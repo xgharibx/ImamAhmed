@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="رِيَاضُ الذَّاكِرِينَ - دَلِيلُ السَّالِكِ إِلَى طُمَأْنِينَةِ القَلْبِ - تأليف الشيخ أحمد إسماعيل الفشني">
+    <meta name="keywords" content="رياض الذاكرين, الشيخ أحمد الفشني, أذكار, ذكر الله, طمأنينة القلب">
+    <title>كتاب رِيَاضُ الذَّاكِرِينَ | الشيخ أحمد إسماعيل الفشني</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@300;400;500;700;800;900&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../animations.css">
+    <link rel="stylesheet" href="../khawater.css">
+    
+    <style>
+        .book-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 3rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.97), rgba(255,255,255,0.97)),
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231a5f4a' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .book-title-page {
+            text-align: center;
+            padding: 4rem 0;
+            border-bottom: 3px double var(--primary-gold);
+            margin-bottom: 3rem;
+        }
+
+        .main-title {
+            font-family: var(--font-decorative);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            color: var(--primary-green-dark);
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .sub-title {
+            font-size: 1.4rem;
+            color: var(--primary-gold-dark);
+            margin-bottom: 2rem;
+            font-family: var(--font-primary);
+        }
+
+        .author-name {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .chapter {
+            margin-bottom: 4rem;
+        }
+
+        .chapter-title {
+            font-family: var(--font-decorative);
+            font-size: 2rem;
+            color: var(--primary-green);
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .chapter-title::after {
+            content: '❖';
+            display: block;
+            color: var(--primary-gold);
+            font-size: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .chapter-content {
+            font-size: 1.15rem;
+            line-height: 2;
+            color: var(--text-primary);
+            text-align: justify;
+        }
+
+        .chapter-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .chapter-content ul {
+            list-style: none;
+            padding-right: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chapter-content ul li {
+            position: relative;
+            margin-bottom: 1rem;
+            padding-right: 1.5rem;
+        }
+
+        .chapter-content ul li::before {
+            content: '•';
+            color: var(--primary-gold);
+            font-size: 1.5rem;
+            position: absolute;
+            right: -0.5rem;
+            top: -5px;
+        }
+
+        .hadith-box {
+            background: rgba(201, 162, 39, 0.1);
+            border-right: 4px solid var(--primary-gold);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: var(--radius-md) 0 0 var(--radius-md);
+            font-family: var(--font-primary);
+        }
+
+        .hadith-text {
+            font-weight: 600;
+            color: var(--primary-green-dark);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .hadith-source {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            display: block;
+        }
+
+        .verse-box {
+            text-align: center;
+            margin: 2rem 0;
+            font-family: 'Amiri', serif;
+            font-size: 1.4rem;
+            color: var(--primary-green);
+            position: relative;
+            padding: 1rem;
+        }
+
+        .verse-box::before, .verse-box::after {
+            content: '﴿';
+            color: var(--primary-gold);
+            margin: 0 10px;
+        }
+
+        .verse-box::after {
+            content: '﴾';
+        }
+
+        /* Khawater Section Specific to Book */
+        .book-khawater {
+            background: var(--bg-secondary);
+            padding: 3rem;
+            border-radius: var(--radius-lg);
+            margin-top: 4rem;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .khawater-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .khawater-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border-top: 3px solid var(--primary-gold);
+        }
+
+        .summary-box {
+            background: var(--primary-green);
+            color: white;
+            padding: 3rem;
+            border-radius: var(--radius-lg);
+            margin-top: 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .summary-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,..."); /* Same pattern but light opacity */
+            opacity: 0.1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader">
+            <div class="islamic-pattern-loader"></div>
+            <div class="bismillah-loader">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <header id="header" class="scrolled">
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="../index.html" class="logo">
+                    <div class="logo-icon"><span class="moon-icon">☾</span></div>
+                    <div class="logo-text">
+                        <span class="logo-title">الشيخ أحمد الفشني</span>
+                        <span class="logo-subtitle">إمام وخطيب</span>
+                    </div>
+                </a>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="../index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li class="nav-item"><a href="../books.html" class="nav-link active"><i class="fas fa-book"></i> المؤلفات</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Book Content -->
+    <div class="container" style="padding-top: 120px; padding-bottom: 60px;">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb" style="justify-content: flex-start; margin-bottom: 2rem;">
+            <a href="../index.html">الرئيسية</a>
+            <i class="fas fa-chevron-left"></i>
+            <a href="../books.html">المؤلفات</a>
+            <i class="fas fa-chevron-left"></i>
+            <span>رِيَاضُ الذَّاكِرِينَ</span>
+        </div>
+
+        <div class="book-container">
+            <!-- Title Page -->
+            <div class="book-title-page" data-aos="fade-up">
+                <h1 class="main-title">رِيَاضُ الذَّاكِرِينَ</h1>
+                <h2 class="sub-title">دَلِيلُ السَّالِكِ إِلَى طُمَأْنِينَةِ القَلْبِ</h2>
+                <div class="author-name">
+                    تأليف فضيلة الشيخ / أحمد إسماعيل الفشني الازهري
+                    <br>
+                    <span style="font-size: 0.9rem; font-weight: normal; margin-top: 0.5rem; display: block;">القاهرة في ٢/١١/٢٠٢٥م</span>
+                </div>
+            </div>
+
+            <!-- Introduction -->
+            <div class="chapter" data-aos="fade-up">
+                <h3 class="chapter-title">المُقَدِّمَةُ: الذِّكْرُ.. حَيَاةُ الرُّوحِ</h3>
+                <div class="chapter-content">
+                    <p>الحَمْدُ للهِ الَّذِي لَمْ يَشْغَلْهُ شَأْنٌ عَنْ شَأْنٍ، وَلَمْ يَمْنَعْهُ عَنْ سَمَاعِ الأَصْوَاتِ اخْتِلَافُ اللُّغَاتِ، وَجَعَلَ ذِكْرَهُ حِصْنًا لِعِبَادِهِ المُؤْمِنِينَ. وَالصَّلَاةُ وَالسَّلَامُ عَلَى إِمَامِ الذَّاكِرِينَ، سَيِّدِنَا مُحَمَّدٍ، وَعَلَى آلِهِ وَصَحْبِهِ أَجْمَعِينَ.</p>
+                    <p>أَيُّهَا السَّادَةُ الكِرَامُ: إِنَّ الإِنْسَانَ فِي هَذِهِ الدُّنْيَا مُسَافِرٌ، وَالأَخْطَارُ حَوْلَهُ كَثِيرَةٌ، وَلَيْسَ لَهُ حِصْنٌ يَأْوِي إِلَيْهِ أَقْوَى مِنْ "ذِكْرِ اللهِ".</p>
+                    <p>إِنَّ الذِّكْرَ لَيْسَ مُجَرَّدَ كَلِمَاتٍ، بَلْ هُوَ الفَاصِلُ بَيْنَ الحَيَاةِ وَالمَوْتِ.</p>
+                    <div class="hadith-box">
+                        <span class="hadith-text">أَلَمْ يَقُلِ الصَّادِقُ المَصْدُوقُ ﷺ: "مَثَلُ الَّذِي يَذْكُرُ رَبَّهُ وَالَّذِي لَا يَذْكُرُ رَبَّهُ، مَثَلُ الحَيِّ وَالمَيِّتِ"</span>
+                        <span class="hadith-source">(رَوَاهُ البُخَارِيُّ)</span>
+                    </div>
+                    <p>فَالغَافِلُ -وَإِنْ مَشَى عَلَى الأَرْضِ- هُوَ فِي حُكْمِ الأَمْوَاتِ رُوحِيًّا، أَمَّا الذَّاكِرُ فَهُوَ الحَيُّ وَلَوْ وَارَاهُ التُّرَابُ.</p>
+                </div>
+            </div>
+
+            <!-- Chapter 1 -->
+            <div class="chapter" data-aos="fade-up">
+                <h3 class="chapter-title">كُنُوزُ السَّمَاءِ: فَضَائِلُ الذِّكْرِ</h3>
+                <div class="chapter-content">
+                    <p>أَيُّهَا المُحِبُّ لِرَبِّهِ: إِذَا أَرَدْتَ أَنْ تَعْرِفَ مَقَامَكَ عِنْدَ اللهِ، فَانْظُرْ فِيمَا أَقَامَكَ. فَإِذَا أَقَامَكَ فِي الذِّكْرِ، فَقَدْ أَعْطَاكَ مَنْشُورَ الوَلَايَةِ.</p>
+                    
+                    <p><strong>١. الذِّكْرُ.. العِبَادَةُ المُطْلَقَةُ:</strong> كُلُّ العِبَادَاتِ لَهَا أَوْقَاتٌ مُحَدَّدَةٌ، إِلَّا الذِّكْرَ، فَقَدْ أَمَرَ اللهُ بِهِ بِلَا حَدٍّ.</p>
+                    <div class="verse-box">يَا أَيُّهَا الَّذِينَ آمَنُوا اذْكُرُوا اللَّهَ ذِكْرًا كَثِيرًا</div>
+
+                    <p><strong>٢. الجَزَاءُ مِنْ جِنْسِ العَمَلِ:</strong> يَكْفِي فِي فَضْلِ الذِّكْرِ قَوْلُهُ تَعَالَى:</p>
+                    <div class="verse-box">فَاذْكُرُونِي أَذْكُرْكُمْ</div>
+                    <div class="hadith-box">
+                        <span class="hadith-text">فِي الحَدِيثِ القُدْسِيِّ: "أَنَا عِنْدَ ظَنِّ عَبْدِي بِي، وَأَنَا مَعَهُ إِذَا ذَكَرَنِي..."</span>
+                    </div>
+
+                    <p><strong>٣. السَّبْقُ لِلْمُفَرِّدِينَ:</strong> بَيْنَمَا كَانَ النَّبِيُّ ﷺ يَسِيرُ مَرَّ بِجَبَلٍ يُقَالُ لَهُ "جُمْدَانُ"، فَقَالَ: "سِيرُوا، هَذَا جُمْدَانُ، سَبَقَ المُفَرِّدُونَ". قَالُوا: وَمَا المُفَرِّدُونَ يَا رَسُولَ اللهِ؟ قَالَ: "الذَّاكِرُونَ اللهَ كَثِيرًا وَالذَّاكِرَاتُ".</p>
+                </div>
+            </div>
+
+            <!-- Chapter 2: Manners -->
+            <div class="chapter" data-aos="fade-up">
+                <h3 class="chapter-title">أَدَبُ المَجْلِسِ</h3>
+                <div class="chapter-content">
+                    <p>أَيُّهَا السَّادَةُ الكِرَامُ: إِنَّ الذِّكْرَ هُوَ مُجَالَسَةٌ لِلْمَلِكِ سُبْحَانَهُ، وَلِهَذِهِ المُجَالَسَةِ آدَابٌ:</p>
+                    <p><strong>أَوَّلًا: الآدَابُ الظَّاهِرَةُ:</strong></p>
+                    <ul>
+                        <li><strong>الطَّهَارَةُ:</strong> يُسْتَحَبُّ أَنْ يَكُونَ الذَّاكِرُ عَلَى وُضُوءٍ، تَعْظِيمًا لِلْمَذْكُورِ.</li>
+                        <li><strong>اسْتِقْبَالُ القِبْلَةِ:</strong> لِأَنَّهَا أَشْرَفُ الجِهَاتِ.</li>
+                        <li><strong>السَّكِينَةُ:</strong> الجُلُوسُ بِوَقَارٍ وَخُشُوعٍ.</li>
+                    </ul>
+                    <p><strong>ثَانِيًا: الآدَابُ البَاطِنَةُ (رُوحُ الذِّكْرِ):</strong></p>
+                    <ul>
+                        <li><strong>حُضُورُ القَلْبِ:</strong> هُوَ الشَّرْطُ الأَعْظَمُ. يَقُولُ العُلَمَاءُ: "الذِّكْرُ بِلَا حُضُورٍ كَالجَسَدِ بِلَا رُوحٍ".</li>
+                        <li><strong>التَّفْرِيغُ قَبْلَ التَّحْلِيَةِ:</strong> أَنْ يُفْرِغَ قَلْبَهُ مِنْ شَوَاغِلِ الدُّنْيَا لِيَتَمَكَّنَ النُّورُ مِنْهُ.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Chapter 3: Encyclopedia of Dhikr -->
+            <div class="chapter" data-aos="fade-up">
+                <h3 class="chapter-title">جَوَامِعُ الكَلِمِ: المَوْسُوعَةُ النَّبَوِيَّةُ</h3>
+                <div class="chapter-content">
+                    <p>أَيُّهَا السَّادَةُ: لَقَدْ تَرَكَ لَنَا نَبِيُّنَا ﷺ لِكُلِّ حَالٍ ذِكْرًا صَحِيحًا:</p>
+                    
+                    <h4>القِسْمُ الأَوَّلُ: حِصْنُ اليَوْمِ وَاللَّيْلَةِ</h4>
+                    <ul>
+                        <li><strong>سَيِّدُ الاسْتِغْفَارِ:</strong> "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ..."</li>
+                        <li><strong>الحِمَايَةُ مِنَ الضُّرِّ:</strong> "بِسْمِ اللهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ..."</li>
+                        <li><strong>الكِفَايَةُ مِنَ الهَمِّ:</strong> "حَسْبِيَ اللهُ لَا إِلَهَ إِلَّا هُوَ..."</li>
+                    </ul>
+
+                    <h4>القِسْمُ الثَّانِي: أَذْكَارُ الكَرْبِ وَالهَمِّ</h4>
+                    <div class="hadith-box">
+                        <span class="hadith-text">دَعْوَةُ ذِي النُّونِ: "لَا إِلَهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ"</span>
+                    </div>
+
+                    <h4>القِسْمُ الثَّالِثُ: غِرَاسُ الجَنَّةِ</h4>
+                    <ul>
+                        <li><strong>سُبْحَانَ اللهِ وَبِحَمْدِهِ (100 مرة):</strong> حُطَّتْ خَطَايَاهُ وَإِنْ كَانَتْ مِثْلَ زَبَدِ البَحْرِ.</li>
+                        <li><strong>كَلِمَتَانِ خَفِيفَتَانِ:</strong> "سُبْحَانَ اللهِ وَبِحَمْدِهِ، سُبْحَانَ اللهِ العَظِيمِ".</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Chapter 4: Innovation vs Sunnah -->
+            <div class="chapter" data-aos="fade-up">
+                <h3 class="chapter-title">فِقْهُ الذِّكْرِ وَحُكْمُ الصِّيَغِ المُخْتَرَعَةِ</h3>
+                <div class="chapter-content">
+                    <p>يَثُورُ سُؤَالٌ شَائِكٌ: هَلْ يَجُوزُ تَخْصِيصُ وِرْدٍ لَمْ يَرِدْ بِنَصِّهِ عَنِ النَّبِيِّ ﷺ؟</p>
+                    <p>قَسَّمَ العُلَمَاءُ الذِّكْرَ إِلَى نَوْعَيْنِ:</p>
+                    <ul>
+                        <li><strong>١. الذِّكْرُ المُقَيَّدُ (التَّوْقِيفِيُّ):</strong> مَا حَدَّدَهُ الشَّرْعُ بِعَدَدٍ وَوَقْتٍ (كَأَذْكَارِ الصَّلَاةِ)، فَهَذَا لَا يَجُوزُ تَغْيِيرُهُ.</li>
+                        <li><strong>٢. الذِّكْرُ المُطْلَقُ:</strong> مَا دَخَلَ تَحْتَ عُمُومِ ﴿اذْكُرُوا اللَّهَ ذِكْرًا كَثِيرًا﴾. يَجُوزُ فِيهِ الاجْتِهَادُ بِشَرْطِ سَلَامَةِ المَعْنَى وَعَدَمِ نِسْبَتِهِ لِلسُّنَّةِ.</li>
+                    </ul>
+                </div>
+            </div>
+
+             <!-- Chapter 5: Daily Wird -->
+             <div class="chapter" data-aos="fade-up">
+                <h3 class="chapter-title">حِصْنُ المُؤْمِنِ (الوِرْدُ اليَوْمِيُّ)</h3>
+                <div class="chapter-content">
+                    <p>كَيْفَ تَبْنِي لِنَفْسِكَ وِرْدًا لَا يَنْقَطِعُ؟ القَوَاعِدُ هي:</p>
+                    <ol>
+                        <li>قَلِيلٌ دَائِمٌ خَيْرٌ مِنْ كَثِيرٍ مُنْقَطِعٍ.</li>
+                        <li>تَثْبِيتُ الزَّمَانِ.</li>
+                        <li>قَضَاءُ مَا فَاتَ.</li>
+                    </ol>
+                    
+                    <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 10px; border: 1px dashed #ccc; margin: 2rem 0;">
+                        <h4 style="color: var(--primary-color); margin-bottom: 1rem; text-align: center;">مُقْتَرَحُ وِرْدِ المُبْتَدِئِينَ (15 دقيقة)</h4>
+                        <ul>
+                            <li><strong>الاسْتِغْفَارُ (100 مرة):</strong> "أَسْتَغْفِرُ اللهَ العَظِيمَ وَأَتُوبُ إِلَيْهِ".</li>
+                            <li><strong>الصَّلَاةُ عَلَى النَّبِيِّ ﷺ (100 مرة).</strong></li>
+                            <li><strong>كَلِمَةُ التَّوْحِيدِ (100 مرة):</strong> "لَا إِلَهَ إِلَّا اللهُ".</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conclusion -->
+             <div class="chapter" data-aos="fade-up">
+                <h3 class="chapter-title">خَاتِمَةُ: لَا يَزَالُ لِسَانُكَ رَطْبًا</h3>
+                <div class="chapter-content">
+                    <p>أَيُّهَا الأَخُ الكَرِيمُ: لَقَدْ عَرَفْتَ فَأَلْزِمْ. عَرَفْتَ أَنَّ الذِّكْرَ حَيَاةٌ، فَلَا تَرْضَ بِالمَوْتِ.</p>
+                    <p>اجْعَلْ "ذِكْرَ اللهِ" هُوَ الرَّفِيقَ الَّذِي لَا يُفَارِقُكَ. كُنْ صَاحِبَ "لَهَجٍ" دَائِمٍ بِاسْمِ اللهِ، حَتَّى إِذَا جَاءَكَ المَلَكُ لِيَقْبِضَ رُوحَكَ، وَجَدَ لِسَانَكَ رَطْبًا.</p>
+                    <div class="hadith-box" style="text-align: center;">
+                        <span class="hadith-text">"لَا يَزَالُ لِسَانُكَ رَطْبًا مِنْ ذِكْرِ اللهِ"</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Khawater Section -->
+        <div class="book-khawater" data-aos="fade-up">
+            <h3 class="section-title text-center" style="color: var(--primary-green);">خواطر من وحي الكتاب</h3>
+            <div class="khawater-grid">
+                <div class="khawater-card">
+                    <p>"الذِّكْرُ لَيْسَ مُجَرَّدَ كَلِمَاتٍ، بَلْ هُوَ الفَاصِلُ بَيْنَ الحَيَاةِ وَالمَوْتِ."</p>
+                </div>
+                <div class="khawater-card">
+                    <p>"إِذَا أَرَدْتَ أَنْ تَعْرِفَ مَقَامَكَ عِنْدَ اللهِ، فَانْظُرْ فِيمَا أَقَامَكَ."</p>
+                </div>
+                <div class="khawater-card">
+                    <p>"الذِّكْرُ بِلَا حُضُورٍ كَالجَسَدِ بِلَا رُوحٍ.. فَرِّغْ قَلْبَكَ لِيَتَمَكَّنَ النُّورُ مِنْهُ."</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Section -->
+        <div class="summary-box" data-aos="zoom-in">
+            <div class="summary-pattern"></div>
+            <h2 style="font-family: var(--font-decorative); margin-bottom: 1rem;">خلاصة الكتاب</h2>
+            <p style="font-size: 1.2rem; line-height: 1.8; max-width: 700px; margin: 0 auto;">
+                كتاب "رياض الذاكرين" هو منهاج عملي يضع قدميك على طريق الولاية، يجمع بين فقه الذكر وأحكامه وبين روحه وحلاوته. يُعلمك كيف تبني "وردك اليومي" الذي لا ينقطع، وكيف تنتقل من ذكر اللسان إلى ذكر القلب، لتصل إلى الطمأنينة التي وعد الله بها عباده الذاكرين.
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer" class="footer">
+        <div class="footer-pattern"></div>
+        <div class="container">
+            <div class="footer-bottom">
+                <p>جميع الحقوق محفوظة &copy; <span id="currentYear"></span> الشيخ أحمد إسماعيل الفشني</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="../main.js"></script>
+    <script>
+        if (typeof AOS !== 'undefined') {
+            AOS.init({ duration: 800, once: true });
+        }
+    </script>
+</body>
+</html>
