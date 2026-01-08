@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="مؤلفات والكتب الكاملة للشيخ أحمد إسماعيل الفشني">
+    <meta name="keywords" content="كتب, مؤلفات, الشيخ أحمد الفشني, رياض الذاكرين, خواطر">
+    <title>مؤلفات الشيخ | الشيخ أحمد إسماعيل الفشني</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@300;400;500;700;800;900&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
+    
+    <style>
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .book-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-normal);
+            border: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .book-cover {
+            height: 250px;
+            background: var(--gradient-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .book-cover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMjUgMGwyNSAyNS0yNSAyNS0yNS0yNXoiIGZpbGw9IiNmZmYiLz48L3N2Zz4=');
+        }
+
+        .book-icon {
+            font-size: 5rem;
+            color: var(--primary-gold);
+            z-index: 1;
+        }
+
+        .book-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-title {
+            font-family: var(--font-decorative);
+            font-size: 1.4rem;
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .book-meta {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .book-meta i {
+            color: var(--primary-gold);
+        }
+
+        .book-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .book-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-book {
+            flex: 1;
+            text-align: center;
+            padding: 0.8rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            transition: var(--transition-normal);
+            text-decoration: none;
+        }
+
+        .btn-read {
+            background: var(--primary-green);
+            color: white;
+        }
+
+        .btn-read:hover {
+            background: var(--primary-green-dark);
+        }
+
+        .page-header-custom {
+            background: var(--gradient-green);
+            padding: 100px 0 60px;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader">
+            <div class="islamic-pattern-loader"></div>
+            <div class="bismillah-loader">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <header id="header" class="scrolled">
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon"><span class="moon-icon">☾</span></div>
+                    <div class="logo-text">
+                        <span class="logo-title">الشيخ أحمد الفشني</span>
+                        <span class="logo-subtitle">إمام وخطيب</span>
+                    </div>
+                </a>
+
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li class="nav-item"><a href="hadith.html" class="nav-link"><i class="fas fa-book-quran"></i> الحديث الشريف</a></li>
+                    <li class="nav-item"><a href="articles.html" class="nav-link"><i class="fas fa-book-open"></i> المقالات</a></li>
+                    <li class="nav-item"><a href="videos.html" class="nav-link"><i class="fas fa-video"></i> الدروس والمحاضرات</a></li>
+                    <li class="nav-item"><a href="khawater.html" class="nav-link"><i class="fas fa-feather-alt"></i> الخواطر</a></li>
+                    <li class="nav-item"><a href="books.html" class="nav-link active"><i class="fas fa-book"></i> المؤلفات</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link"><i class="fas fa-user"></i> عن الشيخ</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link"><i class="fas fa-envelope"></i> تواصل</a></li>
+                </ul>
+
+                <div class="hamburger">
+                    <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header-custom">
+        <div class="container">
+            <h1 class="page-title" data-aos="fade-up">مؤلفات الشيخ</h1>
+            <p class="page-subtitle" data-aos="fade-up" data-aos-delay="100">المكتبة الكاملة لمؤلفات وكتب الشيخ أحمد إسماعيل الفشني</p>
+        </div>
+    </section>
+
+    <!-- Books Grid -->
+    <section class="books-section">
+        <div class="container">
+            <div class="books-grid">
+                
+                <!-- Book 1: Khawater -->
+                <div class="book-card" data-aos="fade-up">
+                    <div class="book-cover">
+                        <i class="fas fa-book-open book-icon"></i>
+                    </div>
+                    <div class="book-content">
+                        <h3 class="book-title">خواطر على درب النجاح والتزكية</h3>
+                        <div class="book-meta">
+                            <span><i class="fas fa-file-alt"></i> ٥٨ صفحة</span>
+                            <span><i class="fas fa-tag"></i> تزكية</span>
+                        </div>
+                        <p class="book-description">
+                            مجموعة من الخواطر والتأملات في طريق النجاح وتزكية النفس، تجمع بين الحكمة والموعظة الحسنة.
+                        </p>
+                        <div class="book-actions">
+                            <a href="khawater-full-book.html" class="btn-book btn-read">
+                                <i class="fas fa-book-reader"></i> اقرأ الكتاب
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book 2: Riyad al-Dhakireen (New) -->
+                <div class="book-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="book-cover" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);">
+                        <i class="fas fa-kaaba book-icon"></i>
+                    </div>
+                    <div class="book-content">
+                        <h3 class="book-title">رِيَاضُ الذَّاكِرِينَ</h3>
+                        <div class="book-meta">
+                            <span><i class="fas fa-file-alt"></i> الكتاب الأول</span>
+                            <span><i class="fas fa-tag"></i> أذكار ورقائق</span>
+                        </div>
+                        <p class="book-description">
+                            كتاب جامع في فضائل الذكر وأحوال الذاكرين، يجمع بين الأدلة الشرعية والمعاني الروحية.
+                        </p>
+                        <div class="book-actions">
+                            <!-- Link to the new page we will create -->
+                            <a href="books/riyad-al-dhakireen.html" class="btn-book btn-read">
+                                <i class="fas fa-book-reader"></i> اقرأ الكتاب
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer" class="footer">
+        <div class="footer-pattern"></div>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <span class="logo-arabic">الشيخ أحمد الفشني</span>
+                    </div>
+                    <p class="footer-about">
+                        الموقع الرسمي للشيخ أحمد إسماعيل الفشني - إمام وخطيب وداعية إلى الله.
+                    </p>
+                    <div class="footer-social">
+                        <a href="https://www.facebook.com/share/1AcZYBDpD5/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.youtube.com/@ahmedelfashny" target="_blank"><i class="fab fa-youtube"></i></a>
+                        <!-- Add other social links -->
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="books.html">المؤلفات</a></li>
+                        <li><a href="articles.html">المقالات</a></li>
+                        <li><a href="videos.html">الدروس</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>جميع الحقوق محفوظة &copy; <span id="currentYear"></span> الشيخ أحمد إسماعيل الفشني</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="main.js"></script>
+    <script>
+        if (typeof AOS !== 'undefined') {
+            AOS.init({ duration: 800, once: true });
+        }
+    </script>
+</body>
+</html>
