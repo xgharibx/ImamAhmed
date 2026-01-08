@@ -635,7 +635,7 @@ input, textarea, select {
 .bar {
     width: 28px;
     height: 3px;
-    background: #2e7d32;
+    background: var(--primary-gold);
     border-radius: 3px;
     transition: var(--transition-normal);
 }
@@ -2061,7 +2061,7 @@ section {
     }
     
     .hero-section {
-        min-height: 70vh;
+        min-height: 100vh;
         padding: 100px 10px 50px;
     }
     
