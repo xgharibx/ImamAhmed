@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حياة واحدة.. فعشها كما ينبغي | مكتبة الشيخ أحمد</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #117864;
+            --heading-font: 'Aref Ruqaa', serif;
+            --body-font: 'Amiri', serif;
+        }
+        
+        body {
+            font-family: var(--body-font);
+            background-color: #fbfcfc;
+            color: #333;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .book-header {
+            background: linear-gradient(135deg, #117864, #148f77);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .book-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.1;
+        }
+
+        .book-title {
+            font-family: var(--heading-font);
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .book-subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .book-author {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: -3rem auto 3rem;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-family: var(--heading-font);
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .text-content {
+            font-size: 1.4rem;
+            text-align: justify;
+            margin-bottom: 1.5rem;
+        }
+
+        .highlight-box {
+            background-color: #e8f8f5;
+            border-right: 4px solid var(--primary-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .custom-list {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+        }
+
+        .custom-list li {
+            margin-bottom: 1rem;
+            padding-right: 2rem;
+            position: relative;
+            font-size: 1.3rem;
+        }
+
+        .custom-list li::before {
+            content: '♦';
+            color: var(--primary-color);
+            position: absolute;
+            right: 0;
+            top: 5px;
+            font-size: 1rem;
+        }
+        
+        .quran-verse {
+            font-family: 'Amiri', serif;
+            color: var(--primary-color);
+            font-weight: bold;
+            display: block;
+            text-align: center;
+            margin: 1.5rem 0;
+            font-size: 1.5rem;
+        }
+
+        .nav-button {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 10px 25px;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: #0e6655;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .book-title { font-size: 2.2rem; }
+            .content-card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="book-header">
+        <h1 class="book-title">حياة واحدة.. فعشها كما ينبغي</h1>
+        <div class="book-subtitle">بين عمارة الدنيا وطلب الآخرة</div>
+        <div class="book-author">بقلم: فضيلة الشيخ أحمد إسماعيل الفشني</div>
+        <a href="../books.html" class="nav-button">
+            <i class="fas fa-arrow-right"></i> عودة للمكتبة
+        </a>
+    </header>
+
+    <div class="container">
+        <article class="content-card">
+            <p class="text-content">الحَمْدُ للهِ الَّذِي جَعَلَ اللَّيْلَ وَالنَّهَارَ خِلْفَةً لِمَنْ أَرَادَ أَنْ يَذَّكَّرَ أَوْ أَرَادَ شُكُورًا، وَالصَّلَاةُ وَالسَّلَامُ عَلَى سَيِّدِنَا مُحَمَّدٍ، الَّذِي كَانَ أَزْهَدَ النَّاسِ فِي الدُّنْيَا وَهِيَ بَيْنَ يَدَيْهِ، وَأَرْغَبَهُمْ فِي الآخِرَةِ وَهِيَ مِلْءُ عَيْنَيْهِ، وَعَلَى آلِهِ وَصَحْبِهِ وَمَنِ اقْتَفَى أَثَرَهُمْ إِلَى يَوْمِ الدِّينِ.</p>
+<p class="text-content">وَبَعْدُ؛</p>
+<p class="text-content">أَيُّهَا السَّادَةُ الكِرَامُ، إِنَّ أَعْظَمَ حَقِيقَةٍ يَجِبُ أَنْ نُدْرِكَهَا هِيَ أَنَّ هَذِهِ الحَيَاةَ الدُّنْيَا "رِحْلَةٌ لَا تَتَكَرَّرُ". إِنَّهَا فُرْصَةٌ وَاحِدَةٌ، وَشَوْطٌ وَاحِدٌ، لَيْسَ فِيهِ إِعَادَةٌ وَلَا رُجُوعٌ. يَقُولُ رَبُّنَا تَبَارَكَ وَتَعَالَى عَنْ حَالِ المُفَرِّطِينَ حِينَ يَرَوْنَ الحَقِيقَةَ: <strong>﴿حَتَّىٰ إِذَا جَاءَ أَحَدَهُمُ الْمَوْتُ قَالَ رَبِّ ارْجِعُونِ * لَعَلِّي أَعْمَلُ صَالِحًا فِيمَا تَرَكْتُ﴾</strong>، فَيَأْتِيهِ الجَوَابُ القَاطِعُ: <strong>﴿كَلَّا﴾</strong>.</p>
+<p class="text-content">إِذًا، مَا دَامَتِ الحَيَاةُ سَتُعَاشُ مَرَّةً وَاحِدَةً، فَكَيْفَ نَعِيشُهَا كَمَا يَنْبَغِي؟ وَكَيْفَ نُحَقِّقُ فِيهَا مُرَادَ اللهِ دُونَ أَنْ نُهْمِلَ حَظَّنَا مِنَ الدُّنْيَا؟</p>
+<h2 class="section-title">المَفْهُومُ الخَاطِئُ وَالتَّصْحِيحُ الرَّبَّانِيُّ:</h2>
+<p class="text-content">يَفْهَمُ البَعْضُ عِبَارَةَ "الحَيَاةُ مَرَّةً وَاحِدَةً" فَهْمًا مَغْلُوطًا، فَيَنْدَفِعُونَ نَحْوَ الشَّهَوَاتِ وَالمَلَذَّاتِ، ظَنًّا مِنْهُمْ أَنَّ اغْتِنَامَ الحَيَاةِ يَعْنِي التَّفَلُّتَ مِنَ الضَّوَابِطِ.</p>
+<p class="text-content">وَيَفْهَمُ آخَرُونَ الدِّينَ فَهْمًا قَاصِرًا، فَيَعْتَزِلُونَ الحَيَاةَ، وَيُهْمِلُونَ أَعْمَالَهُمْ وَمَظْهَرَهُمْ وَدُنْيَاهُمْ بِدَعْوَى الزُّهْدِ.</p>
+<p class="text-content">وَكِلَا الطَّرَفَيْنِ مُخْطِئٌ، وَالصَّوَابُ هُوَ "المِيزَانُ" الَّذِي وَضَعَهُ القُرْآنُ الكَرِيمُ فِي آيَةٍ جَامِعَةٍ مَانِعَةٍ:</p>
+<p class="text-content"><span class="quran-verse">﴿وَابْتَغِ فِيمَا آتَاكَ اللَّهُ الدَّارَ الْآخِرَةَ ۖ وَلَا تَنسَ نَصِيبَكَ مِنَ الدُّنْيَا ۖ وَأَحْسِن كَمَا أَحْسَنَ اللَّهُ إِلَيْكَ﴾</span> (القَصَص: 77).</p>
+<ul class="custom-list">
+<li><strong>ابْتَغِ الآخِرَةَ:</strong>  اجْعَلْ هَدَفَكَ الأَسْمَى هُوَ رِضَا اللهِ وَالجَنَّةَ.</li>
+<li><strong>لَا تَنْسَ نَصِيبَكَ مِنَ الدُّنْيَا:</strong>  تَمَتَّعْ بِالحَلَالِ الطَّيِّبِ، انْجَحْ فِي عَمَلِكَ، ابْنِ مُسْتَقْبَلَكَ، الْبَسْ الجَمِيلَ، وَكُلِ الطَّيِّبَ، وَكُنْ قَوِيًّا غَنِيًّا، فَـ "المُؤْمِنُ القَوِيُّ خَيْرٌ وَأَحَبُّ إِلَى اللهِ مِنَ المُؤْمِنِ الضَّعِيفِ".</li>
+</ul>
+<h2 class="section-title">إِنَّ لِرَبِّكَ عَلَيْكَ حَقًّا:</h2>
+<p class="text-content">لَقَدْ أَسَّسَ لَنَا سَيِّدُنَا رَسُولُ اللهِ ﷺ قَاعِدَةَ التَّوَازُنِ فِي الحَيَاةِ مِنْ خِلَالِ القِصَّةِ الشَّهِيرَةِ بَيْنَ سَيِّدِنَا سَلْمَانَ الفَارِسِيِّ وَسَيِّدِنَا أَبِي الدَّرْدَاءِ رَضِيَ اللهُ عَنْهُمَا.</p>
+<p class="text-content">حِينَ رَأَى سَلْمَانُ أَنَّ أَبَا الدَّرْدَاءِ قَدْ أَهْمَلَ نَفْسَهُ وَأَهْلَهُ وَانْقَطَعَ لِلْعِبَادَةِ فَقَطْ، بَاتَ عِنْدَهُ، فَلَمَّا أَرَادَ أَبُو الدَّرْدَاءِ أَنْ يَقُومَ اللَّيْلَ كُلَّهُ مَنَعَهُ سَلْمَانُ وَقَالَ لَهُ: نَمْ، ثُمَّ قُمْ فِي آخِرِ اللَّيْلِ. وَفِي النَّهَارِ أَمَرَهُ بِالفِطْرِ بَعْدَ أَنْ كَانَ يَصُومُ الدَّهْرَ.</p>
+<p class="text-content">ثُمَّ قَالَ لَهُ سَلْمَانُ القَاعِدَةَ الذَّهَبِيَّةَ: "إِنَّ لِرَبِّكَ عَلَيْكَ حَقًّا، وَلِنَفْسِكَ عَلَيْكَ حَقًّا، وَلِأَهْلِكَ عَلَيْكَ حَقًّا، فَأَعْطِ كُلَّ ذِي حَقٍّ حَقَّهُ".</p>
+<p class="text-content">فَلَمَّا ذَهَبَا إِلَى النَّبِيِّ ﷺ وَقَصَّا عَلَيْهِ مَا حَدَثَ، قَالَ ﷺ: "صَدَقَ سَلْمَانُ". (رَوَاهُ البُخَارِيُّ).</p>
+<h2 class="section-title">كَيْفَ تَعِيشُهَا كَمَا يَنْبَغِي؟</h2>
+<p class="text-content">أَيُّهَا السَّادَةُ الكِرَامُ، لِكَيْ تَكُونَ حَيَاتُكُمُ الوَحِيدَةُ نَاجِحَةً، عَلَيْكُمْ بِهَذِهِ الخُطُوَاتِ:</p>
+<ul class="custom-list">
+<li><strong>حَوِّلِ العَادَاتِ إِلَى عِبَادَاتٍ:</strong>  الذَّكِيُّ هُوَ مَنْ يَجْعَلُ دُنْيَاهُ مَزْرَعَةً لِآخِرَتِهِ. اذْهَبْ إِلَى عَمَلِكَ بِنِيَّةِ إِعْفَافِ نَفْسِكَ وَأَهْلِكَ، يَتَحَوَّلُ العَمَلُ إِلَى عِبَادَةٍ. نَمْ مُبَكِّرًا بِنِيَّةِ التَّقَوِّي عَلَى صَلَاةِ الفَجْرِ، يَتَحَوَّلُ النَّوْمُ إِلَى أَجْرٍ. هَكَذَا تَجْمَعُ بَيْنَ الدُّنْيَا وَالآخِرَةِ.</li>
+<li><strong>كُنْ نَاجِحًا فِي مَجَالِكَ:</strong>  الإِسْلَامُ لَا يُرِيدُ كَسَالَى، بَلْ يُرِيدُ أَطِبَّاءَ مَهَرَةً، وَمُهَنْدِسِينَ مُبْدِعِينَ، وَتُجَّارًا صَادِقِينَ. عِشْ دُنْيَاكَ بِالتَّفَوُّقِ وَالنَّجَاحِ، لِتَكُونَ يَدًا عُلْيَا تُعْطِي وَلَا تَأْخُذُ.</li>
+<li><strong>لَا تَجْعَلِ الدُّنْيَا فِي قَلْبِكَ:</strong>  اجْعَلْهَا فِي يَدِكَ لِتَسْتَخْدِمَهَا، وَلَا تَجْعَلْهَا فِي قَلْبِكَ فَتَسْتَخْدِمَكَ. عِشْ فِيهَا كَأَنَّكَ غَرِيبٌ أَوْ عَابِرُ سَبِيلٍ، تَتَزَوَّدُ مِنْهَا لِمَا بَعْدَهَا.</li>
+<li><strong>اتْرُكْ أَثَرًا طَيِّبًا:</strong>  مَا دَامَتِ الحَيَاةُ سَتُعَاشُ مَرَّةً، فَاحْرِصْ أَلَّا تُرْحَلَ مِنْهَا إِلَّا وَقَدْ تَرَكْتَ بَصْمَةً؛ عِلْمًا يُنْتَفَعُ بِهِ، أَوْ صَدَقَةً جَارِيَةً، أَوْ وَلَدًا صَالِحًا يَدْعُو لَكَ، أَوْ جَبْرًا لِخَاطِرٍ مَكْسُورٍ.</li>
+</ul>
+<h2 class="section-title">خِتَامًا:</h2>
+<p class="text-content">عِشْ حَيَاتَكَ بِطُولِهَا وَعَرْضِهَا فِي طَاعَةِ اللهِ، اسْتَمْتِعْ بِنِعَمِ اللهِ، وَاشْكُرِ المُنْعِمَ، وَوَازِنْ بَيْنَ رُوحِكَ وَجَسَدِكَ.</p>
+<p class="text-content">فَأَسْعَدُ النَّاسِ هُوَ مَنْ جَمَعَ اللهُ لَهُ خَيْرَيِ الدُّنْيَا وَالآخِرَةِ، كَمَا كَانَ مِنْ دُعَاءِ النَّبِيِّ ﷺ: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ".</p>
+<p class="text-content">وَبِاللهِ تَعَالَى التَّوْفِيقُ.</p>
+
+        </article>
+    </div>
+
+</body>
+</html>
