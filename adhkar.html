@@ -21,27 +21,7 @@
     <!-- Custom Styles -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="animations.css">
-    
-    <style>
-        .coming-soon-container {
-            min-height: 60vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 2rem;
-        }
-        .coming-soon-icon {
-            font-size: 5rem;
-            color: var(--primary-gold);
-            margin-bottom: 1rem;
-        }
-        .coming-soon-text {
-            font-size: 1.5rem;
-            color: var(--text-primary);
-        }
-    </style>
+    <link rel="stylesheet" href="adhkar.css">
 </head>
 <body>
     <!-- Preloader -->
@@ -85,7 +65,7 @@
     </header>
 
     <!-- Page Header -->
-    <section class="page-header" style="height: 300px;">
+    <section class="page-header">
         <div class="page-header-bg"></div>
         <div class="container">
             <div class="page-header-content" data-aos="fade-up">
@@ -96,24 +76,105 @@
                 </div>
                 <h1 class="page-title">
                     <span class="title-icon"><i class="fas fa-hand-holding-heart"></i></span>
-                    الأذكار
+                    حصن المسلم
                 </h1>
+                <p class="page-description">أذكار الصباح والمساء واليوم والليلة من الكتاب والسنة</p>
             </div>
         </div>
+        <div class="header-overlay"></div>
     </section>
 
-    <!-- Main Content -->
-    <section class="coming-soon-container">
-        <div class="coming-soon-icon" data-aos="zoom-in"><i class="fas fa-tools"></i></div>
-        <h2 class="coming-soon-text" data-aos="fade-up">قريباً بإذن الله</h2>
-        <p data-aos="fade-up" data-aos-delay="100">هذا القسم قيد الإعداد والتجهيز</p>
-    </section>
+    <!-- Main Azkar Layout -->
+    <main class="azkar-section">
+        <div class="container">
+            <div class="azkar-layout">
+                <!-- Sidebar / Category Selector -->
+                <aside class="azkar-sidebar" data-aos="fade-left">
+                    <div class="sidebar-header">
+                        <h3><i class="fas fa-list"></i> أقسام الأذكار</h3>
+                    </div>
+                    <ul id="azkar-categories" class="azkar-nav">
+                        <!-- Loaded dynamically -->
+                        <div class="shimmer-loader" style="height: 200px;"></div>
+                    </ul>
+                </aside>
+
+                <!-- Content Area -->
+                <div class="azkar-content-area" data-aos="fade-right">
+                    
+                    <div class="content-header">
+                        <h2 id="current-category-title">...</h2>
+                        <div class="content-controls">
+                            <button id="reset-all-btn" class="control-btn" title="إعادة تعيين الكل">
+                                <i class="fas fa-undo"></i> تصفير القسم
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="adhkar-container" class="adhkar-grid">
+                         <div class="shimmer-loader" style="height: 150px;"></div>
+                         <div class="shimmer-loader" style="height: 150px;"></div>
+                         <div class="shimmer-loader" style="height: 150px;"></div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating Action Button for Mobile Sidebar -->
+    <button id="mobile-sidebar-toggle" class="mobile-fab">
+        <i class="fas fa-list"></i>
+    </button>
+
+   <!-- Footer -->
+   <footer class="footer">
+    <div class="footer-top">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <a href="index.html" class="footer-logo">
+                        <span class="moon-icon">☾</span>
+                        <div class="logo-text">
+                            <span class="logo-title">الشيخ أحمد الفشني</span>
+                            <span class="logo-subtitle">إمام وخطيب</span>
+                        </div>
+                    </a>
+                    <p class="footer-bio">نسعى لنشر العلم الشرعي الصحيح وفق الكتاب والسنة بفهم سلف الأمة، وتقديم المحتوى الإسلامي بصورة عصرية.</p>
+                </div>
+
+                <div class="footer-links">
+                    <h3>روابط سريعة</h3>
+                    <ul>
+                        <li><a href="about.html">عن الشيخ</a></li>
+                        <li><a href="quran.html">القرآن الكريم</a></li>
+                        <li><a href="hadith.html">الحديث الشريف</a></li>
+                        <li><a href="adhkar.html">الأذكار</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-contact">
+                    <h3>تواصل معنا</h3>
+                    <ul class="contact-list">
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>contact@ahmedelfashni.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="container">
+            <p>&copy; 2024 الشيخ أحمد إسماعيل الفشني. جميع الحقوق محفوظة.</p>
+        </div>
+    </div>
+</footer>
 
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="main.js"></script>
-    <script>
-        AOS.init({duration: 800, once: true});
-    </script>
+    <script src="adhkar.js"></script>
 </body>
 </html>
