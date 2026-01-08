@@ -21,27 +21,7 @@
     <!-- Custom Styles -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="animations.css">
-    
-    <style>
-        .coming-soon-container {
-            min-height: 60vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 2rem;
-        }
-        .coming-soon-icon {
-            font-size: 5rem;
-            color: var(--primary-gold);
-            margin-bottom: 1rem;
-        }
-        .coming-soon-text {
-            font-size: 1.5rem;
-            color: var(--text-primary);
-        }
-    </style>
+    <link rel="stylesheet" href="tilawa.css">
 </head>
 <body>
     <!-- Preloader -->
@@ -102,11 +82,61 @@
     </section>
 
     <!-- Main Content -->
-    <section class="coming-soon-container">
-        <div class="coming-soon-icon" data-aos="zoom-in"><i class="fas fa-tools"></i></div>
-        <h2 class="coming-soon-text" data-aos="fade-up">قريباً بإذن الله</h2>
-        <p data-aos="fade-up" data-aos-delay="100">هذا القسم قيد الإعداد والتجهيز</p>
-    </section>
+    <main class="tilawa-sections">
+        <div class="container">
+            <!-- 1. Murattal Quran -->
+            <section class="tilawa-category" id="murattal" data-aos="fade-up">
+                <div class="category-header">
+                    <div class="category-icon"><i class="fas fa-quran"></i></div>
+                    <h2 class="category-title">المصحف المرتل</h2>
+                </div>
+                <!-- Content Placeholder -->
+                <div class="empty-category-msg">
+                    <i class="fas fa-hourglass-half" style="margin-left: 10px;"></i>
+                    سيتم إضافة التلاوات قريباً بإذن الله
+                </div>
+            </section>
+
+            <!-- 2. Mujawwad Quran -->
+            <section class="tilawa-category" id="mujawwad" data-aos="fade-up">
+                <div class="category-header">
+                    <div class="category-icon"><i class="fas fa-star-and-crescent"></i></div>
+                    <h2 class="category-title">المصحف المجود</h2>
+                </div>
+                <!-- Content Placeholder -->
+                <div class="empty-category-msg">
+                    <i class="fas fa-hourglass-half" style="margin-left: 10px;"></i>
+                    سيتم إضافة التلاوات قريباً بإذن الله
+                </div>
+            </section>
+
+            <!-- 3. External Recitations -->
+            <section class="tilawa-category" id="external" data-aos="fade-up">
+                <div class="category-header">
+                    <div class="category-icon"><i class="fas fa-microphone-lines"></i></div>
+                    <h2 class="category-title">تلاوات خارجية</h2>
+                </div>
+                <!-- Content Placeholder -->
+                <div class="empty-category-msg">
+                    <i class="fas fa-hourglass-half" style="margin-left: 10px;"></i>
+                    سيتم إضافة التلاوات قريباً بإذن الله
+                </div>
+            </section>
+
+            <!-- 4. Mihrab Recitations -->
+            <section class="tilawa-category" id="mihrab" data-aos="fade-up">
+                <div class="category-header">
+                    <div class="category-icon"><i class="fas fa-mosque"></i></div>
+                    <h2 class="category-title">تلاوات المحراب</h2>
+                </div>
+                <!-- Content Placeholder -->
+                <div class="empty-category-msg">
+                    <i class="fas fa-hourglass-half" style="margin-left: 10px;"></i>
+                    سيتم إضافة التلاوات قريباً بإذن الله
+                </div>
+            </section>
+        </div>
+    </main>
 
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
