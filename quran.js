@@ -88,16 +88,17 @@ function openSurah(id) {
     `;
   }
   
+  let surahText = '';
   for (let i = 0; i < currentSurah.ayahs.length; i++) {
     const ayah = currentSurah.ayahs[i];
     const ayahNum = convertArabicNumbers((i + 1).toString());
-    html += `
-      <div class="ayah">
-        ${escapeHtml(ayah)}
-        <span class="ayah-num">(${ayahNum})</span>
-      </div>
+    surahText += `
+      <span class="ayah-text">${escapeHtml(ayah)}</span>
+      <span class="ayah-end-marker">﴿${ayahNum}﴾</span>
     `;
   }
+  html += `<div class="quran-text-block">${surahText}</div>`;
+  
   container.innerHTML = html;
 
   // Scroll to top
