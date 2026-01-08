@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="قصص الأنبياء - الشيخ أحمد إسماعيل الفشني - الكتاب الكامل">
+    <title>قصص الأنبياء | الشيخ أحمد الفشني</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cairo:wght@300;400;500;600;700&family=Tajawal:wght@400;500;700&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="../style.css">
+    
+    <style>
+        :root {
+            /* Premium Green & Gold Theme */
+            --theme-color: #1a5f4a; /* Deep Green */
+            --theme-light: #2d8b6f;
+            --theme-accent: #c9a227; /* Gold */
+        }
+        
+        body {
+            background-color: #faf9f6;
+            font-family: 'Cairo', sans-serif;
+            color: #333;
+        }
+
+        .book-header {
+            background: linear-gradient(135deg, var(--theme-color), var(--theme-light));
+            color: white;
+            padding: 120px 0 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .book-title {
+            font-family: 'Amiri', serif;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .book-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        /* Sidebar Navigation */
+        .book-sidebar {
+            position: sticky;
+            top: 100px;
+            max-height: calc(100vh - 140px);
+            overflow-y: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            scrollbar-width: thin;
+            scrollbar-color: var(--theme-accent) #eee;
+        }
+
+        .sidebar-title {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--theme-color);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--theme-accent);
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .toc-item {
+            margin-bottom: 2px;
+        }
+
+        .toc-link {
+            display: block;
+            padding: 8px 12px;
+            color: #555;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            border-right: 3px solid transparent;
+            text-decoration: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .toc-link:hover, .toc-link.active {
+            background: rgba(201, 162, 39, 0.1);
+            color: var(--theme-color);
+            border-right-color: var(--theme-accent);
+            padding-right: 15px;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .book-content {
+            background: white;
+            padding: 60px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.05);
+            line-height: 2;
+            font-size: 1.2rem;
+            min-height: 100vh;
+            text-align: center; /* Centered layout */
+        }
+
+        .article-card {
+            margin-bottom: 80px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid #eee;
+            scroll-margin-top: 120px;
+        }
+
+        .article-number {
+            color: var(--theme-accent);
+            font-family: 'Aref Ruqaa', serif;
+            font-size: 1.3rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .article-title {
+            font-family: 'Amiri', serif;
+            font-size: 2.2rem;
+            color: var(--theme-color);
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 15px;
+            display: inline-block;
+        }
+        
+        .article-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--theme-accent);
+        }
+
+        .section-header {
+            color: var(--theme-color);
+            font-family: 'Aref Ruqaa', serif;
+            margin: 40px 0 20px;
+            font-size: 1.6rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .quran-box {
+            background: #f4fcf9;
+            border-right: 4px solid #1a5f4a;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 8px 0 0 8px;
+            font-family: 'Amiri', serif;
+            font-size: 1.4rem;
+            color: #1a5f4a;
+            line-height: 2.2;
+            text-align: center;
+        }
+        
+        .hadith-box {
+            background: #fffbf0;
+            border-right: 4px solid #c9a227;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 8px 0 0 8px;
+            color: #5d4037;
+            text-align: center;
+        }
+
+        .list-item {
+            margin-bottom: 15px;
+            text-align: right; /* Lists usually look better aligned right even in center layout */
+            display: flex;
+            align-items: flex-start;
+            background: #fafafc;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .list-icon {
+            color: var(--theme-accent);
+            margin-left: 15px;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 900px) {
+            .book-container {
+                grid-template-columns: 1fr;
+            }
+            .book-sidebar {
+                display: none; 
+            }
+            .book-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="book-header">
+        <div class="container">
+            <h1 class="book-title" data-aos="fade-up">قصص الأنبياء</h1>
+            <p style="font-size: 1.2rem; opacity: 0.9;" data-aos="fade-up" data-aos-delay="100">دروس وعبر من حياة خير البشر</p>
+            <div style="margin-top: 30px;">
+                <a href="../index.html" style="color: white; border: 1px solid white; padding: 10px 20px; border-radius: 30px; text-decoration: none; margin: 0 5px;">الرئيسية</a>
+                <a href="../books.html" style="background: var(--theme-accent); color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; margin: 0 5px;">المكتبة</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="book-container">
+        <!-- Sidebar -->
+        <aside class="book-sidebar">
+            <div class="sidebar-title">فهرس القصص</div>
+            <ul class="toc-list">
+    <li class="toc-item"><a href="#episode-1" class="toc-link">آدم (عليه السلام)</a></li><li class="toc-item"><a href="#episode-2" class="toc-link">نوح (عليه السلام)</a></li><li class="toc-item"><a href="#episode-3" class="toc-link">هود (عليه السلام)</a></li><li class="toc-item"><a href="#episode-4" class="toc-link">صالح (عليه السلام)</a></li><li class="toc-item"><a href="#episode-5" class="toc-link">إبراهيم (عليه السلام) - الجزء الأول</a></li><li class="toc-item"><a href="#episode-6" class="toc-link">إبراهيم وإسماعيل (عليهما السلام)</a></li><li class="toc-item"><a href="#episode-7" class="toc-link">لوط (عليه السلام)</a></li><li class="toc-item"><a href="#episode-8" class="toc-link">إسحاق ويعقوب (عليهما السلام)</a></li><li class="toc-item"><a href="#episode-9" class="toc-link">يوسف (عليه السلام) - الجزء الأول</a></li><li class="toc-item"><a href="#episode-10" class="toc-link">يوسف (عليه السلام) - الجزء الثاني</a></li><li class="toc-item"><a href="#episode-11" class="toc-link">شعيب (عليه السلام)</a></li><li class="toc-item"><a href="#episode-12" class="toc-link">أيوب (عليه السلام)</a></li><li class="toc-item"><a href="#episode-13" class="toc-link">موسى (عليه السلام) - الجزء الأول من 3 حلقات</a></li><li class="toc-item"><a href="#episode-14" class="toc-link">موسى (عليه السلام) - الجزء الثاني</a></li><li class="toc-item"><a href="#episode-15" class="toc-link">موسى (عليه السلام) - الجزء الثالث</a></li><li class="toc-item"><a href="#episode-16" class="toc-link">موسى (عليه السلام) - الجزء الرابع</a></li><li class="toc-item"><a href="#episode-17" class="toc-link">يوشع بن نون (عليه السلام)</a></li><li class="toc-item"><a href="#episode-18" class="toc-link">داود وطالوت وجالوت (عليهم السلام)</a></li><li class="toc-item"><a href="#episode-19" class="toc-link">داود (عليه السلام)</a></li><li class="toc-item"><a href="#episode-20" class="toc-link">سليمان (عليه السلام) - الجزء الأول</a></li><li class="toc-item"><a href="#episode-21" class="toc-link">سليمان (عليه السلام) - الجزء الثاني</a></li><li class="toc-item"><a href="#episode-22" class="toc-link">يونس (عليه السلام)</a></li>
+            </ul>
+        </aside>
+
+        <!-- Content -->
+        <main class="book-content">
+    <div id="intro" class="article-card" data-aos="fade-up"><h1 class="article-title">مقدمة الكتاب</h1><div class="article-text">﻿قصص الأنبياء
+علي شكل حلقات
+
+
+
+
+تأليف
+فضيلة الشيخ احمد إسماعيل الفشني الازهري</div></div><div id="episode-1" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة الأولى: آدم (عليه السلام)</span><h2 class="article-title">القصة الأولى: آدم عليه السلام.. درس التوبة والاستخلاف</h2><div class="article-text"><h3 class="section-header">المقدمة "بسم الله الرحمن الرحيم. أهلاً بكم في برنامجكم (قصة وعبره). كل قصة نبي تحمل سراً من أسرار الحياة. اليوم، نبدأ بالقصة الأولى، قصة أبينا آدم (عليه السلام). قصته ليست مجرد قصة عن خلق البشر، بل هي قصة عن أعظم درسين كيف تبدأ المهمة، وكيف تنهض بعد السقوط. ابقوا معنا."</h3>
+<p>"بسم الله الرحمن الرحيم. أهلاً بكم في برنامجكم (قصة وعبره). كل قصة نبي تحمل سراً من أسرار الحياة. اليوم، نبدأ بالقصة الأولى، قصة أبينا آدم (عليه السلام). قصته ليست مجرد قصة عن خلق البشر، بل هي قصة عن أعظم درسين: كيف تبدأ المهمة، وكيف تنهض بعد السقوط. ابقوا معنا."</p>
+<h3 class="section-header">القصة باختصار  * التكريم الأول يبدأ المشهد بإعلان الله للملائكة "إِنِّي جَاعِلٌ فِي الْأَرْضِ خَلِيفَةً". هذا هو التكريم الأول الإنسان مُكلف بمهمة (الاستخلاف) قبل حتى أن يُخلق.</h3>
+<p>* التكريم الأول: يبدأ المشهد بإعلان الله للملائكة: "إِنِّي جَاعِلٌ فِي الْأَرْضِ خَلِيفَةً". هذا هو التكريم الأول: الإنسان مُكلف بمهمة (الاستخلاف) قبل حتى أن يُخلق.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>التكريم الثاني (العلم):</strong> "وَعَلَّمَ آدَمَ الْأَسْمَاءَ كُلَّهَا". الله يمنح آدم "المعرفة" كأداة أساسية لمهمته، وبها يثبت فضله أمام الملائكة.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>التكريم الثالث (السجود):</strong> الأمر الإلهي للملائكة بالسجود لآدم. هذا سجود تكريم واعتراف بهذا المخلوق الجديد ومكانته.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العدو الأول (الكبر):</strong> يرفض إبليس السجود. السبب؟ "أَنَا خَيْرٌ مِّنْهُ". هنا يظهر الكبر كأول معصية، ويتحول إبليس إلى العدو المبين.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الجنة والتحذير:</strong> يسكن آدم وحواء الجنة مع تحذير واضح ومحدد: "وَلَا تَقْرَبَا هَٰذِهِ الشَّجَرَةَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الوسوسة والسقوط:</strong> يستغل إبليس "النسيان" و "الضعف البشري" ويوسوس لهما. يأكل آدم وحواء من الشجرة.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>النهوض (التوبة):</strong> آدم لم ييأس ولم يبرر خطأه. بل اعترف فوراً هو وزوجه: "رَبَّنَا ظَلَمْنَا أَنفُسَنَا وَإِن لَّمْ تَغْفِرْ لَنَا وَتَرْحَمْنَا لَنَكُونَنَّ مِنَ الْخَاسِرِينَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>بداية المهمة:</strong> الله يقبل التوبة، ولكن تبدأ المهمة التي خُلق من أجلها: الهبوط إلى الأرض لبدء "الاستخلاف" وتعميرها.</div></div>
+<p>. الدروس والعبر: * الدرس الأول: أنت مُكرّم و لك مهمة.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> الله كرّمك بالعقل والمعرفة وكلفك بمهمة (الاستخلاف). وجودك على الأرض له هدف عظيم، وهو إعمارها بالخير والعدل والعبادة. لا تستهن بقيمتك.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> الفرق بين "خطأ آدم" و "جريمة إبليس".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> المشكلة ليست في أن تخطئ، كلنا نخطئ. المشكلة في الإصرار على الخطأ (كبر إبليس) أو اليأس من المغفرة. آدم أخطأ (ضعفاً) فندم وتاب. إبليس أخطأ (كبراً) فأصر واستكبر. كن من "التوابين" ولا تكن من "المصرّين".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> التوبة هي بداية الإصلاح.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> الكلمات الأولى التي تعلمها آدم من ربه كانت كلمات التوبة. عندما تسقط، لا تنظر إلى مدى انحدار السقطة، بل انظر إلى قوة الله الذي سيمد لك يده إذا طلبت. التوبة هي "إعادة ضبط المصنع" للعودة إلى المهمة.</div></div>
+<h3 class="section-header">الخاتمة "قصة آدم (عليه السلام) تعلمنا أن الله لم يخلقنا ملائكة بلا أخطاء، ولكنه خلقنا بشراً نتعلم من أخطائنا ونعود إليه بالتوبة. السقوط ليس نهاية القصة، بل التوبة هي بداية المهمة الحقيقية.</h3>
+<p>"قصة آدم (عليه السلام) تعلمنا أن الله لم يخلقنا ملائكة بلا أخطاء، ولكنه خلقنا بشراً نتعلم من أخطائنا ونعود إليه بالتوبة. السقوط ليس نهاية القصة، بل التوبة هي بداية المهمة الحقيقية.</p>
+<p>في الحلقة القادمة، ننتقل إلى قصة النبي الصابر والمجاهد الأول.. نوح (عليه السلام). إلى اللقاء."</p></div></div><div id="episode-2" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة الثانية: نوح (عليه السلام)</span><h2 class="article-title">سفينة الصبر: نوح عليه السلام.. الاستمرار رغم اليأس</h2><div class="article-text"><h3 class="section-header">المقدمة "بسم الله الرحمن الرحيم. أهلاً بكم.في برنامجكم (قصة وعبره) في رحلتنا مع قصص الأنبياء، نصل اليوم إلى قصة نبيٍ عظيم، قصة تلخص معنى "الصبر" و "اليقين" في أحلك الظروف.</h3>
+<p>"بسم الله الرحمن الرحيم. أهلاً بكم.في برنامجكم (قصة وعبره) في رحلتنا مع قصص الأنبياء، نصل اليوم إلى قصة نبيٍ عظيم، قصة تلخص معنى "الصبر" و "اليقين" في أحلك الظروف.</p>
+<p>ضيفنا اليوم هو شيخ المرسلين، نوح (عليه السلام). قصته لا تعلمنا كيف نبدأ الدعوة فقط، بل كيف نستمر فيها 950 سنة رغم الإعراض، وكيف أن الله لا يضيع أجر من أحسن عملاً، حتى لو كذّبه كل من حوله. ابقوا معنا لنتعلم درس اليقين."</p>
+<h3 class="section-header">القصة باختصار * بداية الانحراف بعد آدم بقرون، بدأ الناس ينحرفون عن التوحيد. عبدوا الأصنام (ود، سواع، يغوث، يعوق، نسر) ظناً منهم أنها تقربهم إلى الله، فكانت أول مظاهر الشرك على الأرض.</h3>
+<p>* بداية الانحراف: بعد آدم بقرون، بدأ الناس ينحرفون عن التوحيد. عبدوا الأصنام (ود، سواع، يغوث، يعوق، نسر) ظناً منهم أنها تقربهم إلى الله، فكانت أول مظاهر الشرك على الأرض.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدعوة الطويلة (950 سنة):</strong> أرسل الله نوحاً ليدعوهم للتوحيد ليلاً ونهاراً، سراً وجهاراً. استخدم كل أساليب الدعوة.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الإعراض العنيد:</strong> كانت النتيجة صادمة. "وَإِنِّي كُلَّمَا دَعَوْتُهُمْ لِتَغْفِرَ لَهُمْ جَعَلُوا أَصَابِعَهُمْ فِي آذَانِهِمْ وَاسْتَغْشَوْا ثِيَابَهُمْ". اتهموه بالضلال والجنون، وسخروا منه.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>قلة المؤمنين:</strong> بعد هذا الزمن الطويل، لم يؤمن معه إلا عدد قليل جداً. "وَمَا آمَنَ مَعَهُ إِلَّا قَلِيلٌ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الأمر الإلهي (بناء السفينة):</strong> عندما يأس نوح من إيمانهم، جاء الأمر الإلهي الحاسم: "وَاصْنَعِ الْفُلْكَ بِأَعْيُنِنَا وَوَحْيِنَا".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>السخرية الأخيرة:</strong> بدأ نوح يبني سفينة ضخمة في أرض صحراوية لا بحر فيها. تحولت الدعوة إلى سخرية علنية. "كُلَّمَا مَرَّ عَلَيْهِ مَلَأٌ مِّن قَوْمِهِ سَخِرُوا مِنْهُ". لكنه استمر بيقين.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الطوفان العظيم:</strong> جاء أمر الله. تفجرت الأرض عيوناً وهطلت السماء مطراً غزيراً. ركب نوح ومن آمن معه، وحمل من كل زوجين اثنين.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>درس في العقيدة (الابن العاصي):</strong> المشهد الأصعب. نوح ينادي ابنه ليركب، فيرفض الابن ويظن أن الجبل سيحميه. "قَالَ سَآوِي إِلَىٰ جَبَلٍ يَعْصِمُنِي مِنَ الْمَاءِ". لكن أمر الله نافذ. "وَحَالَ بَيْنَهُمَا الْمَوْجُ فَكَانَ مِنَ الْمُغْرَقِينَ". لا مجاملة في العقيدة.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>النجاة والبداية الجديدة:</strong> استوت السفينة على جبل الجودي. نجا نوح والمؤمنون، وهلك الكافرون. كانت بمثابة "إعادة ضبط" ثانية للبشرية على التوحيد.</div></div>
+<h3 class="section-header">الدروس والعبر  * الدرس الأول اصبر.. فالعبرة ليست بالعدد بل بالبلاغ.</h3>
+<p>* الدرس الأول: اصبر.. فالعبرة ليست بالعدد بل بالبلاغ.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> نوح لم يُسأل عن "عدد" من آمن معه، بل سُئل عن "تبليغ" الرسالة. لا تقِس نجاحك بعدد المتابعين أو المؤيدين. النجاح الحقيقي هو أن تؤدي ما عليك بإخلاص، وأن تزرع البذرة، والله هو من يتولى الثمرة. لا تيأس من قلة المستجيبين.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> اليقين وسط السخرية (اصنع سفينتك).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> عندما كان نوح يبني السفينة في الصحراء، كان "العالم كله" يسخر منه لأنه كان يرى "الوحي" وهم يرون "الواقع". في حياتك، إذا كنت على يقين من أمر صحيح (دراسة، مشروع، مبدأ) حتى لو سخر منك الناس، أكمل طريقك. "سفينتك" هي عملك الصالح ويقينك بالله.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> لا وساطة في الحق (درس الابن).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> قصة نوح مع ابنه هي أقوى درس في أن العلاقات (الأبوة، الصداقة) لا تنفع إذا تعارضت مع الحق. "إِنَّهُ لَيْسَ مِنْ أَهْلِكَ ۖ إِنَّهُ عَمَلٌ غَيْرُ صَالِحٍ". الانتماء الحقيقي هو للقيم والمبادئ، وليس للقرابة العمياء.</div></div>
+<h3 class="section-header">الخاتمة "950 سنة من الصبر.. انتهت بنجاةٍ وبداية جديدة. قصة نوح (عليه السلام) هي رسالة لكل من يشعر بالوحدة في طريق الحق، ولكل من يسخر الناس من أحلامه (اصنع فلكك) بيقين، وسيأتي أمر الله بالنجاة.</h3>
+<p>"950 سنة من الصبر.. انتهت بنجاةٍ وبداية جديدة. قصة نوح (عليه السلام) هي رسالة لكل من يشعر بالوحدة في طريق الحق، ولكل من يسخر الناس من أحلامه: (اصنع فلكك) بيقين، وسيأتي أمر الله بالنجاة.</p>
+<p>في الحلقة القادمة، نلتقي بنبي أرسل إلى قوم عاد، قوم امتلكوا القوة التي لم يُخلق مثلها في البلاد.. قصة هود (عليه السلام). إلى اللقاء."</p></div></div><div id="episode-3" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة الثالثة: هود (عليه السلام)</span><h2 class="article-title">القوة الغاشمة: هود عليه السلام.. من أشد منا قوة؟</h2><div class="article-text"><p>المقدمه: "بسم الله الرحمن الرحيم. أهلاً بكم.في برنامجكم (قصة وعبره) ماذا يحدث عندما تتحول النعمة إلى نقمة؟ وماذا تفعل عندما تمنحك الدنيا "القوة" التي لم يمتلكها أحد قبلك؟</p>
+<p>قصتنا اليوم عن قوم "عاد"، القوم الذين قالوا في الأرض: "مَنْ أَشَدُّ مِنَّا قُوَّةً؟". وعن نبيهم هود (عليه السلام)، الذي وقف وحيداً في وجه هذا الطغيان. قصتهم هي درس في أن القوة الحقيقية ليست في البنيان، بل في الإيمان. ابقوا معنا."</p>
+<h3 class="section-header">القصة باختصار * قوة لم يُخلق مثلها بعد قوم نوح، جاء قوم "عاد". منحهم الله قوة جسدية هائلة، وبراعة في العمارة. بنوا القصور الفارهة ونحتوا "إِرَمَ ذَاتِ الْعِمَادِ * الَّتِي لَمْ يُخْلَقْ مِثْلُهَا فِي الْبِلَادِ".</h3>
+<p>* قوة لم يُخلق مثلها: بعد قوم نوح، جاء قوم "عاد". منحهم الله قوة جسدية هائلة، وبراعة في العمارة. بنوا القصور الفارهة ونحتوا "إِرَمَ ذَاتِ الْعِمَادِ * الَّتِي لَمْ يُخْلَقْ مِثْلُهَا فِي الْبِلَادِ".</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>النعمة والبطر:</strong> هذه القوة، بدلاً من أن تدفعهم للشكر، دفعتهم للبطر والظلم وعبادة الأصنام. أصبحوا جبارين في الأرض.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الرسول منهم:</strong> أرسل الله إليهم هوداً (عليه السلام)، وكان رجلاً منهم، معروفاً بالأمانة والحكمة.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدعوة والاتهام:</strong> دعاهم هود ببساطة: "يَا قَوْمِ اعْبُدُوا اللَّهَ مَا لَكُم مِّنْ إِلَٰهٍ غَيْرُهُ ۖ أَفَلَا تَتَّقُونَ". وذكّرهم بنعم الله عليهم.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>رد الملأ:</strong> كعادتهم، رد "الملأ" (عليّة القوم المستفيدون من الوضع) باتهام هود بالجنون والسفاهة: "إِنَّا لَنَرَاكَ فِي سَفَاهَةٍ وَإِنَّا لَنَظُنُّكَ مِنَ الْكَاذِبِينَ".                     ثبات هود: رد هود بكل هدوء وثقة: "يَا قَوْمِ لَيْسَ بِي سَفَاهَةٌ وَلَٰكِنِّي رَسُولٌ مِّن رَّبِّ الْعَالَمِينَ". وأعلن تحديه: "فَكِيدُونِي جَمِيعًا ثُمَّ لَا تُنظِرُونِ  إِنِّي تَوَكَّلْتُ عَلَى اللَّهِ رَبِّي وَرَبِّكُم".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>التحدي والعذاب:</strong> استكبروا وتحدوا هوداً أن يأتيهم بالعذاب. أمسك الله عنهم المطر (كإنذار أول) حتى أصابهم القحط.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الريح العقيم:</strong> ثم رأوا سحاباً عظيماً يتقدم نحوهم، ففرحوا وقالوا: "هَٰذَا عَارِضٌ مُّمْطِرُنَا". فجاء الرد الإلهي: "بَلْ هُوَ مَا اسْتَعْجَلْتُم بِهِ ۖ رِيحٌ فِيهَا عَذَابٌ أَلِيمٌ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>النهاية:</strong> سلط الله عليهم ريحاً قوية (ريحاً صرصراً عاتية) لمدة سبع ليالٍ وثمانية أيام متواصلة. كانت تدمر كل شيء وتقتلعهم من الأرض كأنهم "أَعْجَازُ نَخْلٍ خَاوِيَةٍ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>النجاة:</strong> هلك قوم عاد عن بكرة أبيهم، ونجّى الله هوداً والمؤمنين القلائل الذين كانوا معه برحمة منه.</div></div>
+<h3 class="section-header">الدروس والعبر * الدرس الأول القوة الحقيقية هي التواضع (فخ "من أشد منا قوة؟").</h3>
+<p>* الدرس الأول: القوة الحقيقية هي التواضع (فخ "من أشد منا قوة؟").</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> قوم عاد امتلكوا القوة المادية (العمارة، الأجسام) لكنهم كانوا ضعفاء روحياً. أكبر خطأ تقع فيه أمة أو فرد هو أن ينسب الفضل لنفسه وينسى المُنعم. القوة، الذكاء، المال، المنصب.. كلها نعم للاستخدام في الخير، لا للاستكبار على الخلق.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> لا تستهن بالناصح الأمين.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> اتهموا هوداً بالسفاهة والجنون لأنه خالف "المألوف" وانتقد "قوتهم" التي يتباهون بها. كثيراً ما ننعت الناصحين بالتخلف أو المثالية الزائدة لأن نصيحتهم تهدد منطقة راحتنا. استمع لمن يخاف عليك، حتى لو كان كلامه مراً.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> هلاك القوة يأتي من حيث لا تحتسب.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> هم كانوا أقوياء الأجسام، فأهلكهم الله بأضعف الأشياء وألطفها (الهواء/الريح). ظنوا السحاب "مطراً" (رحمة) فكان "عذاباً" (نقمة). لا تأمن مكر الله، فالله قادر على أن يسلب النعمة بنفس الأداة التي وهبها لك.</div></div>
+<h3 class="section-header">الخاتمة "هلكت "عاد" وبقيت قصتهم عبرة. لم تنفعهم قصورهم ولا قوتهم "التي لم يُخلق مثلها في البلاد". وبقي "هود" رمزاً للثبات على الحق.</h3>
+<p>"هلكت "عاد" وبقيت قصتهم عبرة. لم تنفعهم قصورهم ولا قوتهم "التي لم يُخلق مثلها في البلاد". وبقي "هود" رمزاً للثبات على الحق.</p>
+<p>قصتهم تعلمنا أن الحضارة التي تُبنى على القوة المادية دون أخلاق أو إيمان، هي حضارة هشة، تدمرها "ريح" من أمر الله.</p>
+<p>في الحلقة القادمة، ننتقل إلى قوم "ثمود"، الذين نحتوا الجبال بيوتاً، ومعجزة هزت التاريخ: "ناقة الله".. قصة صالح (عليه السلام). إلى اللقاء."</p></div></div><div id="episode-4" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة الرابعة: صالح (عليه السلام)</span><h2 class="article-title">تحدي المعجزة: صالح عليه السلام.. وآية الناقة</h2><div class="article-text"><h3 class="section-header">المقدمة "بسم الله الرحمن الرحيم. أهلاً بكم. بعد أن رأينا كيف أهلك الله "عاداً" أصحاب القوة، ننتقل اليوم إلى ورثتهم، قوم "ثمود".</h3>
+<p>"بسم الله الرحمن الرحيم. أهلاً بكم. بعد أن رأينا كيف أهلك الله "عاداً" أصحاب القوة، ننتقل اليوم إلى ورثتهم، قوم "ثمود".</p>
+<p>لم يكن قوم ثمود مجرد جبارين، بل كانوا فنانين ومهندسين.. "وَكَانُوا يَنْحِتُونَ مِنَ الْجِبَالِ بُيُوتًا آمِنِينَ". حولوا الجبال الصماء إلى قصور آمنة. لكن هذا الأمان، وهذا الفن، تحول إلى كبر. قصتنا اليوم مع نبيهم صالح (عليه السلام)، هي قصة عن أخطر تحدٍ: عندما يطلب قومك معجزة بأعينهم، ثم يتآمرون على قتلها. ابقوا معنا."</p>
+<h3 class="section-header">القصة باختصار * ورثة القوة والفن سكن قوم ثمود منطقة "الحِجر"، وورثوا الأرض والقوة من بعد "عاد". لكنهم تفوقوا عليهم بالبراعة، فكانوا ينحتون بيوتهم في الجبال، آمنين من العواصف والزلازل والحروب.</h3>
+<p>* ورثة القوة والفن: سكن قوم ثمود منطقة "الحِجر"، وورثوا الأرض والقوة من بعد "عاد". لكنهم تفوقوا عليهم بالبراعة، فكانوا ينحتون بيوتهم في الجبال، آمنين من العواصف والزلازل والحروب.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الخلل (الشرك والترف):</strong> مع هذا الأمان والرخاء، عبدوا الأصنام، وعاشوا حياة الترف والفساد في الأرض.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الرسول (ابن القوم):</strong> أرسل الله إليهم صالحاً، وكان رجلاً معروفاً بينهم بالحكمة والرجاحة. "قَالُوا يَا صَالِحُ قَدْ كُنتَ فِينَا مَرْجُوًّا قَبْلَ هَٰذَا". أي كنا نأمل أن تكون سيداً فينا، فكيف تأتي بهذا الدين الجديد؟</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدعوة ومنطقها:</strong> دعاهم صالح (عليه السلام) لعبادة الله الذي خلقهم واستخلفهم في هذه الأرض، وذكّرهم: "وَاذْكُرُوا إِذْ جَعَلَكُمْ خُلَفَاءَ مِن بَعْدِ عَادٍ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div>الانقسام (المستكبرون والمستضعفون): انقسم الناس. "الملأ" (المترفون المستكبرون) كذبوه، وآمن معه قلة من "المستضعفين".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>طلب المعجزة (التحدي):</strong> ليثبت صدقه، طلب المستكبرون منه معجزة مستحيلة: أن يُخرج لهم من صخرة صماء يشيرون إليها "ناقة" (جمل أنثى) حية.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الآية المبصرة:</strong> دعا صالح ربه، فاستجاب الله له. انشقت الصخرة، وخرجت منها ناقة عظيمة كما طلبوا. كانت هذه "آية مبصرة" لا مجال للشك فيها.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الاختبار الإلهي:</strong> قال لهم صالح: "هَٰذِهِ نَاقَةُ اللَّهِ لَكُمْ آيَةً". ومعها اختبار واضح: "لَهَا شِرْبٌ وَلَكُمْ شِرْبُ يَوْمٍ مَّعْلُومٍ". (تشرب الماء يوماً، وأنتم تشربون يوماً آخر). "وَلَا تَمَسُّوهَا بِسُوءٍ فَيَأْخُذَكُمْ عَذَابٌ أَلِيمٌ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>التآمر والجريمة (عقر الناقة):</strong> ضاق المستكبرون ذرعاً بالناقة التي ذكّرتهم بوجود الله. تآمر "تسعة رهط" في المدينة، وتقدم "أشقاها" (أكثرهم شقاءً) فقتل الناقة (عقرها).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>التحدي الأخير:</strong> بعد قتلها، جاءوا إلى صالح بكل استهزاء: "ائْتِنَا بِمَا تَعِدُنَا إِن كُنتَ مِنَ الْمُرْسَلِينَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الإنذار والعذاب:</strong> قال لهم صالح: "تَمَتَّعُوا فِي دَارِكُمْ ثَلَاثَةَ أَيَّامٍ ۖ ذَٰلِكَ وَعْدٌ غَيْرُ مَكْذُوبٍ". وبعد ثلاثة أيام، جاء أمر الله. "فَأَخَذَتْهُمُ الرَّجْفَةُ" (الزلزلة) و "الصَّيْحَةُ" (الصوت المدمر). "فَأَصْبَحُوا فِي دِيَارِهِمْ جَاثِمِينَ" (ماتوا في بيوتهم المنحوتة).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الخاتمة الحزينة:</strong> نجّى الله صالحاً والمؤمنين، وعندما رحل عنهم وهم جثث، قال قولته الشهيرة: "يَا قَوْمِ لَقَدْ أَبْلَغْتُكُمْ رِسَالَةَ رَبِّي وَنَصَحْتُ لَكُمْ وَلَٰكِن لَّا تُحِبُّونَ النَّاصِحِينَ".</div></div>
+<h3 class="section-header">الدروس والعبر * الدرس الأول البيوت الآمنة لا تمنع العذاب.</h3>
+<p>* الدرس الأول: البيوت الآمنة لا تمنع العذاب.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> قوم ثمود ظنوا أن هندستهم وبناءهم في الجبال سيحميهم ("بيوتاً آمنين"). لكن عندما جاء أمر الله، لم تنفعهم حصونهم. الأمان الحقيقي ليس في الجدران، بل في طاعة الرحمن. لا تدع "أمانك" المادي (وظيفتك، منصبك، حصونك) ينسيك مصدر الأمان الحقيقي.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> إياك و"عقر الناقة" (قتل الآيات).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> الناقة كانت آية واضحة. قتلها كان إعلاناً صريحاً برفض الحق بعد وضوحه. في حياتنا، يرسل الله لنا "آيات" (مواقف، رسائل، إنذارات) توقظنا. حين نتجاهل هذه الآيات ونصر على الخطأ، فنحن "نعقر الناقة" ونعرض أنفسنا لغضب الله.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> مأساة "ولكن لا تحبون الناصحين".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> هذه الجملة من صالح تلخص مأساة كل أمة. المشكلة لم تكن في قلة النصح، بل في كراهية الناصح. الناس بطبعها تكره من يوقظها من غفلتها أو يخالف هواها. احذر من أن يكون كبرك هو الحاجز الذي يمنعك من سماع النصيحة الصادقة.</div></div>
+<h3 class="section-header">الخاتمة "مات قوم ثمود داخل البيوت التي ظنوا أنها ستخلدهم. لم تحمهم هندستهم من "صيحة" واحدة. وبقيت "ناقة الله" شاهداً على أن تحدي الله هو الخسارة المؤكدة.</h3>
+<p>"مات قوم ثمود داخل البيوت التي ظنوا أنها ستخلدهم. لم تحمهم هندستهم من "صيحة" واحدة. وبقيت "ناقة الله" شاهداً على أن تحدي الله هو الخسارة المؤكدة.</p>
+<p>الدرس الأبقى: لا تكره الحق، ولا تكره من يأتيك به.</p>
+<p>في الحلقة القادمة، ننتقل إلى الأب الثاني للبشرية، خليل الرحمن، الرجل الذي واجه أمة كاملة وحده، وبنى البيت العتيق.. قصة إبراهيم (عليه السلام). إلى اللقاء."</p></div></div><div id="episode-5" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة الخامسة: إبراهيم (عليه السلام) - الجزء الأول</span><h2 class="article-title">خليل الرحمن (1): إبراهيم عليه السلام.. أمة في رجل</h2><div class="article-text"><h3 class="section-header">المقدمة "بسم الله الرحمن الرحيم. أهلاً بكم.في برنامجكم (قصة وعبره) هل سألت نفسك يوماً ما معنى أن تقف وحيداً ضد العالم كله؟ ليس فقط ضد الحاكم، بل ضد مجتمعك، وضد أقرب الناس إليك.. أهلك؟</h3>
+<p>"بسم الله الرحمن الرحيم. أهلاً بكم.في برنامجكم (قصة وعبره) هل سألت نفسك يوماً: ما معنى أن تقف وحيداً ضد العالم كله؟ ليس فقط ضد الحاكم، بل ضد مجتمعك، وضد أقرب الناس إليك.. أهلك؟</p>
+<p>قصتنا اليوم عن رجل كان "أمة" وحده. عن "خليل الرحمن"، أبي الأنبياء إبراهيم (عليه السلام). رحلته ليست مجرد قصة نبي، بل هي قصة البحث عن الحقيقة، وقوة المنطق، والشجاعة في مواجهة الباطل، حتى لو كلفه ذلك أن يُلقى في النار. ابقوا معنا."</p>
+<h3 class="section-header">القصة باختصار * البحث عن الحقيقة (الفطرة) وُلد إبراهيم في مجتمع يعبد الكواكب والأصنام. كان أبوه "آزر" نفسه صانعاً للأصنام. لكن فطرة إبراهيم السليمة رفضت هذا.</h3>
+<p>* البحث عن الحقيقة (الفطرة): وُلد إبراهيم في مجتمع يعبد الكواكب والأصنام. كان أبوه "آزر" نفسه صانعاً للأصنام. لكن فطرة إبراهيم السليمة رفضت هذا.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>البحث بالمنطق:</strong> نظر إلى الكواكب والنجوم.. "فَلَمَّا جَنَّ عَلَيْهِ اللَّيْلُ رَأَىٰ كَوْكَبًا ۖ قَالَ هَٰذَا رَبِّي؟" فلما اختفى، "قَالَ لَا أُحِبُّ الْآفِلِينَ" (الذين يغيبون). ورأى القمر، ثم الشمس.. وكلما غاب واحد، أدرك أنها مخلوقات متغيرة لا تصلح للعبادة، حتى وصل بعقله إلى الحقيقة: "إِنِّي وَجَّهْتُ وَجْهِيَ لِلَّذِي فَطَرَ السَّمَاوَاتِ وَالْأَرْضَ حَنِيفًا".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>المواجهة الأولى (الأب):</strong> بدأ بأبيه. "يَا أَبَتِ لِمَ تَعْبُدُ مَا لَا يَسْمَعُ وَلَا يُبْصِرُ وَلَا يُغْنِي عَنكَ شَيْئًا؟". حاوره بأدب شديد، لكن الرد كان التهديد بالطرد والرجم.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>المواجهة الثانية (القوم):</strong> ذهب إلى قومه. سألهم: "مَا هَٰذِهِ التَّمَاثِيلُ الَّتِي أَنتُمْ لَهَا عَاكِفُونَ؟". كان ردهم هو "صنم العادة": "قَالُوا وَجَدْنَا آبَاءَنَا لَهَا عَابِدِينَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>كسر الأصنام (الصدمة العملية):</strong> قرر أن يثبت لهم عجز آلهتهم عملياً. في يوم عيدهم، ذهب إلى معبدهم "فَجَعَلَهُمْ جُذَاذًا إِلَّا كَبِيرًا لَّهُمْ لَعَلَّهُمْ إِلَيْهِ يَرْجِعُونَ". حطمها كلها وعلّق الفأس في عنق الصنم الأكبر.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>إقامة الحجة:</strong> عندما عادوا ورأوا الكارثة، اتهموه. سألوه: "أَأَنتَ فَعَلْتَ هَٰذَا بِآلِهَتِنَا يَا إِبْرَاهِيمُ؟". فجاء رده المنطقي الصادم: "قَالَ بَلْ فَعَلَهُ كَبِيرُهُمْ هَٰذَا فَاسْأَلُوهُمْ إِن كَانُوا يَنطِقُونَ". هنا، "فَرَجَعُوا إِلَىٰ أَنفُسِهِمْ" (أدركوا الحقيقة للحظة) لكنهم عادوا للكبر.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div>المواجهة الثالثة (الملك نمرود): فشلوا في الحوار، فلجأوا للسلطة. أخذوه إلى الملك (النمرود)، الذي ادعى الألوهية. قال إبراهيم: "رَبِّيَ الَّذِي يُحْيِي وَيُمِيتُ". قال الملك بغرور: "أَنَا أُحْيِي وَأُمِيتُ" (يقتل من يشاء ويعفو عمن يشاء).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الحجة القاطعة:</strong> أعطاه إبراهيم حجة لا تُرد: "فَإِنَّ اللَّهَ يَأْتِي بِالشَّمْسِ مِنَ الْمَشْرِقِ فَأْتِ بِهَا مِنَ الْمَغْرِبِ". هنا "فَبُهِتَ الَّذِي كَفَرَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>المواجهة الرابعة (النار):</strong> عندما فشل المنطق، وفشلت السلطة، لجأوا للقوة الغاشمة. "قَالُوا حَرِّقُوهُ وَانصُرُوا آلِهَتَكُمْ". أعدوا ناراً عظيمة وألقوه فيها.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>اليقين والمعجزة:</strong> وهو في الهواء، كان يقينه مطلقاً بالله. فجاء الأمر الإلهي الذي يغير قوانين الكون: "قُلْنَا يَا نَارُ كُونِي بَرْدًا وَسَلَامًا عَلَىٰ إِبْرَاهِيمَ". فخرج منها سالماً أمام أعينهم.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الهجرة:</strong> بعد كل هذه الآيات، أعلن هجرته من هذا المجتمع: "إِنِّي ذَاهِبٌ إِلَىٰ رَبِّي سَيَهْدِينِ".</div></div>
+<h3 class="section-header">الدروس والعبر* الدرس الأول استخدم عقلك (لا تتبع القطيع).</h3>
+<p>* الدرس الأول: استخدم عقلك (لا تتبع القطيع).</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> إبراهيم لم يقبل "ما وجدنا عليه آباءنا". بل فكّر وبحث وتساءل حتى وصل للحقيقة. الدرس: لا تخف من طرح الأسئلة، ولا تقدس العادات. الإسلام يحترم العقل الذي يبحث عن الله.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> قوة المنطق تهزم قوة البطش.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> إبراهيم (عليه السلام) كان "رجلاً" واحداً، لكن "حجته" كانت أقوى من "أمة" كاملة. حاور أباه بالأدب، وقومه بالمنطق، والملك بالحجة الدامغة. لا تيأس من قول الحق، فقوة الحجة أقوى من حجة القوة.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> الله يغير القوانين من أجلك (كن إبراهيمياً).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> النار طبيعتها الإحراق. لكن عندما كان إبراهيم مخلصاً في يقينه، الله عطّل قانون الإحراق. عندما تكون على الحق، قد يرميك الناس في "نار" (مشاكل، ظلم، حصار). ثق بالله، فالله الذي جعل النار برداً وسلاماً، قادر أن يجعل "نار" مشكلتك "برداً وسلاماً" عليك.</div></div>
+<h3 class="section-header">الخاتمة "خرج إبراهيم من النار سالماً، ولكنه ترك وطنه. لقد أثبت للعالم أن رجلاً واحداً على الحق، أقوى من أمة كاملة على الباطل.</h3>
+<p>"خرج إبراهيم من النار سالماً، ولكنه ترك وطنه. لقد أثبت للعالم أن رجلاً واحداً على الحق، أقوى من أمة كاملة على الباطل.</p>
+<p>لكن هذه لم تكن نهاية القصة، بل بدايتها. رحلة إبراهيم (عليه السلام) مليئة بالابتلاءات العظيمة.</p>
+<p>في الحلقة القادمة، نكمل رحلة الخليل، ونتحدث عن أصعب اختبارين في حياته: صبره على الحرمان من الولد، ثم الأمر الإلهي بذبح هذا الولد.. قصة إسماعيل (عليه السلام) والذبح العظيم. إلى اللقاء."</p></div></div><div id="episode-6" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة السادسة: إبراهيم وإسماعيل (عليهما السلام)</span><h2 class="article-title">خليل الرحمن (2): قصة الذبيح.. ومعنى التسليم المطلق</h2><div class="article-text"><h3 class="section-header">المقدمة"بسم الله الرحمن الرحيم. أهلاً بكم.في برنامجكم (قصة وعبره) في الحلقة الماضية، رأينا إبراهيم (عليه السلام) يواجه النار ويصمد. لكن ابتلاءات الله لأصفيائه لا تنتهي.</h3>
+<p>اليوم، ننتقل من "نار الدنيا" إلى "نار القلب". الابتلاء في أغلى ما يملك الإنسان: ولده. ماذا تفعل حين يأتيك الأمر الإلهي بذبح ابنك الوحيد الذي انتظرته عمراً كاملاً؟ قصة اليوم عن إبراهيم وإسماعيل (عليهما السلام) هي قمة التسليم ومعنى "الإسلام" الحقيقي. ابقوا معنا."</p>
+<h3 class="section-header">القصة باختصار* الشوق للولد بعد أن هاجر إبراهيم، دعا ربه "رَبِّ هَبْ لِي مِنَ الصَّالِحِينَ". فجاءته البشارة بـ "غلام حليم" (إسماعيل عليه السلام) من زوجته هاجر.</h3>
+<p>* الشوق للولد: بعد أن هاجر إبراهيم، دعا ربه: "رَبِّ هَبْ لِي مِنَ الصَّالِحِينَ". فجاءته البشارة بـ "غلام حليم" (إسماعيل عليه السلام) من زوجته هاجر.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div>الابتلاء الأول (الترك في الصحراء): بعد ولادته، جاء الأمر الإلهي الأول: أن يأخذ إبراهيم زوجته هاجر وابنه الرضيع إسماعيل ويتركهما في وادٍ غير ذي زرع (مكة)، لا ماء فيه ولا بشر.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>يقين هاجر:</strong> عندما سألته هاجر: "آللَّهُ أَمَرَكَ بِهَذَا؟". قال إبراهيم: "نعم". فقالت بيقين عجيب: "إِذًا لَا يُضَيِّعُنَا".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>تفجر زمزم:</strong> نفد الماء، وبدأت هاجر تسعى بين جبلي الصفا والمروة بحثاً عن الماء، ففجّر الله لهما عين زمزم، بداية قصة مكة.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الابتلاء الأعظم (الرؤيا):</strong> كبر إسماعيل وأصبح شاباً "فَلَمَّا بَلَغَ مَعَهُ السَّعْيَ" (أصبح قادراً على العمل ومرافقة أبيه). هنا جاء الابتلاء الأشد. رأى إبراهيم في المنام أنه يذبح ابنه. ورؤيا الأنبياء وحي.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الحوار الخالد:</strong> لم يأخذ إبراهيم ابنه غدراً، بل عرض عليه الأمر ليرى مدى تسليمه: "يَا بُنَيَّ إِنِّي أَرَىٰ فِي الْمَنَامِ أَنِّي أَذْبَحُكَ فَانظُرْ مَاذَا تَرَىٰ؟".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>التسليم الابني:</strong> جاء رد الابن "الغلام الحليم" رداً يفوق الوصف: "قَالَ يَا أَبَتِ افْعَلْ مَا تُؤْمَرُ ۖ سَتَجِدُنِي إِن شَاءَ اللَّهُ مِنَ الصَّابِرِينَ". إنه ليس مجرد طاعة، بل هو تثبيت لأبيه!</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>قمة التسليم (الأب والابن):</strong> "فَلَمَّا أَسْلَمَا" (كلاهما استسلما لأمر الله) "وَتَلَّهُ لِلْجَبِينِ" (وضعه على جبهته ليذبحه).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الفداء العظيم:</strong> في اللحظة الحاسمة، بعد أن أثبت الاثنان صدقهما المطلق، جاء النداء الإلهي: "وَنَادَيْنَاهُ أَن يَا إِبْرَاهِيمُ  قَدْ صَدَّقْتَ الرُّؤْيَا". وأفداه الله بذبح عظيم.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>المكافأة (بناء الكعبة):</strong> بعد هذا النجاح الباهر في الاختبار، كافأهما الله بشرف عظيم: "وَإِذْ يَرْفَعُ إِبْرَاهِيمُ الْقَوَاعِدَ مِنَ الْبَيْتِ وَإِسْمَاعِيلُ". الأب والابن يبنيان معاً أول بيت لعبادة الله في الأرض.</div></div>
+<h3 class="section-header">الدروس والعبر * الدرس الأول "الإسلام" هو التسليم (حتى لو كان مؤلماً).</h3>
+<p>* الدرس الأول: "الإسلام" هو التسليم (حتى لو كان مؤلماً).</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> نحن نسمي أنفسنا "مسلمين". هذه القصة هي الاختبار العملي لكلمة "إسلام". التسليم هو أن تثق في حكمة الله حتى لو لم تفهمها، حتى لو كانت ضد رغباتك. إبراهيم وهاجر وإسماعيل جسدوا معنى "الاستسلام" لله.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> الأسرة الصالحة تبنى على "افعل ما تؤمر".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> الحوار بين إبراهيم وابنه هو أرقى حوار أسري في التاريخ. الأب لم يكذب، والابن لم يتمرد. كلاهما فهم أن "أمر الله" فوق كل شيء. عندما تكون مرجعية الأسرة هي "طاعة الله"، تصبح قادرة على تجاوز أصعب الأزمات.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> الله لا يأخذ منك شيئاً إلا ليعطيك ما هو أعظم.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> إبراهيم كان مستعداً للتضحية بابنه (أغلى ما يملك)، فرده الله إليه، وأعطاه الفداء، وأعطاه شرف بناء الكعبة، وأعطاه النبوة في ذريته، وجعل قصته تُتلى حتى يوم القيامة (الأضحية).</div></div>
+<h3 class="section-header">الخاتمة"بنجاحهما في هذا الاختبار، استحق إبراهيم وإسماعيل أن يرفعا قواعد بيت الله. قصة الذبح ليست قصة عن الدم، بل هي قصة عن الحب.. حب الله الذي يفوق كل حب.</h3>
+<p>"بنجاحهما في هذا الاختبار، استحق إبراهيم وإسماعيل أن يرفعا قواعد بيت الله. قصة الذبح ليست قصة عن الدم، بل هي قصة عن الحب.. حب الله الذي يفوق كل حب.</p>
+<p>في رحلة إبراهيم (عليه السلام)، عاصر نبياً آخر كان يعيش في منطقة قريبة، لكنه كان يواجه انحرافاً بشرياً من نوع مختلف تماماً.. انحرافاً أخلاقياً هز الوجود.</p>
+<p>في الحلقة القادمة، نذهب إلى قوم سدوم وقصة لوط (عليه السلام). إلى اللقاء."</p></div></div><div id="episode-7" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة السابعة: لوط (عليه السلام)</span><h2 class="article-title">انهيار الفطرة: لوط عليه السلام.. وقوم سدوم</h2><div class="article-text"><h3 class="section-header">المقدمة"بسم الله الرحمن الرحيم أهلاً بكم.في برنامجكم (قصة وعبره) في رحلتنا مع الأنبياء، رأينا أقواماً عبدوا الأصنام (قوم نوح)، وأقواماً بطروا بالقوة (عاد)، وآخرين كفروا بالمعجزة (ثمود).</h3>
+<p>"بسم الله الرحمن الرحيم أهلاً بكم.في برنامجكم (قصة وعبره) في رحلتنا مع الأنبياء، رأينا أقواماً عبدوا الأصنام (قوم نوح)، وأقواماً بطروا بالقوة (عاد)، وآخرين كفروا بالمعجزة (ثمود).</p>
+<p>لكننا اليوم أمام قصة مختلفة. قصة نبي واجه قوماً لم يكتفوا بالشرك، بل ابتدعوا فاحشة وانحرافاً عن الفطرة الإنسانية لم يسبقهم إليه أحد من العالمين. قصة اليوم عن النبي لوط (عليه السلام) وقوم "سدوم"، هي إنذار شديد اللهجة حول مصير المجتمعات التي تُفسد طبيعتها التي خلقها الله عليها. ابقوا معنا."</p>
+<h3 class="section-header">القصة باختصار* هجرة لوط لوط (عليه السلام) هو ابن أخ إبراهيم (عليه السلام). آمن مع إبراهيم وهاجر معه، ثم أرسله الله إلى أهل "سدوم" وقراها المجاورة.</h3>
+<p>* هجرة لوط: لوط (عليه السلام) هو ابن أخ إبراهيم (عليه السلام). آمن مع إبراهيم وهاجر معه، ثم أرسله الله إلى أهل "سدوم" وقراها المجاورة.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الانحراف الفريد:</strong> كان قوم لوط، بالإضافة لشركهم، يرتكبون فاحشة شنيعة (إتيان الذكور) ويجاهرون بها في نواديهم: "أَتَأْتُونَ الْفَاحِشَةَ مَا سَبَقَكُم بِهَا مِنْ أَحَدٍ مِّنَ الْعَالَمِينَ؟". كما كانوا يقطعون السبيل ويرتكبون المنكرات علناً.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>دعوة لوط (العودة للفطرة):</strong> لم تكن دعوة لوط لهم لترك هذه الفاحشة فقط، بل كانت تذكيراً لهم بأساس الخلقة: "أَتَأْتُونَ الذُّكْرَانَ مِنَ الْعَالَمِينَ  وَتَذَرُونَ مَا خَلَقَ لَكُمْ رَبُّكُم مِّنْ أَزْوَاجِكُم ۚ بَلْ أَنتُمْ قَوْمٌ عَادُونَ" (أي: معتدون ومتجاوزون للحد).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الرد بالتهديد:</strong> لم يجدوا حجة يردون بها، فكان ردهم الوحيد هو التهديد بالطرد: "قَالُوا لَئِن لَّمْ تَنتَهِ يَا لُوطُ لَتَكُونَنَّ مِنَ الْمُخْرَجِينَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>منطقهم الأعوج:</strong> وصل بهم الانتكاس إلى أنهم اعتبروا "الطهارة" عيباً. "فَمَا كَانَ جَوَابَ قَوْمِهِ إِلَّا أَن قَالُوا أَخْرِجُوا آلَ لُوطٍ مِّن قَرْيَتِكُمْ ۖ إِنَّهُمْ أُنَاسٌ يَتَطَهَّرُونَ!".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>يوم عصيب (الضيوف):</strong> أرسل الله ملائكة (في هيئة شباب حسان) لإنزال العذاب. مروا أولاً على إبراهيم فبشروه بإسحاق، وأخبروه بمهمتهم. ثم ذهبوا إلى لوط كضيوف.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>المحنة الأخيرة:</strong> عندما علم قومه بالضيوف، "جَاءُوهُ يُهْرَعُونَ إِلَيْهِ". شعر لوط بالعجز والحرج الشديد "وَقَالَ هَٰذَا يَوْمٌ عَصِيبٌ"، وحاول يائساً أن يحمي ضيوفه.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>كشف الحقيقة والعقوبة:</strong> طمأنته الملائكة: "إِنَّا رُسُلُ رَبِّكَ لَن يَصِلُوا إِلَيْكَ". وأمروه أن يخرج بأهله ليلاً "إِلَّا امْرَأَتَكَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>هلاك الزوجة:</strong> زوجة لوط لم تكن ترتكب الفاحشة، لكنها كانت "راضية" بفعل قومها ومتعاطفة معهم (خانت زوجها ودلت القوم على الضيوف). لذلك استحقت العذاب معهم.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العقاب المزدوج:</strong> عند الفجر، جاء أمر الله. "فَجَعَلْنَا عَالِيَهَا سَافِلَهَا" (قُلبت قراهم رأساً على عقب) "وَأَمْطَرْنَا عَلَيْهِمْ حِجَارَةً مِّن سِجِّيلٍ" (حجارة من طين ناري متتابع). كان عقاباً من الأرض والسماء يطابق بشاعة جريمتهم.</div></div>
+<h3 class="section-header">الدروس والعبر* الدرس الأول الفطرة خط أحمر.</h3>
+<p>* الدرس الأول: الفطرة خط أحمر.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> الله خلق الكون بنظام (سماوات، أرض، ليل، نهار، ذكر، أنثى). قصة قوم لوط تعلمنا أن الخروج عن "نظام الفطرة" الذي وضعه الله للإنسان هو جريمة توازي في خطورتها الشرك بالله، لأنها هدم لأساس استمرار البشرية.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> المجاهرة بالذنب أخطر من الذنب.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> لم يُهلك قوم لوط لأنهم كانوا يخطئون سراً، بل لأنهم جعلوا المنكر "علناً" ("وَتَأْتُونَ فِي نَادِيكُمُ الْمُنكَرَ") وجزءاً من ثقافتهم. عندما يصبح الخطأ "حقاً" يدافع عنه، ويصبح الصواب "عيباً" يُطرد أهله (إنهم أناس يتطهرون)، ينزل العذاب العام.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> الولاء للحق، لا للقوم (درس الزوجة).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> زوجة لوط هي الدليل على أن النجاة ليست بالقرابة (زوجة نبي) ولا بالانتماء (من أهل القرية). النجاة بالولاء للحق. كانت بقلبها مع قومها، فهلكت معهم. لا تدافع عن الباطل لمجرد أنه من أهلك أو مجتمعك.</div></div>
+<h3 class="section-header">الخاتمة"هلك قوم لوط عقاباً فريداً لجريمة فريدة، وأصبحت قريتهم "آية" للناظرين وموعظة عبر الزمن. قصة تعلمنا أن المجتمعات لا تُبنى فقط على الاقتصاد والعمران، بل على الأخلاق والفطرة السليمة.</h3>
+<p>"هلك قوم لوط عقاباً فريداً لجريمة فريدة، وأصبحت قريتهم "آية" للناظرين وموعظة عبر الزمن. قصة تعلمنا أن المجتمعات لا تُبنى فقط على الاقتصاد والعمران، بل على الأخلاق والفطرة السليمة.</p>
+<p>في الحلقة القادمة، نعود إلى بيت إبراهيم (عليه السلام)، لنرى كيف استجيبت دعوته بالولد الآخر، ومنه سلالة عظيمة من الأنبياء.. قصة إسحاق ويعقوب (عليهما السلام)، والتمهيد لأجمل قصة في القرآن. إلى اللقاء."</p></div></div><div id="episode-8" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة الثامنة: إسحاق ويعقوب (عليهما السلام)</span><h2 class="article-title">سلالة النبوة: إسحاق ويعقوب.. وتأسيس بني إسرائيل</h2><div class="article-text"><h3 class="section-header">المقدمة"بسم الله الرحمن الرحيم. أهلاً بكم.في برنامجكم (قصة وعبره) في رحاب خليل الرحمن إبراهيم، رأينا كيف أن دعوته كانت "وَاجْعَلْنَا مُسْلِمَيْنِ لَكَ وَمِن ذُرِّيَّتِنَا أُمَّةً مُّسْلِمَةً لَّكَ".</h3>
+<p>"بسم الله الرحمن الرحيم. أهلاً بكم.في برنامجكم (قصة وعبره) في رحاب خليل الرحمن إبراهيم، رأينا كيف أن دعوته كانت "وَاجْعَلْنَا مُسْلِمَيْنِ لَكَ وَمِن ذُرِّيَّتِنَا أُمَّةً مُّسْلِمَةً لَّكَ".</p>
+<p>اليوم، نرى الجزء الثاني من استجابة هذه الدعوة. قصة "ابن البشارة"، النبي إسحاق (عليه السلام)، الذي وُلد كمعجزة لوالدين عجوزين. وقصة ابنه، النبي الذي صارع الأحزان وفقد البصر، والذي يُعرف أيضاً باسم "إسرائيل".. يعقوب (عليه السلام). قصتهما هي قصة تسليم الميراث النبوي من جيل إلى جيل. ابقوا معنا."</p>
+<h3 class="section-header">القصة باختصار * البشارة بإسحاق (ابن العجائب) عندما زارت الملائكة إبراهيم (عليه السلام) ليخبروه بعذاب قوم لوط، قدموا له بشرى ثانية "فَبَشَّرْنَاهَا بِإِسْحَاقَ وَمِن وَرَاءِ إِسْحَاقَ يَعْقُوبَ".</h3>
+<p>* البشارة بإسحاق (ابن العجائب): عندما زارت الملائكة إبراهيم (عليه السلام) ليخبروه بعذاب قوم لوط، قدموا له بشرى ثانية: "فَبَشَّرْنَاهَا بِإِسْحَاقَ وَمِن وَرَاءِ إِسْحَاقَ يَعْقُوبَ".</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>دهشة سارة:</strong> كانت زوجته "سارة" واقفة، فتعجبت "قَالَتْ يَا وَيْلَتَىٰ أَأَلِدُ وَأَنَا عَجُوزٌ وَهَٰذَا بَعْلِي شَيْخًا ۖ إِنَّ هَٰذَا لَشَيْءٌ عَجِيبٌ". فكان الرد: "أَتَعْجَبِينَ مِنْ أَمْرِ اللَّهِ؟".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>نبي الصبر والحكمة:</strong> وُلد إسحاق وعاش في كنف أبيه إبراهيم في أرض الشام (فلسطين). كان نبياً صالحاً، هادئاً، ورث الحكمة والصبر عن أبيه، واستمر على منهجه في التوحيد في تلك الأرض.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>ولادة يعقوب (إسرائيل):</strong> تزوج إسحاق (عليه السلام) ورُزق بولدين توأم (عيسو ويعقوب). كان "يعقوب" هو الذي اختاره الله لحمل النبوة بعد أبيه.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>اسم "إسرائيل":</strong> يُعرف يعقوب (عليه السلام) أيضاً باسم "إسرائيل"، ومعناها (عبد الله) أو (الذي يسري ليلاً إلى الله).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>تكوين الأمة (الأسباط):</strong> تزوج يعقوب (عليه السلام) ورُزق باثني عشر ولداً. هؤلاء الأولاد الاثنا عشر هم الذين يُطلق عليهم "الأسباط"، ومنهم تكونت "بنو إسرائيل".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الابتلاء بفقد الأحبة:</strong> ستبدأ قصة يعقوب الحقيقية في القرآن مع ابنه الأحب إليه، "يوسف". لكن قبل ذلك، عاش يعقوب حياة مليئة بالابتلاءات والصبر.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div>الوصية الخالدة (ميثاق العائلة): أهم مشهد يلخص قصة يعقوب هو مشهد وفاته. لم يكن مشغولاً بالمال أو الأرض، بل كان مشغولاً بـ "الدين" الذي سيبقى عليه أولاده.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>مشهد الوفاة:</strong> "أَمْ كُنتُمْ شُهَدَاءَ إِذْ حَضَرَ يَعْقُوبَ الْمَوْتُ إِذْ قَالَ لِبَنِيهِ مَا تَعْبُدُونَ مِن بَعْدِي؟".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الجواب (عهد التوحيد):</strong> كان الجواب الذي أثلج صدره: "قَالُوا نَعْبُدُ إِلَٰهَكَ وَإِلَٰهَ آبَائِكَ إِبْرَاهِيمَ وَإِسْمَاعِيلَ وَإِسْحَاقَ إِلَٰهًا وَاحِدًا وَنَحْنُ لَهُ مُسْلِمُونَ".</div></div>
+<h3 class="section-header">الدروس والعبر* الدرس الأول عطاء الله لا يعرف المستحيل (درس إسحاق).</h3>
+<p>* الدرس الأول: عطاء الله لا يعرف المستحيل (درس إسحاق).</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> قصة ولادة إسحاق من أبوين طاعنين في السن هي رسالة واضحة: لا تيأس من دعائك. قوانين الأرض والطب والمنطق تقف، ولكن "أمر الله" فوق كل القوانين. ما تراه مستحيلاً، هو على الله هين.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> ما هو إرثك الحقيقي؟ (درس يعقوب).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> يعقوب (عليه السلام) عند موته، لم يسأل أولاده: كم جمعتم من المال؟ بل سألهم: "مَا تَعْبُدُونَ مِن بَعْدِي؟". الدرس الأهم: أعظم إرث تتركه لأولادك ليس بيتاً أو رصيداً في البنك، بل هو "الدين" والصلة بالله.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> تأسيس "الأمة المسلمة".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> رد الأبناء "نَعْبُدُ إِلَٰهَكَ وَإِلَٰهَ آبَائِكَ إِبْرَاهِيمَ وَإِسْمَاعِيلَ وَإِسْحَاقَ... وَنَحْنُ لَهُ مُسْلِمُونَ". هذا الرد هو تلخيص لقصص كل هؤلاء الأنبياء. كلهم جاؤوا برسالة واحدة: "الإسلام" (التسليم لله الواحد).</div></div>
+<h3 class="section-header">الخاتمة "إسحاق ويعقوب (عليهما السلام).. نبيان حملا راية التوحيد جيلاً بعد جيل، وأسسا الأمة التي سيخرج منها معظم أنبياء بني إسرائيل.</h3>
+<p>"إسحاق ويعقوب (عليهما السلام).. نبيان حملا راية التوحيد جيلاً بعد جيل، وأسسا الأمة التي سيخرج منها معظم أنبياء بني إسرائيل.</p>
+<p>لكن في بيت يعقوب هذا، وبين أبنائه الاثني عشر، ستحدث قصة عجيبة. قصة تبدأ بحلم، وتمر ببئر، وتصل إلى قصر الملك. قصة عن الغيرة، والصبر، والنجاح.</p>
+<p>في الحلقة القادمة، نغوص في "أحسن القصص" كما وصفها القرآن.. قصة يوسف (عليه السلام). إلى اللقاء."</p></div></div><div id="episode-9" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة التاسعة: يوسف (عليه السلام) - الجزء الأول</span><h2 class="article-title">أحسن القصص (1): يوسف.. من غيابة البئر إلى ظلمة السجن</h2><div class="article-text"><h3 class="section-header">المقدمة "بسم الله الرحمن الرحيم أهلاً بكم.في برنامجكم (قصة وعبره) قصص الأنبياء مليئة بالعبر، لكن هناك قصة واحدة وصفها الله تعالى بأنها "أَحْسَنَ الْقَصَصِ". إنها ليست مجرد قصة، بل هي رواية متكاملة عن الجمال، والغيرة، والمؤامرة، والفتنة، والصبر، والنجاة.</h3>
+<p>"بسم الله الرحمن الرحيم أهلاً بكم.في برنامجكم (قصة وعبره) قصص الأنبياء مليئة بالعبر، لكن هناك قصة واحدة وصفها الله تعالى بأنها "أَحْسَنَ الْقَصَصِ". إنها ليست مجرد قصة، بل هي رواية متكاملة عن الجمال، والغيرة، والمؤامرة، والفتنة، والصبر، والنجاة.</p>
+<p>قصتنا اليوم عن النبي يوسف (عليه السلام). سنبدأ معه من حلم الطفولة، وننزل معه إلى غيابة البئر، ونرافقه كعبدٍ في قصر العزيز، ثم ندخل معه السجن. إنها رحلة الابتلاءات الكبرى التي تصنع الرجال. ابقوا معنا."</p>
+<h3 class="section-header">القصة باختصار * الحلم والوصية تبدأ القصة برؤيا عجيبة. الطفل يوسف يرى "أَحَدَ عَشَرَ كَوْكَبًا وَالشَّمْسَ وَالْقَمَرَ رَأَيْتُهُمْ لِي سَاجِدِينَ". فهم أبوه يعقوب (النبي) أن هذا ميلاد نبي عظيم، فكانت وصيته الأولى "يَا بُنَيَّ لَا تَقْصُصْ رُؤْيَاكَ عَلَىٰ إِخْوَتِكَ فَيَكِيدُوا لَكَ كَيْدًا".</h3>
+<p>* الحلم والوصية: تبدأ القصة برؤيا عجيبة. الطفل يوسف يرى "أَحَدَ عَشَرَ كَوْكَبًا وَالشَّمْسَ وَالْقَمَرَ رَأَيْتُهُمْ لِي سَاجِدِينَ". فهم أبوه يعقوب (النبي) أن هذا ميلاد نبي عظيم، فكانت وصيته الأولى: "يَا بُنَيَّ لَا تَقْصُصْ رُؤْيَاكَ عَلَىٰ إِخْوَتِكَ فَيَكِيدُوا لَكَ كَيْدًا".</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>نار الغيرة:</strong> كانت محبة يعقوب ليوسف وأخيه تثير غيرة إخوته (غير الأشقاء). فدبّروا مؤامرة: "اقْتُلُوا يُوسُفَ أَوِ اطْرَحُوهُ أَرْضًا يَخْلُ لَكُمْ وَجْهُ أَبِيكُمْ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>من القصر إلى البئر:</strong> استقر رأيهم على إلقائه في "غيابة الجب" (بئر مهجور). استأذنوا أباهم، وألقوه في البئر.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدم الكذب والصبر الجميل:</strong> عادوا إلى أبيهم ليلاً يبكون "وَجَاءُوا عَلَىٰ قَمِيصِهِ بِدَمٍ كَذِبٍ". لكن يعقوب (النبي) أدرك المؤامرة، فقال كلمته الخالدة: "فَصَبْرٌ جَمِيلٌ ۖ وَاللَّهُ الْمُسْتَعَانُ عَلَىٰ مَا تَصِفُونَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>من البئر إلى الرق:</strong> مرّت قافلة، وأرسلوا واردهم، فأدلى دلوه. "قَالَ يَا بُشْرَىٰ هَٰذَا غُلَامٌ". وباعوه "بِثَمَنٍ بَخْسٍ دَرَاهِمَ مَعْدُودَةٍ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>في بيت العزيز:</strong> اشتراه "عزيز مصر" (وزير المالية أو الخزانة). ورأى فيه علامات النجابة، فقال لامرأته: "أَكْرِمِي مَثْوَاهُ عَسَىٰ أَن يَنفَعَنَا أَوْ نَتَّخِذَهُ وَلَدًا".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الفتنة الكبرى:</strong> كبر يوسف وأوتي "حُكْمًا وَعِلْمًا". وهنا جاء الابتلاء الأشد. امرأة العزيز "رَاوَدَتْهُ عَن نَّفْسِهِ وَغَلَّقَتِ الْأَبْوَابَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العصمة ("معاذ الله"):</strong> كان رده حاسماً: "قَالَ مَعَاذَ اللَّهِ ۖ إِنَّهُ رَبِّي أَحْسَنَ مَثْوَايَ". هرب نحو الباب، فلحقته وشقّت قميصه من الخلف.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>البراءة:</strong> عند الباب، وجدا العزيز. وشهد شاهد من أهلها: إن كان قميصه قُدَّ من الخلف، "فَصَدَقَتْ وَهُوَ مِنَ الْكَاذِبِينَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>من البراءة إلى السجن:</strong> انتشر الخبر في المدينة (نسوة المدينة). فقررت امرأة العزيز، لحفظ ماء وجهها، أن تسجنه رغم علمها ببراءته.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>اختيار السجن:</strong> اختار يوسف (عليه السلام) السجن على المعصية: "قَالَ رَبِّ السِّجْنُ أَحَبُّ إِلَيَّ مِمَّا يَدْعُونَنِي إِلَيْهِ".</div></div>
+<h3 class="section-header">الدروس والعبر * الدرس الأول احذروا الغيرة (أخطر أمراض القلوب).</h3>
+<p>* الدرس الأول: احذروا الغيرة (أخطر أمراض القلوب).</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> القصة بدأت بسبب "الغيرة". الغيرة جعلت أبناء أنبياء يكذبون على أبيهم النبي، ويحاولون قتل أخيهم النبي. هذا الدرس موجه لكل أسرة: العدل بين الأبناء ضرورة، والحذر من الغيرة التي تدمر البيوت.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> قوة "معاذ الله" (العصمة أمام الفتنة).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> يوسف كان شاباً، جميلاً، غريباً (لا يخشى العار)، وعبداً (تحت الأمر). والمرأة كانت ذات منصب وجمال وهي التي دعته وغلّقت الأبواب. توفرت كل أسباب المعصية، لكن "وازع الدين" كان أقوى. قوة "معاذ الله" (أعوذ بالله) هي التي تنجي من أعظم الفتن.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> الله غالب على أمره (خيرة الله في الشر).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> إخوته أرادوا "التخلص منه" (البئر)، فكان البئر سبباً لوصوله "للقصر". امرأة العزيز أرادت "كسره" (السجن)، فكان السجن سبباً "لتمكينه" (مقابلة الملك). الدرس: قد تحدث لك أمور تبدو شراً، لكن خطة الله تسير في الخفاء "وَاللَّهُ غَالِبٌ عَلَىٰ أَمْرِهِ وَلَٰكِنَّ أَكْثَرَ النَّاسِ لَا يَعْلَمُونَ".</div></div>
+<h3 class="section-header">الخاتمة "دخل يوسف (عليه السلام) السجن بريئاً. يبدو المشهد مظلماً، شاب وحيد في السجن بعد أن كان في القصر. لكن هذه ليست النهاية.</h3>
+<p>"دخل يوسف (عليه السلام) السجن بريئاً. يبدو المشهد مظلماً، شاب وحيد في السجن بعد أن كان في القصر. لكن هذه ليست النهاية.</p>
+<p>السجن لم يكن عقوبة، بل كان "إعداداً" وتأهيلاً للمرحلة الأعظم. في هذا السجن، ستبدأ أولى خطواته نحو حكم مصر.</p>
+<p>في الحلقة القادمة، نرى كيف خرج يوسف من السجن ليصبح عزيز مصر، وكيف التقى بإخوته بعد سنين طويلة، وكيف تحقق حلم الطفولة. إلى اللقاء في الجزء الثاني من "أحسن القصص"."</p></div></div><div id="episode-10" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة العاشرة: يوسف (عليه السلام) - الجزء الثاني</span><h2 class="article-title">أحسن القصص (2): يوسف.. من السجن إلى العرش وتحقيق الحلم</h2><div class="article-text"><h3 class="section-header">المقدمة "بسم الله الرحمن الرحيم أهلاً بكم.في برنامجكم (قصة وعبره) في الحلقة الماضية، تركنا يوسف (عليه السلام) سجيناً مظلوماً. لكننا تعلمنا أن "الله غالب على أمره"، وأن ما يبدو نهاية، هو في الحقيقة إعداد لبداية أعظم.</h3>
+<p>"بسم الله الرحمن الرحيم أهلاً بكم.في برنامجكم (قصة وعبره) في الحلقة الماضية، تركنا يوسف (عليه السلام) سجيناً مظلوماً. لكننا تعلمنا أن "الله غالب على أمره"، وأن ما يبدو نهاية، هو في الحقيقة إعداد لبداية أعظم.</p>
+<p>اليوم، سنرى كيف تحول السجن إلى بوابة للعرش. قصة اليوم هي عن "التمكين" بعد "الابتلاء". سنرى كيف يخرج يوسف من السجن ليصبح "عزيز مصر"، وكيف يلتقي بمن ظلموه، وكيف تتحقق رؤيا الطفولة بعد سنين طويلة. هذا هو الجزء الثاني والأجمل من "أحسن القصص". ابقوا معنا."</p>
+<h3 class="section-header">القصة باختصار * الدعوة في السجن لم يكن يوسف سجيناً عادياً. كان يدعو إلى الله. وعندما سأله فتيان (الساقي والخباز) عن تفسير أحلامهما، قدم لهما التوحيد أولاً، ثم فسر الحلم.</h3>
+<p>* الدعوة في السجن: لم يكن يوسف سجيناً عادياً. كان يدعو إلى الله. وعندما سأله فتيان (الساقي والخباز) عن تفسير أحلامهما، قدم لهما التوحيد أولاً، ثم فسر الحلم.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>رؤيا الملك:</strong> مكث يوسف في السجن "بضع سنين". حتى رأى ملك مصر رؤيا عجيبة (سبع بقرات سمان يأكلهن سبع عجاف، وسبع سنبلات خضر وأخر يابسات). عجز السحرة عن تفسيرها.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الساقي يتذكر:</strong> هنا، تذكر "الساقي" الذي نجا، يوسف. "قَالَ أَنَا أُنَبِّئُكُم بِتَأْوِيلِهِ فَأَرْسِلُونِ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>البراءة أولاً:</strong> فسر يوسف الحلم (خطة اقتصادية لـ 15 سنة: 7 زرع، 7 حصاد، ثم 1 مجاعة). أعجب الملك بذكائه وأمر بإخراجه. لكن يوسف رفض الخروج!</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>رد الاعتبار:</strong> قال للرسول: "ارْجِعْ إِلَىٰ رَبِّكَ فَاسْأَلْهُ مَا بَالُ النِّسْوَةِ اللَّاتِي قَطَّعْنَ أَيْدِيَهُنَّ". أراد أن تظهر براءته للجميع قبل أن يخرج.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الحق يظهر:</strong> جمع الملك النسوة، فاعترفن. وقالت امرأة العزيز: "الْآنَ حَصْحَصَ الْحَقُّ أَنَا رَاوَدتُّهُ عَن نَّفْسِهِ وَإِنَّهُ لَمِنَ الصَّادِقِينَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>من السجن إلى العرش:</strong> خرج يوسف نقيّ السيرة. قال له الملك: "إِنَّكَ الْيَوْمَ لَدَيْنَا مَكِينٌ أَمِينٌ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>طلب الولاية:</strong> لم يطلب يوسف مالاً، بل طلب المسؤولية التي يتقنها: "قَالَ اجْعَلْنِي عَلَىٰ خَزَائِنِ الْأَرْضِ ۖ إِنِّي حَفِيظٌ عَلِيمٌ". (أنا أمين على حفظها، وعليم بإدارتها).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>لقاء الإخوة:</strong> حلت المجاعة. جاء إخوة يوسف من كنعان (فلسطين) ليأخذوا المؤونة من مصر. دخلوا عليه "فَعَرَفَهُمْ وَهُمْ لَهُ مُنكِرُونَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>خطة بنيامين:</strong> أعطاهم المؤونة، لكنه طلب منهم أن يحضروا أخاهم من أبيهم (بنيامين) في المرة القادمة. ونجحت خطته في إحضار بنيامين، ثم استطاع أن يبقيه معه (بحادثة الصواع).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>اللقاء الأعظم:</strong> بعد أن يئس الإخوة، جاؤوا ليوسف يترجونه. هنا، كشف عن هويته: "قَالَ هَلْ عَلِمْتُم مَّا فَعَلْتُم بِيُوسُفَ وَأَخِيهِ... قَالُوا أَإِنَّكَ لَأَنتَ يُوسُفُ؟ قَالَ أَنَا يُوسُفُ وَهَٰذَا أَخِي".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العفو عند المقدرة:</strong> أصابهم الرعب، لكنه طمأنهم بأعظم كلمة عفو في التاريخ: "قَالَ لَا تَثْرِيبَ عَلَيْكُمُ الْيَوْمَ ۖ يَغْفِرُ اللَّهُ لَكُمْ ۖ وَهُوَ أَرْحَمُ الرَّاحِمِينَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>تحقيق الرؤيا:</strong> أرسل قميصه لأبيه (الذي ابيضت عيناه من الحزن) ليرتد بصيراً. وجاءت العائلة كلها إلى مصر.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>سجود التحية:</strong> "وَرَفَعَ أَبَوَيْهِ عَلَى الْعَرْشِ وَخَرُّوا لَهُ سُجَّدًا" (سجود تحية وتكريم). فقال يوسف: "يَا أَبَتِ هَٰذَا تَأْوِيلُ رُؤْيَايَ مِن قَبْلُ قَدْ جَعَلَهَا رَبّي حَقًّا".</div></div>
+<h3 class="section-header">الدروس والعبر * الدرس الأول السمعة أهم من الحرية (البراءة أولاً).</h3>
+<p>* الدرس الأول: السمعة أهم من الحرية (البراءة أولاً).</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> يوسف رفض الخروج من السجن كـ "مجرم" حصل على عفو. أصر أن يخرج كـ "بريء" تم رد اعتباره. لا تتنازل عن سمعتك أو كرامتك مقابل مكسب سريع. الحق يجب أن يظهر.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> القيادة بالكفاءة (إني حفيظ عليم).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> عندما جاءته الفرصة، لم يطلب منصباً للوجاهة، بل طلب "خزائن الأرض" لأنه كان "حفيظاً" (أميناً) و "عليماً" (خبيراً). لا تطلب منصباً لا تتقنه. القيادة هي مسؤولية وكفاءة، لا وجاهة.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> العفو عند المقدرة (لا تثريب عليكم).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> بعد كل ما فعلوه (البئر، الكذب، تفريق الأسرة)، كان يوسف في قمة قوته. كان يستطيع الانتقام، لكنه اختار العفو. "لَا تَثْرِيبَ عَلَيْكُمُ الْيَوْمَ". العفو الحقيقي هو أن تسامح وأنت قادر على رد الإساءة.</div></div>
+<h3 class="section-header">الخاتمة "وهكذا، انتهت "أحسن القصص". من البئر إلى العرش. من حلم طفل إلى واقع عزيز مصر. قصة يوسف تعلمنا أن ثمن الأحلام العظيمة هو الصبر العظيم، وأن الله لا يضيع أجر المحسنين، وأن العفو هو أجمل انتصار.</h3>
+<p>"وهكذا، انتهت "أحسن القصص". من البئر إلى العرش. من حلم طفل إلى واقع عزيز مصر. قصة يوسف تعلمنا أن ثمن الأحلام العظيمة هو الصبر العظيم، وأن الله لا يضيع أجر المحسنين، وأن العفو هو أجمل انتصار.</p>
+<p>في الحلقة القادمة، ننتقل إلى قصة نبي آخر من ذرية إبراهيم، نبي أرسل إلى قوم كانوا أذكياء في التجارة، لكنهم كانوا يغشون في الميزان.. قصة شعيب (عليه السلام) وقوم مدين. إلى اللقاء."</p></div></div><div id="episode-11" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة الحادية عشرة: شعيب (عليه السلام)</span><h2 class="article-title">خطيب الأنبياء: شعيب عليه السلام.. الميزان والأخلاق</h2><div class="article-text"><h3 class="section-header">المقدمة "بسم الله الرحمن الرحيم أهلاً بكم.في برنامجكم (قصة وعبره) هل الدين مجرد صلاة وصوم في المسجد؟ أم أنه يمتد ليحكم معاملاتنا في السوق والبيزنس؟</h3>
+<p>"بسم الله الرحمن الرحيم أهلاً بكم.في برنامجكم (قصة وعبره) هل الدين مجرد صلاة وصوم في المسجد؟ أم أنه يمتد ليحكم معاملاتنا في السوق والبيزنس؟</p>
+<p>قصتنا اليوم عن نبي واجه قوماً متدينين في عبادتهم، لكنهم غشاشون في تجارتهم. قوم "مدين"، الذين كانوا يملكون "بزنس" كبيراً على مفترق الطرق التجارية، لكنهم بنوه على الغش وتطفيف الميزان. قصة نبيهم شعيب (عليه السلام)، المعروف بـ "خطيب الأنبياء"، تعلمنا أن العبادة بلا أمانة لا قيمة لها. ابقوا معنا."</p>
+<h3 class="section-header">القصة باختصار * قوم مدين (أصحاب الأيكة) كانوا قوماً يسكنون "مدين" (قرب خليج العقبة)، وكانت لهم غابات وأشجار (لذلك سُموا أيضاً "أصحاب الأيكة"). موقعهم كان استراتيجياً على طريق القوافل التجارية.</h3>
+<p>* قوم مدين (أصحاب الأيكة): كانوا قوماً يسكنون "مدين" (قرب خليج العقبة)، وكانت لهم غابات وأشجار (لذلك سُموا أيضاً "أصحاب الأيكة"). موقعهم كان استراتيجياً على طريق القوافل التجارية.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الفساد المزدوج:</strong> كان لديهم مشكلتان: 1- الشرك بالله (عبادة الأيكة).</div></div>
+<p>2- الفساد الاقتصادي والأخلاقي.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الفساد الاقتصادي:</strong> كان هو السمة الأبرز. "التطفيف" (إذا اشتروا لأنفسهم يأخذون حقهم كاملاً، وإذا باعوا للناس ينقصون الميزان). و "بخس الناس أشياءهم" (التقليل من قيمة سلع الناس لشرائها بثمن رخيص). إضافة إلى قطع الطريق على القوافل.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>خطيب الأنبياء:</strong> أرسل الله إليهم شعيباً، وكان منهم. وكان معروفاً بفصاحته وقوة حجته (لذلك يلقب بخطيب الأنبياء).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدعوة الواضحة:</strong> دعوة شعيب كانت مباشرة وتربط بين الأمرين: 1- "اعْبُدُوا اللَّهَ". 2- "فَأَوْفُوا الْكَيْلَ وَالْمِيزَانَ وَلَا تَبْخَسُوا النَّاسَ أَشْيَاءَهُمْ وَلَا تُفْسِدُوا فِي الْأَرْضِ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الرد الساخر:</strong> رد قومه كان غريباً جداً ويكشف علّتهم. قالوا: "يَا شُعَيْبُ أَصَلَاتُكَ تَأْمُرُكَ أَن نَّتْرُكَ مَا يَعْبُدُ آبَاؤُنَا أَوْ أَن نَّفْعَلَ فِي أَمْوَالِنَا مَا نَشَاءُ؟".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>(تحليل الرد):</strong> هم ربطوا بين صلاته ودعوته الاقتصادية. كأنهم يقولون: "ما علاقة صلاتك بسوقنا وتجارتنا؟ هذه أموالنا ونحن أحرار فيها". لقد فصلوا الدين عن الحياة.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>التهديد والوعيد:</strong> عندما عجزوا عن الرد على حجته، لجأوا للتهديد: "قَالُوا يَا شُعَيْبُ مَا نَفْقَهُ كَثِيرًا مِّمَّا تَقُولُ وَإِنَّا لَنَرَاكَ فِينَا ضَعِيفًا ۖ وَلَوْلَا رَهْطُكَ لَرَجَمْنَاكَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العذاب المدمر:</strong> استنفد شعيب كل الحجج، وتحدوه أن يسقط عليهم العذاب. فجاءهم العذاب متنوعاً: "يوم الظلة" (سحابة أظلتهم ثم أمطرت ناراً)، و"الرجفة" (الزلزال)، و"الصيحة". "كَأَن لَّمْ يَغْنَوْا فِيهَا" (كأنهم لم يعيشوا في هذا النعيم من قبل). ونجّى الله شعيباً والمؤمنين معه.</div></div>
+<h3 class="section-header">الدروس والعبر  * الدرس الأول لا انفصال بين العبادة والمعاملة.</h3>
+<p>* الدرس الأول: لا انفصال بين العبادة والمعاملة.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> قوم شعيب هم الدليل الأكبر على أن الله لا يقبل "التدين المنفصل". لا قيمة لصلاتك وصيامك إذا كنت تغش في الميزان، أو تظلم موظفيك، أو تأكل حقوق الناس. "الأمانة" في السوق هي "عبادة" في المسجد.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> خطورة مقولة "نحن أحرار في أموالنا".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> ردهم "أَوْ أَن نَّفْعَلَ فِي أَمْوَالِنَا مَا نَشَاءُ" هو شعار الرأسمالية المتوحشة. الإسلام يقول: لا، المال مال الله، وأنت مستخلف فيه. حريتك في مالك تنتهي عند حقوق الآخرين وعند أوامر الله.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> الفساد الاقتصادي سبب هلاك الأمم.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> لم يُهلك الله قوماً بسبب "الغش التجاري" فقط كما أهلك قوم شعيب. هذا يدل على خطورة الفساد المالي والاقتصادي. إنه يدمر المجتمع من أساسه ويؤدي إلى انهياره.</div></div>
+<h3 class="section-header">الخاتمة "هلك قوم مدين، وبقي الدرس "أوفوا الكيل والميزان". قصة شعيب هي تذكير لكل تاجر وموظف وصاحب عمل بأن الميزان الذي نزن به للناس، هو نفسه الميزان الذي سيزن الله به أعمالنا يوم القيامة.</h3>
+<p>"هلك قوم مدين، وبقي الدرس: "أوفوا الكيل والميزان". قصة شعيب هي تذكير لكل تاجر وموظف وصاحب عمل بأن الميزان الذي نزن به للناس، هو نفسه الميزان الذي سيزن الله به أعمالنا يوم القيامة.</p>
+<p>في الحلقة القادمة، ننتقل من ابتلاء "الفساد" في المجتمع، إلى ابتلاء "الألم" في الجسد. قصة النبي الذي أصبح مضرب المثل في الصبر على المرض وفقدان الأهل والولد.. قصة أيوب (عليه السلام). إلى اللقاء."</p></div></div><div id="episode-12" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة الثانية عشرة: أيوب (عليه السلام)</span><h2 class="article-title">أيقونة الصبر: أيوب عليه السلام.. نِعْمَ العبد</h2><div class="article-text"><p>المقدمه: "بسم الله الرحمن الرحيم أهلاً بكم.في برنامجكم (قصة وعبره) في حياتنا، كلنا نمر بابتلاءات. منا من يفقد المال، ومنا من يعاني في صحته، ومنا من يشعر بالوحدة. لكن، ماذا لو جاءت كل هذه الابتلاءات مجتمعة؟</p>
+<p>قصتنا اليوم عن نبي كريم، كان مضرب المثل في النعمة والشكر، ثم أصبح مضرب المثل في الصبر. قصة أيوب (عليه السلام). قصته لا تعلمنا كيف نصبر فقط، بل تعلمنا "كيف" نشتكي، ولمن نشتكي. إنه النبي الذي قال الله عنه: "إِنَّا وَجَدْنَاهُ صَابِرًا ۚ نِّعْمَ الْعَبْدُ ۖ إِنَّهُ أَوَّابٌ". ابقوا معنا."</p>
+<h3 class="section-header">القصة باختصار * قمة النعمة والشكر كان أيوب (عليه السلام) رجلاً من نسل إبراهيم، آتاه الله نعماً عظيمة ثروة هائلة، أراضٍ واسعة، أبناء كثر، وصحة تامة. وكان هو "نِعْمَ العبد"، شاكراً لله، عابداً، محسناً للفقراء.</h3>
+<p>* قمة النعمة والشكر: كان أيوب (عليه السلام) رجلاً من نسل إبراهيم، آتاه الله نعماً عظيمة: ثروة هائلة، أراضٍ واسعة، أبناء كثر، وصحة تامة. وكان هو "نِعْمَ العبد"، شاكراً لله، عابداً، محسناً للفقراء.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الابتلاء العظيم:</strong> أراد الله أن يجعله نموذجاً للصبر كما كان نموذجاً للشكر. فبدأت الابتلاءات المتتابعة.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>فقدان المال والولد:</strong> خسر أيوب (عليه السلام) ثروته كلها، وفقد أولاده جميعاً في كارثة. فصبر واحتسب وقال: "لله ما أخذ وله ما أعطى".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>فقدان الصحة:</strong> لم يتوقف الابتلاء عند هذا الحد. بل ابتلاه الله بمرض شديد في جسده، حتى أقعده الفراش، ونفر منه الناس.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الصبر الطويل:</strong> استمر هذا الابتلاء سنوات طويلة. ولم يبق معه أحد يؤنسه إلا زوجته الوفية، التي كانت ترعاه وتعمل لتطعمه.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الأدب في الشكوى:</strong> رغم كل هذا الألم، لم يقل أيوب كلمة واحدة فيها جزع أو اعتراض على قضاء الله.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدعاء المستجاب:</strong> عندما وصل به "الضُرُّ" إلى مداه، لجأ إلى الله بدعاء هو قمة في الأدب والتوحيد. لم يقل "يا رب ارفع عني" أو "لماذا فعلت هذا بي؟"، بل قال:</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div>"أَنِّي مَسَّنِيَ الضُّرُّ وَأَنتَ أَرْحَمُ الرَّاحِمِينَ". (هو فقط يصف حاله، ويُثني على ربه بأنه أرحم الراحمين).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div>"أَنِّي مَسَّنِيَ الشَّيْطَانُ بِنُصْبٍ وَعَذَابٍ". (نسب الألم والتعب للشيطان، تأدباً مع الله).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div>الاستجابة الفورية (اركض برجلك): هنا، بعد أن أثبت صبره، جاءت الاستجابة الفورية. "فَاسْتَجَبْنَا لَهُ فَكَشَفْنَا مَا بِهِ مِن ضُرٍّ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الشفاء المعجزة:</strong> أمره الله: "ارْكُضْ بِرِجْلِكَ ۖ هَٰذَا مُغْتَسَلٌ بَارِدٌ وَشَرَابٌ". فضرب الأرض برجله، فنبعت عين ماء. اغتسل منها فشُفي ظاهره، وشرب منها فشُفي باطنه.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>المكافأة المزدوجة:</strong> لم يعد له الشفاء فقط، بل "وَآتَيْنَاهُ أَهْلَهُ وَمِثْلَهُم مَّعَهُمْ رَحْمَةً مِّنَّا وَذِكْرَىٰ لِلْعَابِدِينَ". (رد الله عليه أهله ورزقه ضعفهم).</div></div>
+<h3 class="section-header">الدروس والعبر * الدرس الأول الشكوى لله "عبادة" لا "اعتراض".</h3>
+<p>* الدرس الأول: الشكوى لله "عبادة" لا "اعتراض".</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> أيوب علّمنا أن الألم البشري طبيعي. من حقك أن تتألم، لكن "الشكوى" يجب أن توجَّه للمكان الصحيح. لا تشتكِ من "الله" للناس، بل اشتكِ "همك" إلى "الله". "أَنِّي مَسَّنِيَ الضُّرُّ" هو اعتراف بالعجز، "وَأَنتَ أَرْحَمُ الرَّاحِمِينَ" هو اعتراف باليقين.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> الله يختبر "نِعْمَ العبد".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> أيوب لم يُبتلَ لأنه أذنب، بل ابتُلي لأنه كان "نِعْمَ الْعَبْدُ". أحياناً، يأتيك الابتلاء لا ليعاقبك، بل ليرفع درجتك، وليكون "ذكرى للعابدين" (أي نموذجاً لغيرك). لا تفترض أن كل بلاء هو عقوبة، قد يكون ترقية.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> الفرج يأتي بعد "أدب الصبر".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> استمر البلاء سنين، لكن الفرج جاء في لحظة. "ارْكُضْ بِرِجْلِكَ". الله لا ينسى عبده الصابر. مهما طال ليل الألم، لا بد أن يأتي "مغتسل بارد وشراب" من رحمة الله يغسل كل تعب السنين.</div></div>
+<p>الخاتمه: "هذه قصة أيوب.. قصة "الصبر الجميل" والدعاء "الأديب". هي رسالة لكل مريض، ولكل مهموم، ولكل من فقد عزيزاً: اصبر صبراً جميلاً، واشتكِ همك لربك بأدب، وانتظر الفرج، فالله عند حسن ظن عبده به.</p>
+<p>في الحلقة القادمة، ننتقل إلى أرض مصر. حيث تحول بنو إسرائيل (أحفاد يوسف) من ضيوف مكرمين إلى عبيد مستضعفين، لنشهد ميلاد النبي الذي وُلد في عام القتل، وتحدى أعظم طاغية في التاريخ.. قصة كليم الله، موسى (عليه السلام). إلى اللقاء."</p></div></div><div id="episode-13" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة الثالثة عشرة: موسى (عليه السلام) - الجزء الأول من 3 حلقات</span><h2 class="article-title">كليم الله (1): موسى.. الأمير الهارب من قصر الطاغية</h2><div class="article-text"><h3 class="section-header">المقدمة "بسم الله الرحمن الرحيم. أهلاً بكم. بعد أن رأينا صبر أيوب، ننتقل اليوم إلى قصة هي بحد ذاتها ملحمة كاملة. قصة نبي وُلد في زمن الموت، وتحدى أعظم طاغية عرفته الأرض.</h3>
+<p>"بسم الله الرحمن الرحيم. أهلاً بكم. بعد أن رأينا صبر أيوب، ننتقل اليوم إلى قصة هي بحد ذاتها ملحمة كاملة. قصة نبي وُلد في زمن الموت، وتحدى أعظم طاغية عرفته الأرض.</p>
+<p>قصتنا عن موسى (عليه السلام). اليوم لن نتحدث عن النبي، بل عن "صناعة" النبي. عن الطفل الذي أراد فرعون قتله، فربّاه الله في قصر فرعون نفسه! هذه قصة عن تدبير الله الذي لا يغلبه تدبير. ابقوا معنا."</p>
+<h3 class="section-header">القصة باختصار * زمن الطغيان مرت السنون على "بني إسرائيل" (أحفاد يوسف) في مصر. تحولوا من ضيوف إلى عبيد. جاء فرعون جديد زاد في طغيانه "إِنَّ فِرْعَوْنَ عَلَا فِي الْأَرْضِ". ورأى رؤيا (أو تنبأ له الكهنة) أن هلاكه على يد غلام من بني إسرائيل.</h3>
+<p>* زمن الطغيان: مرت السنون على "بني إسرائيل" (أحفاد يوسف) في مصر. تحولوا من ضيوف إلى عبيد. جاء فرعون جديد زاد في طغيانه "إِنَّ فِرْعَوْنَ عَلَا فِي الْأَرْضِ". ورأى رؤيا (أو تنبأ له الكهنة) أن هلاكه على يد غلام من بني إسرائيل.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>قرار القتل:</strong> أصدر قراره المروع: "يُذَبِّحُ أَبْنَاءَهُمْ وَيَسْتَحْيِي نِسَاءَهُمْ". كل طفل ذكر يولد، يُقتل.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>خطة الله (الوحي للأم):</strong> وُلد موسى في عام القتل. خافت أمه عليه، فأوحى الله إليها (إلهاماً): "أَنِ اقْذِفِيهِ فِي التَّابُوتِ فَاقْذِفِيهِ فِي الْيَمِّ". (ضعيه في صندوق وارميه في النيل).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>اليقين المستحيل:</strong> تخيلوا أماً يُطلب منها أن ترمي رضيعها في النهر لتنجيه! لكنها فعلت. "فَالْتَقَطَهُ آلُ فِرْعَوْنَ لِيَكُونَ لَهُمْ عَدُوًّا وَحَزَنًا".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>في بيت العدو:</strong> النهر حمل الصندوق إلى قصر فرعون. رأته زوجته "آسيا". "وَقَالَتِ امْرَأَتُ فِرْعَوْنَ قُرَّتُ عَيْنٍ لِّي وَلَكَ ۖ لَا تَقْتُلُوهُ عَسَىٰ أَن يَنفَعَنَا".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العودة للأم:</strong> رفض موسى كل المراضع. أخته كانت تراقبه عن بُعد. "فَقَالَتْ هَلْ أَدُلُّكُمْ عَلَىٰ أَهْلِ بَيْتٍ يَكْفُلُونَهُ لَكُمْ؟".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>التدبير العجيب:</strong> "فَرَدَدْنَاهُ إِلَىٰ أُمِّهِ كَيْ تَقَرَّ عَيْنُهَا وَلَا تَحْزَنَ". عاد موسى ليرضع من أمه، في قصر فرعون، وتأخذ أمه أجراً على إرضاعه!</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>النشأة والأزمة:</strong> كبر موسى في القصر "وَلَمَّا بَلَغَ أَشُدَّهُ وَاسْتَوَىٰ". وفي يوم، رأى رجلاً من قومه (إسرائيلي) يقاتل رجلاً من عدوه (مصري).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>القتل الخطأ:</strong> "فَوَكَزَهُ مُوسَىٰ فَقَضَىٰ عَلَيْهِ". (ضربه موسى ليخلصه، فمات الرجل). لم يكن موسى ينوي القتل.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>التوبة الفورية:</strong> أدرك موسى فداحة الخطأ: "قَالَ هَٰذَا مِنْ عَمَلِ الشَّيْطَانِ... رَبِّ إِنِّي ظَلَمْتُ نَفْسِي فَاغْفِرْ لِي فَغَفَرَ لَهُ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الفرار:</strong> في اليوم التالي، انكشف أمره. وتآمر الملأ لقتله. "فَخَرَجَ مِنْهَا خَائِفًا يَتَرَقَّبُ ۖ قَالَ رَبِّ نَجِّنِي مِنَ الْقَوْمِ الظَّالِمِينَ". هرب من مصر بلا مال ولا وجهة.</div></div>
+<h3 class="section-header">الدروس والعبر * الدرس الأول الله يُربي أولياءه في بيت أعدائه.</h3>
+<p>* الدرس الأول: الله يُربي أولياءه في بيت أعدائه.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> فرعون يقتل الآلاف ليمنع "موسى"، والله يجعل فرعون يدفع المال ليربي "موسى" في قصره. هذا هو معنى "وَيَمْكُرُونَ وَيَمْكُرُ اللَّهُ ۖ وَاللَّهُ خَيْرُ الْمَاكِرِينَ". لا تقلق من تدبير البشر، فتدبير الله أقوى.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> الله لا ينسى القلب المنكسر (الرحمة بالأم).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> قلب أم موسى كان "فارغاً" من شدة الخوف. لكن الله لم يتركها. رده إليها ليعلمنا أن الله يجبر كسر الصادقين. ثق أن الله لن يضيعك.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> الهروب من "القصر" إلى "النبوة".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> موسى كان أميراً في القصر. لكن ليكون "كليم الله"، كان يجب أن يخرج من هذا النعيم. هرب "خائفاً يترقب" (ضعف بشري)، لكنه "تاب" (قوة إيمانية). أحياناً، يخرجك الله من منطقة راحتك (القصر) ليعدك لمهمة عظيمة (النبوة).</div></div>
+<h3 class="section-header">الخاتمة"ترك موسى (عليه السلام) مصر أميراً، وهرب منها طريداً خائفاً. يتجه الآن إلى "مدين" لا يعرف ماذا ينتظره هناك.</h3>
+<p>"ترك موسى (عليه السلام) مصر أميراً، وهرب منها طريداً خائفاً. يتجه الآن إلى "مدين" لا يعرف ماذا ينتظره هناك.</p>
+<p>هو لا يعلم، لكن في هذا المنفى، في هذه الصحراء، سيبدأ الإعداد الحقيقي. هناك سيلتقي بالشيخ الكبير، وهناك سيتزوج، وهناك، بعد عشر سنين، سيرى النار المقدسة.</p>
+<p>في الحلقة القادمة: قصة "مدين"، والمناجاة عند جبل الطور، والكلمة التي هزت الوجود: "إِنَّنِي أَنَا اللَّهُ". إلى اللقاء في الجزء الثاني من قصة كليم الله."</p></div></div><div id="episode-14" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة الرابعة عشرة: موسى (عليه السلام) - الجزء الثاني</span><h2 class="article-title">كليم الله (2): موسى.. من راعي غنم إلى نبي مرسل</h2><div class="article-text"><h3 class="section-header">المقدمة "بسم الله الرحمن الرحيم. أهلاً بكم.في برنامجكم (قصة وعبره) في الحلقة الماضية، خرج موسى (عليه السلام) من قصر فرعون طريداً خائفاً، يتجه نحو المجهول.</h3>
+<p>"بسم الله الرحمن الرحيم. أهلاً بكم.في برنامجكم (قصة وعبره) في الحلقة الماضية، خرج موسى (عليه السلام) من قصر فرعون طريداً خائفاً، يتجه نحو المجهول.</p>
+<p>لكن الله كان يعده لمهمة عظيمة. اليوم، نرى كيف تحول "الأمير الهارب" إلى "أجير" يرعى الغنم في "مدين"، وكيف تحول "الهارب الخائف" إلى "كليم الله" عند جبل الطور. قصة اليوم هي عن "الصناعة الإلهية" للنبي قبل المواجهة الكبرى. ابقوا معنا."</p>
+<h3 class="section-header">القصة باختصار * الوصول إلى مدين وصل موسى (عليه السلام) إلى بئر ماء في "مدين" بعد رحلة طويلة، "وَلَمَّا وَرَدَ مَاءَ مَدْيَنَ". وجد الرعاة يسقون، ووجد "مِن دُونِهِمُ امْرَأَتَيْنِ تَذُودَانِ" (تمنعان أغنامهما عن الماء حتى ينتهي الرعاة).</h3>
+<p>* الوصول إلى مدين: وصل موسى (عليه السلام) إلى بئر ماء في "مدين" بعد رحلة طويلة، "وَلَمَّا وَرَدَ مَاءَ مَدْيَنَ". وجد الرعاة يسقون، ووجد "مِن دُونِهِمُ امْرَأَتَيْنِ تَذُودَانِ" (تمنعان أغنامهما عن الماء حتى ينتهي الرعاة).</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>القوي الأمين (المروءة):</strong> سألهما موسى بشهامة: "مَا خَطْبُكُمَا؟" (ما شأنكما؟). قالتا: "لَا نَسْقِي حَتَّىٰ يُصْدِرَ الرِّعَاءُ وَأَبُونَا شَيْخٌ كَبِيرٌ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>فعل الخير:</strong> "فَسَقَىٰ لَهُمَا". (رغم تعبه وجوعه).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>دعاء الفقير إلى الله:</strong> "ثُمَّ تَوَلَّىٰ إِلَى الظِّلِّ فَقَالَ رَبِّ إِنِّي لِمَا أَنزَلْتَ إِلَيَّ مِنْ خَيْرٍ فَقِيرٌ". (أنا يا رب، بعد أن كنت أميراً، الآن فقير تماماً لأي خير ترسله لي).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الاستجابة الفورية:</strong> "فَجَاءَتْهُ إِحْدَاهُمَا تَمْشِي عَلَى اسْتِحْيَاءٍ". دعته ليقابل أباها ليكافئه على سقيه لهما.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الأمان والعمل والزواج:</strong> قابل الشيخ الكبير (قيل إنه نبي الله شعيب، وقيل رجل صالح). طمأنه الشيخ: "نَجَوْتَ مِنَ الْقَوْمِ الظَّالِمِينَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>شهادة "القوي الأمين":</strong> قالت إحدى البنات: "يَا أَبَتِ اسْتَأْجِرْهُ ۖ إِنَّ خَيْرَ مَنِ اسْتَأْجَرْتَ الْقَوِيُّ الْأَمِينُ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العقد:</strong> عرض عليه الشيخ أن يزوجه إحدى ابنتيه مقابل أن يعمل عنده "ثَمَانِيَ حِجَجٍ" (8 سنوات)، فإن أتمها عشراً فمن عنده.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>النار المقدسة (جبل الطور):</strong> قضى موسى الأجل (10 سنوات). وكان يسير بأهله عائداً لمصر، في ليلة باردة مظلمة، "آنَسَ مِن جَانِبِ الطُّورِ نَارًا".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>اللقاء الإلهي:</strong> قال لأهله امكثوا، لعلي آتيكم بخبر أو "قَبَسٍ مِّنَ النَّارِ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الوادي المقدس:</strong> "فَلَمَّا أَتَاهَا نُودِيَ يَا مُوسَىٰ  إِنِّي أَنَا رَبُّكَ فَاخْلَعْ نَعْلَيْكَ ۖ إِنَّكَ بِالْوَادِ الْمُقَدَّسِ طُوًى  وَأَنَا اخْتَرْتُكَ فَاسْتَمِعْ لِمَا يُوحَىٰ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الرسالة:</strong> "إِنَّنِي أَنَا اللَّهُ لَا إِلَٰهَ إِلَّا أَنَا فَاعْبُدْنِي وَأَقِمِ الصَّلَاةَ لِذِكْرِي".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>المعجزات (العصا واليد):</strong> سأله الله: "وَمَا تِلْكَ بِيَمِينِكَ يَا مُوسَىٰ؟". قال هي عصاي. قال: "أَلْقِهَا". فألقاها "فَإِذَا هِيَ حَيَّةٌ تَسْعَىٰ". ثم أمره أن يضم يده إلى جناحه "تَخْرُجْ بَيْضَاءَ مِنْ غَيْرِ سُوءٍ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>المهمة:</strong> "اذْهَبْ إِلَىٰ فِرْعَوْنَ ۖ إِنَّهُ طَغَىٰ".</div></div>
+<h3 class="section-header">الدروس والعبر* الدرس الأول صناعة "القوي الأمين".</h3>
+<p>* الدرس الأول: صناعة "القوي الأمين".</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> موسى تربى "قوياً" في القصر، وتربى "أميناً" في الصحراء كراعٍ للغنم لمدة 10 سنوات. لكي تواجه "فرعون"، احتجت أن تكون "قوياً" (في الحجة والبدن) و "أميناً" (على الرسالة). رعي الغنم في الصحراء يعلم الصبر والمسؤولية والأمانة.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> مفتاح الفرج (رب إني فقير).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> موسى لم يطلب من الشيخ شيئاً. هو فقط "سقى لهما" (فعل الخير) ثم اشتكى فقره "لله" وحده. "رَبِّ إِنِّي لِمَا أَنزَلْتَ إِلَيَّ مِنْ خَيْرٍ فَقِيرٌ". هذا الدعاء هو قمة الافتقار لله. فكانت النتيجة: أمان، وزوجة، وعمل، وسكن.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> من نار الدنيا إلى نور الوحي.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> موسى كان يبحث عن "نار" (قبس) ليدفئ أهله في البرد. كان يبحث عن حاجة دنيوية بسيطة. لكن الله كان قد أعد له "نور" الوحي والرسالة. لا تدري، أحياناً وأنت تسعى وراء رزقك، يفتح الله لك باباً من فضله لم تكن تحلم به.</div></div>
+<h3 class="section-header">الخاتمة "في تلك الليلة، تحول موسى الهارب الخائف، إلى موسى "كليم الله". تحول راعي الغنم إلى نبي مرسل. أعطاه الله الأمان، وأعطاه المعجزات، وأعطاه المهمة الأصعب "اذهب إلى فرعون".</h3>
+<p>"في تلك الليلة، تحول موسى الهارب الخائف، إلى موسى "كليم الله". تحول راعي الغنم إلى نبي مرسل. أعطاه الله الأمان، وأعطاه المعجزات، وأعطاه المهمة الأصعب: "اذهب إلى فرعون".</p>
+<p>في الحلقة القادمة، يبدأ الفصل الأعظم في القصة. المواجهة بين الحق والباطل، بين موسى وفرعون، بين المعجزة والسحر، وبين اليقين والطغيان. إلى اللقاء في الجزء الثالث من قصة كليم الله."</p></div></div><div id="episode-15" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة الخامسة عشرة: موسى (عليه السلام) - الجزء الثالث</span><h2 class="article-title">كليم الله (3): موسى.. المواجهة الكبرى وغرق الطاغية</h2><div class="article-text"><h3 class="section-header">المقدمة"بسم الله الرحمن الرحيم أهلاً بكم.في برنامجكم (قصة وعبره) في الحلقة الماضية، تركنا موسى (عليه السلام) عند جبل الطور، وقد تحول من راعٍ للغنم إلى "كليم الله". عاد الآن نبياً، يحمل في يده عصا، وفي صدره وحياً، ومعه أخوه هارون وزيراً.</h3>
+<p>"بسم الله الرحمن الرحيم أهلاً بكم.في برنامجكم (قصة وعبره) في الحلقة الماضية، تركنا موسى (عليه السلام) عند جبل الطور، وقد تحول من راعٍ للغنم إلى "كليم الله". عاد الآن نبياً، يحمل في يده عصا، وفي صدره وحياً، ومعه أخوه هارون وزيراً.</p>
+<p>المهمة واضحة: "اذْهَبَا إِلَىٰ فِرْعَوْنَ إِنَّهُ طَغَىٰ". اليوم، سنشهد أعظم مواجهة في التاريخ: الحق ضد الطغيان، المعجزة ضد السحر، واليقين ضد الغرور. قصة اليوم هي عن نهاية فرعون. ابقوا معنا."</p>
+<h3 class="section-header">القصة باختصار * المواجهة الأولى (الغرور) دخل موسى وهارون على فرعون. الطلب واضح "أَنْ أَرْسِلْ مَعَنَا بَنِي إِسْرَائِيلَ".</h3>
+<p>* المواجهة الأولى (الغرور): دخل موسى وهارون على فرعون. الطلب واضح: "أَنْ أَرْسِلْ مَعَنَا بَنِي إِسْرَائِيلَ".</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>رد فرعون:</strong> كان رده مليئاً بالاستعلاء. أولاً، سخر منه: "أَلَمْ نُرَبِّكَ فِينَا وَلِيدًا؟" (ألم نربك في قصرنا؟). ثانياً، أنكر وجود الله: "وَمَا رَبُّ الْعَالَمِينَ؟". ثالثاً، أعلن ألوهيته: "مَا عَلِمْتُ لَكُم مِّنْ إِلَٰهٍ غَيْرِي".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>المعجزة (العصا واليد):</strong> ألقى موسى عصاه، "فَإِذَا هِيَ ثُعْبَانٌ مُّبِينٌ". وأخرج يده، "فَإِذَا هِيَ بَيْضَاءُ لِلنَّاظِرِينَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الاتهام:</strong> (إنه ساحر): لم يجد فرعون رداً، فاتهمه فوراً بالسحر: "إِنَّ هَٰذَا لَسَاحِرٌ عَلِيمٌ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>يوم الزينة (المواجهة الكبرى):</strong> اقترح فرعون تحدياً عاماً. "قَالَ مَوْعِدُكُمْ يَوْمُ الزِّينَةِ وَأَن يُحْشَرَ النَّاسُ ضُحًى". (يوم العيد، أمام كل الناس).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>السحرة ضد موسى:</strong> جمع فرعون "كُلَّ سَحَّارٍ عَلِيمٍ". بدأ السحرة "وَقَالُوا بِعِزَّةِ فِرْعَوْنَ إِنَّا لَنَحْنُ الْغَالِبُونَ". ألقوا حبالهم وعصيهم، "فَإِذَا حِبَالُهُمْ وَعِصِيُّهُمْ يُخَيَّلُ إِلَيْهِ مِن سِحْرِهِمْ أَنَّهَا تَسْعَىٰ". (سحروا أعين الناس).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الحقيقة تبتلع الوهم:</strong> أوحى الله لموسى: "أَلْقِ مَا فِي يَمِينِكَ تَلْقَفْ مَا صَنَعُوا". ألقى موسى عصاه، فابتلعت كل سحرهم ووهمهم. "فَوَقَعَ الْحَقُّ وَبَطَلَ مَا كَانُوا يَعْمَلُونَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>إيمان السحرة:</strong> السحرة، وهم خبراء، أدركوا أن هذه ليست خدعة، بل "معجزة". "فَأُلْقِيَ السَّحَرَةُ سُجَّدًا قَالُوا آمَنَّا بِرَبِّ هَارُونَ وَمُوسَىٰ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الآيات التسع (تتابع العذاب):</strong> غضب فرعون وهددهم بالصلب. ورغم هزيمته، استمر في طغيانه. فبدأ الله يرسل عليه وعلى قومه "الآيات التسع": (الطوفان، الجراد، القُمّل (القمل)، الضفادع، الدم). كلما جاءهم العذاب، توسلوا لموسى، وعندما يكشفه الله عنهم، يعودون لكفرهم.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الهروب الكبير (الخروج):</strong> جاء الأمر الإلهي لموسى: "أَنْ أَسْرِ بِعِبَادِي لَيْلًا إِنَّكُم مُّتَّبَعُونَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>المطاردة الأخيرة:</strong> اكتشف فرعون الهروب، فجمع جيشه الجرار ولحق بهم.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div>البحر من أمامهم والعدو من خلفهم: وصل بنو إسرائيل إلى شاطئ البحر الأحمر. المشهد مستحيل: البحر أمامهم، وجيش فرعون خلفهم.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>اللحظة الحاسمة (اليقين):</strong> صرخ أصحاب موسى: "إِنَّا لَمُدْرَ KُKُونَ" (انتهى أمرنا، نحن مُدرَكون).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>رد موسى (قمة التوكل):</strong> "قَالَ كَلَّا ۖ إِنَّ مَعِيَ رَبِّي سَيَهْدِينِ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>المعجزة الكبرى:</strong> "فَأَوْحَيْنَا إِلَىٰ مُوسَىٰ أَنِ اضْرِب بِّعَصَاكَ الْبَحْرَ ۖ فَانفَلَقَ فَكَانَ كُلُّ فِرْقٍ كَالطَّوْدِ الْعَظِيمِ". (انشق البحر إلى 12 طريقاً).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>نهاية الطاغية:</strong> عبر موسى وقومه. تبعهم فرعون وجيشه. "فَأَغْرَقْنَاهُمْ أَجْمَعِينَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>توبة الغرغرة:</strong> وهو يغرق، "قَالَ آمَنتُ...". فكان الرد: "آلْآنَ وَقَدْ عَصَيْتَ قَبْلُ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الجسد كآية:</strong> "فَالْيَوْمَ نُنَجِّيكَ بِبَدَنِكَ لِتَكُونَ لِمَنْ خَلْفَكَ آيَةً". (نجّى الله جثته لتكون عبرة).</div></div>
+<h3 class="section-header">الدروس والعبر * الدرس الأول الحق يبتلع الباطل.</h3>
+<p>* الدرس الأول: الحق يبتلع الباطل.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> سحر فرعون كان "تخييلاً" (سحروا أعين الناس). معجزة موسى كانت "حقيقة". الباطل قد يبدو ضخماً ومهيباً كـ "سحر فرعون"، لكن "عصا حق" واحدة تبتلعه كله.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> الخبراء هم أول من يعرف الحق.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> السحرة (أهل الخبرة) كانوا أول من آمن. لماذا؟ لأنهم عرفوا الفرق بين "الخدعة البشرية" و "القوة الإلهية". لا تخف من الخبراء، فالحق الواضح يقنعهم.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> قمة اليقين في لحظة اليأس ("كَلَّا").</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> بين البحر والعدو، كل المعطيات الأرضية تقول "هلكنا". لكن موسى (عليه السلام) كان ينظر إلى السماء. "كَلَّا ۖ إِنَّ مَعِيَ رَبِّي سَيَهْدِينِ". هذا هو التوكل. أن ترى النجاة بعين اليقين، حتى لو كانت كل الأسباب الأرضية ضدك.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الرابع:</strong> نهاية كل طاغية (آلْآنَ؟).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> لا قيمة للتوبة عند الغرغرة. طغيان فرعون الذي استمر عقوداً انتهى في لحظة، وجثته التي كان يتباهى بها أصبحت "آية" لمن بعده.</div></div>
+<h3 class="section-header">الخاتمة "وهكذا، انتهت أسطورة فرعون "أنا ربكم الأعلى" غريقاً في قاع البحر. ونجا موسى والمستضعفون.</h3>
+<p>"وهكذا، انتهت أسطورة فرعون "أنا ربكم الأعلى" غريقاً في قاع البحر. ونجا موسى والمستضعفون.</p>
+<p>قد تظنون أن هذه هي النهاية السعيدة... لكن الحقيقة، أن قصة "موسى النبي" انتهت هنا، وبدأت قصة "موسى القائد". التحدي القادم لم يكن طاغية، بل كان أصعب: التعامل مع قومه "بني إسرائيل" أنفسهم.</p>
+<p>في الحلقة القادمة، نرى ما حدث بعد عبور البحر، قصة "العجل الذهبي"، وبداية 40 سنة من التيه في الصحراء. إلى اللقاء."</p></div></div><div id="episode-16" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة السادسة عشرة: موسى (عليه السلام) - الجزء الرابع</span><h2 class="article-title">كليم الله (4): موسى.. ابتلاء الأمة وعِباد العجل</h2><div class="article-text"><h3 class="section-header">المقدمة "بسم الله الرحمن الرحيم أهلاً بكم.في برنامجكم (قصة وعبره) في الحلقة الماضية، شهدنا المعجزة الكبرى انشقاق البحر، وغرق فرعون، ونجاة بني إسرائيل. نتوقع الآن أن تبدأ قصة أمة صالحة تشكر الله.</h3>
+<p>"بسم الله الرحمن الرحيم أهلاً بكم.في برنامجكم (قصة وعبره) في الحلقة الماضية، شهدنا المعجزة الكبرى: انشقاق البحر، وغرق فرعون، ونجاة بني إسرائيل. نتوقع الآن أن تبدأ قصة أمة صالحة تشكر الله.</p>
+<p>لكن ما حدث كان صادماً. اليوم، تبدأ قصة "موسى القائد" ومعاناته مع قومه. سنرى كيف أن القوم الذين رأوا البحر ينشق، هم أنفسهم أول من طلب الشرك، وأول من عبد العجل الذهبي بمجرد أن غاب عنهم نبيهم. قصة اليوم هي عن التحدي الأصعب: بناء الإنسان. ابقوا معنا."</p>
+<h3 class="section-header">القصة باختصار * الطلب الأول (الشرك) بمجرد عبورهم البحر، مروا على قوم يعبدون أصناماً. ماذا كان طلبهم الصادم من موسى؟ "قَالُوا يَا مُوسَى اجْعَل لَّنَا إِلَٰهًا كَمَا لَهُمْ آلِهَةٌ". (ما زالت عقلية "الإله المادي" تسيطر عليهم).</h3>
+<p>* الطلب الأول (الشرك): بمجرد عبورهم البحر، مروا على قوم يعبدون أصناماً. ماذا كان طلبهم الصادم من موسى؟ "قَالُوا يَا مُوسَى اجْعَل لَّنَا إِلَٰهًا كَمَا لَهُمْ آلِهَةٌ". (ما زالت عقلية "الإله المادي" تسيطر عليهم).</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>اختبار المن والسلوى:</strong> بدأوا رحلة التيه في الصحراء. أنزل الله عليهم طعاماً سماوياً جاهزاً: "الْمَنَّ" (طعام حلو) و "السَّلْوَىٰ" (طائر السمان).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>التمرد على النعمة:</strong> بعد فترة، ملّوا من هذا الطعام الإلهي، وطلبوا العودة لـ "زراعة الأرض": "فَادْعُ لَنَا رَبَّكَ يُخْرِجْ لَنَا مِمَّا تُنبِتُ الْأَرْضُ مِن بَقْلِهَا وَقِثَّائِهَا وَفُومِهَا وَعَدَسِهَا وَبَصَلِهَا". كان ردهم عجيباً: "أَتَسْتَبْدِلُونَ الَّذِي هُوَ أَدْنَىٰ بِالَّذِي هُوَ خَيْرٌ؟".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الموعد المقدس (الألواح):</strong> ذهب موسى (عليه السلام) لميقات ربه 40 ليلة ليتلقى التوراة (الألواح التي فيها المنهج). وترك أخاه هارون مسؤولاً عنهم.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الكارثة (العجل الذهبي):</strong> في غياب موسى، ظهر رجل منهم اسمه "السامري". جمع ذهب النساء، وصنع منه "عِجْلًا جَسَدًا لَّهُ خُوَارٌ" (تمثال عجل له صوت بفعل حركة الهواء). وقال لهم: "هَٰذَا إِلَٰهُكُمْ وَإِلَٰهُ مُوسَىٰ فَنَسِيَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>ضعف هارون:</strong> حاول هارون (عليه السلام) منعهم، لكنهم استضعفوه وكادوا يقتلونه.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>غضب موسى (النبي الغاضب):</strong> عاد موسى ليجد الكارثة. أمة كاملة تعبد عجلاً! فامتلأ غضباً لله. "وَأَلْقَى الْأَلْوَاحَ" (من هول الصدمة) وأخذ برأس أخيه يجره إليه.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>التوبة القاسية:</strong> كانت توبتهم من هذه الجريمة قاسية جداً ليطهرهم الله: "فَتُوبُوا إِلَىٰ بَارِئِكُمْ فَاقْتُلُوا أَنفُسَكُمْ" (أي ليقتل البريء منكم المذنب).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>التمرد على دخول الأرض المقدسة:</strong> بعد كل هذا، وصلوا إلى أبواب "الأرض المقدسة" (فلسطين). أمرهم الله بدخولها.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الجبن والعصيان:</strong> رفضوا القتال، وقالوا كلمتهم الوقحة: "فَاذْهَبْ أَنتَ وَرَبُّكَ فَقَاتِلَا إِنَّا هَاهُنَا قَاعِدُونَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العقوبة (40 سنة تيه):</strong> هنا، دعا عليهم موسى: "رَبِّ إِنِّي لَا أَمْلِكُ إِلَّا نَفْسِي وَأَخِي...". فجاء الحكم الإلهي: "فَإِنَّهَا مُحَرَّمَةٌ عَلَيْهِمْ ۛ أَرْبَعِينَ سَنَةً ۛ يَتِيهُونَ فِي الْأَرْضِ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>نهاية موسى وهارون:</strong> مات موسى وهارون (عليهما السلام) في أرض التيه، ولم يدخلا الأرض المقدسة مع هذا الجيل العاصي.</div></div>
+<h3 class="section-header">الدروس والعبر * الدرس الأول رؤية المعجزات لا تصنع الإيمان.</h3>
+<p>* الدرس الأول: رؤية المعجزات لا تصنع الإيمان.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> بنو إسرائيل رأوا البحر ينشق، ورأوا فرعون يغرق، ثم عبدوا العجل. الدرس: المعجزات المادية قد تُبهر، لكنها لا تبني إيماناً حقيقياً. الإيمان الحقيقي هو اختيار عقلي وقلبي بالمنهج، وليس مجرد انبهار بالخوارق.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> خطورة الفراغ القيادي (غياب موسى).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> بمجرد أن غاب "موسى" القائد، ظهر "السامري" المضل، وانهارت الأمة. هذا يعلمنا أن المجتمعات تحتاج دائماً إلى قيادة صالحة وواعية، لأن "السامري" لا يظهر إلا عندما يغيب "موسى".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> عقوبة الجبن (التيه 40 سنة).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> عندما رفضوا دفع ثمن بسيط (الجهاد) لدخول الأرض المقدسة، عاقبهم الله بعقوبة أشد: 40 سنة من الضياع والتيه في الصحراء. الدرس: الهروب من التكاليف الصعبة في وقتها، قد يكلفك "عمرك كله" ضائعاً في صحراء التيه.</div></div>
+<h3 class="section-header">الخاتمة "مات موسى (عليه السلام) في التيه، بعد رحلة طويلة من الصراع مع فرعون ومع بني إسرائيل. قصة كليم الله هي ملحمة الصبر على الطغاة، والصبر على الأتباع.</h3>
+<p>"مات موسى (عليه السلام) في التيه، بعد رحلة طويلة من الصراع مع فرعون ومع بني إسرائيل. قصة كليم الله هي ملحمة الصبر على الطغاة، والصبر على الأتباع.</p>
+<p>مات الجيل الذي عبد العجل في التيه، وولد جيل جديد تربى على يد نبي آخر تلميذٍ لموسى.</p>
+<p>في الحلقة القادمة، نلتقي بهذا النبي الشاب الذي وُلد في التيه، وهو الذي سيكمل المهمة، ويعبر ببني إسرائيل إلى الأرض المقدسة.. قصة يوشع بن نون (عليه السلام). إلى اللقاء."</p></div></div><div id="episode-17" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة السابعة عشرة: يوشع بن نون (عليه السلام)</span><h2 class="article-title">فتى موسى: يوشع بن نون.. يوم أن حُبست الشمس</h2><div class="article-text"><h3 class="section-header">المقدمة "بسم الله الرحمن الرحيم أهلاً بكم.في برنامجكم (قصة وعبره) في الحلقة الماضية، انتهت قصة بني إسرائيل بالتيه 40 سنة في الصحراء عقاباً لهم على جبنهم. ومات في التيه الجيل الذي عبد العجل، ومات أيضاً موسى وهارون (عليهما السلام).</h3>
+<p>"بسم الله الرحمن الرحيم أهلاً بكم.في برنامجكم (قصة وعبره) في الحلقة الماضية، انتهت قصة بني إسرائيل بالتيه 40 سنة في الصحراء عقاباً لهم على جبنهم. ومات في التيه الجيل الذي عبد العجل، ومات أيضاً موسى وهارون (عليهما السلام).</p>
+<p>لكن، وُلد جيل جديد.. جيل تربى في الصحراء على الشدة لا على الذل. واليوم، قصتنا عن قائد هذا الجيل الجديد، "فتى موسى" الذي ذُكر في القرآن، النبي الذي أكمل المهمة المستحيلة، والذي شهد واحدة من أعظم المعجزات: يوم أن توقفت الشمس عن الغروب. قصة يوشع بن نون (عليه السلام). ابقوا معنا."</p>
+<h3 class="section-header">القصة باختصار * من هو يوشع؟ هو "فتى موسى" الذي كان يرافقه في رحلته للقاء الخضر. وهو أحد الرجلين الذين قالا لبني إسرائيل (أيام موسى) "ادْخُلُوا عَلَيْهِمُ الْبَابَ فَإِذَا دَخَلْتُمُوهُ فَإِنَّكُمْ غَالِبُونَ". لقد كان تلميذاً وفياً وشجاعاً.</h3>
+<p>* من هو يوشع؟: هو "فتى موسى" الذي كان يرافقه في رحلته للقاء الخضر. وهو أحد الرجلين الذين قالا لبني إسرائيل (أيام موسى): "ادْخُلُوا عَلَيْهِمُ الْبَابَ فَإِذَا دَخَلْتُمُوهُ فَإِنَّكُمْ غَالِبُونَ". لقد كان تلميذاً وفياً وشجاعاً.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>استلام الراية:</strong> بعد وفاة موسى، أوحى الله إلى يوشع بن نون، وكلفه بقيادة الجيل الجديد لفتح "الأرض المقدسة" (فلسطين) التي جبن آباؤهم عن دخولها.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>عبور الأردن:</strong> كانت أولى المعارك هي عبور نهر الأردن. بمعجزة إلهية، انحسر ماء النهر وعبر جيش بني إسرائيل.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>فتح أريحا:</strong> كانت أول مدينة يواجهونها هي مدينة "أريحا"، وكانت مدينة ذات أسوار عظيمة وحصون منيعة.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>المعجزة الكبرى (حبس الشمس):</strong> وقعت المعركة الكبرى لفتح المدينة يوم جمعة. استمر القتال طوال اليوم، وكادت الشمس أن تغرب.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>المشكلة:</strong> إذا غربت الشمس، يبدأ "يوم السبت"، والسبت مُحرّم فيه القتال على بني إسرائيل. وهذا يعني أن العدو سيعيد ترتيب صفوفه وستفشل المعركة.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدعاء اليقين:</strong> نظر يوشع (عليه السلام) إلى الشمس وقال قولته الشهيرة: "أيتها الشمس، إنك مأمورة وأنا مأمور". ثم دعا ربه: "اللهم احبسها علينا".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>توقف الزمن:</strong> استجاب الله لدعاء نبيه. تأخر غروب الشمس، ولم تغرب، حتى تم النصر الكامل لبني إسرائيل. (وهي معجزة لم تحدث لنبي قبله بهذا الشكل).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>إتمام المهمة:</strong> نجح يوشع فيما فشل فيه الجيل السابق. قاد بني إسرائيل، وفتح الله على يديه الأرض المقدسة، وقسّمها بين أسباط بني إسرائيل الاثني عشر. وعاشوا في الأرض التي وعدهم الله بها.</div></div>
+<h3 class="section-header">الدروس والعبر* الدرس الأول الله لا يربي أمة في "العبودية".</h3>
+<p>* الدرس الأول: الله لا يربي أمة في "العبودية".</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> لماذا 40 سنة تيه؟ ليموت الجيل الذي تربى على "الذل" في مصر (عقلية العبيد)، ويولد جيل جديد تربى على "الحرية" في الصحراء. الله أراد جيلاً "حراً" ليحمل أمانة الأرض المقدسة.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> الكون كله يخدم "المؤمن صاحب المهمة".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> "اللهم احبسها علينا". يوشع كان يقاتل "لله"، فغيّر الله له "قانون الكون". عندما تكون في مهمة خالصة لله، فإن الله يسخر لك ما لا يتخيله عقلك، حتى لو كان "إيقاف الزمن" نفسه.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> الوفاء وإتمام المسيرة.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> يوشع هو التلميذ الوفي. موسى بدأ، ويوشع أكمل. هذا يعلمنا أهمية "تمرير الراية". العمل العظيم لا يرتبط بشخص واحد يموت بموته، بل هو "مسيرة" يكملها جيل بعد جيل.</div></div>
+<h3 class="section-header">الخاتمة"هذه قصة يوشع بن نون، قصة الجيل الجديد، وقصة النصر الذي جاء بعد طول صبر. لقد استقرت أخيراً أقدام بني إسرائيل في الأرض المقدسة.</h3>
+<p>"هذه قصة يوشع بن نون، قصة الجيل الجديد، وقصة النصر الذي جاء بعد طول صبر. لقد استقرت أخيراً أقدام بني إسرائيل في الأرض المقدسة.</p>
+<p>ولكن، هل استمروا على العهد؟ للأسف، بعد وفاة يوشع، دب الفساد فيهم مرة أخرى، وعبدوا الأصنام، وتفرقوا، وسلّط الله عليهم أعداءهم... حتى جاء زمن طلبوا فيه شيئاً غريباً.</p>
+<p>في الحلقة القادمة، ننتقل إلى زمن "القضاة" وبداية زمن "الملوك".. قصة طالوت وجالوت، وميلاد النبي الملك الشاب.. داود (عليه السلام). إلى اللقاء."</p></div></div><div id="episode-18" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة الثامنة عشرة: داود وطالوت وجالوت (عليهم السلام)</span><h2 class="article-title">بداية عصر الملوك: طالوت وجالوت.. وقتل داود للطاغية</h2><div class="article-text"><h3 class="section-header">المقدمة "بسم الله الرحمن الرحيم. أهلاً بكم. بعد أن فتح يوشع بن نون الأرض المقدسة، انحرف بنو إسرائيل مرة أخرى. عبدوا الأصنام، وتفرقوا، فضرب الله عليهم الذل، وسلّط عليهم أعداءهم حتى طردوهم من ديارهم وسلبوا منهم "تابوت العهد" المقدس.</h3>
+<p>"بسم الله الرحمن الرحيم. أهلاً بكم. بعد أن فتح يوشع بن نون الأرض المقدسة، انحرف بنو إسرائيل مرة أخرى. عبدوا الأصنام، وتفرقوا، فضرب الله عليهم الذل، وسلّط عليهم أعداءهم حتى طردوهم من ديارهم وسلبوا منهم "تابوت العهد" المقدس.</p>
+<p>في لحظة الذل هذه، ذهبوا إلى نبي لهم (قيل هو "صموئيل") بطلب غريب: "ابْعَثْ لَنَا مَلِكًا نُّقَاتِلْ فِي سَبِيلِ اللَّهِ". قصة اليوم هي عن "الملك" الذي اختاره الله، وعن "النهر" الذي فضحتهم ماؤه، وعن "الفتى الصغير" الذي قتل الطاغية "جالوت". قصة ميلاد داود (عليه السلام). ابقوا معنا."</p>
+<h3 class="section-header">القصة باختصار* الطلب والشرط طلبوا "ملِكاً" ليقودهم. حذرهم نبيهم "هَلْ عَسَيْتُمْ إِن كُتِبَ عَلَيْكُمُ الْقِتَالُ أَلَّا تُقَاتِلُوا؟" (أخشى أن تطلبوا القتال ثم تجبنوا). فأصروا.</h3>
+<p>* الطلب والشرط: طلبوا "ملِكاً" ليقودهم. حذرهم نبيهم: "هَلْ عَسَيْتُمْ إِن كُتِبَ عَلَيْكُمُ الْقِتَالُ أَلَّا تُقَاتِلُوا؟" (أخشى أن تطلبوا القتال ثم تجبنوا). فأصروا.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الاختيار الإلهي (طالوت):</strong> اختار الله لهم ملكاً اسمه "طالوت" (شاول).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الاعتراض المادي:</strong> اعترض "الملأ" (علية القوم) فوراً. لماذا هو؟ "قَالُوا أَنَّىٰ يَكُونُ لَهُ الْمُلْكُ عَلَيْنَا وَنَحْنُ أَحَقُّ بِالْمُلْكِ مِنْهُ وَلَمْ يُؤْتَ سَعَةً مِّنَ الْمَالِ". (اعتراضهم: ليس من عائلة ملكية، وليس غنياً).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>رد النبي (معايير القيادة):</strong> جاء الرد الإلهي يصحح المفاهيم: "إِنَّ اللَّهَ اصْطَفَاهُ عَلَيْكُمْ وَزَادَهُ بَسْطَةً فِي الْعِلْمِ وَالْجِسْمِ". (معايير القيادة هي: العلم والقوة، لا المال والنسب).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الآية (عودة التابوت):</strong> كانت علامتهم هي عودة "تابوت العهد" إليهم تحمله الملائكة.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>جيش طالوت (الاختبار):</strong> تجهز الجيش لقتال الطاغية "جالوت" (جالوت). كان الجيش كبيراً في البداية.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الاختبار الأول (النهر):</strong> وصلوا إلى نهر. أراد طالوت أن يختبر طاعتهم. "قَالَ إِنَّ اللَّهَ مُبْتَلِيكُم بِنَهَرٍ فَمَن شَرِبَ مِنْهُ فَلَيْسَ مِنِّي وَمَن لَّمْ يَطْعَمْهُ فَإِنَّهُ مِنِّي إِلَّا مَنِ اغْتَرَفَ غُرْفَةً بِيَدِهِ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>النتيجة:</strong> "فَشَرِبُوا مِنْهُ إِلَّا قَلِيلًا مِّنْهُمْ". (سقطت الأغلبية العاصية).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الاختبار الثاني (رؤية العدو):</strong> عبر "طالوت" والقلة المؤمنة (قيل كانوا 313 رجلاً). عندما رأوا جيش "جالوت" الجرار، سقطت فئة ثانية: "قَالُوا لَا طَاقَةَ لَنَا الْيَوْمَ بِجَالُوتَ وَجُنُودِهِ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الفئة المؤمنة (أهل اليقين):</strong> ثبتت الفئة الأخيرة "الَّذِينَ يَظُنُّونَ أَنَّهُم مُّلَاقُو اللَّهِ"، وقالوا كلمتهم الخالدة: "كَم مِّن فِئَةٍ قَلِيلَةٍ غَلَبَتْ فِئَةً كَثِيرَةً بِإِذْنِ اللَّهِ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>المواجهة (ظهور داود):</strong> برز "جالوت" الطاغية الجبار يطلب المبارزة.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الفتى الشجاع:</strong> خرج له فتى صغير لم يكن في الحسبان، راعي غنم اسمه داود (عليه السلام). (كان في جيش طالوت).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>النهاية:</strong> "فَهَزَمُوهُم بِإِذْنِ اللَّهِ وَقَتَلَ دَاوُودُ جَالُوتَ". (بمقدفته الحجرية الشهيرة).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>المكافأة:</strong> "وَآتَاهُ اللَّهُ الْمُلْكَ وَالْحِكْمَةَ وَعَلَّمَهُ مِمَّا يَشَاءُ". (أصبح داود الملك والنبي).</div></div>
+<h3 class="section-header">الدروس والعبر * الدرس الأول معايير الله للقيادة تختلف عن معايير البشر.</h3>
+<p>* الدرس الأول: معايير الله للقيادة تختلف عن معايير البشر.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> الناس اختارت "المال والنسب". والله اختار "العلم والقوة". لا تنبهر بمنصبه أو ثروته، بل انظر إلى علمه (حكمته) وقوته (أمانته وقدرته على التنفيذ).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> "اختبار النهر" (الطاعة في التفاصيل).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> الجيش الكبير سقط في اختبار "شربة ماء". من يعصي الله في "شربة ماء" وقت الرخاء، سيعصيه في "أمر القتال" وقت الشدة. النصر لا يحتاج إلى "كمية"، بل إلى "نوعية" تطيع الأمر.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> الله يخرج النصر من حيث لا نحتسب.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> كان جيش طالوت كله يخشى جالوت. لم يتوقع أحد أن النصر سيأتي على يد "فتى صغير" راعي غنم (داود). لا تحتقر أحداً، فالله يضع سره في أضعف خلقه أحياناً.</div></div>
+<h3 class="section-header">الخاتمة"بمقتل جالوت على يد داود، بدأ عصر جديد. انتهى عصر الذل، وبدأ عصر "الأنبياء الملوك".</h3>
+<p>"بمقتل جالوت على يد داود، بدأ عصر جديد. انتهى عصر الذل، وبدأ عصر "الأنبياء الملوك".</p>
+<p>هذا الفتى الصغير، داود، لم يصبح بطلاً عسكرياً فقط، بل سيصبح الملك العادل، والنبي الذي أنزل الله عليه الزبور، وصاحب الصوت الذي كانت الجبال والطير تردد معه التسبيح.</p>
+<p>في الحلقة القادمة، نغوص في قصة النبي الملك.. داود (عليه السلام). إلى اللقاء."</p></div></div><div id="episode-19" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة التاسعة عشرة: داود (عليه السلام)</span><h2 class="article-title">النبي الملك: داود عليه السلام.. قوة الحديد ورقة المزمار</h2><div class="article-text"><h3 class="section-header">المقدمة"بسم الله الرحمن الرحيم أهلاً بكم.في برنامجكم (قصة وعبره) في الحلقة الماضية، رأينا الفتى الصغير داود وهو يقتل الطاغية جالوت. لكن القصة لم تنتهِ عند البطولة العسكرية.</h3>
+<p>"بسم الله الرحمن الرحيم أهلاً بكم.في برنامجكم (قصة وعبره) في الحلقة الماضية، رأينا الفتى الصغير داود وهو يقتل الطاغية جالوت. لكن القصة لم تنتهِ عند البطولة العسكرية.</p>
+<p>اليوم، نغوص في حياة داود (عليه السلام) بعد أن أصبح ملكاً ونبياً. أول إنسان يجمع الله له بين "الملك" و "النبوة". قصة النبي الذي كان يصنع الدروع بيده، والذي كانت الجبال والطير تسبّح معه بصوته العذب، والنبي الذي وصفه الله بأنه "نِعْمَ الْعَبْدُ ۖ إِنَّهُ أَوَّابٌ" (كثير التوبة والرجوع). ابقوا معنا."</p>
+<h3 class="section-header">القصة باختصار * الملك والنبي أعطى الله داود "الملك والحكمة" وأنزل عليه كتاباً هو "الزبور".</h3>
+<p>* الملك والنبي: أعطى الله داود "الملك والحكمة" وأنزل عليه كتاباً هو "الزبور".</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>القوة في العبادة:</strong> كان داود "ذَا الْأَيْدِ" (صاحب القوة). قوته لم تكن في الملك فقط، بل في العبادة. كان يصوم يوماً ويفطر يوماً (أفضل الصيام)، وكان ينام نصف الليل ويقوم ثلثه وينام سدسه (أفضل القيام). كان "أوّاباً" (كثير الرجوع لله).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div>المعجزة الصوتية (تسبيح الجبال): منحه الله صوتاً عذباً لم يمنحه لأحد. وعندما كان يسبّح الله، كانت المعجزة تحدث: "إِنَّا سَخَّرْنَا الْجِبَالَ مَعَهُ يُسَبِّحْنَ بِالْعَشِيِّ وَالْإِشْرَاقِ  وَالطَّيْرَ مَحْشُورَةً ۖ كُلٌّ لَّهُ أَوَّابٌ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>المعجزة الصناعية (الحديد):</strong> لم يكن ملكاً مترفاً، بل كان عاملاً. "وَأَلَنَّا لَهُ الْحَدِيدَ". ألان الله له الحديد كالعجين.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>صناعة الدروع:</strong> أمره الله أن يستخدم هذه المعجزة في الخير: "أَنِ اعْمَلْ سَابِغَاتٍ وَقَدِّرْ فِي السَّرْدِ". (اصنع دروعاً متقنة) فكان أول من صنع الدروع المتشابكة التي تحمي المقاتلين، وكان يأكل من عمل يده.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الحكمة في القضاء:</strong> كان ملكاً عادلاً. "يَا دَاوُودُ إِنَّا جَعَلْنَاكَ خَلِيفَةً فِي الْأَرْضِ فَاحْكُم بَيْنَ النَّاسِ بِالْحَقِّ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div>الابتلاء والاختبار (قصة الخصمين): أراد الله أن يختبره. "وَهَلْ أَتَاكَ نَبَأُ الْخَصْمِ إِذْ تَسَوَّرُوا الْمِحْرَابَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>القصة:</strong> دخل عليه رجلان فجأة وهو في محرابه. قال أحدهما: "إِنَّ هَٰذَا أَخِي لَهُ تِسْعٌ وَتِسْعُونَ نَعْجَةً وَلِيَ نَعْجَةٌ وَاحِدَةٌ فَقَالَ أَكْفِلْنِيهَا وَعَزَّنِي فِي الْخِطَابِ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الحكم المتسرع:</strong> استمع داود لطرف واحد، وبحسن نية وغضب للحق، حكم فوراً: "قَالَ لَقَدْ ظَلَمَكَ بِسُؤَالِ نَعْجَتِكَ إِلَىٰ نِعَاجِهِ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الإدراك والتوبة:</strong> بمجرد أن حكم، أدرك "فَظَنَّ دَاوُودُ أَنَّمَا فَتَنَّاهُ" (أنه كان اختباراً له، وأنه تسرع في الحكم قبل سماع الطرف الآخر). "فَاسْتَغْفَرَ رَبَّهُ وَخَرَّ رَاكِعًا وَأَنَابَ". (تاب فوراً من التسرع، لا من ذنب عظيم كما في الروايات الأخرى).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>المغفرة والترقية:</strong> "فَغَفَرْنَا لَهُ ذَٰلِكَ ۖ وَإِنَّ لَهُ عِندَنَا لَزُلْفَىٰ وَحُسْنَ مَآبٍ".</div></div>
+<h3 class="section-header">الدروس والعبر * الدرس الأول العبادة لا تتعارض مع العمل (الملك الصانع).</h3>
+<p>* الدرس الأول: العبادة لا تتعارض مع العمل (الملك الصانع).</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> داود كان "ملكاً"، و "نبياً"، و "قائماً لليل"، و "صانع دروع" يأكل من عمل يده. هذا هو توازن الإسلام. الدين لا يعني ترك الدنيا، بل يعني إتقان الدنيا (الصناعة) وإتقان الآخرة (العبادة) في نفس الوقت.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> قوة الصوت في خدمة الحق.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> صوت داود العذب جعل الجبال تسبّح معه. هذا يعلمنا أن "الموهبة" (الصوت الجميل، الكلمة الطيبة، الفن) عندما تُستخدم في طاعة الله، يصبح لها تأثير كوني عظيم.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> "أوّاب" (لا عيب في الخطأ، العيب في الإصرار).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> قصة الخصمين تعلمنا أن الأنبياء بشر وقد يتسرعون. لكن عظمة داود لم تكن في أنه لا يخطئ، بل في أنه كان "أوّاباً" (كثير الرجوع والتوبة). عندما أدرك التسرع، "خَرَّ رَاكِعًا" فوراً. الدرس: إذا أخطأت، ارجع فوراً.</div></div>
+<h3 class="section-header">الخاتمة "مات داود (عليه السلام) بعد أن أسس مملكة قوية وعادلة، مملكة قائمة على "العبادة" و "العمل".</h3>
+<p>"مات داود (عليه السلام) بعد أن أسس مملكة قوية وعادلة، مملكة قائمة على "العبادة" و "العمل".</p>
+<p>لكنه ترك وراءه إرثاً عظيماً، وترك ابناً سيرث هذا الملك والنبوة، ابناً سيصل به الملك إلى مدى لم يبلغه أحد من قبله ولا من بعده. الابن الذي سيفهم لغة الطير، ويحكم الجن، ويسخّر الريح.</p>
+<p>في الحلقة القادمة، ندخل مملكة العجائب.. قصة سليمان (عليه السلام). إلى اللقاء."</p></div></div><div id="episode-20" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة العشرين: سليمان (عليه السلام) - الجزء الأول</span><h2 class="article-title">المملكة المعجزة: سليمان (1).. تسبيح الريح ومنطق الطير</h2><div class="article-text"><h3 class="section-header">المقدمة"بسم الله الرحمن الرحيم أهلاً بكم.في برنامجكم (قصة وعبره) في الحلقة الماضية، تركنا الملك والنبي داود (عليه السلام). واليوم، ننتقل إلى ابنه الذي ورثه سليمان (عليه السلام).</h3>
+<p>"بسم الله الرحمن الرحيم أهلاً بكم.في برنامجكم (قصة وعبره) في الحلقة الماضية، تركنا الملك والنبي داود (عليه السلام). واليوم، ننتقل إلى ابنه الذي ورثه: سليمان (عليه السلام).</p>
+<p>إذا كانت مملكة داود قائمة على القوة والعدل، فإن مملكة سليمان هي مملكة المعجزات الخارقة. قصة نبي دعا ربه دعاءً فريداً: "رَبِّ... هَبْ لِي مُلْكًا لَّا يَنبَغِي لِأَحَدٍ مِّن بَعْدِي". فكيف كانت الاستجابة؟ قصة اليوم عن تسخير الريح، وحكم الجن، وفهم لغة النمل والهدهد. ابقوا معنا."</p>
+<h3 class="section-header">القصة باختصار * الوراثة والدعاء "وَوَرِثَ سُلَيْمَانُ دَاوُودَ". لم يرث المال، بل ورث "النبوة والملك". لكن سليمان أراد أن يكون ملكه أداة فريدة لخدمة الله، فدعا بذلك الدعاء العظيم.</h3>
+<p>* الوراثة والدعاء: "وَوَرِثَ سُلَيْمَانُ دَاوُودَ". لم يرث المال، بل ورث "النبوة والملك". لكن سليمان أراد أن يكون ملكه أداة فريدة لخدمة الله، فدعا بذلك الدعاء العظيم.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الاستجابة:</strong> (مملكة لا تتكرر):</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>تسخير الريح:</strong> "وَلِسُلَيْمَانَ الرِّيحَ غُدُوُّهَا شَهْرٌ وَرَوَاحُهَا شَهْرٌ". (أعطاه الله ريحاً سريعة جداً كـ "بساط سحري" تنقله وجيشه مسيرة شهر في ساعات).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>تسخير الجن:</strong> "وَمِنَ الشَّيَاطِينِ مَن يَغُوصُونَ لَهُ وَيَعْمَلُونَ عَمَلًا دُونَ ذَٰلِكَ". (الجن يبنون له القصور "الْمَحَارِيبَ وَالتَّمَاثِيلَ وَجِفَانٍ كَالْجَوَابِ"، ويستخرجون له اللؤلؤ من البحر).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>تسخير الطير:</strong> "وَحُشِرَ لِسُلَيْمَانَ جُنُودُهُ مِنَ الْجِنِّ وَالْإِنسِ وَالطَّيْرِ فَهُمْ يُوزَعُونَ". (جيش مكون من ثلاثة فيالق: بشر وجن وطيور!).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>منطق الطير والحيوان:</strong> "عُلِّمْنَا مَنطِقَ الطَّيْرِ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>المشهد الأول (وادي النمل):</strong> </div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div>كان الجيش العظيم (بشر، جن، طير) يسير، فوصلوا إلى "وَادِ النَّمْلِ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div>"قَالَتْ نَمْلَةٌ يَا أَيُّهَا النَّمْلُ ادْخُلُوا مَسَاكِنَكُمْ لَا يَحْطِمَنَّكُمْ سُلَيْمَانُ وَجُنُودُهُ وَهُمْ لَا يَشْعُرُونَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>رد فعل الملك:</strong> سليمان، الملك الجبار، سمعها. "فَتَبَسَّمَ ضَاحِكًا مِّن قَوْلِهَا".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>دعاء الشكر:</strong> لم يغتر، بل دعا فوراً: "رَبِّ أَوْزِعْنِي أَنْ أَشْكُرَ نِعْمَتَكَ... وَأَدْخِلْنِي بِرَحْمَتِكَ فِي عِبَادِكَ الصَّالِحِينَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>المشهد الثاني (الهدهد):</strong> </div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div>"وَتَفَقَّدَ الطَّيْرَ فَقَالَ مَا لِيَ لَا أَرَى الْهُدْهُدَ؟" (تفقد دقيق للجيش).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الغضب الحازم:</strong> "لَأُعَذِّبَنَّهُ عَذَابًا شَدِيدًا أَوْ لَأَذْبَحَنَّهُ أَوْ لَيَأْتِيَنِّي بِسُلْطَانٍ مُّبِينٍ". (هذا انضباط جيش، لا تساهل).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>عودة الهدهد:</strong> عاد الهدهد برباطة جأش، وقال للملك الأعظم: "أَحَطتُ بِمَا لَمْ تُحِطْ بِهِ". (أنا أعرف شيئاً أنت لا تعرفه!).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الخبر الخطير:</strong> "وَجِئْتُكَ مِن سَبَإٍ بِنَبَإٍ يَقِينٍ". (خبر عن مملكة "سبأ" وملكتهم "بلقيس" وقومهم يسجدون للشمس من دون الله).</div></div>
+<h3 class="section-header">الدروس والعبر* الدرس الأول التواضع في قمة القوة (درس النملة).</h3>
+<p>* الدرس الأول: التواضع في قمة القوة (درس النملة).</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> سليمان هو أقوى ملك في التاريخ، لكنه يتوقف ليتبسم من قول "نملة"، ثم لا يغتر بقوته، بل "يشكر" الله على نعمة الفهم. العظمة الحقيقية هي في التواضع عندما تمتلك كل أسباب الغرور.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> كل فرد في المملكة مسؤول (درس الهدهد).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> "الهدهد" لم يكن مجرد طائر عادي، بل كان "جندياً" و "رجل مخابرات". غاب عن مهمته ليأتي بمهمة أعظم (اكتشاف مملكة كافرة). مملكة سليمان تعلمنا أن كل فرد، مهما كان صغيراً، له دور ومسؤولية في نشر الخير.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> لا تغتر بعلمك (أحطت بما لم تحط به).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> الملك النبي، الذي معه الجن والريح، يقول له "هدهد": أنا أعرف ما لا تعرفه. هذا درس لكل قائد ومدير وعالم: كن متواضعاً، فالله قد يضع العلم والمعلومة عند كائن لم تتوقعه.</div></div>
+<h3 class="section-header">الخاتمة"هدهد صغير يغير مسار التاريخ. لقد وضع "قضية التوحيد" على طاولة الملك سليمان. والآن، سليمان لن يسكت.</h3>
+<p>"هدهد صغير يغير مسار التاريخ. لقد وضع "قضية التوحيد" على طاولة الملك سليمان. والآن، سليمان لن يسكت.</p>
+<p>لقد بدأ للتو فصل جديد ومثير. كيف سيتعامل الملك النبي مع هذه الملكة "بلقيس"؟ وكيف سيكتب لها رسالة ستجعلها تجمع قادتها؟</p>
+<p>في الحلقة القادمة، نكمل قصة سليمان (عليه السلام)، وقصة "بلقيس"، وعرشها الذي جاء "قبل أن يرتد إليه طرفه". إلى اللقاء."</p></div></div><div id="episode-21" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة الحادية والعشرين: سليمان (عليه السلام) - الجزء الثاني</span><h2 class="article-title">المملكة المعجزة: سليمان (2).. إسلام بلقيس ونهاية الملك</h2><div class="article-text"><h3 class="section-header">المقدمة"بسم الله الرحمن الرحيم. أهلاً بكم. في الحلقة الماضية، توقفنا عند "هدهد" غيور على التوحيد، كشف عن مملكة "سبأ" التي تعبد الشمس. ووضع الملك سليمان (عليه السلام) أمام مسؤولية.</h3>
+<p>"بسم الله الرحمن الرحيم. أهلاً بكم. في الحلقة الماضية، توقفنا عند "هدهد" غيور على التوحيد، كشف عن مملكة "سبأ" التي تعبد الشمس. ووضع الملك سليمان (عليه السلام) أمام مسؤولية.</p>
+<p>اليوم، نرى كيف استخدم سليمان (عليه السلام) ملكه الخارق، ليس للغزو والدمار، بل "للدعوة" والإبهار. قصة اليوم هي عن "الرسالة" التي أرسلها، وعن "العرش" الذي وصل في طرفة عين، وعن إسلام الملكة الحكيمة "بلقيس". ابقوا معنا."</p>
+<h3 class="section-header">القصة باختصار* الرسالة المختصرة القوية كتب سليمان رسالة قمة في البلاغة والحزم "إِنَّهُ مِن سُلَيْمَانَ وَإِنَّهُ بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ * أَلَّا تَعْلُوا عَلَيَّ وَأْتُونِي مُسْلِمِينَ". (لا تتكبروا، وتعالوا إليّ منقادين للحق).</h3>
+<p>* الرسالة المختصرة القوية: كتب سليمان رسالة قمة في البلاغة والحزم: "إِنَّهُ مِن سُلَيْمَانَ وَإِنَّهُ بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ * أَلَّا تَعْلُوا عَلَيَّ وَأْتُونِي مُسْلِمِينَ". (لا تتكبروا، وتعالوا إليّ منقادين للحق).</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>حكمة بلقيس (المشورة):</strong> بلقيس لم تتسرع. جمعت مجلسها "قَالَتْ يَا أَيُّهَا الْمَلَأُ أَفْتُونِي فِي أَمْرِي". عرض قادتها "القوة" (نَحْنُ أُولُو قُوَّةٍ)، لكنها اختارت "الدبلوماسية" أولاً.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الاختبار (الهدية):</strong> أرسلت هدية ثمينة لسليمان، لتختبره: هل هو "ملك" يريد المال والدنيا، أم "نبي" له قضية؟</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>رد النبي الملك:</strong> عندما جاءته الهدية، كان رده حاسماً: "أَتُمِدُّونَنِ بِمَالٍ؟ فَمَا آتَانِيَ اللَّهُ خَيْرٌ مِّمَّا آتَاكُم... ارْجِعْ إِلَيْهِمْ فَلَنَأْتِيَنَّهُمْ بِجُنُودٍ لَّا قِبَلَ لَهُم بِهَا". (الرسالة واضحة: القضية ليست مالاً، بل عقيدة).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الإبهار (إحضار العرش):</strong> قرر سليمان أن يريها قوة الله قبل أن تصل. سأل مجلسه (من الجن والإنس): "أَيُّكُمْ يَأْتِينِي بِعَرْشِهَا قَبْلَ أَن يَأْتُونِي مُسْلِمِينَ؟".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>عفريت من الجن:</strong> "قَالَ عِفْرِيتٌ مِّنَ الْجِنِّ أَنَا آتِيكَ بِهِ قَبْلَ أَن تَقُومَ مِن مَّقَامِكَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الذي عنده علم من الكتاب:</strong> "قَالَ الَّذِي عِندَهُ عِلْمٌ مِّنَ الْكِتَابِ أَنَا آتِيكَ بِهِ قَبْلَ أَن يَرْتَدَّ إِلَيْكَ طَرْفُكَ". (في طرفة عين).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الشكر قبل الغرور:</strong> "فَلَمَّا رَآهُ مُسْتَقِرًّا عِندَهُ" (رأى العرش أمامه)، لم يقل "أنا عظيم"، بل قال: "قَالَ هَٰذَا مِن فَضْلِ رَبِّي لِيَبْلُوَنِي أَأَشْكُرُ أَمْ أَكْفُرُ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>اللقاء (الصرح الممرد):</strong> وصلت بلقيس. رأت عرشها، ثم دعاها لدخول "الصرح" (قصر زجاجي شفاف تجري من تحته المياه).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>اللحظة الحاسمة:</strong> "فَلَمَّا رَأَتْهُ حَسِبَتْهُ لُجَّةً وَكَشَفَتْ عَن سَاقَيْهَا" (ظنته ماءً فرفعت ثوبها).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الانهيار والإسلام:</strong> هنا أدركت بلقيس أنها أمام قوة لا علاقة لها بالبشر أو الملوك، بل هي قوة إلهية. وأعلنت إسلامها: "قَالَتْ رَبِّ إِنِّي ظَلَمْتُ نَفْسِي وَأَسْلَمْتُ مَعَ سُلَيْمَانَ لِلَّهِ رَبِّ الْعَالَمِينَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>نهاية سليمان (درس للجن):</strong> مات سليمان (عليه السلام) وهو متكئ على عصاه، يراقب الجن وهم يعملون. وظلوا يعملون لا يعلمون بموته. "فَلَمَّا خَرَّ" (سقط) "تَبَيَّنَتِ الْجِنُّ أَن لَّوْ كَانُوا يَعْلَمُونَ الْغَيْبَ مَا لَبِثُوا فِي الْعَذَابِ الْمُهِينِ". (أنهت "دودة الأرض" أسطورة علم الجن للغيب).</div></div>
+<h3 class="section-header">الدروس والعبر * الدرس الأول القوة في خدمة الدعوة.</h3>
+<p>* الدرس الأول: القوة في خدمة الدعوة.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> سليمان لم يستخدم جيش الجن والريح لإخضاع بلقيس بالقوة، بل استخدمها "لإقناعها" بالحق. أراها المعجزات (العرش والصرح) لتدرك عظمة الله، لا عظمته هو.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> قمة الشكر في قمة الملك.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> كلما زادت النعمة (العرش في طرفة عين)، زاد شكره. "هَٰذَا مِن فَضْلِ رَبِّي لِيَبْلُوَنِي أَأَشْكُرُ أَمْ أَكْفُرُ". الدرس: النعمة ليست جائزة، بل هي "اختبار شكر".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> نهاية كل قوة (درس موت سليمان).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> الملك الجبار الذي حكم الريح والجن، مات متكئاً على عصا. وكشفت موته "دابة الأرض" (الأرضة). هذا يذكرنا بأن القوة المطلقة لله وحده، وأن الجن الذين يرهبهم الناس لا يعلمون الغيب.</div></div>
+<h3 class="section-header">الخاتمة"مات سليمان، وانتهت المملكة التي لم ولن تتكرر. مملكة أُسست على دعوة "هَبْ لِي مُلْكًا"، وانتهت بدعوة "أَسْلَمْتُ مَعَ سُلَيْمَانَ لِلَّهِ رَبِّ الْعَالَمِينَ".</h3>
+<p>"مات سليمان، وانتهت المملكة التي لم ولن تتكرر. مملكة أُسست على دعوة "هَبْ لِي مُلْكًا"، وانتهت بدعوة "أَسْلَمْتُ مَعَ سُلَيْمَانَ لِلَّهِ رَبِّ الْعَالَمِينَ".</p>
+<p>بعد عصر القوة والملوك (داود وسليمان)، يدخل بنو إسرائيل في مرحلة جديدة من الانحراف، ليأتي زمن نبي يُبتلى في جسده، لكن الله يجعله آية.. أو نبي يُبتلى في عرضه...</p>
+<p>في الحلقة القادمة، ننتقل إلى نبي من نوع آخر تماماً، نبي ابتلعه الحوت.. قصة يونس (عليه السلام). إلى اللقاء."</p></div></div><div id="episode-22" class="article-card" data-aos="fade-up"><span class="article-number">إعداد الحلقة الثانية والعشرين: يونس (عليه السلام)</span><h2 class="article-title">نبي الحوت: يونس عليه السلام.. نداء من الظلمات</h2><div class="article-text"><h3 class="section-header">المقدمة"بسم الله الرحمن الرحيم أهلاً بكم.في برنامجكم (قصة وعبره) ماذا يحدث عندما يغضب النبي؟ وهل يمكن لنبي أن يترك قومه ويغادر مهمته دون إذن من الله؟</h3>
+<p>"بسم الله الرحمن الرحيم أهلاً بكم.في برنامجكم (قصة وعبره) ماذا يحدث عندما يغضب النبي؟ وهل يمكن لنبي أن يترك قومه ويغادر مهمته دون إذن من الله؟</p>
+<p>قصتنا اليوم عن نبي كريم، هو يونس (عليه السلام). قصة نبي ابتلعه الحوت، لا ليعاقبه الله بالهلاك، بل ليعلمه درساً عميقاً في الصبر والمسؤولية. قصته هي قصة "التسبيحة" التي شقّت الظلمات، وقصة الأمة الوحيدة التي آمنت بكاملها بعد أن غادرها نبيها. ابقوا معنا."</p>
+<h3 class="section-header">القصة باختصار* المهمة في نينوى أرسل الله يونس (عليه السلام) إلى أهل "نينوى" (في العراق)، وكانوا قوماً يعبدون الأصنام.</h3>
+<p>* المهمة في نينوى: أرسل الله يونس (عليه السلام) إلى أهل "نينوى" (في العراق)، وكانوا قوماً يعبدون الأصنام.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدعوة والرفض:</strong> دعاهم مراراً وتكراراً، ولكنهم أصروا على كفرهم وعنادهم.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الغضب والمغادرة:</strong> ضاق صدر يونس (عليه السلام) من عنادهم، فغضب. وبدلاً من أن يستمر في الصبر، قرر مغادرة القرية، وهددهم بعذاب سيحل بهم بعد ثلاث ليالٍ. (لقد غادر "مغاضباً" دون أن يأمره الله بالخروج).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>على متن السفينة:</strong> "إِذْ أَبَقَ إِلَى الْفُلْكِ الْمَشْحُونِ" (هرب إلى سفينة ممتلئة).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العاصفة والقرعة:</strong> هاج البحر، وأوشكت السفينة على الغرق. أدرك الركاب أن بينهم رجلاً عاصياً هو سبب المشكلة. أجروا "القرعة" لتحديد من سيلقونه في البحر لتخفيف الحمولة.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div>"فَسَاهَمَ فَكَانَ مِنَ الْمُدْحَضِينَ": في كل مرة، كانت القرعة تقع على "يونس". فأدرك أن هذا ترتيب إلهي، وألقى بنفسه في البحر.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الالتقام المعجزة:</strong> "فَالْتَقَمَهُ الْحُوتُ وَهُوَ مُلِيمٌ" (ابتلعه الحوت وهو "مليم" أي: آتٍ بما يُلام عليه).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>في الظلمات الثلاث:</strong> وجد يونس نفسه في ظلام بطن الحوت، وظلام البحر، وظلام الليل.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>النداء الخالد (التسبيح):</strong> في هذا اليأس المطلق، لم يطلب النجاة، بل اعترف بالذنب وسبّح الله: "فَنَادَىٰ فِي الظُّلُمَاتِ أَن لَّا إِلَٰهَ إِلَّا أَنتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ الظَّالِمِينَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الاستجابة والنجاة:</strong> "فَاسْتَجَبْنَا لَهُ وَنَجَّيْنَاهُ مِنَ الْغَمِّ ۚ وَكَذَٰلِكَ نُنجِي الْمُؤْمِنِينَ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العودة للحياة:</strong> "فَنَبَذْنَاهُ بِالْعَرَاءِ وَهُوَ سَقِيمٌ" (لفظه الحوت على الشاطئ وهو مريض).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الرعاية الإلهية:</strong> "وَأَنبَتْنَا عَلَيْهِ شَجَرَةً مِّن يَقْطِينٍ" (نبات القرع) لتحميه بظلها وتكون غذاءً له.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>المفاجأة (إيمان الأمة):</strong> في هذه الأثناء، قومه في "نينوى" عندما رأوا بوادر العذاب الذي حذرهم منه، خافوا وتابوا توبة جماعية صادقة.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>النتيجة:</strong> "فَلَمَّا آمَنُوا كَشَفْنَا عَنْهُمْ عَذَابَ الْخِزْيِ".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العودة:</strong> عاد يونس (عليه السلام) إلى قومه، ليجدهم مؤمنين جميعاً، "مِائَةِ أَلْفٍ أَوْ يَزِيدُونَ".</div></div>
+<h3 class="section-header">الدروس والعبر* الدرس الأول لا تغادر مهمتك غاضباً.</h3>
+<p>* الدرس الأول: لا تغادر مهمتك غاضباً.</p>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> يونس (عليه السلام) "غضب" فضاق صدره، فـ "غادر" دون إذن. الدرس: لا تتخذ قرارات مصيرية وأنت غاضب. الصبر على المهمة (سواء كانت دعوة، أو وظيفة، أو أسرة) هو جزء أساسي منها.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثاني:</strong> مفتاح النجاة "لا إله إلا أنت سبحانك".</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> هذه التسبيحة هي أقوى علاج للغم واليأس. يونس لم يقل "يا رب نجني"، بل قال: 1. (توحيد) لا إله إلا أنت. 2. (تنزيه) سبحانك. 3. (اعتراف بالذنب) إني كنت من الظالمين. عندما تعترف لله بعظمته وتقصيرك، تأتي النجاة.</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>الدرس الثالث:</strong> الله يقبل التوبة الصادقة (حتى في آخر لحظة).</div></div>
+<div class="list-item"><i class="fas fa-star list-icon"></i> <div><strong>العبرة:</strong> قوم يونس هم الأمة الوحيدة التي آمنت بالكامل بعد رؤية بوادر العذاب، فرفع الله عنهم العذاب. هذا يعلمنا أن باب التوبة مفتوح حتى اللحظة الأخيرة، وأن رحمة الله تسبق غضبه.</div></div>
+<h3 class="section-header">الخاتمة"هذه قصة يونس.. قصة النبي الذي تاب فتاب الله عليه، وقصة القوم الذين تابوا فقبل الله توبتهم. إنها رسالة "النداء الأخير" من أعماق الظلمات، ورسالة الرحمة الإلهية التي شملت النبي وقومه.</h3>
+<p>"هذه قصة يونس.. قصة النبي الذي تاب فتاب الله عليه، وقصة القوم الذين تابوا فقبل الله توبتهم. إنها رسالة "النداء الأخير" من أعماق الظلمات، ورسالة الرحمة الإلهية التي شملت النبي وقومه.</p>
+<p>في الحلقة القادمة، نعود إلى بني إسرائيل بعد انقسام مملكتهم، ونلتقي بنبي عظيم واجه ملكاً جباراً وقوماً عبدوا صنماً اسمه "بعل".. قصة إلياس (عليه السلام). إلى اللقاء."</p></div></div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+        
+        // Active TOC link on scroll
+        const sections = document.querySelectorAll('.article-card');
+        const navLi = document.querySelectorAll('.toc-link');
+        
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLi.forEach(a => {
+                a.classList.remove('active');
+                if (a.getAttribute('href').includes(current)) {
+                    a.classList.add('active');
+                    // Scroll sidebar to active element
+                    a.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+    
