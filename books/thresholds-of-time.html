@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عَلَى عَتَبَاتِ الزَّمَانِ | مكتبة الشيخ أحمد</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #d35400;
+            --heading-font: 'Aref Ruqaa', serif;
+            --body-font: 'Amiri', serif;
+        }
+        
+        body {
+            font-family: var(--body-font);
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .book-header {
+            background: linear-gradient(135deg, #d35400, #a04000);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .book-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.1;
+        }
+
+        .book-title {
+            font-family: var(--heading-font);
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .book-subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .book-author {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: -3rem auto 3rem;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-family: var(--heading-font);
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .text-content {
+            font-size: 1.4rem;
+            text-align: justify;
+            margin-bottom: 1.5rem;
+        }
+
+        .highlight-box {
+            background: #fff8f0;
+            border-right: 5px solid var(--primary-color);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 5px;
+            font-style: italic;
+        }
+        
+        .poetry-box {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .poetry-box::before {
+            content: '❝';
+            font-family: serif;
+            font-size: 4rem;
+            color: var(--primary-color);
+            opacity: 0.2;
+            position: absolute;
+            top: -1rem;
+            right: 1rem;
+        }
+        
+        .poetry-line {
+            font-family: var(--heading-font);
+            font-size: 1.5rem;
+            margin: 1rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .poetry-hemistich {
+            flex: 1;
+            min-width: 200px;
+            max-width: 45%;
+        }
+
+        .quran-verse {
+            font-family: 'Amiri', serif;
+            color: var(--primary-color);
+            font-size: 1.6rem;
+            display: block;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .custom-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .custom-list li {
+            margin-bottom: 1rem;
+            padding-right: 2rem;
+            position: relative;
+            font-size: 1.3rem;
+        }
+
+        .custom-list li::before {
+            content: '♦';
+            color: var(--primary-color);
+            position: absolute;
+            right: 0;
+            top: 5px;
+        }
+
+        .nav-button {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 10px 25px;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: #a04000;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .book-title { font-size: 2.2rem; }
+            .content-card { padding: 1.5rem; }
+            .poetry-hemistich { max-width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="book-header">
+        <h1 class="book-title">عَلَى عَتَبَاتِ الزَّمَانِ</h1>
+        <div class="book-subtitle">مَلْحَمَةُ الْمُحَاسَبَةِ وَمِيعَادُ الِانْطِلَاقِ</div>
+        <div class="book-author">بقلم: فضيلة الشيخ أحمد إسماعيل الفشني</div>
+        <a href="../books.html" class="nav-button">
+            <i class="fas fa-arrow-right"></i> عودة للمكتبة
+        </a>
+    </header>
+
+    <div class="container">
+        <article class="content-card">
+            <div class="poetry-box">
+
+                    <div class="poetry-line">
+                        <div class="poetry-hemistich">﻿(عَلَى عَتَبَاتِ الزَّمَانِ</div>
+                        <div class="poetry-hemistich">مَلْحَمَةُ الْمُحَاسَبَةِ وَمِيعَادُ الِانْطِلَاقِ)</div>
+                    </div></div>
+<p class="text-content">الْحَمْدُ لِلَّهِ الَّذِي جَعَلَ الزَّمَانَ خِزَانَةً لِلْأَعْمَالِ، وَشَاهِداً عَلَى مَصَائِرِ الْعِبَاد، وَالصَّلَاةُ وَالسَّلَامُ عَلَى سَيِّدِنَا مُحَمَّدٍ ﷺ، الَّذِي عَلَّمَنَا أَنَّ الْعُمْرَ لَحْظَةٌ تُغْتَنَمُ، وَأَنَّ الْغَدَ غَيْبٌ لَا يُكْتَمُ، وَعَلَى آلِهِ وَصَحْبِهِ أَهْلِ الْهِمَمِ.</p>
+<p class="text-content">أَيُّهَا السَّادَةُ الْكِرَامُ..هَا نَحْنُ نَطْوِي صَفْحَةَ عَامٍ، وَنَنْشُرُ أُخْرَى، وَالزَّمَانُ يَجْرِي بِنَا جَرْياً حَثِيثاً نَحْوَ مَوْعِدٍ لَا خُلْفَ فِيهِ. إِنَّ اسْتِقْبَالَ الْعَامِ الْجَدِيدِ لَيْسَ بِمَحْضِ الِاحْتِفَالِ أَوْ تَبَادُلِ الْأَمَانِيِّ، بَلْ هُوَ "وَقْفَةُ مُحَارِبٍ" يُعِيدُ تَرْتِيبَ أَوْرَاقِهِ لِيَنْجُوَ بَيْنَ يَدَيِ اللَّهِ عَزَّ وَجَلَّ.</p>
+<p class="text-content">الْمَاضِي.. (دَفْتَرُ الِاعْتِبَارِ): إِنَّ مَنْ مَضَى عَلَيْهِ عَامٌ دُونَ أَنْ يُحَاسِبَ نَفْسَهُ حِسَابَ الشَّرِيكِ لِشَرِيكِهِ، فَقَدْ غَبَنَ نَفْسَهُ.</p>
+<ul class="custom-list">
+<li><strong>رْوَى فِي كِتَابِ "الزُّهْدِ" لِلْإِمَامِ أَحْمَدَ، أَنَّ سَيِّدَنَا الْحَسَنَ الْبَصْرِيَّ (رَضِيَ اللَّهُ عَنْهُ) كَانَ يَقُولُ:</strong>  "يَا ابْنَ آدَمَ، إِنَّمَا أَنْتَ أَيَّامٌ، كُلَّمَا ذَهَبَ يَوْمٌ ذَهَبَ بَعْضُكَ". وَيُحْكَى أَنَّ سَيِّدَنَا عُمَرَ بْنَ الْخَطَّابِ (رَضِيَ اللَّهُ عَنْهُ) كَانَ يَمْشِي فِي اللَّيْلِ وَيَضْرِبُ قَدَمَيْهِ بِالدِّرَّةِ وَيَقُولُ لِنَفْسِهِ: "مَاذَا عَمِلْتِ الْيَوْمَ؟". هَذَا هُوَ الْعُمُقُ الَّذِي نَحْتَاجُهُ؛ أَنْ نُفَتِّشَ فِي نِيَّاتِنَا، وَفِي أَمْوَالِنَا، وَفِي صِلَاتِنَا، قَبْلَ أَنْ تُنْشَرَ الصُّحُفُ.</li>
+</ul>
+<p class="text-content">الْمُسْتَقْبَلُ.. (مِيثَاقُ التَّجْدِيدِ):الْعَامُ الْجَدِيدُ هُوَ "بَعْثٌ" لِلْأَمَلِ. الْوَاجِبُ فِيهِ أَنْ نَضَعَ خُطَّةً لِلرُّوحِ كَمَا نَضَعُ خُطَّةً لِلْأَرْزَاقِ.</p>
+<ul class="custom-list">
+<li><strong>صِدْقِ التَّوَجُّهِ:</strong>  يُحْكَى أَنَّ عَابِداً مِنَ السَّلَفِ كَانَ يَكْتُبُ فِي بِدَايَةِ كُلِّ عَامٍ: "مَا هِيَ السَّيِّئَةُ الَّتِي سَأَهْجُرُهَا هَذَا الْعَامَ؟ وَمَا هِيَ الطَّاعَةُ الَّتِي سَأَلْتَزِمُهَا؟". فَلَمَّا سُئِلَ: لِمَ لَا تَكْتُبُ كُلَّ شَيْءٍ؟ قَالَ: "الْقَلِيلُ الدَّائِمُ يَبْنِي الْجِبَالَ، وَالْكَثِيرُ الْمُنْقَطِعُ غُبَارٌ تَذْرُوهُ الرِّيَاحُ".</li>
+</ul>
+<p class="text-content">أَيُّهَا السَّادَةُ الْكِرَامُ، إِنَّ الدَّقَائِقَ الَّتِي تَمُرُّ عَلَيْكَ وَأَنْتَ تَقْرَأُ هَذِهِ الْكَلِمَاتِ لَنْ تَعُودَ إِلَى يَوْمِ الْقِيَامَةِ، فَاجْعَلْ لَكَ فِي كُلِّ نَفَسٍ طَاعَةً، وَفِي كُلِّ لَحْظَةٍ نِيَّةً.</p>
+<h2 class="section-title">يَقُولُ الشَّاعِرُ فِي مَعْنَى اغْتِنَامِ الْعُمْرِ:</h2>
+<div class="poetry-box">
+
+                    <div class="poetry-line">
+                        <div class="poetry-hemistich">تَمُرُّ سِنِينُ الْعُمْرِ سَرْعَى وَنَحْنُ فِي</div>
+                        <div class="poetry-hemistich">غَفَالَةِ لَهْوٍ وَالْمَنَايَا رَوَاصِدُ</div>
+                    </div>
+                    <div class="poetry-line">
+                        <div class="poetry-hemistich">فَقُمْ يَا أَخِي نَحْوَ الْمَعَالِي مُشَمِّراً</div>
+                        <div class="poetry-hemistich">فَمَا فَازَ إِلَّا مَنْ لِرَبِّهِ عَابِدُ</div>
+                    </div></div>
+<h2 class="section-title">خَارِطَةُ طَرِيقٍ لِلْعَامِ الْجَدِيدِ:</h2>
+<ul class="custom-list">
+<li><strong>جَرْدُ الْمَظَالِمِ:</strong>  ابْدَأْ عَامَكَ بِتَصْفِيَةِ حِسَابَاتِكَ مَعَ الْخَلْقِ؛ رُدَّ الْحُقُوقَ، وَاعْتَذِرْ عَنِ الْخَطَأِ، وَصِلْ مَنْ قَطَعَكَ.</li>
+<li><strong>خَلْوَةُ الْمُحَاسَبَةِ:</strong>  خَصِّصْ سَاعَةً وَاحِدَةً لِلتَّأَمُّلِ فِي عَامِكَ الْمَاضِي؛ أَيْنَ تَعَثَّرْتَ؟ وَأَيْنَ أَصَبْتَ؟ وَاجْعَلْ مِنْ تَعَثُّرِكَ دَرْساً لِلنُّهُوضِ.</li>
+<li><strong>عَهْدُ الِاسْتِقَامَةِ:</strong>  لَا تَكُنْ "مُوسِمِيَّ الطَّاعَةِ"، بَلِ اجْعَلْ هَدَفَكَ هَذَا الْعَامَ هُوَ "الثَّبَاتَ" عَلَى الصَّلَاةِ فِي وَقْتِهَا، وَبِرِّ الْوَالِدَيْنِ، وَطَهَارَةِ اللِّسَانِ.</li>
+</ul>
+<p class="text-content">وَبِاللَّهِ تَعَالَى التَّوْفِيقُ.</p>
+
+        </article>
+    </div>
+
+</body>
+</html>
