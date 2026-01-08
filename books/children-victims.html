@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أبناؤنا | مكتبة الشيخ أحمد</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #c0392b;
+            --heading-font: 'Aref Ruqaa', serif;
+            --body-font: 'Amiri', serif;
+        }
+        
+        body {
+            font-family: var(--body-font);
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .book-header {
+            background: linear-gradient(135deg, #c0392b, #8e44ad);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .book-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.1;
+        }
+
+        .book-title {
+            font-family: var(--heading-font);
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .book-subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .book-author {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: -3rem auto 3rem;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-family: var(--heading-font);
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .text-content {
+            font-size: 1.4rem;
+            text-align: justify;
+            margin-bottom: 1.5rem;
+        }
+
+        .story-box {
+            background-color: #fdf2f2;
+            border-right: 4px solid var(--primary-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .story-title {
+            font-family: var(--heading-font);
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .custom-list {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+        }
+
+        .custom-list li {
+            margin-bottom: 1rem;
+            padding-right: 2rem;
+            position: relative;
+            font-size: 1.3rem;
+        }
+
+        .custom-list li::before {
+            content: '♥';
+            color: var(--primary-color);
+            position: absolute;
+            right: 0;
+            top: 5px;
+            font-size: 1rem;
+        }
+
+        .nav-button {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 10px 25px;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: #922b21;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .book-title { font-size: 2.2rem; }
+            .content-card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="book-header">
+        <h1 class="book-title">أبناؤنا</h1>
+        <div class="book-subtitle">لا تجعلوهم ضحايا للعناد</div>
+        <div class="book-author">بقلم: فضيلة الشيخ أحمد إسماعيل الفشني</div>
+        <a href="../books.html" class="nav-button">
+            <i class="fas fa-arrow-right"></i> عودة للمكتبة
+        </a>
+    </header>
+
+    <div class="container">
+        <article class="content-card">
+            <p class="text-content">الحمد لله الذي وهبنا الذرية وجعلها زينة الحياة الدنيا، وأمرنا بحفظ هذه الأمانة ورعايتها حق الرعاية. والصلاة والسلام على سيدنا محمد، الذي كان أرحم الناس بالأطفال، وأحنهم على الصغار، وعلى آله وصحبه الأطهار.</p>
+<p class="text-content">وبعد؛ أيها السادة الكرام، إن الأبناء هم "قرّة العين" وهم "أزهار الحياة"، ولكن مما يدمي القلب أن نرى هذه الأزهار تذبل وتُداس تحت أقدام الخلافات الزوجية.</p>
+<p class="text-content">حينما يختلف الزوجان – وسواء انتهى الأمر بالطلاق أو استمرت الخلافات داخل البيت – فإن هناك طرفاً ثالثاً بريئاً يدفع الثمن غالياً، وهم "الأبناء".</p>
+<div class="story-box"><span class="story-title">مشهد يُبكي القلوب: يُحكى أن معلماً في مدرسة ابتدائية لاحظ تلميذاً دائماً ما يكون شارداً، حزيناً، ومنزوياً عن زملائه. فلما اقترب منه المعلم وسأله برفق عن حاله، انفجر الطفل باكياً وقال كلمة نزلت كالصاعقة: "أنا أكره نفسي يا أستاذ!" ذُهل المعلم وسأله: ولماذا يا بني؟ قال الطفل: "لأن أبي يقول لي دائماً: أنت غبي ومزعج مثل أمك، وأمي تقول لي: أنت قاسي وشؤم مثل أبيك.. فأنا مزيج من اثنين سيئين، فكيف يحبني أحد؟!".</span>
+<p class="text-content">تأملوا أيها السادة.. خلافات الكبار زرعت "كره الذات" في نفس هذا الصغير! هل يرضى الله بهذا؟ أهذه هي الأمانة التي استودعكم الله إياها؟</p>
+<p class="text-content">أبناؤكم ليسوا "أوراق ضغط": إن أكبر جريمة يرتكبها الآباء والأمهات هي استخدام الأبناء كـ "سلاح" في المعركة.</p>
+<p class="text-content">نرى الزوج يمنع النفقة ليذل الأم، ونرى الأم تمنع الرؤية وتسمم أفكار الأولاد لتحرق قلب الأب.</p>
+<p class="text-content">يا من تفعلون ذلك، تذكروا قول نبيكم ﷺ: <strong>«كَفَى بِالْمَرْءِ إِثْمًا أَنْ يُضَيِّعَ مَنْ يَقُوتُ»</strong>. (رواه أبو داود). والتضييع ليس تضييع الطعام فقط، بل تضييع التربية والنفسية.</p>
+<div class="story-box"><span class="story-title">قصة من بيت الخلافة (درس في الرحمة النفسية): تعالوا نتعلم من سلفنا الصالح كيف كانوا يراعون نفسية الطفل حتى عند الفراق.</span>
+<p class="text-content">طُلِّقَت امرأة من الأنصار، وكان لها طفل صغير، فأراد أبوه (وكان ذا شأن ومكانة) أن ينتزعه منها ليضمه إليه.</p>
+<p class="text-content">فاختصما إلى خليفة رسول الله ﷺ أبي بكر الصديق رضي الله عنه.</p>
+<p class="text-content">نظر أبو بكر إلى الأب القوي، وإلى الأم الحنونة، وإلى الطفل الصغير، ثم حكم حكماً يكتب بماء الذهب، مراعياً فيه "مشاعر الطفل" قبل "حقوق الأب"، فقال للأب: <strong>«رِيقُها خيرٌ له من شَهدِ وعسلِ غيرِها»</strong> الله أكبر! ما أجمل هذا الفقه!</p>
+<p class="text-content">يقول له: إن حنان هذه الأم، وضمّتها، ورائحتها، وريقها وهي تقبله وتطعمه، أنفع لنفسية هذا الطفل وأصلح له من الشهد والعسل والمال الذي ستقدمه له أنت بعيداً عنها.</p>
+<p class="text-content">فترك الأب الطفل لأمه رحمةً به.</p>
+<p class="text-content">أخلاق الفرسان عند الخلاف: ومن القصص العجيبة أيضاً في أدب الخلاف وعدم تشويه الصورة أمام الأبناء: أن رجلاً طلق زوجته، فسألوه: ما رابك منها؟ (أي ما عيبها؟)، فقال: "العاقل لا يهتك ستر زوجته".</p>
+<p class="text-content">وبعد مدة تزوجت غيره، فسألوه عنها، فقال: "ما لي وللكلام عن امرأة صارت في ذمة رجل آخر!" لم يذمها بكلمة، ولم يقل لأولاده "أمكم كانت كذا وكذا"، بل حفظ الود، وحفظ ألسنة الناس عن أم أولاده.</p>
+<h2 class="section-title">رسالة إلى كل أب وأم: اتقوا الله في أولادكم!</h2>
+<p class="text-content">إذا وقع الخلاف، فلا تزرعوا الكراهية في صدورهم.</p>
+<ul class="custom-list">
+<li>لا تقولي لابنك: "أبوك ظالم"، ولا تقول : "أمك سيئة".</li>
+<li>علموهم أن يحترموا الطرف الآخر مهما حدث.</li>
+<li>قولوا لهم: "نحن اختلفنا كزوجين، لكننا اتفقنا على حبكم كوالدين".</li>
+</ul>
+<p class="text-content">اجعلوا أبناءكم "منطقة آمنة" منزوعة السلاح، لكي يخرج للمجتمع جيل سويّ، لا جيل معقد نفسياً بسبب أنانية الآباء.</p>
+<p class="text-content">نسأل الله أن يحفظ أبناءنا وأبناء المسلمين، وأن ينزل السكينة على كل بيت، وأن يهدينا لأحسن الأخلاق ، وبالله تعالى التوفيق.</p>
+
+        </article>
+    </div>
+
+</body>
+</html>
