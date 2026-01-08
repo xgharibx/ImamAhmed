@@ -668,6 +668,7 @@ input, textarea, select {
 .hero-section {
     position: relative;
     min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1916,6 +1917,7 @@ section {
         width: 80%;
         max-width: 400px;
         height: 100vh;
+        height: 100dvh;
         background: linear-gradient(180deg, #1a5f4a 0%, #2e7d32 50%, #1b5e20 100%);
         flex-direction: column;
         justify-content: center;
@@ -2062,6 +2064,7 @@ section {
     
     .hero-section {
         min-height: 100vh;
+        min-height: 100dvh;
         padding: 100px 10px 50px;
     }
     
