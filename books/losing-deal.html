@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الصفقة الخاسرة | مكتبة الشيخ أحمد</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #922b21;
+            --heading-font: 'Aref Ruqaa', serif;
+            --body-font: 'Amiri', serif;
+        }
+        
+        body {
+            font-family: var(--body-font);
+            background-color: #fce4ec; /* Very light reddish pink background */
+            font-weight: 500;
+            color: #333;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .book-header {
+            background: linear-gradient(135deg, #922b21, #641e16);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .book-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.1;
+        }
+
+        .book-title {
+            font-family: var(--heading-font);
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .book-subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .book-author {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: -3rem auto 3rem;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-family: var(--heading-font);
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .text-content {
+            font-size: 1.4rem;
+            text-align: justify;
+            margin-bottom: 1.5rem;
+        }
+
+        .hadith-box {
+            background-color: #fdfefe;
+            border: 2px solid var(--primary-color);
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .hadith-text {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .hadith-grade {
+            font-size: 1rem;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .custom-list {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+        }
+
+        .custom-list li {
+            margin-bottom: 1rem;
+            padding-right: 2rem;
+            position: relative;
+            font-size: 1.3rem;
+            border-bottom: 1px dashed #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        .custom-list li::before {
+            content: '⚠️';
+            position: absolute;
+            right: 0;
+            top: 5px;
+            font-size: 1rem;
+        }
+        
+        .quote-box {
+            background: #fcf3cf;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 5px solid #f1c40f;
+            font-style: italic;
+        }
+
+        .nav-button {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 10px 25px;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: #641e16;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .book-title { font-size: 2.2rem; }
+            .content-card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="book-header">
+        <h1 class="book-title">الصفقة الخاسرة</h1>
+        <div class="book-subtitle">مجاملة الخلق على حساب الخالق</div>
+        <div class="book-author">بقلم: فضيلة الشيخ أحمد إسماعيل الفشني</div>
+        <a href="../books.html" class="nav-button">
+            <i class="fas fa-arrow-right"></i> عودة للمكتبة
+        </a>
+    </header>
+
+    <div class="container">
+        <article class="content-card">
+            <p class="text-content">الحَمْدُ للهِ الَّذِي بِيَدِهِ مَقَالِيدُ القُلُوبِ، يُقَلِّبُهَا كَيْفَ يَشَاءُ، وَالصَّلَاةُ وَالسَّلَامُ عَلَى سَيِّدِنَا مُحَمَّدٍ، الَّذِي عَلَّمَنَا أَنَّ العِزَّةَ للهِ وَلِرَسُولِهِ وَلِلْمُؤْمِنِينَ، وَعَلَى آلِهِ وَصَحْبِهِ الَّذِينَ آثَرُوا رِضَا الرَّحْمَنِ عَلَى رِضَا الأَكْوَانِ.</p>
+<p class="text-content">وَبَعْدُ؛</p>
+<p class="text-content">أَيُّهَا السَّادَةُ الكِرَامُ، إِنَّنَا نَعِيشُ فِي دُنْيَا تَتَجَاذَبُنَا فِيهَا رَغَبَاتُ النَّاسِ وَأَهْوَاؤُهُمْ. هَذَا يُرِيدُ مِنْكَ كَذَا، وَذَاكَ لَا يَرْضَى عَنْكَ إِلَّا بِكَذَا. وَفِي خِضَمِّ هَذِهِ العَلَاقَاتِ الاجْتِمَاعِيَّةِ، يَقَعُ الكَثِيرُ مِنَّا فِي فَخٍّ عَظِيمٍ وَمَزْلَقٍ خَطِيرٍ؛ أَلَا وَهُوَ "مُجَامَلَةُ الخَلْقِ عَلَى حِسَابِ الخَالِقِ".</p>
+<p class="text-content">قَدْ يَجَامِلُ الإِنْسَانُ مُدِيرَهُ فِي العَمَلِ بِتَوْقِيعٍ حَرَامٍ خَوْفًا عَلَى مَنْصِبِهِ، أَوْ تُجَامِلُ المَرْأَةُ صَدِيقَاتِهَا فِي حَفْلَةٍ بِارْتِكَابِ مُخَالَفَةٍ شَرْعِيَّةٍ خَوْفًا مِنْ لَوْمِهِنَّ، أَوْ يُوَافِقُ الرَّجُلُ جُلَسَاءَهُ عَلَى الغِيبَةِ وَالنَّمِيمَةِ كَيْ لَا يُقَالَ عَنْهُ "مُتَزَمِّتٌ".</p>
+<h2 class="section-title">القَاعِدَةُ النَّبَوِيَّةُ الفَاصِلَةُ:</h2>
+<p class="text-content">لَقَدْ وَضَعَ لَنَا طَبِيبُ القُلُوبِ ﷺ قَاعِدَةً ذَهَبِيَّةً تَفْصِلُ فِي هَذَا الأَمْرِ، وَتُرِيحُ القُلُوبَ مِنَ عَنَاءِ مُلَاحَقَةِ رِضَا البَشَرِ.</p>
+<p class="text-content">فَعَنْ أُمِّ المُؤْمِنِينَ عَائِشَةَ رَضِيَ اللهُ عَنْهَا، قَالَتْ: سَمِعْتُ رَسُولَ اللهِ ﷺ يَقُولُ:</p>
+
+               <div class="hadith-box">
+                   <div class="hadith-text">«مَنِ الْتَمَسَ رِضَا اللَّهِ بِسَخَطِ النَّاسِ كَفَاهُ اللَّهُ مُؤْنَةَ النَّاسِ، وَمَنِ الْتَمَسَ رِضَا النَّاسِ بِسَخَطِ اللَّهِ وَكَلَهُ اللَّهُ إِلَى النَّاسِ"»</div>
+                   <div class="hadith-grade">(رَوَاهُ  التِّرْمِذِيُّ).</div>
+               </div>
+               <h2 class="section-title">تَأَمَّلُوا هَذِهِ الكَلِمَاتِ:</h2>
+<ul class="custom-list">
+<li><strong>كَفَاهُ اللهُ مُؤْنَةَ النَّاسِ:</strong>  إِذَا اخْتَرْتَ اللهَ، تَوَلَّى اللهُ الدِّفَاعَ عَنْكَ، وَأَلْقَى مَحَبَّتَكَ وَهَيْبَتَكَ فِي قُلُوبِ مَنْ سَخِطُوا عَلَيْكَ أَوَّلًا، لِأَنَّ القُلُوبَ بِيَدِهِ سُبْحَانَهُ.</li>
+<li><strong>وَكَلَهُ اللهُ إِلَى النَّاسِ:</strong>  وَهَذِهِ هِيَ الطَّامَّةُ! أَنْ يَتَخَلَّى اللهُ عَنْكَ، وَيَتْرُكَكَ لِهَؤُلَاءِ البَشَرِ الضُّعَفَاءِ الَّذِينَ لَا يَمْلِكُونَ لِأَنْفُسِهِمْ نَفْعًا وَلَا ضَرًّا. فَلَنْ يَرْضَوْا عَنْكَ مَهْمَا فَعَلْتَ، بَلْ سَيَنْقَلِبُونَ عَلَيْكَ ذَامِّينَ.</li>
+</ul>
+<h2 class="section-title">نَصِيحَةُ أُمِّ المُؤْمِنِينَ لِمُعَاوِيَةَ:</h2>
+<p class="text-content">وَمِنْ رَوَائِعِ التَّارِيخِ، أَنَّ مُعَاوِيَةَ بْنَ أَبِي سُفْيَانَ رَضِيَ اللهُ عَنْهُ كَتَبَ إِلَى السَّيِّدَةِ عَائِشَةَ رَضِيَ اللهُ عَنْهَا يَطْلُبُ مِنْهَا نَصِيحَةً وَيَقُولُ: "اكْتُبِي إِلَيَّ كِتَابًا تُوصِينِي فِيهِ، وَلا تُكْثِرِي عَلَيَّ".</p>
+
+               <div class="hadith-box">
+                   <div class="hadith-text">«فَكَتَبَتْ إِلَيْهِ نَصِيحَةً مُوجَزَةً خَالِدَةً، ذَكَّرَتْهُ فِيهَا بِهَذَا الحَدِيثِ، وَقَالَتْ لَهُ: "فَإِنِّي سَمِعْتُ رَسُولَ اللَّهِ ﷺ يَقُولُ: مَنِ الْتَمَسَ رِضَا اللَّهِ بِسَخَطِ النَّاسِ كَفَاهُ اللَّهُ مُؤْنَةَ النَّاسِ، وَمَنِ الْتَمَسَ رِضَا النَّاسِ بِسَخَطِ اللَّهِ وَكَلَهُ اللَّهُ إِلَى النَّاسِ، وَالسَّلَامُ عَلَيْكَ".»</div>
+                   <div class="hadith-grade"></div>
+               </div>
+               <p class="text-content">عَلِمَتْ أُمُّنَا عَائِشَةُ أَنَّ هَذَا هُوَ جِمَاعُ الخَيْرِ لِلْحَاكِمِ وَالمَحْكُومِ؛ أَلَّا يَخَافَ فِي اللهِ لَوْمَةَ لَائِمٍ.</p>
+<h2 class="section-title">رِضَا النَّاسِ غَايَةٌ لَا تُدْرَكُ:</h2>
+<div class="quote-box">أَيُّهَا السَّادَةُ الكِرَامُ، يَقُولُ الإِمَامُ الشَّافِعِيُّ رَحِمَهُ اللهُ: "رِضَا النَّاسِ غَايَةٌ لَا تُدْرَكُ، وَرِضَا اللهِ غَايَةٌ لَا تُتْرَكُ، فَاتْرُكْ مَا لَا يُدْرَكُ، وَأَدْرِكْ مَا لَا يُتْرَكُ".</div><p class="text-content">مَهْمَا حَاوَلْتَ أَنْ تُرْضِيَ الجَمِيعَ فَلَنْ تَسْتَطِيعَ. فَهَذَا يَرْضَى وَذَاكَ يَغْضَبُ، وَهَذَا يَمْدَحُ وَذَاكَ يَذُمُّ. فَإِذَا كَانَ الأَمْرُ كَذَلِكَ، فَلِمَاذَا تُتْعِبُ نَفْسَكَ وَتُغْضِبُ رَبَّكَ؟</p>
+<p class="text-content">اجْعَلْ هَمَّكَ هَمًّا وَاحِدًا، يَكْفِكَ اللهُ سَائِرَ الهُمُومِ.</p>
+<h2 class="section-title">كَيْفَ نُطَبِّقُ هَذَا فِي حَيَاتِنَا؟</h2>
+<ul class="custom-list">
+<li><strong>عِنْدَ الأَعْرَاسِ وَالمُنَاسَبَاتِ:</strong>  لَا تُوَافِقْ عَلَى المُنْكَرَاتِ وَالخَلَاعَةِ بَدَعْوَى "مُجَامَلَةِ الضُّيُوفِ". تَذَكَّرْ أَنَّ البَرَكَةَ مِنَ اللهِ، وَإِذَا سَخِطَ اللهُ نُزِعَتِ البَرَكَةُ.</li>
+<li><strong>فِي العَمَلِ وَالتِّجَارَةِ:</strong>  لَا تَغُشَّ وَلَا تَكْذِبْ لِتُرْضِيَ زَبُونًا أَوْ مُدِيرًا. فَالرِّزْقُ بِيَدِ اللهِ، وَمَنْ تَرَكَ شَيْئًا للهِ عَوَّضَهُ اللهُ خَيْرًا مِنْهُ.</li>
+<li><strong>فِي الحَقِّ:</strong>  قُلِ الحَقَّ بِلُطْفٍ وَأَدَبٍ، وَلَا تُدَاهِنْ فِي دِينِ اللهِ.</li>
+</ul>
+<h2 class="section-title">خِتَامًا:</h2>
+<p class="text-content">إِنَّ مَنْ خَافَ اللهَ أَخَافَ اللهُ مِنْهُ كُلَّ شَيْءٍ، وَمَنْ خَافَ النَّاسَ أَخَافَهُ اللهُ مِنْ كُلِّ شَيْءٍ.</p>
+<p class="text-content">فَاللَّهُمَّ اجْعَلْنَا مِمَّنْ آثَرَ رِضَاكَ، وَسَعَى لِتَقْوَاكَ، وَلَا تَكِلْنَا إِلَى أَنْفُسِنَا وَلَا إِلَى أَحَدٍ مِنْ خَلْقِكَ طَرْفَةَ عَيْنٍ.</p>
+<p class="text-content">وَبِاللهِ تَعَالَى التَّوْفِيقُ.</p>
+
+        </article>
+    </div>
+
+</body>
+</html>
