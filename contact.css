@@ -1,0 +1,613 @@
+/* =====================================================
+   Contact Page Styles - الشيخ أحمد إسماعيل الفشني
+   ===================================================== */
+
+/* Page Header */
+.page-header {
+    position: relative;
+    min-height: 40vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+    overflow: hidden;
+}
+
+.page-header-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.5;
+}
+
+.page-header-content {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.page-title {
+    font-family: var(--font-decorative);
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--primary-gold);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.page-title .title-icon {
+    font-size: 3rem;
+}
+
+.page-subtitle {
+    font-family: var(--font-primary);
+    font-size: 1.4rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 0;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.breadcrumb a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.breadcrumb a:hover {
+    color: var(--primary-gold);
+}
+
+.page-header-wave {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+}
+
+.page-header-wave svg {
+    display: block;
+    width: 100%;
+    height: 80px;
+}
+
+/* Contact Section */
+.contact-section {
+    padding: 5rem 0;
+    background: var(--bg-primary);
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+/* Contact Info */
+.contact-info {
+    position: sticky;
+    top: 120px;
+}
+
+.contact-info h2 {
+    font-family: var(--font-decorative);
+    font-size: 2rem;
+    color: var(--primary-green);
+    margin-bottom: 1rem;
+    position: relative;
+    display: inline-block;
+}
+
+.contact-info h2::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    right: 0;
+    width: 50%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-gold), transparent);
+    border-radius: 3px;
+}
+
+.info-intro {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.8;
+}
+
+/* Info Cards */
+.info-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.info-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    border-right: 4px solid var(--primary-gold);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateX(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.info-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-green), var(--primary-green-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.info-icon i {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.info-content h3 {
+    font-family: var(--font-primary);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.info-content p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    direction: ltr;
+    text-align: right;
+}
+
+/* Social Section */
+.social-section {
+    margin-bottom: 2rem;
+}
+
+.social-section h3 {
+    font-family: var(--font-primary);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.social-links {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.social-link i {
+    font-size: 1.25rem;
+}
+
+.social-link.facebook {
+    background: rgba(66, 103, 178, 0.1);
+    color: #4267B2;
+}
+
+.social-link.facebook:hover {
+    background: #4267B2;
+    color: white;
+}
+
+.social-link.youtube {
+    background: rgba(255, 0, 0, 0.1);
+    color: #FF0000;
+}
+
+.social-link.youtube:hover {
+    background: #FF0000;
+    color: white;
+}
+
+.social-link.telegram {
+    background: rgba(0, 136, 204, 0.1);
+    color: #0088CC;
+}
+
+.social-link.telegram:hover {
+    background: #0088CC;
+    color: white;
+}
+
+.social-link.whatsapp {
+    background: rgba(37, 211, 102, 0.1);
+    color: #25D366;
+}
+
+.social-link.whatsapp:hover {
+    background: #25D366;
+    color: white;
+}
+
+.social-link.twitter {
+    background: rgba(0, 0, 0, 0.08);
+    color: #000;
+}
+
+.social-link.twitter:hover {
+    background: #000;
+    color: white;
+}
+
+.social-link.instagram {
+    background: linear-gradient(45deg, rgba(253, 29, 29, 0.1), rgba(131, 58, 180, 0.1));
+    color: #E1306C;
+}
+
+.social-link.instagram:hover {
+    background: linear-gradient(45deg, #F58529, #DD2A7B, #8134AF);
+    color: white;
+}
+
+.social-link.linkedin {
+    background: rgba(0, 119, 181, 0.1);
+    color: #0077B5;
+}
+
+.social-link.linkedin:hover {
+    background: #0077B5;
+    color: white;
+}
+
+.social-link.tiktok {
+    background: rgba(0, 0, 0, 0.08);
+    color: #000;
+}
+
+.social-link.tiktok:hover {
+    background: #000;
+    color: #25F4EE;
+}
+
+/* Contact Verse */
+.contact-verse {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
+    border-radius: 16px;
+    text-align: center;
+}
+
+.contact-verse blockquote {
+    position: relative;
+    padding: 0;
+    margin: 0;
+}
+
+.contact-verse i {
+    font-size: 1.5rem;
+    color: var(--primary-gold);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.contact-verse p {
+    font-family: var(--font-decorative);
+    font-size: 1.5rem;
+    color: white;
+    margin-bottom: 0.5rem;
+    line-height: 2;
+}
+
+.contact-verse cite {
+    font-style: normal;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Contact Form Container */
+.contact-form-container {
+    background: var(--bg-secondary);
+    border-radius: 24px;
+    padding: 2.5rem;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-form-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, var(--primary-gold), transparent);
+    opacity: 0.05;
+    border-radius: 0 24px 0 100%;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form-header h2 {
+    font-family: var(--font-decorative);
+    font-size: 2rem;
+    color: var(--primary-green);
+    margin-bottom: 0.5rem;
+}
+
+.form-header p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+/* Form Styles */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.form-group .required {
+    color: #e74c3c;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper i {
+    position: absolute;
+    right: 1rem;
+    color: var(--primary-green);
+    font-size: 1rem;
+    pointer-events: none;
+    transition: color 0.3s ease;
+}
+
+.input-wrapper input,
+.input-wrapper select,
+.input-wrapper textarea {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3rem;
+    padding-right: 3rem;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    font-family: var(--font-primary);
+    font-size: 1rem;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    transition: all 0.3s ease;
+}
+
+.input-wrapper input:focus,
+.input-wrapper select:focus,
+.input-wrapper textarea:focus {
+    outline: none;
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 4px rgba(26, 95, 74, 0.1);
+}
+
+.input-wrapper input:focus + i,
+.input-wrapper select:focus + i,
+.input-wrapper textarea:focus + i {
+    color: var(--primary-gold);
+}
+
+.input-wrapper.textarea-wrapper {
+    align-items: flex-start;
+}
+
+.input-wrapper.textarea-wrapper i {
+    top: 1rem;
+}
+
+.input-wrapper textarea {
+    resize: vertical;
+    min-height: 150px;
+}
+
+.input-wrapper select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%231a5f4a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 1rem center;
+}
+
+/* Submit Button */
+.submit-btn {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    background: linear-gradient(135deg, var(--primary-green), var(--primary-green-dark));
+    border: none;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(26, 95, 74, 0.3);
+}
+
+.submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Form Success */
+.form-success {
+    display: none;
+    text-align: center;
+    padding: 3rem 2rem;
+    animation: fadeIn 0.5s ease;
+}
+
+.form-success .success-icon {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-green), var(--primary-green-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    animation: scaleIn 0.5s ease;
+}
+
+.form-success .success-icon i {
+    font-size: 3rem;
+    color: white;
+}
+
+.form-success h3 {
+    font-family: var(--font-decorative);
+    font-size: 1.75rem;
+    color: var(--primary-green);
+    margin-bottom: 0.75rem;
+}
+
+.form-success p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .contact-info {
+        position: static;
+        order: 2;
+    }
+    
+    .contact-form-container {
+        order: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 2.5rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .page-title .title-icon {
+        font-size: 2.5rem;
+    }
+    
+    .page-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .contact-section {
+        padding: 3rem 0;
+    }
+    
+    .contact-form-container {
+        padding: 1.5rem;
+    }
+    
+    .social-links {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 2rem;
+    }
+    
+    .info-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .info-content p {
+        text-align: center;
+    }
+}

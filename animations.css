@@ -1,0 +1,605 @@
+/* =====================================================
+   الشيخ أحمد إسماعيل الفشني - Advanced Animations
+   Morphing, Calligraphy Effects, and Islamic Patterns
+   ===================================================== */
+
+/* ============== Morphing Text Animation ============== */
+.morphing-text {
+    position: relative;
+}
+
+.morphing-text::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(201, 162, 39, 0.1),
+        transparent
+    );
+    animation: morphShine 5s ease-in-out infinite;
+}
+
+@keyframes morphShine {
+    0%, 100% { left: -100%; }
+    50% { left: 100%; }
+}
+
+/* ============== Calligraphy Reveal Animation ============== */
+.calligraphy-reveal {
+    position: relative;
+    overflow: hidden;
+}
+
+.calligraphy-reveal::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--primary-green-dark);
+    transform-origin: right;
+    animation: revealText 1.5s ease-out forwards;
+}
+
+@keyframes revealText {
+    0% { transform: scaleX(1); }
+    100% { transform: scaleX(0); }
+}
+
+/* ============== Floating Animation ============== */
+.float-animation {
+    animation: floatUpDown 4s ease-in-out infinite;
+}
+
+@keyframes floatUpDown {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+/* ============== Glow Pulse Animation ============== */
+.glow-pulse {
+    animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(201, 162, 39, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(201, 162, 39, 0.6);
+    }
+}
+
+/* ============== Text Gradient Animation ============== */
+.animated-gradient-text {
+    background: linear-gradient(
+        270deg,
+        var(--primary-gold),
+        var(--primary-gold-light),
+        var(--primary-gold),
+        var(--accent-cream)
+    );
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 8s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ============== Islamic Star Rotation ============== */
+.islamic-star {
+    animation: starRotate 20s linear infinite;
+}
+
+@keyframes starRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ============== Card Hover Effects ============== */
+.card-hover-lift {
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                box-shadow 0.4s ease;
+}
+
+.card-hover-lift:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* ============== Ripple Effect ============== */
+.ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(201, 162, 39, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.ripple:active::after {
+    width: 300px;
+    height: 300px;
+}
+
+/* ============== Typewriter Effect ============== */
+.typewriter {
+    overflow: hidden;
+    border-left: 3px solid var(--primary-gold);
+    white-space: nowrap;
+    animation: 
+        typing 3.5s steps(40, end),
+        blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50% { border-color: var(--primary-gold); }
+}
+
+/* ============== Slide In Animations ============== */
+.slide-in-right {
+    animation: slideInRight 0.8s ease-out forwards;
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.8s ease-out forwards;
+}
+
+.slide-in-up {
+    animation: slideInUp 0.8s ease-out forwards;
+}
+
+.slide-in-down {
+    animation: slideInDown 0.8s ease-out forwards;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============== Scale In Animation ============== */
+.scale-in {
+    animation: scaleIn 0.5s ease-out forwards;
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ============== Fade Animations ============== */
+.fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+.fade-in-delay-1 { animation-delay: 0.1s; }
+.fade-in-delay-2 { animation-delay: 0.2s; }
+.fade-in-delay-3 { animation-delay: 0.3s; }
+.fade-in-delay-4 { animation-delay: 0.4s; }
+.fade-in-delay-5 { animation-delay: 0.5s; }
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ============== Bounce Animation ============== */
+.bounce {
+    animation: bounce 2s ease infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-20px); }
+    60% { transform: translateY(-10px); }
+}
+
+/* ============== Shake Animation ============== */
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* ============== Heartbeat Animation ============== */
+.heartbeat {
+    animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    14% { transform: scale(1.1); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.1); }
+    70% { transform: scale(1); }
+}
+
+/* ============== Swing Animation ============== */
+.swing {
+    animation: swing 2s ease-in-out infinite;
+    transform-origin: top center;
+}
+
+@keyframes swing {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(5deg); }
+    75% { transform: rotate(-5deg); }
+}
+
+/* ============== Flash Animation ============== */
+.flash {
+    animation: flash 2s ease-in-out infinite;
+}
+
+@keyframes flash {
+    0%, 50%, 100% { opacity: 1; }
+    25%, 75% { opacity: 0.5; }
+}
+
+/* ============== Rotate Animation ============== */
+.rotate-continuous {
+    animation: rotateContinuous 10s linear infinite;
+}
+
+@keyframes rotateContinuous {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ============== Border Animation ============== */
+.animated-border {
+    position: relative;
+    overflow: hidden;
+}
+
+.animated-border::before,
+.animated-border::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: var(--gradient-gold);
+}
+
+.animated-border::before {
+    top: 0;
+    left: -100%;
+    animation: borderSlide 3s ease-in-out infinite;
+}
+
+.animated-border::after {
+    bottom: 0;
+    right: -100%;
+    animation: borderSlide 3s ease-in-out infinite reverse;
+}
+
+@keyframes borderSlide {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(200%); }
+}
+
+/* ============== Islamic Geometric Pattern Animation ============== */
+.islamic-pattern-animate {
+    position: relative;
+}
+
+.islamic-pattern-animate::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="none" stroke="%23c9a227" stroke-width="0.5" d="M50 0 L60 40 L100 50 L60 60 L50 100 L40 60 L0 50 L40 40 Z"/></svg>');
+    background-size: 50px 50px;
+    opacity: 0.1;
+    animation: patternMove 20s linear infinite;
+}
+
+@keyframes patternMove {
+    from { background-position: 0 0; }
+    to { background-position: 50px 50px; }
+}
+
+/* ============== Text Shadow Animation ============== */
+.animated-text-shadow {
+    animation: textShadowPulse 3s ease-in-out infinite;
+}
+
+@keyframes textShadowPulse {
+    0%, 100% {
+        text-shadow: 0 0 10px rgba(201, 162, 39, 0.5);
+    }
+    50% {
+        text-shadow: 0 0 30px rgba(201, 162, 39, 0.8),
+                     0 0 60px rgba(201, 162, 39, 0.4);
+    }
+}
+
+/* ============== Parallax Effect ============== */
+.parallax {
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+/* ============== Blur In Animation ============== */
+.blur-in {
+    animation: blurIn 1s ease-out forwards;
+}
+
+@keyframes blurIn {
+    from {
+        filter: blur(10px);
+        opacity: 0;
+    }
+    to {
+        filter: blur(0);
+        opacity: 1;
+    }
+}
+
+/* ============== Skeleton Loading ============== */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--bg-secondary) 25%,
+        var(--bg-primary) 50%,
+        var(--bg-secondary) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeletonLoading 1.5s ease-in-out infinite;
+}
+
+@keyframes skeletonLoading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ============== Counter Animation ============== */
+.counter-animate {
+    animation: countUp 2s ease-out forwards;
+}
+
+/* ============== Image Reveal ============== */
+.image-reveal {
+    position: relative;
+    overflow: hidden;
+}
+
+.image-reveal::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--primary-green);
+    transform-origin: right;
+    animation: imageReveal 1s ease-out 0.5s forwards;
+}
+
+@keyframes imageReveal {
+    from { transform: scaleX(1); }
+    to { transform: scaleX(0); }
+}
+
+/* ============== Staggered List Animation ============== */
+.stagger-list > * {
+    opacity: 0;
+    animation: staggerFadeIn 0.5s ease-out forwards;
+}
+
+.stagger-list > *:nth-child(1) { animation-delay: 0.1s; }
+.stagger-list > *:nth-child(2) { animation-delay: 0.2s; }
+.stagger-list > *:nth-child(3) { animation-delay: 0.3s; }
+.stagger-list > *:nth-child(4) { animation-delay: 0.4s; }
+.stagger-list > *:nth-child(5) { animation-delay: 0.5s; }
+.stagger-list > *:nth-child(6) { animation-delay: 0.6s; }
+.stagger-list > *:nth-child(7) { animation-delay: 0.7s; }
+.stagger-list > *:nth-child(8) { animation-delay: 0.8s; }
+
+@keyframes staggerFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============== Hover Underline Animation ============== */
+.hover-underline {
+    position: relative;
+    display: inline-block;
+}
+
+.hover-underline::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-gold);
+    transition: width 0.3s ease;
+}
+
+.hover-underline:hover::after {
+    width: 100%;
+}
+
+/* ============== Magnetic Button Effect ============== */
+.magnetic-btn {
+    transition: transform 0.3s ease;
+}
+
+/* ============== Morphing Shape Animation ============== */
+.morphing-shape {
+    animation: morphShape 8s ease-in-out infinite;
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+}
+
+@keyframes morphShape {
+    0%, 100% {
+        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    }
+    25% {
+        border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+    }
+    50% {
+        border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%;
+    }
+    75% {
+        border-radius: 60% 40% 60% 30% / 70% 30% 50% 60%;
+    }
+}
+
+/* ============== Wave Animation ============== */
+.wave-animation {
+    animation: wave 2.5s ease-in-out infinite;
+}
+
+@keyframes wave {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-10px) rotate(2deg); }
+    75% { transform: translateY(10px) rotate(-2deg); }
+}
+
+/* ============== 3D Card Flip ============== */
+.card-3d {
+    perspective: 1000px;
+}
+
+.card-3d-inner {
+    position: relative;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+}
+
+.card-3d:hover .card-3d-inner {
+    transform: rotateY(180deg);
+}
+
+.card-3d-front,
+.card-3d-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.card-3d-back {
+    transform: rotateY(180deg);
+}
+
+/* ============== Neon Glow Effect ============== */
+.neon-glow {
+    animation: neonGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes neonGlow {
+    from {
+        box-shadow: 
+            0 0 5px var(--primary-gold),
+            0 0 10px var(--primary-gold),
+            0 0 20px var(--primary-gold);
+    }
+    to {
+        box-shadow: 
+            0 0 10px var(--primary-gold),
+            0 0 20px var(--primary-gold),
+            0 0 40px var(--primary-gold),
+            0 0 80px var(--primary-gold);
+    }
+}
+
+/* ============== Reduced Motion ============== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

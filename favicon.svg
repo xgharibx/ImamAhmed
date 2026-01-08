@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#c9a227"/>
+      <stop offset="50%" style="stop-color:#e8d48b"/>
+      <stop offset="100%" style="stop-color:#c9a227"/>
+    </linearGradient>
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a5f4a"/>
+      <stop offset="100%" style="stop-color:#0d3b2d"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="50" cy="50" r="48" fill="url(#greenGrad)"/>
+  <circle cx="50" cy="50" r="46" fill="none" stroke="url(#goldGrad)" stroke-width="2"/>
+  
+  <!-- Mosque Dome -->
+  <path d="M50 15 Q30 30 30 45 L30 45 L70 45 Q70 30 50 15 Z" fill="url(#goldGrad)"/>
+  
+  <!-- Crescent on top -->
+  <path d="M50 10 Q55 15 50 20 Q47 15 50 10" fill="url(#goldGrad)"/>
+  
+  <!-- Mosque Body -->
+  <rect x="25" y="45" width="50" height="35" fill="url(#goldGrad)"/>
+  
+  <!-- Main Door -->
+  <path d="M42 55 Q50 48 58 55 L58 80 L42 80 Z" fill="url(#greenGrad)"/>
+  
+  <!-- Windows -->
+  <path d="M30 52 Q35 48 40 52 L40 62 L30 62 Z" fill="url(#greenGrad)"/>
+  <path d="M60 52 Q65 48 70 52 L70 62 L60 62 Z" fill="url(#greenGrad)"/>
+  
+  <!-- Minarets -->
+  <rect x="15" y="35" width="8" height="45" fill="url(#goldGrad)"/>
+  <path d="M19 25 Q15 35 15 35 L23 35 Q23 35 19 25" fill="url(#goldGrad)"/>
+  
+  <rect x="77" y="35" width="8" height="45" fill="url(#goldGrad)"/>
+  <path d="M81 25 Q77 35 77 35 L85 35 Q85 35 81 25" fill="url(#goldGrad)"/>
+  
+  <!-- Base -->
+  <rect x="10" y="80" width="80" height="8" rx="2" fill="url(#goldGrad)"/>
+</svg>

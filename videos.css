@@ -1,0 +1,643 @@
+/* =====================================================
+   الشيخ أحمد إسماعيل الفشني - Videos Page Styles
+   ===================================================== */
+
+/* ============== Page Header ============== */
+.page-header {
+    position: relative;
+    padding: 150px 0 100px;
+    background: var(--gradient-green);
+    overflow: hidden;
+}
+
+.page-header-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(201, 162, 39, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(201, 162, 39, 0.1) 0%, transparent 40%);
+}
+
+.page-header-content {
+    position: relative;
+    text-align: center;
+    color: var(--text-light);
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    color: var(--primary-gold-light);
+}
+
+.breadcrumb a {
+    color: var(--primary-gold-light);
+    transition: var(--transition-normal);
+}
+
+.breadcrumb a:hover {
+    color: var(--primary-gold);
+}
+
+.breadcrumb i {
+    font-size: 0.7rem;
+}
+
+.page-title {
+    font-family: var(--font-calligraphy);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.title-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: var(--primary-gold);
+    border-radius: var(--radius-full);
+    color: var(--primary-green-dark);
+}
+
+.title-icon i {
+    font-size: 1.5rem;
+}
+
+.page-subtitle {
+    font-size: 1.2rem;
+    color: var(--primary-gold-light);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.page-header-wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    line-height: 0;
+}
+
+.page-header-wave svg {
+    width: 100%;
+    height: 80px;
+}
+
+/* ============== Categories Section ============== */
+.categories-section {
+    padding: var(--spacing-xl) 0;
+    background: var(--bg-primary);
+}
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.category-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-normal);
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.category-card:hover,
+.category-card.active {
+    transform: translateY(-5px);
+    border-color: var(--primary-gold);
+    box-shadow: var(--shadow-lg);
+}
+
+.category-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gradient-green);
+    border-radius: var(--radius-full);
+}
+
+.category-icon i {
+    font-size: 1.8rem;
+    color: var(--primary-gold);
+}
+
+.category-card h3 {
+    font-family: var(--font-decorative);
+    font-size: 1.1rem;
+    color: var(--primary-green-dark);
+    margin-bottom: 0.5rem;
+}
+
+.category-count {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    background: var(--bg-secondary);
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-sm);
+}
+
+/* ============== Videos Section ============== */
+.videos-section {
+    padding: var(--spacing-xl) 0;
+    background: var(--bg-secondary);
+}
+
+/* ============== Coming Soon ============== */
+.coming-soon-container {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.coming-soon-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.coming-soon-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: var(--gradient-gold);
+}
+
+.coming-soon-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gradient-green);
+    border-radius: var(--radius-full);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.coming-soon-icon i {
+    font-size: 2.5rem;
+    color: var(--primary-gold);
+}
+
+.coming-soon-card h2 {
+    font-family: var(--font-calligraphy);
+    font-size: 2.5rem;
+    color: var(--primary-green);
+    margin-bottom: 1rem;
+}
+
+.coming-soon-card > p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.coming-soon-verse {
+    font-family: var(--font-decorative);
+    font-size: 1.4rem;
+    color: var(--primary-gold);
+    margin-bottom: 2rem;
+}
+
+.coming-soon-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+.feature-item i {
+    color: var(--primary-green);
+    font-size: 1.1rem;
+}
+
+.subscribe-notify {
+    padding-top: 2rem;
+    border-top: 2px dashed var(--primary-gold);
+}
+
+.subscribe-notify h3 {
+    font-family: var(--font-decorative);
+    font-size: 1.3rem;
+    color: var(--primary-green);
+    margin-bottom: 0.5rem;
+}
+
+.subscribe-notify p {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.notify-form {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.notify-form input {
+    flex: 1;
+    min-width: 250px;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    font-family: inherit;
+    border: 2px solid var(--primary-green);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+    transition: var(--transition-normal);
+}
+
+.notify-form input:focus {
+    outline: none;
+    border-color: var(--primary-gold);
+    box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.2);
+}
+
+/* ============== Videos Grid (Future) ============== */
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.videos-grid.hidden {
+    display: none;
+}
+
+.video-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-normal);
+}
+
+.video-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.video-thumbnail {
+    position: relative;
+    aspect-ratio: 16/9;
+    background: var(--bg-secondary);
+}
+
+.video-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.video-play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70px;
+    height: 70px;
+    background: rgba(201, 162, 39, 0.9);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-normal);
+}
+
+.video-play-btn i {
+    font-size: 1.8rem;
+    color: var(--primary-green-dark);
+    margin-right: -3px;
+}
+
+.video-card:hover .video-play-btn {
+    transform: translate(-50%, -50%) scale(1.1);
+    background: var(--primary-gold);
+}
+
+.video-duration {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+    border-radius: 4px;
+}
+
+.video-info {
+    padding: var(--spacing-sm);
+}
+
+.video-title {
+    font-family: var(--font-decorative);
+    font-size: 1.1rem;
+    color: var(--primary-green-dark);
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.video-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.video-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.video-meta i {
+    color: var(--primary-gold);
+}
+
+/* ============== Video Content Styles ============== */
+.video-content {
+    padding: var(--spacing-sm);
+}
+
+.video-desc {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+}
+
+.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 2px solid var(--primary-green);
+    color: var(--primary-green);
+    font-size: 0.85rem;
+    border-radius: var(--radius-md);
+    transition: var(--transition-normal);
+    text-decoration: none;
+}
+
+.btn-outline:hover {
+    background: var(--primary-green);
+    color: white;
+}
+
+.btn-outline.btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+}
+
+/* Video Embed & Placeholder Styles */
+.video-embed {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.video-embed iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.video-embed.placeholder {
+    background: linear-gradient(135deg, var(--primary-green-dark), var(--primary-green));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-embed.placeholder.hajj-bg {
+    background: linear-gradient(135deg, #1a1a1a, #333);
+}
+
+.play-overlay {
+    text-align: center;
+    color: var(--primary-gold);
+}
+
+.play-overlay i {
+    font-size: 3.5rem;
+    display: block;
+    margin-bottom: 0.5rem;
+    transition: var(--transition-normal);
+    text-shadow: 0 0 20px rgba(201, 162, 39, 0.5);
+}
+
+.video-card:hover .play-overlay i {
+    transform: scale(1.2);
+}
+
+.play-overlay span {
+    font-size: 0.85rem;
+    color: var(--primary-gold-light);
+}
+
+.video-category {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--primary-gold);
+    color: var(--primary-green-dark);
+    padding: 0.3rem 0.8rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    z-index: 2;
+}
+
+.video-category i {
+    font-size: 0.7rem;
+}
+
+/* Featured Video Card */
+.video-card.featured {
+    border: 2px solid var(--primary-gold);
+}
+
+.video-card.featured .video-category {
+    background: var(--gradient-gold);
+}
+
+/* Hajj Card */
+.video-card.hajj-card .video-category {
+    background: #1a1a1a;
+    color: var(--primary-gold);
+}
+
+/* Section Description */
+.section-desc {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-top: 1rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Alt Background */
+.videos-section.alt-bg {
+    background: var(--bg-primary);
+}
+
+/* Channel Name in YouTube Section */
+.channel-name {
+    font-family: monospace;
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+    opacity: 0.8;
+}
+
+/* Category cards as links */
+a.category-card {
+    text-decoration: none;
+}
+
+a.category-card:hover h3 {
+    color: var(--primary-gold);
+}
+
+/* ============== YouTube Section ============== */
+.youtube-section {
+    padding: var(--spacing-xl) 0;
+    background: var(--bg-primary);
+}
+
+.youtube-card {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: #ff0000;
+    border-radius: var(--radius-lg);
+    color: white;
+}
+
+.youtube-icon {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-full);
+}
+
+.youtube-icon i {
+    font-size: 2.5rem;
+}
+
+.youtube-content {
+    flex: 1;
+}
+
+.youtube-content h3 {
+    font-family: var(--font-decorative);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.youtube-content p {
+    opacity: 0.9;
+    font-size: 0.95rem;
+}
+
+.btn-youtube {
+    flex-shrink: 0;
+    background: white;
+    color: #ff0000;
+    font-weight: 600;
+}
+
+.btn-youtube:hover {
+    background: var(--bg-secondary);
+    transform: translateY(-3px);
+}
+
+/* ============== Responsive ============== */
+@media (max-width: 768px) {
+    .page-header {
+        padding: 120px 0 80px;
+    }
+    
+    .categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .coming-soon-card {
+        padding: var(--spacing-md);
+    }
+    
+    .coming-soon-features {
+        grid-template-columns: 1fr;
+    }
+    
+    .notify-form {
+        flex-direction: column;
+    }
+    
+    .notify-form input {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .youtube-card {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .categories-grid {
+        grid-template-columns: 1fr;
+    }
+}

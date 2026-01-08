@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="الموقع الرسمي للشيخ أحمد إسماعيل الفشني - إمام وخطيب - دروس ومحاضرات وخواطر إسلامية">
+    <meta name="keywords" content="الشيخ أحمد الفشني, أحمد إسماعيل الفشني, دروس إسلامية, خطب, محاضرات, خواطر">
+    <meta name="author" content="الشيخ أحمد إسماعيل الفشني">
+    <title>الشيخ أحمد إسماعيل الفشني | الموقع الرسمي</title>
+    
+    <!-- Google Fonts - Arabic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@300;400;500;700;800;900&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="living-scripture.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+</head>
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <!-- Preloader Flying Letters -->
+        <div class="preloader-letters" aria-hidden="true">
+            <span class="preloader-letter" style="top: 10%; left: 15%; animation-delay: 0s;">ب</span>
+            <span class="preloader-letter" style="top: 20%; right: 20%; animation-delay: 0.3s;">س</span>
+            <span class="preloader-letter" style="top: 35%; left: 10%; animation-delay: 0.6s;">م</span>
+            <span class="preloader-letter" style="top: 50%; right: 15%; animation-delay: 0.9s;">ا</span>
+            <span class="preloader-letter" style="top: 65%; left: 20%; animation-delay: 1.2s;">ل</span>
+            <span class="preloader-letter" style="top: 80%; right: 10%; animation-delay: 1.5s;">ل</span>
+            <span class="preloader-letter" style="top: 15%; right: 40%; animation-delay: 0.4s;">ه</span>
+            <span class="preloader-letter" style="top: 70%; left: 40%; animation-delay: 1.1s;">ر</span>
+            <span class="preloader-letter" style="top: 85%; right: 35%; animation-delay: 1.7s;">ح</span>
+            <span class="preloader-letter" style="top: 25%; left: 45%; animation-delay: 0.2s;">م</span>
+            <span class="preloader-letter" style="top: 45%; right: 45%; animation-delay: 0.8s;">ن</span>
+            <span class="preloader-letter" style="top: 60%; left: 35%; animation-delay: 1.4s;">ي</span>
+            <span class="preloader-letter" style="top: 30%; right: 5%; animation-delay: 0.5s;">☾</span>
+            <span class="preloader-letter" style="top: 75%; left: 5%; animation-delay: 1.6s;">☾</span>
+            <span class="preloader-letter" style="top: 40%; left: 80%; animation-delay: 0.7s;">☾</span>
+            <span class="preloader-letter" style="top: 55%; right: 80%; animation-delay: 1.0s;">☾</span>
+        </div>
+        <!-- Islamic Pattern Overlay -->
+        <div class="preloader-pattern"></div>
+        <div class="loader">
+            <div class="islamic-pattern-loader"></div>
+            <div class="bismillah-loader">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+        </div>
+    </div>
+
+    <!-- Floating Islamic Decorations -->
+    <div class="floating-decorations">
+        <div class="decoration dec-1"></div>
+        <div class="decoration dec-2"></div>
+        <div class="decoration dec-3"></div>
+    </div>
+
+    <!-- Flying Arabic Letters Decoration -->
+    <div class="flying-letters" aria-hidden="true">
+        <span class="flying-letter" style="top: 10%; right: 5%; animation-duration: 20s; animation-delay: 0s;">ا</span>
+        <span class="flying-letter" style="top: 25%; right: 20%; animation-duration: 24s; animation-delay: 2s;">ح</span>
+        <span class="flying-letter" style="top: 40%; right: 35%; animation-duration: 22s; animation-delay: 4s;">م</span>
+        <span class="flying-letter" style="top: 60%; right: 15%; animation-duration: 26s; animation-delay: 6s;">د</span>
+        <span class="flying-letter" style="top: 75%; right: 45%; animation-duration: 23s; animation-delay: 8s;">ن</span>
+        <span class="flying-letter" style="top: 50%; right: 70%; animation-duration: 25s; animation-delay: 10s;">ق</span>
+        <span class="flying-letter" style="top: 20%; right: 60%; animation-duration: 21s; animation-delay: 12s;">ر</span>
+        <span class="flying-letter" style="top: 85%; right: 30%; animation-duration: 27s; animation-delay: 14s;">ى</span>
+        <span class="flying-letter" style="top: 15%; right: 80%; animation-duration: 24s; animation-delay: 16s;">ت</span>
+        <span class="flying-letter" style="top: 68%; right: 55%; animation-duration: 22s; animation-delay: 18s;">س</span>
+        <span class="flying-letter" style="top: 33%; right: 8%; animation-duration: 23s; animation-delay: 3s;">ل</span>
+        <span class="flying-letter" style="top: 55%; right: 42%; animation-duration: 26s; animation-delay: 7s;">ع</span>
+        <span class="flying-letter" style="top: 72%; right: 68%; animation-duration: 21s; animation-delay: 11s;">ب</span>
+        <span class="flying-letter" style="top: 42%; right: 82%; animation-duration: 25s; animation-delay: 5s;">ي</span>
+        <span class="flying-letter" style="top: 88%; right: 12%; animation-duration: 24s; animation-delay: 15s;">ك</span>
+        <span class="flying-letter" style="top: 8%; right: 48%; animation-duration: 22s; animation-delay: 1s;">ه</span>
+        <span class="flying-letter" style="top: 62%; right: 90%; animation-duration: 27s; animation-delay: 13s;">و</span>
+        <span class="flying-letter" style="top: 28%; right: 75%; animation-duration: 23s; animation-delay: 9s;">ص</span>
+        <span class="flying-letter" style="top: 78%; right: 22%; animation-duration: 25s; animation-delay: 17s;">ف</span>
+        <span class="flying-letter" style="top: 48%; right: 3%; animation-duration: 24s; animation-delay: 19s;">ط</span>
+    </div>
+
+    <!-- Navigation -->
+    <header id="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <!-- Logo -->
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <span class="moon-icon">☾</span>
+                    </div>
+                    <div class="logo-text">
+                        <span class="logo-title">الشيخ أحمد الفشني</span>
+                        <span class="logo-subtitle">إمام وخطيب</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Menu -->
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="index.html" class="nav-link active"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li class="nav-item"><a href="hadith.html" class="nav-link"><i class="fas fa-book-quran"></i> الحديث الشريف</a></li>
+                    <li class="nav-item"><a href="quran.html" class="nav-link"><i class="fas fa-quran"></i> القرآن الكريم</a></li>
+                    <li class="nav-item"><a href="articles.html" class="nav-link"><i class="fas fa-book-open"></i> المقالات</a></li>
+                    <li class="nav-item"><a href="videos.html" class="nav-link"><i class="fas fa-video"></i> الدروس والمحاضرات</a></li>
+                    <li class="nav-item"><a href="khawater.html" class="nav-link"><i class="fas fa-feather-alt"></i> الخواطر</a></li>
+                    <li class="nav-item"><a href="khawater-full-book.html" class="nav-link"><i class="fas fa-moon"></i> الكتاب الكامل</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link"><i class="fas fa-user"></i> عن الشيخ</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link"><i class="fas fa-envelope"></i> تواصل</a></li>
+                </ul>
+
+                <!-- Mobile Menu Toggle -->
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Islamic Border Decoration -->
+        <div class="nav-border-decoration">
+            <svg viewBox="0 0 1200 20" preserveAspectRatio="none">
+                <pattern id="islamic-border" x="0" y="0" width="60" height="20" patternUnits="userSpaceOnUse">
+                    <path d="M0 10 Q15 0 30 10 Q45 20 60 10" fill="none" stroke="currentColor" stroke-width="2"/>
+                </pattern>
+                <rect width="100%" height="100%" fill="url(#islamic-border)"/>
+            </svg>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+        <!-- Animated Background Pattern -->
+        <div class="hero-bg-pattern"></div>
+        
+        <!-- Floating Crescent Moons Background (replaced stars) -->
+        <div class="floating-moons-bg" aria-hidden="true">
+            <span class="floating-moon moon-1">☾</span>
+            <span class="floating-moon moon-2">☾</span>
+            <span class="floating-moon moon-3">☾</span>
+        </div>
+
+        <div class="hero-content" data-aos="fade-up" data-aos-duration="1200">
+            <!-- Calligraphy Header -->
+            <div class="calligraphy-container">
+                <div class="bismillah" data-aos="zoom-in" data-aos-delay="200">
+                    بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                </div>
+            </div>
+
+            <!-- Main Title with Morphing Effect -->
+            <div class="hero-title-container">
+                <h1 class="hero-title morphing-text">
+                    <span class="title-line">الشيخ</span>
+                    <span class="title-name">أحمد إسماعيل الفشني</span>
+                </h1>
+                <div class="title-decoration">
+                    <span class="deco-line"></span>
+                    <span class="deco-star">☾</span>
+                    <span class="deco-line"></span>
+                </div>
+            </div>
+
+            <!-- Subtitle -->
+            <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="400">
+                إمام وخطيب | داعية إلى الله | معلم ومربي
+            </p>
+
+            <!-- Verse -->
+            <div class="hero-verse" data-aos="fade-up" data-aos-delay="600">
+                <blockquote>
+                    <span class="verse-text">﴿ وَمَنْ أَحْسَنُ قَوْلًا مِّمَّن دَعَا إِلَى اللَّهِ وَعَمِلَ صَالِحًا وَقَالَ إِنَّنِي مِنَ الْمُسْلِمِينَ ﴾</span>
+                    <cite>— سورة فصلت: ٣٣</cite>
+                </blockquote>
+            </div>
+
+            <!-- CTA Buttons -->
+            <div class="hero-cta" data-aos="fade-up" data-aos-delay="800">
+                <a href="articles.html" class="btn btn-primary">
+                    <i class="fas fa-book-reader"></i>
+                    تصفح المقالات
+                </a>
+                <a href="videos.html" class="btn btn-secondary">
+                    <i class="fas fa-play-circle"></i>
+                    شاهد الدروس
+                </a>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+            <span>اسحب للأسفل</span>
+        </div>
+
+        <!-- Hero Wave -->
+        <div class="hero-wave">
+            <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+                <path d="M0,64 C480,150 960,-20 1440,64 L1440,120 L0,120 Z" fill="var(--bg-primary)"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Featured Section -->
+    <section id="featured" class="featured-section">
+        <div class="container">
+            <!-- Section Header -->
+            <div class="section-header" data-aos="fade-up">
+                <div class="section-icon">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <h2 class="section-title">أحدث الإضافات</h2>
+                <div class="section-divider">
+                    <span></span>
+                    <i class="fas fa-mosque"></i>
+                    <span></span>
+                </div>
+                <p class="section-subtitle">آخر المقالات والخواطر والدروس</p>
+            </div>
+
+            <!-- Featured Cards Grid -->
+            <div class="featured-grid">
+                <!-- Featured Article Card 1 -->
+                <article class="featured-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card-decoration">
+                        <div class="corner corner-tl"></div>
+                        <div class="corner corner-tr"></div>
+                        <div class="corner corner-bl"></div>
+                        <div class="corner corner-br"></div>
+                    </div>
+                    <div class="card-icon">
+                        <i class="fas fa-feather-alt"></i>
+                    </div>
+                    <span class="card-category">خواطر</span>
+                    <h3 class="card-title">خواطر على درب النجاح والتزكية</h3>
+                    <p class="card-excerpt">مجموعة من الخواطر والتأملات في طريق النجاح وتزكية النفس، تجمع بين الحكمة والموعظة الحسنة...</p>
+                    <div class="card-meta">
+                        <span class="meta-date"><i class="far fa-calendar-alt"></i> ٢٠٢٤</span>
+                        <span class="meta-read"><i class="far fa-clock"></i> ٥ دقائق</span>
+                    </div>
+                    <a href="khawater.html" class="card-link">
+                        اقرأ المزيد
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                </article>
+
+                <!-- Featured Article Card 2 -->
+                <article class="featured-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card-decoration">
+                        <div class="corner corner-tl"></div>
+                        <div class="corner corner-tr"></div>
+                        <div class="corner corner-bl"></div>
+                        <div class="corner corner-br"></div>
+                    </div>
+                    <div class="card-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <span class="card-category">مقالات</span>
+                    <h3 class="card-title">في رحاب الإيمان</h3>
+                    <p class="card-excerpt">تأملات في معاني الإيمان وأثره في حياة المسلم، وكيف نرتقي بإيماننا في زمن الفتن...</p>
+                    <div class="card-meta">
+                        <span class="meta-date"><i class="far fa-calendar-alt"></i> ٢٠٢٤</span>
+                        <span class="meta-read"><i class="far fa-clock"></i> ٨ دقائق</span>
+                    </div>
+                    <a href="articles.html" class="card-link">
+                        اقرأ المزيد
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                </article>
+
+                <!-- Featured Video Card -->
+                <article class="featured-card video-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card-decoration">
+                        <div class="corner corner-tl"></div>
+                        <div class="corner corner-tr"></div>
+                        <div class="corner corner-bl"></div>
+                        <div class="corner corner-br"></div>
+                    </div>
+                    <div class="card-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <span class="card-category">دروس</span>
+                    <h3 class="card-title">الدروس والمحاضرات</h3>
+                    <p class="card-excerpt">مكتبة شاملة من الدروس والمحاضرات في العلوم الشرعية والتربية الإيمانية...</p>
+                    <div class="card-meta">
+                        <span class="meta-videos"><i class="fas fa-play-circle"></i> قريباً</span>
+                    </div>
+                    <a href="videos.html" class="card-link">
+                        شاهد الدروس
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Khawater Preview Section -->
+    <section id="khawater-preview" class="khawater-section">
+        <div class="khawater-bg-pattern"></div>
+        <div class="container">
+            <div class="section-header light" data-aos="fade-up">
+                <div class="section-icon">
+                    <i class="fas fa-quote-right"></i>
+                </div>
+                <h2 class="section-title">من الخواطر</h2>
+                <div class="section-divider light">
+                    <span></span>
+                    <i class="fas fa-moon"></i>
+                    <span></span>
+                </div>
+            </div>
+
+            <!-- Khawater Slider -->
+            <div class="khawater-slider" data-aos="fade-up" data-aos-delay="200">
+                <div class="khawater-slide active">
+                    <div class="khawater-content">
+                        <div class="quote-mark quote-open">❝</div>
+                        <p class="khawater-text">النجاح ليس محطة نصل إليها، بل هو رحلة مستمرة من التزكية والارتقاء بالنفس نحو الكمال الذي أراده الله لنا</p>
+                        <div class="quote-mark quote-close">❞</div>
+                    </div>
+                </div>
+                <div class="khawater-slide">
+                    <div class="khawater-content">
+                        <div class="quote-mark quote-open">❝</div>
+                        <p class="khawater-text">التزكية طريق طويل، لكنه الطريق الوحيد الذي يقودك إلى السعادة الحقيقية في الدنيا والآخرة</p>
+                        <div class="quote-mark quote-close">❞</div>
+                    </div>
+                </div>
+                <div class="khawater-slide">
+                    <div class="khawater-content">
+                        <div class="quote-mark quote-open">❝</div>
+                        <p class="khawater-text">كل يوم هو فرصة جديدة للتوبة والرجوع إلى الله، فلا تدع الأمس يثقل كاهلك عن السير نحو الغد</p>
+                        <div class="quote-mark quote-close">❞</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slider Navigation -->
+            <div class="slider-nav">
+                <button class="nav-btn prev-btn"><i class="fas fa-chevron-right"></i></button>
+                <div class="slider-dots"></div>
+                <button class="nav-btn next-btn"><i class="fas fa-chevron-left"></i></button>
+            </div>
+
+            <a href="khawater.html" class="btn btn-light" data-aos="fade-up" data-aos-delay="400">
+                المزيد من الخواطر
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- About Preview Section -->
+    <section id="about-preview" class="about-section">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-image" data-aos="fade-left" data-aos-delay="200">
+                    <div class="image-frame">
+                        <div class="frame-decoration"></div>
+                        <img src="sheikh-photo.png" alt="الشيخ أحمد إسماعيل الفشني" class="sheikh-photo-home" style="width: 100%; height: auto; border-radius: var(--radius-md); display: block;">
+                    </div>
+                </div>
+                <div class="about-content" data-aos="fade-right">
+                    <div class="section-header text-right">
+                        <div class="section-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h2 class="section-title">عن الشيخ</h2>
+                        <div class="section-divider">
+                            <span></span>
+                            <i class="fas fa-moon"></i>
+                            <span></span>
+                        </div>
+                    </div>
+                    <div class="about-text">
+                        <p>
+                            <strong>الشيخ أحمد إسماعيل الفشني</strong>، إمام وخطيب، داعية إلى الله تعالى، 
+                            يسعى من خلال دروسه ومحاضراته وخواطره إلى نشر العلم الشرعي وتربية النفوس على 
+                            منهج الكتاب والسنة.
+                        </p>
+                        <p>
+                            يتميز أسلوبه بالبساطة والعمق، حيث يجمع بين الموعظة الحسنة والحكمة في 
+                            مخاطبة القلوب، مع التركيز على تزكية النفس والارتقاء بها نحو الكمال.
+                        </p>
+                    </div>
+                    <div class="about-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-book"></i>
+                            <span class="stat-number">+٥٠</span>
+                            <span class="stat-label">خاطرة</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-video"></i>
+                            <span class="stat-number">قريباً</span>
+                            <span class="stat-label">درس ومحاضرة</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-users"></i>
+                            <span class="stat-number">+١٠٠٠</span>
+                            <span class="stat-label">متابع</span>
+                        </div>
+                    </div>
+                    <a href="about.html" class="btn btn-primary">
+                        اقرأ المزيد
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Media Section -->
+    <section id="social" class="social-section">
+        <div class="social-bg-pattern"></div>
+        <div class="container">
+            <div class="section-header light" data-aos="fade-up">
+                <div class="section-icon">
+                    <i class="fas fa-share-alt"></i>
+                </div>
+                <h2 class="section-title">تابعنا على</h2>
+                <div class="section-divider light">
+                    <span></span>
+                    <i class="fas fa-heart"></i>
+                    <span></span>
+                </div>
+                <p class="section-subtitle">تواصل معنا عبر منصات التواصل الاجتماعي</p>
+            </div>
+
+            <div class="social-grid" data-aos="fade-up" data-aos-delay="200">
+                <a href="https://www.facebook.com/share/1AcZYBDpD5/" class="social-card facebook" target="_blank" rel="noopener">
+                    <div class="social-icon">
+                        <i class="fab fa-facebook-f"></i>
+                    </div>
+                    <span class="social-name">فيسبوك</span>
+                    <span class="social-handle">@ahmed.elfashny</span>
+                </a>
+                <a href="https://www.youtube.com/@ahmedelfashny" class="social-card youtube" target="_blank" rel="noopener">
+                    <div class="social-icon">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <span class="social-name">يوتيوب</span>
+                    <span class="social-handle">@ahmedelfashny</span>
+                </a>
+                <a href="https://x.com/ahmed_eelfashny" class="social-card twitter" target="_blank" rel="noopener">
+                    <div class="social-icon">
+                        <i class="fab fa-x-twitter"></i>
+                    </div>
+                    <span class="social-name">تويتر</span>
+                    <span class="social-handle">@ahmed_eelfashny</span>
+                </a>
+                <a href="https://www.instagram.com/ahmedelfashny0/" class="social-card instagram" target="_blank" rel="noopener">
+                    <div class="social-icon">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                    <span class="social-name">إنستجرام</span>
+                    <span class="social-handle">@ahmedelfashny0</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section id="newsletter" class="newsletter-section">
+        <div class="container">
+            <div class="newsletter-content" data-aos="fade-up">
+                <div class="newsletter-icon">
+                    <i class="fas fa-envelope-open-text"></i>
+                </div>
+                <h2>اشترك في القائمة البريدية</h2>
+                <p>احصل على آخر المقالات والخواطر والدروس مباشرة في بريدك الإلكتروني</p>
+                <form class="newsletter-form" id="newsletterForm">
+                    <div class="form-group">
+                        <input type="email" placeholder="البريد الإلكتروني" required>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            اشترك
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer" class="footer">
+        <div class="footer-pattern"></div>
+        <div class="container">
+            <div class="footer-grid">
+                <!-- Footer About -->
+                <div class="footer-section" data-aos="fade-up">
+                    <div class="footer-logo">
+                        <span class="logo-arabic">الشيخ أحمد الفشني</span>
+                    </div>
+                    <p class="footer-about">
+                        الموقع الرسمي للشيخ أحمد إسماعيل الفشني - إمام وخطيب وداعية إلى الله.
+                        نسعى لنشر العلم النافع والدعوة إلى الله بالحكمة والموعظة الحسنة.
+                    </p>
+                    <div class="footer-social">
+                        <a href="https://www.facebook.com/ahmed.elfashny.9" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.youtube.com/@ahmedelfashny" aria-label="YouTube" target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
+                        <a href="https://x.com/ahmed_eelfashny" aria-label="Twitter" target="_blank" rel="noopener"><i class="fab fa-x-twitter"></i></a>
+                        <a href="https://www.instagram.com/ahmedelfashny0/" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/in/%D8%A7%D9%84%D8%B4%D9%8A%D8%AE-%D8%A3%D8%AD%D9%85%D8%AF-%D8%A7%D9%84%D9%81%D8%B4%D9%86%D9%8A-505234344" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.tiktok.com/@ahmedelfashny123" aria-label="TikTok" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+
+                <!-- Footer Links -->
+                <div class="footer-section" data-aos="fade-up" data-aos-delay="100">
+                    <h3 class="footer-title">روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html"><i class="fas fa-angle-left"></i> الرئيسية</a></li>
+                        <li><a href="articles.html"><i class="fas fa-angle-left"></i> المقالات</a></li>
+                        <li><a href="videos.html"><i class="fas fa-angle-left"></i> الدروس والمحاضرات</a></li>
+                        <li><a href="khawater.html"><i class="fas fa-angle-left"></i> الخواطر</a></li>
+                        <li><a href="khawater-full-book.html"><i class="fas fa-angle-left"></i> الكتاب الكامل</a></li>
+                        <li><a href="about.html"><i class="fas fa-angle-left"></i> عن الشيخ</a></li>
+                        <li><a href="contact.html"><i class="fas fa-angle-left"></i> تواصل معنا</a></li>
+                    </ul>
+                </div>
+
+                <!-- Footer Contact -->
+                <div class="footer-section" data-aos="fade-up" data-aos-delay="200">
+                    <h3 class="footer-title">تواصل معنا</h3>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>contact@sheikh-alfeshny.com</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-mosque"></i>
+                            <span>مصر</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Footer Verse -->
+                <div class="footer-section footer-verse" data-aos="fade-up" data-aos-delay="300">
+                    <div class="verse-decoration">
+                        <i class="fas fa-quran"></i>
+                    </div>
+                    <blockquote>
+                        ﴿ ادْعُ إِلَىٰ سَبِيلِ رَبِّكَ بِالْحِكْمَةِ وَالْمَوْعِظَةِ الْحَسَنَةِ ﴾
+                    </blockquote>
+                    <cite>سورة النحل: ١٢٥</cite>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="footer-divider">
+                    <span></span>
+                    <i class="fas fa-moon"></i>
+                    <span></span>
+                </div>
+                <p>جميع الحقوق محفوظة &copy; <span id="currentYear"></span> الشيخ أحمد إسماعيل الفشني</p>
+                <p class="footer-dua">اللهم انفع بهذا العمل وتقبله خالصاً لوجهك الكريم</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="back-to-top" aria-label="العودة للأعلى">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="islamic-patterns.js"></script>
+    <script src="main.js"></script>
+    <script src="living-scripture.js"></script>
+</body>
+</html>

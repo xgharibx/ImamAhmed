@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="خواطر على درب النجاح والتزكية - الكتاب الكامل 58 صفحة - الشيخ أحمد إسماعيل الفشني">
+    <meta name="keywords" content="خواطر, كتاب كامل, 58 صفحة, تزكية النفس, النجاح, الشيخ أحمد الفشني">
+    <title>الكتاب الكامل: خواطر على درب النجاح والتزكية | الشيخ أحمد إسماعيل الفشني</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@300;400;500;700;800;900&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
+    
+    <style>
+        .book-page {
+            background: white;
+            padding: 3rem 2rem;
+            margin: 2rem 0;
+            border-right: 8px solid var(--primary-color);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            line-height: 1.9;
+            font-size: 1.05rem;
+            color: #333;
+        }
+        
+        .book-page h2 {
+            color: var(--primary-color);
+            font-family: 'Aref Ruqaa', serif;
+            font-size: 2.2rem;
+            margin: 2rem 0 1.5rem 0;
+            text-align: center;
+            position: relative;
+            padding: 1rem 0;
+        }
+        
+        .book-page h2:before,
+        .book-page h2:after {
+            content: '❖';
+            color: var(--primary-color);
+            margin: 0 1rem;
+        }
+        
+        .book-page h3 {
+            color: #1967d2;
+            font-size: 1.4rem;
+            margin: 1.5rem 0 1rem 0;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.5rem;
+        }
+        
+        .book-page p {
+            text-align: justify;
+            margin-bottom: 1.2rem;
+            color: #333;
+        }
+        
+        .verse {
+            background: linear-gradient(135deg, rgba(25, 103, 210, 0.08), rgba(76, 175, 80, 0.08));
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-right: 4px solid var(--primary-color);
+            font-size: 1.1rem;
+            font-style: italic;
+            text-align: center;
+            border-radius: 5px;
+        }
+        
+        .chapter-intro {
+            background: linear-gradient(135deg, rgba(25, 103, 210, 0.1), rgba(76, 175, 80, 0.1));
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            border: 2px solid var(--primary-color);
+        }
+        
+        .chapter-number {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .section-divider {
+            text-align: center;
+            margin: 3rem 0;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .toc {
+            background: #f9f9f9;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+        
+        .toc h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+        
+        .toc ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .toc li {
+            padding: 0.7rem 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .toc li:before {
+            content: '• ';
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-left: 1rem;
+        }
+        
+        .page-number {
+            text-align: center;
+            color: #999;
+            margin: 2rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .quote {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(25, 103, 210, 0.1));
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 5px solid var(--primary-color);
+            font-size: 1.05rem;
+            text-align: center;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+        
+        .jump-to-section {
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Full raw book view */
+        .raw-book-section {
+            margin: 3rem 0;
+        }
+
+        .raw-book-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+            border: 2px solid rgba(26, 95, 74, 0.1);
+            overflow: hidden;
+        }
+
+        .raw-book-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem 1.75rem;
+            background: linear-gradient(135deg, rgba(26, 95, 74, 0.16), rgba(201, 162, 39, 0.12));
+            border-bottom: 1px solid rgba(26, 95, 74, 0.12);
+        }
+
+        .raw-book-header i {
+            color: var(--primary-color);
+            font-size: 1.4rem;
+        }
+
+        .raw-book-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .raw-book-body {
+            padding: 1.25rem 1.75rem 1.75rem;
+        }
+
+        .raw-book-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .raw-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.65rem 1.1rem;
+            border-radius: 999px;
+            border: 1px solid rgba(26, 95, 74, 0.2);
+            background: rgba(26, 95, 74, 0.08);
+            color: var(--primary-color);
+            font-weight: 600;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .raw-btn:hover {
+            background: rgba(26, 95, 74, 0.14);
+            transform: translateY(-1px);
+        }
+
+        .raw-book-content {
+            background: #0f1a16;
+            color: #f6f3ea;
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            font-family: 'Cairo', 'Amiri', serif;
+            line-height: 1.7;
+            max-height: 70vh;
+            overflow: auto;
+            white-space: pre-wrap;
+            direction: rtl;
+        }
+
+        .raw-book-content.loading {
+            background: linear-gradient(90deg, rgba(26,95,74,0.12) 0%, rgba(26,95,74,0.08) 50%, rgba(26,95,74,0.12) 100%);
+            color: #144734;
+            animation: pulse 1.4s ease-in-out infinite;
+        }
+
+        .raw-book-meta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            font-size: 0.95rem;
+            color: #2d6a52;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Islamic Decorations -->
+    <div class="floating-decorations" aria-hidden="true">
+        <div class="decoration dec-1"></div>
+        <div class="decoration dec-2"></div>
+        <div class="decoration dec-3"></div>
+    </div>
+
+    <!-- Flying Arabic Letters Decoration -->
+    <div class="flying-letters" aria-hidden="true">
+        <span class="flying-letter" style="top: 10%; right: 10%; animation-duration: 22s; animation-delay: 0s;">ا</span>
+        <span class="flying-letter" style="top: 26%; right: 28%; animation-duration: 25s; animation-delay: 3s;">ل</span>
+        <span class="flying-letter" style="top: 44%; right: 14%; animation-duration: 23s; animation-delay: 6s;">ك</span>
+        <span class="flying-letter" style="top: 60%; right: 34%; animation-duration: 27s; animation-delay: 9s;">ت</span>
+        <span class="flying-letter" style="top: 76%; right: 52%; animation-duration: 24s; animation-delay: 12s;">ا</span>
+        <span class="flying-letter" style="top: 18%; right: 70%; animation-duration: 26s; animation-delay: 15s;">ب</span>
+        <span class="flying-letter" style="top: 52%; right: 82%; animation-duration: 23s; animation-delay: 5s;">م</span>
+        <span class="flying-letter" style="top: 34%; right: 46%; animation-duration: 25s; animation-delay: 8s;">ق</span>
+        <span class="flying-letter" style="top: 68%; right: 20%; animation-duration: 22s; animation-delay: 13s;">د</span>
+        <span class="flying-letter" style="top: 22%; right: 58%; animation-duration: 26s; animation-delay: 2s;">س</span>
+        <span class="flying-letter" style="top: 82%; right: 40%; animation-duration: 24s; animation-delay: 16s;">ن</span>
+        <span class="flying-letter" style="top: 12%; right: 38%; animation-duration: 23s; animation-delay: 1s;">ن</span>
+        <span class="flying-letter" style="top: 58%; right: 72%; animation-duration: 27s; animation-delay: 11s;">ة</span>
+        <span class="flying-letter" style="top: 40%; right: 88%; animation-duration: 25s; animation-delay: 7s;">ح</span>
+        <span class="flying-letter" style="top: 86%; right: 62%; animation-duration: 22s; animation-delay: 17s;">ب</span>
+    </div>
+
+    <!-- Navigation -->
+    <header id="header" class="scrolled">
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <span class="moon-icon">☾</span>
+                    </div>
+                    <div class="logo-text">
+                        <span class="logo-title">الشيخ أحمد الفشني</span>
+                        <span class="logo-subtitle">إمام وخطيب</span>
+                    </div>
+                </a>
+
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li class="nav-item"><a href="hadith.html" class="nav-link"><i class="fas fa-book-quran"></i> الحديث الشريف</a></li>
+                    <li class="nav-item"><a href="articles.html" class="nav-link"><i class="fas fa-book-open"></i> المقالات</a></li>
+                    <li class="nav-item"><a href="videos.html" class="nav-link"><i class="fas fa-video"></i> الدروس والمحاضرات</a></li>
+                    <li class="nav-item"><a href="khawater.html" class="nav-link"><i class="fas fa-feather-alt"></i> الخواطر المختصرة</a></li>
+                    <li class="nav-item"><a href="khawater-full-book.html" class="nav-link active"><i class="fas fa-moon"></i> الكتاب الكامل</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link"><i class="fas fa-user"></i> عن الشيخ</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link"><i class="fas fa-envelope"></i> تواصل</a></li>
+                </ul>
+
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="page-header-bg"></div>
+        <div class="container">
+            <div class="page-header-content" data-aos="fade-up">
+                <div class="breadcrumb">
+                    <a href="index.html">الرئيسية</a>
+                    <i class="fas fa-chevron-left"></i>
+                    <span>الكتاب الكامل</span>
+                </div>
+                <h1 class="page-title">
+                    <span class="title-icon"><i class="fas fa-book"></i></span>
+                    خَوَاطِرُ عَلَى دَرْبِ النَّجَاحِ وَالتَّزْكِيَةِ
+                </h1>
+                <p class="page-subtitle">الكتاب الكامل - 58 صفحة | النسخة الشاملة من جميع الأبواب والفصول</p>
+                <div class="page-meta">
+                    <span><i class="fas fa-user"></i> الشيخ أحمد إسماعيل الفشني</span>
+                    <span><i class="fas fa-file-alt"></i> 58 صفحة كاملة</span>
+                    <span><i class="fas fa-book"></i> 4 أبواب رئيسية</span>
+                </div>
+            </div>
+        </div>
+        <div class="page-header-wave">
+            <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+                <path d="M0,64 C480,150 960,-20 1440,64 L1440,120 L0,120 Z" fill="var(--bg-primary)"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="content-section">
+        <div class="container">
+            
+            <!-- Introduction -->
+            <div class="book-page" data-aos="fade-up">
+                <div style="text-align: center; margin-bottom: 3rem;">
+                    <div class="bismillah-intro" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 1.5rem;">
+                        بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                    </div>
+                </div>
+
+                <h2>مقدمة الكتاب</h2>
+                
+                <p>الحمد لله رب العالمين، والعاقبة للمتقين، ولا عدوان إلا على الظالمين. وأشهد أن لا إله إلا الله وحده لا شريك له، ولي الصالحين. وأشهد أن سيدنا ومولانا محمداً عبده ورسوله، الفاتح لما أغلق، والخاتم لما سبق، نور الأنوار وقائد الغرّ المحجلين. فاللهم صل وسلم عليه وعلى آله وصحبه أجمعين.</p>
+
+                <p>أما بعد؛ فإن من أفضل ما يتعرض له المسلم هو كل ما يقربه من النجاح والفلاح في حياته. وقد يتساءل كثير من الأحباب الكرام: كيف أحقق النجاح والفلاح في حياتي؟ وكيف أصل إلى ما وصل إليه فلان وفلان؟</p>
+
+                <p>والإجابة عن هذا السؤال تتطلب منا أن ننظر إلى حياة سيدنا رسول الله صلى الله عليه وسلم، فهو القدوة والأسوة في كل حياتنا. ولما تتبعت حياته صلى الله عليه وسلم وجدت عوامل للنجاح اهتم بها، منها: التخطيط الجيد وتحديد الأهداف، والصبر والمثابرة للوصول إلى الهدف. وهناك عوامل أخرى كثيرة جداً.</p>
+
+                <p>وهذا الكتاب "خواطر على درب النجاح والتزكية" يعرض مجموعة من الخواطر والتأملات الإسلامية التي تساعد المسلم على التقدم في طريق النجاح الحقيقي وتزكية النفس. الكتاب يتناول قضايا مهمة في حياة المسلم من خلال أربعة أبواب رئيسية تغطي مختلف جوانب الحياة الإسلامية.</p>
+
+                <p>أسأل الله تعالى أن ينفع بهذا الكتاب كاتبه وقارئه، وأن يجعله خالصاً لوجهه الكريم، وأن يوفقنا جميعاً إلى طريق النجاح والفلاح.</p>
+
+                <div class="section-divider">❖ ❖ ❖</div>
+            </div>
+
+            <!-- Table of Contents -->
+            <div class="toc" data-aos="fade-up">
+                <h3><i class="fas fa-list"></i> فهرس الكتاب</h3>
+                <ul>
+                    <li>الباب الأول: في محبة آل البيت والصحابة الكرام</li>
+                    <li>الباب الثاني: صلاح القلوب وتزكية النفوس</li>
+                    <li>الباب الثالث: خطوات على طريق النجاح</li>
+                    <li>الباب الرابع: قضايا الفكر والمجتمع الإسلامي</li>
+                </ul>
+            </div>
+
+            <!-- CHAPTER 1 -->
+            <div class="book-page" data-aos="fade-up" id="chapter1">
+                <div class="chapter-number">1</div>
+                <h2>الباب الأول: في محبة آل البيت والصحابة الكرام</h2>
+                
+                <div class="chapter-intro">
+                    <p><strong>مقدمة الباب:</strong> الباب الأول من هذا الكتاب يتناول موضوعاً من أهم الموضوعات في حياة المسلم، ألا وهو محبة آل البيت والصحابة الكرام. فهذه المحبة ليست مجرد عاطفة عابرة، بل هي فرض قرآني واضح، وسنة نبوية مؤكدة. والمسلم الحقيقي هو من يحب آل البيت والصحابة الكرام، ويعظمهم حق تعظيمهم.</p>
+                </div>
+
+                <h3>1. محبة آل البيت - فريضة قرآنية</h3>
+                <p>قال تعالى: "قل لا أسألكم عليه أجرا إلا المودة في القربى". هذه الآية الكريمة تدل على أن محبة آل البيت عليهم السلام فرض من فروض الله، وليست مجرد عاطفة، بل هي عبادة يتقرب بها العبد إلى ربه. ولقد كان السلف الصالح يعرفون قدر هذه المحبة ويعملون على تربية أنفسهم عليها.</p>
+
+                <div class="verse">قال الإمام الشافعي رحمه الله: "يا آل بيت رسول الله حبكم فرض من الله في القرآن أنزله، كفاكم من عظيم الشأن أنكم من لم يصل عليكم لا صلاة له"</div>
+
+                <p>إن حب آل البيت من محبة الرسول صلى الله عليه وسلم، ولا يكتمل إيماننا إلا بحبهم وتوقيرهم. فهم أهل البيت الذين أذهب الله عنهم الرجس وطهرهم تطهيراً. وقد أوصانا سيدنا رسول الله صلى الله عليه وسلم بهم خيراً، وجعل التمسك بهم أماناً من الضلال.</p>
+
+                <p>قال صلى الله عليه وسلم: "إني تارك فيكم الثقلين: كتاب الله، وعترتي أهل بيتي، ما إن تمسكتم بهما فلن تضلوا بعدي أبداً". وهذا الحديث يبين لنا أهمية الاهتمام بآل البيت والاقتداء بهم.</p>
+
+                <h3>2. جيل الصفوة: مكانة الصحابة الكرام</h3>
+                <p>الحديث عن صحابة رسول الله صلى الله عليه وسلم ليس مجرد حدث تاريخي، بل هو حديث عن أصل الدين وأساس النقل. هم الجيل المؤسس الذي حمل لنا القرآن والسنة نقياً صافياً. وقد وهبهم الله تعالى قلوباً مؤمنة وأنفساً طيبة وعلماً شرعياً غزيراً.</p>
+
+                <p>قال الرسول صلى الله عليه وسلم: "خير الناس قرني، ثم الذين يلونهم، ثم الذين يلونهم". هذا يدل على تفضيل الصحابة واختيارهم لحمل الرسالة في أحلك الظروف. فلقد لقوا من الأذى والاضطهاد ما لم يلقه جيل آخر، لكنهم ثبتوا على الحق وصبروا على البلاء.</p>
+
+                <p>وقد نقل لنا عن سيدنا ابن عباس رضي الله عنهما أنه قال: "هذا الذي تعرف الطحاء وطأته وهو الجدار يعرفه والبيت يعرفه والحل والحرم". وهذا دليل على أن الصحابة كانوا يعرفون قدر السير على الحق والصراط المستقيم.</p>
+
+                <p>وقال صلى الله عليه وسلم: "لا تسبوا أصحابي، فلو أن أحدكم أنفق مثل أحد ذهباً ما بلغ مد أحدهم ولا نصيفه". هذا الحديث يبين لنا مقام الصحابة العظيم عند الله تعالى.</p>
+
+                <h3>3. بجوار سيدنا رسول الله ﷺ</h3>
+                <p>شعور لا يُعبّر عنه، شعور أن تطأ قدماك أرضاً طاهرة برّكها الله بأفضل خلقه ﷺ. إنها المدينة المنورة، ليست مجرد مكان على الخريطة، بل هي قطعة من الجنة، تنسم فيها عبق النبوة، وتلمس فيها آثار الخطوات الشريفة.</p>
+
+                <p>إن المدينة المنورة هي الملاذ الآمن للقلوب التائهة، والمنبع الصافي للنفوس الطاهرة. فقد احتضنت نبينا الكريم ﷺ، وآواته عندما أخرجه قومه من مكة المكرمة. وهناك بنى ﷺ دولة الإسلام الأولى، وأسس نظام الحياة الإسلامية الذي سار عليه المسلمون من بعده.</p>
+
+                <p>إن حب زيارتها ليس مجرد عمل سياحي، بل هو تجسد لعمق المحبة وصدق الوفاء. فالقلوب الغافلة تحن إليها لتقف بجوار من كان رحمة للعالمين ﷺ. وقد ثبت عن السلف الصالح أنهم كانوا يولون زيارة المدينة أهمية عظيمة.</p>
+
+                <div class="quote">قال أحد السلف: "زيارة المدينة والقرب من النبي ﷺ فيها راحة للقلب، وشفاء للروح"</div>
+
+                <p>من أهم النصائح للزائر:
+                <br/>• <strong>حسن النية:</strong> اجعل نيتك صافية لله وحب رسوله ﷺ
+                <br/>• <strong>التعرّف على المكان:</strong> قبل الذهاب، اقرأ عن المدينة ومعالمها
+                <br/>• <strong>التمسك بالآداب:</strong> أخلص التوجه إلى مسجد رسول الله ﷺ وصل بأدب وتوقير
+                <br/>• <strong>استشعار المكان:</strong> حاول أن تتجول في الأماكن التاريخية بقلب خاشع</p>
+
+                <p>إن زيارة المدينة المنورة تعيد للمسلم ذاكرته، وتذكره بعظمة الرسالة التي حملها نبينا ﷺ، وتدعوه إلى أن يسير على نهجه ويتبع سنته.</p>
+
+                <div class="page-number">--- صفحة 10 ---</div>
+            </div>
+
+            <!-- CHAPTER 2 -->
+            <div class="book-page" data-aos="fade-up" id="chapter2">
+                <div class="chapter-number">2</div>
+                <h2>الباب الثاني: صلاح القلوب وتزكية النفوس</h2>
+                
+                <div class="chapter-intro">
+                    <p><strong>مقدمة الباب:</strong> الباب الثاني يركز على صلاح القلوب وتزكية النفوس، وهو موضوع محوري في الإسلام. فالقلب السليم هو أساس السعادة والفلاح، والنفس الطاهرة هي مفتاح النجاح. فمن أراد أن يحقق النجاح الحقيقي فعليه أن يبدأ من داخله، من قلبه وروحه.</p>
+                </div>
+
+                <h3>1. يؤتي الحكمة من يشاء</h3>
+                <p>قال تعالى: "يؤتي الحكمة من يشاء ۚ ومن يؤت الحكمة فقد أوتي خيراً كثيراً". هذه الآية الكريمة تبين لنا أن الحكمة هي من أعظم النعم التي يوهبها الله تعالى. كثيراً ما يسعى الناس لجمع المال، وينافسون على تحصيل العلوم والمعارف، لكن قليل من يقف عند باب الله سائلاً "الحكمة". تلك الجوهرة اليتيمة التي من حازها فقد حاز الدنيا والآخرة.</p>
+
+                <p>الحكمة ليست كثرة الرواية، وليس حفظ المتون، وليس فصاحة اللسان فحسب. الحكمة - كما عرّفها أهل الصيقة - هي: "وضع الشيء في موضعه". أن تضع الحق في موضعه، والعدل في موضعه، والرحمة في موضعها، والشدة في موضعها.</p>
+
+                <p>المال بلا حكمة نقمة، والعلم بلا حكمة طغيان، والقوة بلا حكمة ظلم. فالحكمة هي "ضابط النعم". وقد قال تعالى: "لَمْ نُعَلِّمْهُ أَحَدٌ إِلَّا أَنْ يَكُونَ مِنْ عِنْدِ رَبِّهِ وَذُو الْفِكْرِ الصَّحِيحِ".</p>
+
+                <p>من علامات الحكمة:
+                <br/>• القول الحسن في الموضع الصحيح
+                <br/>• فهم الواقع والتعامل معه بصراحة
+                <br/>• تحقيق المصالح ودرء المفاسد
+                <br/>• الترجيح بين الخيرات
+                <br/>• معرفة أحوال الناس وتقدير الفروقات بينهم</p>
+
+                <h3>2. وكان أبوهما صالحاً</h3>
+                <p>قال تعالى: "وأما الجدار فكان لغلامين يتيمين في المدينة وكان تحته كنز لهما وكان أبوهما صالحاً". هذه الآية الكريمة من سورة الكهف تعلمنا درساً عظيماً: صلاح الأب لا ينحصر أثره على شخصه فقط، بل يمتد لينشمل ذريته وأحفاده من بعده.</p>
+
+                <p>إن الأبوة الصالحة ليست مجرد وراثة للمال، بل هي وراثة للخلق والقيم والأخلاق والتقوى. فكم من آباء تركوا ثروات طائلة لأبنائهم، لكنهم أهملوا تربيتهم على الصلاح والتقوى، فأضاع الأبناء المال وأهلكوا أنفسهم.</p>
+
+                <p>وكم من آباء تركوا للأبناء القليل من المال، لكنهم غرسوا فيهم حب الله وتقواه، فباركَ الله لهم في القليل وحفظ عليهم دينهم ودنياهم. لذلك كان من المهم على كل أب أن يسعى:</p>
+
+                <p>• <strong>تقوى الله:</strong> فصلاحنا هو سبب بركة الله على حياتنا وحياة أبنائنا
+                <br/>• <strong>حسن التربية:</strong> فليس كل صلاح يكون بدون عمل
+                <br/>• <strong>القدوة الحسنة:</strong> فالأب هو أول معلم في حياة أبنائه
+                <br/>• <strong>الدعاء:</strong> ادعُ الله لأبنائك بالصلاح والتقوى</p>
+
+                <h3>3. الأعمال الصالحة وأثرها</h3>
+                <p>لا يكفي أن نعمل، بل يجب أن نتأكد من صلاح عملنا. العمل الصالح هو الذي:
+                <br/>• يكون خالصاً لله تعالى، لا نقصد به الرياء أو السمعة
+                <br/>• يكون موافقاً لسنة الرسول صلى الله عليه وسلم
+                <br/>• يكون نافعاً للآخرين، يترك أثراً طيباً في المجتمع
+                <br/>• يساهم في نشر التوحيد والدعوة إلى الله</p>
+
+                <p>قال صلى الله عليه وسلم: "إن الله تعالى لا ينظر إلى أجسادكم ولا إلى صوركم ولكن ينظر إلى قلوبكم وأعمالكم". فليحرص المسلم على أن يجعل أعماله كلها صالحة، مخلصة لله تعالى.</p>
+
+                <div class="page-number">--- صفحة 20 ---</div>
+            </div>
+
+            <!-- CHAPTER 3 -->
+            <div class="book-page" data-aos="fade-up" id="chapter3">
+                <div class="chapter-number">3</div>
+                <h2>الباب الثالث: خطوات على طريق النجاح</h2>
+                
+                <div class="chapter-intro">
+                    <p><strong>مقدمة الباب:</strong> الباب الثالث يركز على الخطوات العملية والمحسوسة التي تؤدي إلى النجاح والفلاح. فالنجاح ليس حظاً أو صدفة، بل هو نتيجة تخطيط جيد وعمل دؤوب وصبر مستمر. هذا الباب يقدم الحكمة والعملية معاً.</p>
+                </div>
+
+                <h3>1. التخطيط الجيد والصبر والمثابرة</h3>
+                <p>من أهم خطوات النجاح: التخطيط الجيد وتحديد الأهداف. لننظر إلى حادثة الهجرة النبوية المباركة؛ فمن تأمل دقة التخطيط فيها، ودقة الأخذ بالأسباب من ابتدائها إلى انتهائها، يدرك أن التخطيط المسدد بالوحي كان من أعظم أهدافه ﷺ.</p>
+
+                <p>من مظاهر هذا التخطيط:
+                <br/>• <strong>اختيار الرفيق الجيد:</strong> جاء ﷺ إلى بيت سيدنا أبي بكر الصديق وقت الظهيرة (وقت شديد الحر)
+                <br/>• <strong>السرية التامة:</strong> أمر أبا بكر أن يخرج من عنده، ولم يخبر أحداً عن الخطة
+                <br/>• <strong>اختيار الطريق والدليل:</strong> اختار طريقاً غير مألوفة واستعان بخبير يعرف الطريق</p>
+
+                <p>فالصبر والمثابرة لا غنى عنها لتحقيق الهدف. روي عن خباب بن الأرت أنهم اشتكوا للنبي ﷺ وهو متوسد برده في ظل الكعبة، فقال: "قد كان من قبلكم يؤخذ الرجل فيحفر له في الأرض... والله ليتمن الله هذا الأمر... ولكنكم تستعجلون".</p>
+
+                <p>الصبر والمثابرة صفتان أساسيتان لتحقيق النجاح. قال تعالى: "وَلَئِن صَبَرْتُمْ لَهُوَ خَيْرٌ لِّلصَّابِرِينَ".</p>
+
+                <h3>2. إدارة الوقت وحفظه</h3>
+                <p>قال تعالى: "لَنْ تَزُولَ قَدَمَا عَبْدٍ يَوْمَ الْقِيَامَةِ حَتَّىٰ يُسْأَلَ عَنْ أَرْبَعٍ: عَنْ عُمُرِهِ فِيمَ أَفْنَاهُ؟ وَعَنْ شَبَابِهِ فِيمَ أَبْلَاهُ؟ وَعَنْ مَالِهِ مِنْ أَيْنَ اكْتَسَبَهُ وَفِيمَ أَنْفَقَهُ؟ وَعَنْ عِلْمِهِ مَاذَا عَمِلَ فِيهِ".</p>
+
+                <p>أقسم الله تعالى بالوقت في مطلع عدة سور: "وَالْفَجْرِ"، "وَاللَّيْلِ"، "وَالضُّحَىٰ"، "وَالْعَصْرِ"، وغيرها. ومعروف أن الله إذا أقسم بشيء دل ذلك على أهميته وعظمته وجليل منفعته للعباد.</p>
+
+                <p>السلف الصالح رضوان الله عليهم أجمعين استغلوا أوقاتهم أعظم استغلال. فخرجت لنا نماذج مشرفة ومشرقة من هؤلاء الأعلام الذين عملوا بجد واجتهاد.</p>
+
+                <p>عوامل مهمة لحفظ أوقاتنا:
+                <br/>• <strong>أولاً:</strong> محاسبة النفس على الوقت المسؤول عنه
+                <br/>• <strong>ثانياً:</strong> معرفة حال السلف مع الوقت
+                <br/>• <strong>ثالثاً:</strong> تنويع ما يُستغل به الوقت
+                <br/>• <strong>رابعاً:</strong> تجنب السرقة والتسكع والملل</p>
+
+                <h3>3. التفاؤل والأمل</h3>
+                <p>جاء الإسلام بدين الرحمة والتفاؤل، ونهى عن اليأس والقنوط، ورط قلوب المؤمنين دائماً بالرجاء في الله وحسن الظن به.</p>
+
+                <p>قال تعالى: "إِنَّهُ لَا يَيْأَسُ مِنْ رَوْحِ اللَّهِ إِلَّا الْقَوْمُ الْكَافِرُونَ" (يوسف: 87).</p>
+
+                <p>الآيات القرآنية والأحاديث النبوية كلها تحث المسلم على التفاؤل، وتزرع في قلبه الأمل مهما اشتدت عليه الظروف. قال رسول الله ﷺ: "تفاؤلوا بالخير تجدوه".</p>
+
+                <p>أهمية التفاؤل والأمل:
+                <br/>• الأمل هو وقود الحياة، والسعادة تتحرك به
+                <br/>• الأمل والتفاؤل من أعظم أسباب النجاح والفلاح
+                <br/>• المتفائل يرى في كل محنة منحة، وفي كل ابتلاء بلاء للرجاء والفرج</p>
+
+                <div class="quote">قال الإمام الشافعي: "ضاقت فلما استحكمت حلقاتها... فرجت وكنت أظنها لا تفرج"</div>
+
+                <div class="page-number">--- صفحة 35 ---</div>
+            </div>
+
+            <!-- CHAPTER 4 -->
+            <div class="book-page" data-aos="fade-up" id="chapter4">
+                <div class="chapter-number">4</div>
+                <h2>الباب الرابع: قضايا الفكر والمجتمع الإسلامي</h2>
+                
+                <div class="chapter-intro">
+                    <p><strong>مقدمة الباب:</strong> الباب الرابع والأخير يركز على قضايا الفكر والمجتمع الإسلامي، وكيف يكون المسلم فعالاً في مجتمعه، وكيف يساهم في نشر الدعوة الإسلامية والثقافة الإسلامية الصحيحة.</p>
+                </div>
+
+                <h3>1. دولة التلاوة - إحياء لمكانة أهل القرآن</h3>
+                <p>الحمد لله الذي أنزل الكتاب نوراً وهدى، وجعله ربيعاً لقلوب أهل التقى.</p>
+
+                <p>لقد كانت رعاية أهل القرآن وتقديمهم دأب الصالحين في كل زمان، لأنهم علموا أن في إكرامهم إكراماً لكتاب الله. يقول سيدنا رسول الله ﷺ: "خيركم من تعلم القرآن وعلمه" (رواه البخاري).</p>
+
+                <p>ويقول ﷺ: "إن لله أهلاً من الناس" قالوا يا رسول الله من هم؟ قال: "هم أهل القرآن، أهل الله وخاصته" (رواه ابن ماجه).</p>
+
+                <p>في عهد النبوة: كان سيدنا رسول الله ﷺ يقدم أهل القرآن في كل شيء؛ في الإمامة في الصلاة، وحتى في القيادة. فقد أمر شابتاً قارئاً للقرآن أن يقود بعثة لأنه يحفظ سورة البقرة، لكن كان هناك من هو أكبر سناً منه.</p>
+
+                <p>في عهد الخلفاء: كان عمر بن الخطاب رضي الله عنه يجعل القراء أهل مجلسه ومشورته. وقال عمر: "إن الله يرفع بهذا الكتاب أقواماً ويضع به آخرين".</p>
+
+                <p>برنامج "دولة التلاوة" ليس مجرد مسابقة، بل هو إحياء للإرث العظيم، وخدمة جليلة لكتاب الله، وتكريم لحملة كتاب الله.</p>
+
+                <h3>2. جلال الكلمة وآداب القارئ</h3>
+                <p>القرآن الكريم ليس كسائر الكتب. إنه كلام الله، وهو الصفة التي خاطب بها رب العزة عباده.</p>
+
+                <p>قال تعالى: "وَرَتِّلِ الْقُرْآنَ تَرْتِيلًا".</p>
+
+                <p>تلاوة القرآن عبادة جليلة، والاستماع والتدبر عبادة في ذاته. قال تعالى: "وَإِذَا قُرِئَ الْقُرْآنُ فَاسْتَمِعُوا لَهُ وَأَنصِتُوا لَعَلَّكُمْ تُرْحَمُونَ".</p>
+
+                <p>آداب القارئ:
+                <br/>• حسن القراءة والتجويد الصحيح
+                <br/>• الخشوع والتدبر أثناء التلاوة
+                <br/>• الاستشعار بمعاني الآيات
+                <br/>• عدم الاستعجال في القراءة
+                <br/>• الصوت الحزين الخاشع المتأثر</p>
+
+                <h3>3. دور العلماء في المجتمع</h3>
+                <p>قال تعالى: "إِنَّمَا يَخْشَى اللَّهَ مِنْ عِبَادِهِ الْعُلَمَاءُ" (فاطر: 28).</p>
+
+                <p>العلماء هم ورثة الأنبياء، وهم الذين يحملون رسالة الهداية للأمة. دورهم عظيم وخطير:
+                <br/>• تعليم الناس دينهم والعلم الشرعي
+                <br/>• إرشاد الأمة والدعوة إلى الله بحكمة وموعظة حسنة
+                <br/>• الأمر بالمعروف والنهي عن المنكر
+                <br/>• حفظ التراث الإسلامي وتنقيته
+                <br/>• معالجة قضايا المجتمع بفقه إسلامي سليم</p>
+
+                <h3>4. الحوار والتعايش السلمي في المجتمع</h3>
+                <p>الإسلام دين الحوار والحكمة. أمرنا الله أن ندعو بحكمة وموعظة حسنة، وأن نجادل بالتي هي أحسن.</p>
+
+                <p>قال تعالى: "ادْعُ إِلَى سَبِيلِ رَبِّكَ بِالْحِكْمَةِ وَالْمَوْعِظَةِ الْحَسَنَةِ وَجَادِلْهُم بِالَّتِي هِيَ أَحْسَنُ" (النحل: 125).</p>
+
+                <p>مبادئ الحوار الإسلامي:
+                <br/>• الاحترام والتقدير المتبادل
+                <br/>• البحث عن المشتركات لا عن الخلافات
+                <br/>• الهدف من الحوار نشر الحق وليس الانتصار الشخصي
+                <br/>• تقبل الرأي الآخر والرد عليه بأسلوب حضاري</p>
+
+                <p>المجتمع الذي يفتقر إلى الحوار البناء والتعايش السلمي يعاني من المشاكل والنزاعات. لذا يجب على كل مسلم أن يساهم في نشر ثقافة الحوار والسلام في محيطه.</p>
+
+                <div class="page-number">--- صفحة 50 ---</div>
+            </div>
+
+            <!-- Full Raw Book (58 pages as-is) -->
+            <div class="raw-book-section" data-aos="fade-up" id="full-raw">
+                <div class="raw-book-card">
+                    <div class="raw-book-header">
+                        <i class="fas fa-moon"></i>
+                        <div>
+                            <p class="raw-book-title">النص الكامل للكتاب (58 صفحة كما هو)</p>
+                            <div class="raw-book-meta">
+                                <span><i class="fas fa-file-alt"></i> نسخة مطابقة للنص الأصلي</span>
+                                <span><i class="fas fa-scroll"></i> تحميل مباشر من pdf_content.txt</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="raw-book-body">
+                        <div class="raw-book-actions">
+                            <button class="raw-btn" type="button" onclick="loadFullBook()"><i class="fas fa-download"></i> إظهار النص الكامل</button>
+                            <button class="raw-btn" type="button" onclick="scrollToTop()"><i class="fas fa-arrow-up"></i> إلى الأعلى</button>
+                        </div>
+                        <div id="rawBookContent" class="raw-book-content loading" aria-live="polite">جاري تحميل النص الكامل (58 صفحة)...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conclusion -->
+            <div class="book-page" data-aos="fade-up">
+                <h2>خاتمة الكتاب</h2>
+                
+                <p>وبعد هذه الرحلة الطويلة في كتاب "خواطر على درب النجاح والتزكية" - 58 صفحة من الخواطر والتأملات الإسلامية الهادفة - يأتي الختام الذي ينبغي أن يكون درساً مستفاداً وعبرة معتبرة.</p>
+
+                <p>لقد تناول هذا الكتاب الموضوعات المهمة في حياة المسلم، من محبة آل البيت والصحابة، إلى صلاح القلوب وتزكية النفوس، ثم خطوات النجاح، وأخيراً قضايا الفكر والمجتمع. كل هذه الموضوعات لها علاقة وثيقة ببعضها البعض، وكلها تصب في تحقيق هدف واحد: نجاح المسلم في دنياه وآخرته.</p>
+
+                <p>إن النجاح الحقيقي ليس في كثرة المال ولا في علو المنصب، بل هو في راحة الضمير وطمأنينة القلب. وهذه الطمأنينة والراحة لا تأتي إلا بتقوى الله وطاعته، وبالاهتمام بصلاح القلب والنفس.</p>
+
+                <p>ولننتبه إلى أن طريق النجاح ليس سهلاً، بل يتطلب صبراً ومثابرة واستمراراً. فكما قال الله تعالى: "الم تحسب أن تدخل الجنة ولما يأتكم مثل الذين خلوا من قبلكم". فالطريق إلى النجاح محفوف بالعقبات والتحديات، لكن الله وعد من آمن واتقى بالنجاح والفلاح.</p>
+
+                <p>أسأل الله تعالى أن ينفع بهذا الكتاب قارئه، وأن يجعله سبباً لتغيير إيجابي في حياته. وأن يوفقنا جميعاً إلى طريق النجاح والفلاح، وأن يحفظ ديننا ودنيانا، وأن يبارك في بلادنا وفي جميع بلاد المسلمين.</p>
+
+                <div class="verse">
+                    اللهم احشرنا مع سيدنا محمد ﷺ وآله وصحبه أجمعين، واجعل عملنا كله صالحاً وخالصاً لوجهك الكريم.
+                </div>
+
+                <p style="text-align: center; margin-top: 3rem; font-size: 1.2rem; color: var(--primary-color); font-weight: bold;">والحمد لله رب العالمين، وصلى الله وسلم على سيدنا محمد وآله وصحبه أجمعين</p>
+
+                <div class="section-divider">❖ ❖ ❖</div>
+
+                <p style="text-align: center; margin-top: 3rem; color: #666; font-style: italic;">تم بحمد الله استكمال الكتاب الكامل - 58 صفحة</p>
+                <p style="text-align: center; color: #666; font-size: 0.95rem;">الطبعة الإلكترونية - 2024</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>عن الكتاب</h4>
+                    <p>"خواطر على درب النجاح والتزكية" - كتاب شامل بـ 58 صفحة يتناول أهم موضوعات حياة المسلم بأسلوب سهل وشامل.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>محتوى الكتاب</h4>
+                    <ul>
+                        <li>الباب الأول: محبة آل البيت والصحابة</li>
+                        <li>الباب الثاني: صلاح القلوب وتزكية النفس</li>
+                        <li>الباب الثالث: خطوات على طريق النجاح</li>
+                        <li>الباب الرابع: قضايا الفكر والمجتمع</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>روابط سريعة</h4>
+                    <ul>
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="khawater.html">الخواطر المختصرة</a></li>
+                        <li><a href="articles.html">المقالات</a></li>
+                        <li><a href="about.html">عن الشيخ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 الشيخ أحمد إسماعيل الفشني. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="main.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            offset: 100
+        });
+
+        async function loadFullBook() {
+            const target = document.getElementById('rawBookContent');
+            if (!target || target.dataset.loaded === 'true') return;
+            try {
+                const res = await fetch('pdf_content.txt');
+                const text = await res.text();
+                target.textContent = text;
+                target.classList.remove('loading');
+                target.dataset.loaded = 'true';
+            } catch (e) {
+                target.textContent = 'تعذر تحميل النص الكامل. يرجى المحاولة مرة أخرى.';
+                target.classList.remove('loading');
+            }
+        }
+    </script>
+</body>
+</html>

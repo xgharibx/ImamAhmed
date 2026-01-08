@@ -1,0 +1,483 @@
+/* =====================================================
+   الشيخ أحمد إسماعيل الفشني - Khawater Page Styles
+   ===================================================== */
+
+/* ============== Page Header ============== */
+.page-header {
+    position: relative;
+    padding: 150px 0 100px;
+    background: var(--gradient-green);
+    overflow: hidden;
+}
+
+.page-header-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(201, 162, 39, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(201, 162, 39, 0.1) 0%, transparent 40%);
+}
+
+.page-header-content {
+    position: relative;
+    text-align: center;
+    color: var(--text-light);
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    color: var(--primary-gold-light);
+}
+
+.breadcrumb a {
+    color: var(--primary-gold-light);
+    transition: var(--transition-normal);
+}
+
+.breadcrumb a:hover {
+    color: var(--primary-gold);
+}
+
+.breadcrumb i {
+    font-size: 0.7rem;
+}
+
+.page-title {
+    font-family: var(--font-calligraphy);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.title-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: var(--primary-gold);
+    border-radius: var(--radius-full);
+    color: var(--primary-green-dark);
+}
+
+.title-icon i {
+    font-size: 1.5rem;
+}
+
+.page-subtitle {
+    font-size: 1.2rem;
+    color: var(--primary-gold-light);
+    margin-bottom: 1.5rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.page-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.page-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.page-meta i {
+    color: var(--primary-gold);
+}
+
+.page-header-wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    line-height: 0;
+}
+
+.page-header-wave svg {
+    width: 100%;
+    height: 80px;
+}
+
+/* ============== Book Introduction ============== */
+.book-intro {
+    padding: var(--spacing-xl) 0;
+    background: var(--bg-primary);
+}
+
+.intro-card {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+}
+
+.intro-decoration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+}
+
+.deco-corner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-color: var(--primary-gold);
+    border-style: solid;
+    border-width: 0;
+}
+
+.deco-tl { top: 15px; right: 15px; border-top-width: 3px; border-right-width: 3px; }
+.deco-tr { top: 15px; left: 15px; border-top-width: 3px; border-left-width: 3px; }
+.deco-bl { bottom: 15px; right: 15px; border-bottom-width: 3px; border-right-width: 3px; }
+.deco-br { bottom: 15px; left: 15px; border-bottom-width: 3px; border-left-width: 3px; }
+
+.intro-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    background: var(--gradient-green);
+    border-radius: var(--radius-full);
+    margin-bottom: 1.5rem;
+}
+
+.intro-icon i {
+    font-size: 2rem;
+    color: var(--primary-gold);
+}
+
+.intro-card h2 {
+    font-family: var(--font-calligraphy);
+    font-size: 2rem;
+    color: var(--primary-green);
+    margin-bottom: 1rem;
+}
+
+.bismillah-intro {
+    font-family: var(--font-calligraphy);
+    font-size: 1.8rem;
+    color: var(--primary-gold);
+    margin-bottom: 1.5rem;
+}
+
+.intro-text {
+    font-size: 1.1rem;
+    line-height: 2;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.author-signature {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 2px dashed var(--primary-gold);
+}
+
+.author-signature span {
+    font-family: var(--font-calligraphy);
+    font-size: 1.5rem;
+    color: var(--primary-green);
+}
+
+/* ============== Khawater Filter ============== */
+.khawater-main {
+    padding: var(--spacing-xl) 0;
+    background: var(--bg-secondary);
+}
+
+.khawater-filter {
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-box {
+    position: relative;
+    flex: 1;
+    max-width: 400px;
+}
+
+.search-box i {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+
+.search-box input {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3rem;
+    font-size: 1rem;
+    font-family: inherit;
+    border: 2px solid var(--primary-green);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+    transition: var(--transition-normal);
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--primary-gold);
+    box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.2);
+}
+
+.filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.filter-tag {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+    font-family: inherit;
+    font-weight: 500;
+    color: var(--primary-green);
+    background: var(--bg-card);
+    border: 2px solid var(--primary-green);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition-normal);
+}
+
+.filter-tag:hover,
+.filter-tag.active {
+    background: var(--primary-green);
+    color: var(--text-light);
+}
+
+/* ============== Khawater Grid ============== */
+.khawater-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--spacing-md);
+}
+
+/* ============== Khatera Card ============== */
+.khatera-card {
+    position: relative;
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-normal);
+    overflow: hidden;
+}
+
+.khatera-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.khatera-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 5px;
+    height: 100%;
+    background: var(--gradient-gold);
+}
+
+.card-number {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-green);
+    color: var(--primary-gold);
+    font-family: var(--font-decorative);
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-radius: var(--radius-full);
+}
+
+.khatera-card .card-decoration {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+}
+
+.khatera-card .quote-mark {
+    font-size: 3rem;
+    color: var(--primary-gold);
+    opacity: 0.3;
+    line-height: 1;
+}
+
+.card-content {
+    padding-top: 2rem;
+}
+
+.khatera-text {
+    font-family: var(--font-decorative);
+    font-size: 1.15rem;
+    line-height: 2;
+    color: var(--text-primary);
+}
+
+.card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.card-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--primary-green);
+    padding: 0.3rem 0.8rem;
+    background: rgba(26, 95, 74, 0.1);
+    border-radius: var(--radius-sm);
+}
+
+.card-tag i {
+    font-size: 0.75rem;
+}
+
+.share-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    border-radius: var(--radius-full);
+    transition: var(--transition-normal);
+}
+
+.share-btn:hover {
+    background: var(--primary-gold);
+    color: var(--primary-green-dark);
+}
+
+/* ============== Load More ============== */
+.load-more-container {
+    text-align: center;
+    margin-top: var(--spacing-lg);
+}
+
+.load-more-btn {
+    min-width: 200px;
+}
+
+/* ============== Download Section ============== */
+.download-section {
+    padding: var(--spacing-xl) 0;
+    background: var(--bg-primary);
+}
+
+.download-card {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--gradient-green);
+    border-radius: var(--radius-lg);
+    color: var(--text-light);
+}
+
+.download-icon {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-full);
+}
+
+.download-icon i {
+    font-size: 2.5rem;
+    color: var(--primary-gold);
+}
+
+.download-content {
+    flex: 1;
+}
+
+.download-content h3 {
+    font-family: var(--font-decorative);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.download-content p {
+    color: var(--primary-gold-light);
+    font-size: 0.95rem;
+}
+
+.download-btn {
+    flex-shrink: 0;
+}
+
+/* ============== Responsive ============== */
+@media (max-width: 768px) {
+    .page-header {
+        padding: 120px 0 80px;
+    }
+    
+    .page-meta {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .khawater-filter {
+        flex-direction: column;
+    }
+    
+    .search-box {
+        width: 100%;
+        max-width: none;
+    }
+    
+    .khawater-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .download-card {
+        flex-direction: column;
+        text-align: center;
+    }
+}

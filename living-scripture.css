@@ -1,0 +1,788 @@
+/* =====================================================
+   LIVING SCRIPTURE THEME
+   الشيخ أحمد إسماعيل الفشني
+   Modern Motion-Centric Islamic Design
+   ===================================================== */
+
+/* Theme Variables */
+:root {
+    --midnight-blue: #0a1628;
+    --midnight-blue-deep: #050d1a;
+    --emerald: #0d6b58;
+    --emerald-dark: #064a3d;
+    --emerald-glow: #10a882;
+    --gold-light: #f0d78c;
+    --gold: #c9a227;
+    --gold-glow: #ffe6a0;
+    --white: #ffffff;
+    --white-soft: rgba(255, 255, 255, 0.9);
+    --white-muted: rgba(255, 255, 255, 0.7);
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --glass-shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* Living Scripture Theme Body */
+body.living-scripture-theme {
+    background: linear-gradient(135deg, var(--midnight-blue) 0%, var(--midnight-blue-deep) 50%, var(--emerald-dark) 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* =====================================================
+   FLOATING LIGHT PARTICLES
+   ===================================================== */
+.particles-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.light-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--gold-glow);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--gold-glow), 0 0 20px var(--gold), 0 0 30px rgba(201, 162, 39, 0.3);
+    animation: float-particle linear infinite;
+    opacity: 0;
+}
+
+@keyframes float-particle {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.8;
+    }
+    90% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-100px) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* =====================================================
+   HEADER - Glass Morphism
+   ===================================================== */
+body.living-scripture-theme #header {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: 0 4px 30px var(--glass-shadow);
+}
+
+body.living-scripture-theme #header.scrolled {
+    background: rgba(10, 22, 40, 0.95);
+}
+
+body.living-scripture-theme .logo-title,
+body.living-scripture-theme .logo-subtitle {
+    color: var(--white);
+}
+
+body.living-scripture-theme .logo-icon {
+    color: var(--gold);
+}
+
+body.living-scripture-theme .nav-link {
+    color: var(--white-muted);
+}
+
+body.living-scripture-theme .nav-link:hover,
+body.living-scripture-theme .nav-link.active {
+    color: var(--gold);
+}
+
+body.living-scripture-theme .hamburger .bar {
+    background: var(--white);
+}
+
+/* =====================================================
+   HERO SECTION - Living Scripture
+   ===================================================== */
+body.living-scripture-theme .hero-section {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    overflow: hidden;
+}
+
+/* Disable all star patterns completely */
+body.living-scripture-theme .hero-bg-pattern,
+body.living-scripture-theme .islamic-geometry-bg,
+body.living-scripture-theme .geometric-star-canvas,
+.geometric-star-canvas {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* Geometric Star Canvas - DISABLED */
+.geometric-star-canvas {
+    display: none !important;
+}
+
+/* Ink Stroke Animation Container */
+.ink-strokes-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.ink-stroke {
+    position: absolute;
+    stroke: var(--white);
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+}
+
+.ink-stroke.gold {
+    stroke: var(--gold);
+    filter: drop-shadow(0 0 12px var(--gold-glow));
+}
+
+/* Hero Content - Living Scripture */
+body.living-scripture-theme .hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 0 2rem;
+}
+
+/* Animated Calligraphy Title */
+.calligraphy-title-container {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.writing-calligraphy {
+    position: relative;
+    display: inline-block;
+}
+
+.writing-calligraphy svg {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+}
+
+.writing-calligraphy path {
+    stroke: var(--white);
+    stroke-width: 2;
+    fill: none;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: write-stroke 3s ease forwards;
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.6));
+}
+
+.writing-calligraphy path.gold-stroke {
+    stroke: var(--gold);
+    filter: drop-shadow(0 0 20px var(--gold-glow));
+    animation-delay: 0.5s;
+}
+
+@keyframes write-stroke {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Hero Title Living Scripture Style */
+body.living-scripture-theme .hero-title {
+    font-family: 'Aref Ruqaa', serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    color: var(--white);
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.3), 0 0 60px rgba(201, 162, 39, 0.2);
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: reveal-title 1.5s ease 1s forwards;
+}
+
+body.living-scripture-theme .hero-title .title-name {
+    display: block;
+    color: var(--gold);
+    text-shadow: 0 0 40px var(--gold-glow), 0 0 80px rgba(201, 162, 39, 0.4);
+}
+
+@keyframes reveal-title {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+        filter: blur(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+/* Bismillah - Ethereal Glow */
+body.living-scripture-theme .bismillah {
+    font-family: 'Amiri', serif;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    color: var(--gold);
+    text-shadow: 0 0 20px var(--gold-glow), 0 0 40px var(--gold);
+    letter-spacing: 0.1em;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fade-glow 2s ease 0.5s forwards;
+}
+
+@keyframes fade-glow {
+    from {
+        opacity: 0;
+        text-shadow: 0 0 0 transparent;
+    }
+    to {
+        opacity: 1;
+        text-shadow: 0 0 20px var(--gold-glow), 0 0 40px var(--gold);
+    }
+}
+
+/* Title Decoration */
+body.living-scripture-theme .title-decoration {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1.5rem 0;
+    opacity: 0;
+    animation: reveal-title 1s ease 1.5s forwards;
+}
+
+body.living-scripture-theme .deco-line {
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    box-shadow: 0 0 10px var(--gold);
+}
+
+body.living-scripture-theme .deco-star {
+    color: var(--gold);
+    font-size: 1.5rem;
+    text-shadow: 0 0 15px var(--gold-glow);
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% {
+        text-shadow: 0 0 15px var(--gold-glow);
+        transform: scale(1);
+    }
+    50% {
+        text-shadow: 0 0 30px var(--gold-glow), 0 0 50px var(--gold);
+        transform: scale(1.1);
+    }
+}
+
+/* Subtitle */
+body.living-scripture-theme .hero-subtitle {
+    font-family: 'Cairo', sans-serif;
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    color: var(--white-muted);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: reveal-title 1s ease 1.8s forwards;
+}
+
+/* Verse - Living Scripture Style */
+body.living-scripture-theme .hero-verse {
+    max-width: 800px;
+    margin: 0 auto 3rem;
+    padding: 2rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    opacity: 0;
+    animation: reveal-title 1s ease 2s forwards;
+}
+
+body.living-scripture-theme .hero-verse .verse-text {
+    font-family: 'Amiri', serif;
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    color: var(--white);
+    line-height: 2;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+body.living-scripture-theme .hero-verse cite {
+    display: block;
+    margin-top: 1rem;
+    font-style: normal;
+    color: var(--gold);
+    font-size: 1rem;
+}
+
+/* =====================================================
+   NAVIGATION BUTTONS - Morphing Strokes
+   ===================================================== */
+body.living-scripture-theme .hero-cta {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: reveal-title 1s ease 2.3s forwards;
+}
+
+body.living-scripture-theme .btn {
+    position: relative;
+    padding: 1rem 2.5rem;
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+body.living-scripture-theme .btn-primary {
+    background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-glow) 100%);
+    color: var(--white);
+    box-shadow: 0 10px 40px rgba(16, 168, 130, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+body.living-scripture-theme .btn-primary:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 20px 50px rgba(16, 168, 130, 0.5), 0 0 30px var(--emerald-glow);
+}
+
+body.living-scripture-theme .btn-secondary {
+    background: var(--glass-bg);
+    color: var(--white);
+    border: 2px solid var(--gold);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(201, 162, 39, 0.2);
+}
+
+body.living-scripture-theme .btn-secondary:hover {
+    background: var(--gold);
+    color: var(--midnight-blue);
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 0 40px var(--gold-glow);
+}
+
+/* Stroke Animation on Buttons */
+body.living-scripture-theme .btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    transition: all 0.5s ease;
+    border-radius: 50%;
+}
+
+body.living-scripture-theme .btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* =====================================================
+   GLASS-MORPHISM CARDS (Khawater Section)
+   ===================================================== */
+body.living-scripture-theme .khawater-section {
+    background: transparent;
+    position: relative;
+    padding: 6rem 0;
+}
+
+body.living-scripture-theme .khawater-bg-pattern {
+    display: none;
+}
+
+body.living-scripture-theme .section-header.light .section-title,
+body.living-scripture-theme .section-header .section-title {
+    color: var(--white);
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+}
+
+body.living-scripture-theme .section-header.light .section-icon,
+body.living-scripture-theme .section-header .section-icon {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--gold);
+}
+
+body.living-scripture-theme .section-divider span,
+body.living-scripture-theme .section-divider.light span {
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+body.living-scripture-theme .section-divider i,
+body.living-scripture-theme .section-divider.light i {
+    color: var(--gold);
+}
+
+/* Khawater Slider Glass Cards */
+body.living-scripture-theme .khawater-slider {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    padding: 3rem;
+    box-shadow: 0 25px 50px var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+body.living-scripture-theme .khawater-slider::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 30%, rgba(201, 162, 39, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+body.living-scripture-theme .khawater-text {
+    font-family: 'Aref Ruqaa', serif;
+    font-size: clamp(1.3rem, 2.5vw, 2rem);
+    color: var(--white);
+    line-height: 2.2;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+body.living-scripture-theme .quote-mark {
+    color: var(--gold);
+    text-shadow: 0 0 20px var(--gold-glow);
+}
+
+/* Slider Navigation */
+body.living-scripture-theme .slider-nav .nav-btn {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--gold);
+    backdrop-filter: blur(10px);
+}
+
+body.living-scripture-theme .slider-nav .nav-btn:hover {
+    background: var(--gold);
+    color: var(--midnight-blue);
+    box-shadow: 0 0 30px var(--gold-glow);
+}
+
+body.living-scripture-theme .slider-dots .dot {
+    background: var(--glass-border);
+}
+
+body.living-scripture-theme .slider-dots .dot.active {
+    background: var(--gold);
+    box-shadow: 0 0 15px var(--gold-glow);
+}
+
+body.living-scripture-theme .btn-light {
+    background: var(--glass-bg);
+    border: 2px solid var(--gold);
+    color: var(--gold);
+    backdrop-filter: blur(10px);
+}
+
+body.living-scripture-theme .btn-light:hover {
+    background: var(--gold);
+    color: var(--midnight-blue);
+}
+
+/* =====================================================
+   FEATURED SECTION - Glass Cards
+   ===================================================== */
+body.living-scripture-theme .featured-section {
+    background: transparent;
+    position: relative;
+    z-index: 5;
+}
+
+body.living-scripture-theme .featured-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 2rem;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 15px 35px var(--glass-shadow);
+}
+
+body.living-scripture-theme .featured-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    border-color: var(--gold);
+    box-shadow: 0 25px 50px var(--glass-shadow), 0 0 30px rgba(201, 162, 39, 0.2);
+}
+
+body.living-scripture-theme .featured-card .card-decoration {
+    display: none;
+}
+
+body.living-scripture-theme .featured-card .card-icon {
+    background: linear-gradient(135deg, var(--emerald) 0%, var(--emerald-glow) 100%);
+    box-shadow: 0 10px 30px rgba(16, 168, 130, 0.4);
+}
+
+body.living-scripture-theme .featured-card .card-category {
+    color: var(--gold);
+    background: rgba(201, 162, 39, 0.15);
+    border: 1px solid rgba(201, 162, 39, 0.3);
+}
+
+body.living-scripture-theme .featured-card .card-title {
+    color: var(--white);
+}
+
+body.living-scripture-theme .featured-card .card-excerpt {
+    color: var(--white-muted);
+}
+
+body.living-scripture-theme .featured-card .card-meta {
+    color: var(--white-muted);
+}
+
+body.living-scripture-theme .featured-card .card-link {
+    color: var(--gold);
+}
+
+body.living-scripture-theme .featured-card .card-link:hover {
+    color: var(--gold-glow);
+}
+
+/* =====================================================
+   ABOUT SECTION
+   ===================================================== */
+body.living-scripture-theme .about-section {
+    background: transparent;
+}
+
+body.living-scripture-theme .about-content .about-text p {
+    color: var(--white-muted);
+}
+
+body.living-scripture-theme .about-content .about-text strong {
+    color: var(--gold);
+}
+
+body.living-scripture-theme .stat-item {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+}
+
+body.living-scripture-theme .stat-number {
+    color: var(--gold);
+}
+
+body.living-scripture-theme .stat-label {
+    color: var(--white-muted);
+}
+
+body.living-scripture-theme .image-frame {
+    background: var(--glass-bg);
+    border: 2px solid var(--gold);
+    box-shadow: 0 0 40px rgba(201, 162, 39, 0.2);
+}
+
+body.living-scripture-theme .image-placeholder {
+    color: var(--gold);
+}
+
+/* =====================================================
+   SOCIAL SECTION
+   ===================================================== */
+body.living-scripture-theme .social-section {
+    background: linear-gradient(180deg, transparent 0%, rgba(10, 22, 40, 0.8) 100%);
+}
+
+body.living-scripture-theme .social-btn {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--white);
+    backdrop-filter: blur(10px);
+}
+
+body.living-scripture-theme .social-btn:hover {
+    border-color: var(--gold);
+    box-shadow: 0 0 30px rgba(201, 162, 39, 0.3);
+}
+
+/* =====================================================
+   NEWSLETTER
+   ===================================================== */
+body.living-scripture-theme .newsletter-section {
+    background: var(--glass-bg);
+    border-top: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+body.living-scripture-theme .newsletter-section h2 {
+    color: var(--white);
+}
+
+body.living-scripture-theme .newsletter-section p {
+    color: var(--white-muted);
+}
+
+body.living-scripture-theme .newsletter-form input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--glass-border);
+    color: var(--white);
+}
+
+body.living-scripture-theme .newsletter-form input::placeholder {
+    color: var(--white-muted);
+}
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+body.living-scripture-theme .footer {
+    background: rgba(5, 13, 26, 0.95);
+    border-top: 1px solid var(--glass-border);
+}
+
+body.living-scripture-theme .footer-pattern {
+    display: none;
+}
+
+body.living-scripture-theme .footer-title,
+body.living-scripture-theme .footer-logo .logo-arabic {
+    color: var(--gold);
+}
+
+body.living-scripture-theme .footer-about,
+body.living-scripture-theme .footer-links a {
+    color: var(--white-muted);
+}
+
+body.living-scripture-theme .footer-links a:hover {
+    color: var(--gold);
+}
+
+body.living-scripture-theme .footer-social a {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--white);
+}
+
+body.living-scripture-theme .footer-social a:hover {
+    background: var(--gold);
+    color: var(--midnight-blue);
+}
+
+body.living-scripture-theme .footer-verse blockquote {
+    color: var(--gold);
+}
+
+body.living-scripture-theme .footer-verse cite {
+    color: var(--white-muted);
+}
+
+body.living-scripture-theme .footer-bottom {
+    border-top-color: var(--glass-border);
+    color: var(--white-muted);
+}
+
+body.living-scripture-theme .footer-divider span {
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+body.living-scripture-theme .footer-divider i {
+    color: var(--gold);
+}
+
+/* =====================================================
+   SCROLL INDICATOR
+   ===================================================== */
+body.living-scripture-theme .scroll-indicator {
+    color: var(--white-muted);
+}
+
+body.living-scripture-theme .scroll-indicator .mouse {
+    border-color: var(--gold);
+}
+
+body.living-scripture-theme .scroll-indicator .wheel {
+    background: var(--gold);
+}
+
+/* =====================================================
+   HERO WAVE
+   ===================================================== */
+body.living-scripture-theme .hero-wave svg path {
+    fill: transparent;
+}
+
+/* =====================================================
+   BACK TO TOP
+   ===================================================== */
+body.living-scripture-theme .back-to-top {
+    background: var(--gold);
+    color: var(--midnight-blue);
+    box-shadow: 0 0 30px var(--gold-glow);
+}
+
+body.living-scripture-theme .back-to-top:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 50px var(--gold-glow);
+}
+
+/* =====================================================
+   PRELOADER
+   ===================================================== */
+body.living-scripture-theme #preloader {
+    background: var(--midnight-blue);
+}
+
+body.living-scripture-theme .islamic-pattern-loader {
+    border-color: var(--gold);
+    border-top-color: transparent;
+}
+
+body.living-scripture-theme .bismillah-loader {
+    color: var(--gold);
+    text-shadow: 0 0 20px var(--gold-glow);
+}
+
+/* =====================================================
+   RESPONSIVE ADJUSTMENTS
+   ===================================================== */
+@media (max-width: 768px) {
+    body.living-scripture-theme .khawater-slider {
+        padding: 2rem 1.5rem;
+    }
+    
+    body.living-scripture-theme .hero-verse {
+        padding: 1.5rem;
+        margin: 0 1rem 2rem;
+    }
+}
