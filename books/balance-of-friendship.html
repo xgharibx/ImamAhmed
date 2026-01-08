@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مِيزَانُ الصُّحْبَةِ فِي رِحْلَةِ السَّائِرِينَ | مكتبة الشيخ أحمد</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #16a085;
+            --heading-font: 'Aref Ruqaa', serif;
+            --body-font: 'Amiri', serif;
+        }
+        
+        body {
+            font-family: var(--body-font);
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .book-header {
+            background: linear-gradient(135deg, #16a085, #2c3e50);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .book-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.1;
+        }
+
+        .book-title {
+            font-family: var(--heading-font);
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .book-author {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: -3rem auto 3rem;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-family: var(--heading-font);
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .text-content {
+            font-size: 1.4rem;
+            text-align: justify;
+            margin-bottom: 1.5rem;
+        }
+
+        .poetry-box {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .poetry-box::before {
+            content: '❝';
+            font-family: serif;
+            font-size: 4rem;
+            color: var(--primary-color);
+            opacity: 0.2;
+            position: absolute;
+            top: -1rem;
+            right: 1rem;
+        }
+        
+        .poetry-line {
+            font-family: var(--heading-font);
+            font-size: 1.5rem;
+            margin: 1rem 0;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .poetry-hemistich {
+            flex: 1;
+            min-width: 200px;
+            max-width: 45%;
+        }
+
+        .quran-verse {
+            font-family: 'Amiri', serif;
+            color: var(--primary-color);
+            font-size: 1.6rem;
+            display: block;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .custom-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .custom-list li {
+            margin-bottom: 1rem;
+            padding-right: 2rem;
+            position: relative;
+            font-size: 1.3rem;
+        }
+
+        .custom-list li::before {
+            content: '♦';
+            color: var(--primary-color);
+            position: absolute;
+            right: 0;
+            top: 5px;
+        }
+
+        .nav-button {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 10px 25px;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: #2c3e50;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .book-title { font-size: 2.2rem; }
+            .content-card { padding: 1.5rem; }
+            .poetry-hemistich { max-width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="book-header">
+        <h1 class="book-title">مِيزَانُ الصُّحْبَةِ فِي رِحْلَةِ السَّائِرِينَ</h1>
+        <div class="book-author">بقلم: فضيلة الشيخ أحمد إسماعيل الفشني</div>
+        <a href="../books.html" class="nav-button">
+            <i class="fas fa-arrow-right"></i> عودة للمكتبة
+        </a>
+    </header>
+
+    <div class="container">
+        <article class="content-card">
+            <p class="text-content">مِيزَانُ الصُّحْبَةِ فِي رِحْلَةِ السَّائِرِينَ</p>
+<p class="text-content">الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ، الْقَائِلِ فِي كِتَابِهِ الْعَزِيزِ: <span class="quran-verse">﴿الْأَخِلَّاءُ يَوْمَئِذٍ بَعْضُهُمْ لِبَعْضٍ عَدُوٌّ إِلَّا الْمُتَّقِينَ﴾</span>، وَالصَّلَاةُ وَالسَّلَامُ عَلَى سَيِّدِنَا رَسُولِ اللَّهِ ﷺ، الْمَبْعُوثِ رَحْمَةً لِلْعَالَمِينَ، وَعَلَى آلِ بَيْتِهِ الطَّاهِرِينَ، وَصَحَابَتِهِ الْغُرِّ الْمَيَامِينِ، وَتَابِعِيهِمْ بِإِحْسَانٍ إِلَى يَوْمِ الدِّينِ.</p>
+<h2 class="section-title">أَيُّهَا السَّادَةُ الْكِرَامُ..</h2>
+<p class="text-content">إِنَّ مَنْزِلَةَ الصُّحْبَةِ فِي دِينِنَا لَيْسَتْ مُجَرَّدَ لِقَاءَاتٍ عَابِرَةٍ، بَلْ هِيَ مِعْرَاجٌ لِلْقُلُوبِ وَرِبَاطٌ قُدْسِيٌّ يُعِينُ الْمَرْءَ عَلَى دِينِهِ وَدُنْيَاهُ. وَمِنْ جَوَاهِرِ الْحِكْمَةِ الَّتِي نُقِلَتْ عَنْ بَعْضِ أَهْلِ الْبَصَائِرِ تِلْكَ الْوَصِيَّةُ الْجَامِعَةُ الَّتِي تَرْسُمُ مَعَالِمَ الصَّدِيقِ الصَّادِقِ: "يَا بُنَيَّ، لَا تَصْحَبْ مِنَ النَّاسِ إِلَّا مَنْ إِذَا افْتَقَرْتَ إِلَيْهِ قَرُبَ مِنْكَ، وَإِنِ اسْتَغْنَيْتَ عَنْهُ لَمْ يَطْمَعْ فِيكَ، وَإِنْ عَلَتْ مَرْتَبَتُهُ لَمْ يَرْتَفِعْ عَلَيْكَ".</p>
+<h2 class="section-title">أولاً: الْقُرْبُ عِنْدَ الِافْتِقَارِ (مَعْدِنُ الْوَفَاءِ)</h2>
+<p class="text-content">إِنَّ الصَّاحِبَ الْحَقَّ هُوَ مَنْ تَجِدُهُ عِنْدَ الْكَرْبِ قَبْلَ الرَّخَاءِ، وَفِي الضِّيقِ قَبْلَ السَّعَةِ.</p>
+<ul class="custom-list">
+<li><strong>مَوْقِفٌ مِنْ سِيَرِ النُّبَلَاءِ:</strong>  يُذْكَرُ فِي كِتَابِ "حِلْيَةِ الْأَوْلِيَاءِ" لِلْإِمَامِ أَبِي نُعَيْمٍ الْأَصْبَهَانِيِّ، أَنَّ أَحَدَ الصَّالِحِينَ مَرِضَ مَرَضاً شَدِيداً وَافْتَقَرَ، فَجَاءَهُ صَدِيقٌ لَهُ فَوَجَدَهُ يَبْكِي، فَقَالَ لَهُ: مَا يُبْكِيكَ؟ أَحَاجَةٌ مِنَ الدُّنْيَا؟ قَالَ: لَا، وَلَكِنْ يُبْكِينِي أَنِّي لَمْ أَتَفَقَّدْ حَالَكَ حَتَّى احْتَجْتَ إِلَيَّ! هَكَذَا هُوَ الصَّاحِبُ، يَرَى فِي حَاجَةِ صَدِيقِهِ تَقْصِيراً مِنْ نَفْسِهِ لَا عِبْئاً عَلَيْهِ.</li>
+<li><strong>قِصَّةٌ مِنَ الْوَاقِعِ:</strong>  يُحْكَى عَنْ رَجُلٍ تَعَثَّرَتْ تِجَارَتُهُ وَأَصْبَحَ مَطْلُوباً لِلدُّيُونِ، فَانْفَضَّ مِنْ حَوْلِهِ "أَصْدِقَاءُ الْمَصْلَحَةِ"، إِلَّا صَدِيقاً وَاحِداً، بَاعَ سَيَّارَتَهُ الَّتِي يَمْتَلِكُهَا لِيُسَدِّدَ عَنْهُ دَيْنَهُ، قَائِلاً لَهُ: "الْمَالُ يَعُودُ، أَمَّا أَخِي فَلَا يَعُودُ". هَذَا هُوَ مِصْدَاقُ قَوْلِ الشَّاعِرِ:</li>
+</ul>
+<div class="poetry-box">
+
+                    <div class="poetry-line">
+                        <div class="poetry-hemistich">وَمَا أَكْثَرَ الأَصْحَابَ حِينَ تَعُدُّهُمْ</div>
+                        <div class="poetry-hemistich">وَلَكِنَّهُمْ فِي النَّائِبَاتِ قَلِيلُ</div>
+                    </div></div>
+<h2 class="section-title">ثانياً: الْعِفَّةُ عِنْدَ الْغِنَى (نَزَاهَةُ الرُّوحِ)</h2>
+<p class="text-content">الصَّدِيقُ الصَّادِقُ لَا يَرَى فِي صَدِيقِهِ مَطْمَعاً مَادِيّاً، بَلْ يَحْفَظُ لَهُ حُرْمَتَهُ وَقَدْرَهُ.</p>
+<ul class="custom-list">
+<li><strong>مَوْقِفٌ مِنَ السِّيَرِ:</strong>  وَرَدَ فِي كِتَابِ "صِفَةِ الصَّفْوَةِ" لِلْإِمَامِ ابْنِ الْجَوْزِيِّ، أَنَّ سَيِّدَنَا ابْنَ عُمَرَ (رَضِيَ اللَّهُ عَنْهُمَا) كَانَ يُقَاسِمُ إِخْوَانَهُ مَالَهُ، وَكَانَ بَعْضُ التَّابِعِينَ يَمْتَنِعُونَ عَنْ أَخْذِ الْمَالِ مِنْ أَصْدِقَائِهِمْ عِنْدَ الْغِنَى، تَنَزُّهاً وَحِفْظاً لِجَمَالِ الْمَوَدَّةِ، لِيَكُونَ الِاجْتِمَاعُ خَالِصاً لِوَجْهِ اللَّهِ عَزَّ وَجَلَّ.</li>
+</ul>
+<h2 class="section-title">ثالثاً: التَّوَاضُعُ عِنْدَ الرِّفْعَةِ (خُلُقُ السَّادَةِ)</h2>
+<p class="text-content">أَخْطَرُ مَا يُفْسِدُ الصَّدَاقَةَ هُوَ "الْكِبْرُ" إِذَا نَالَ الْمَرْءُ مَنْصِباً أَوْ جَاهاً.</p>
+<ul class="custom-list">
+<li><strong>مَوْقِفٌ لِابْنِ السَّمَّاكِ:</strong>  يُحْكَى فِي كِتَابِ "إِحْيَاءِ عُلُومِ الدِّينِ" لِلْإِمَامِ الْغَزَالِيِّ، أَنَّ ابْنَ السَّمَّاكِ كَانَ لَهُ صَدِيقٌ صَارَ قَاضِياً، فَلَمَّا دَخَلَ عَلَيْهِ ابْنُ السَّمَّاكِ بَعْدَ فَتْرَةٍ، وَجَدَهُ مُتَغَيِّراً فِي كَلَامِهِ، فَقَالَ لَهُ: "يَا هَذَا، لَمَّا صِرْتَ فِي مَقَامِكَ هَذَا نَسِيتَ أَنَّكَ كُنْتَ أَخِي؟"، فَبَكَى الْقَاضِي وَقَامَ لِيُقَبِّلَ رَأْسَهُ، وَأَدْرَكَ أَنَّ الْمَنَاصِبَ تَنْتَهِي وَالْأُخُوَّةَ تَبْقَى.</li>
+<li><strong>قِصَّةٌ مُعَاصِرَةٌ:</strong>  يُرْوَى عَنْ أَحَدِ كِبَارِ الْعُلَمَاءِ أَنَّهُ لَمَّا عُيِّنَ فِي مَنْصِبٍ رَفِيعٍ، ذَهَبَ لِزِيَارَةِ أَصْدِقَاءِ طُفُولَتِهِ فِي قَرْيَتِهِ، وَجَلَسَ مَعَهُمْ عَلَى الْأَرْضِ يَتَنَاوَلُ الطَّعَامَ الْبَسِيطَ، فَلَمَّا تَعَجَّبُوا، قَالَ لَهُمْ: "إِنَّمَا رَفَعَنِي اللَّهُ لِأَخْدُمَكُمْ، لَا لِأَرْتَفِعَ عَلَيْكُمْ".</li>
+</ul>
+<h2 class="section-title">أَيُّهَا السَّادَةُ الْكِرَامُ..</h2>
+<p class="text-content">إِنَّ الْخَلِيلَ الصَّالِحَ هُوَ الَّذِي يَأْخُذُ بِيَدِكَ إِلَى الْجَنَّةِ. فَاجْعَلُوا مِيزَانَكُمُ الْأَدَبَ وَالْوَفَاءَ.</p>
+<h2 class="section-title">نَصَائِحُ عَمَلِيَّةٌ لِلْقُرَّاءِ:</h2>
+<ul class="custom-list">
+<li><strong>اخْتَبِرْ صَدِيقَكَ:</strong>  لَا تُسَلِّمْ قَلْبَكَ لِأَحَدٍ حَتَّى تَرَى مَوْقِفَهُ فِي شِدَّتِكَ.</li>
+<li><strong>كُنْ سَنَداً:</strong>  إِذَا رَأَيْتَ مِنْ أَخِيكَ ضَعْفاً أَوْ حَاجَةً، فَبَادِرْ قَبْلَ أَنْ يَسْأَلَ.</li>
+<li><strong>تَوَاضَعْ لِمَنْ عَلَّمَكَ:</strong>  لَا تَنْسَ مَنْ كَانُوا مَعَكَ فِي "بِدَايَةِ السَّطْرِ" بَعْدَ أَنْ تَصِلَ إِلَى "نِهَايَةِ الْكِتَابِ".</li>
+</ul>
+<p class="text-content">وَبِاللَّهِ تَعَالَى التَّوْفِيقُ.</p>
+
+        </article>
+    </div>
+
+</body>
+</html>
