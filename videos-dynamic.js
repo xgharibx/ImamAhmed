@@ -145,8 +145,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clean ID just in case
         const cleanId = id.trim();
         modalTitle.textContent = title;
-        // Use youtube-nocookie and standard parameters to maximize compatibility
-        modalIframe.src = `https://www.youtube-nocookie.com/embed/${cleanId}?autoplay=1&rel=0&modestbranding=1&playsinline=1&origin=${window.location.origin}`;
+        // Switches back to standard youtube.com and removes 'origin' which causes 153 errors on local files/some browsers
+        modalIframe.src = `https://www.youtube.com/embed/${cleanId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
     };
