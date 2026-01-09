@@ -105,17 +105,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 6. Create Card Logic
     function createCard(item, index, sectionId) {
-        const targetCount = parseInt(item.count) || 1; // Default to 1 if parsing fails
+        const targetCount = parseInt(item.count) || 1; 
         const currentCount = getProgress(sectionId, index);
         const isCompleted = currentCount >= targetCount;
+        
+        // Circular Progress Calculation
+        const radius = 22;
+        const circumference = 2 * Math.PI * radius;
+        const offset = circumference - (currentCount / targetCount) * circumference;
 
         const card = document.createElement('div');
         card.className = `azkar-card ${isCompleted ? 'completed' : ''}`;
         card.id = `card-${sectionId}-${index}`;
 
-        // Benefit HTML (if exists)
+        // Benefit HTML
         let benefitHtml = '';
-        if (item.benefit && item.benefit.length > 2) { // Filter out empty or tiny strings
+        if (item.benefit && item.benefit.length > 2) { 
             benefitHtml = `
                 <div class="dhikr-meta">
                     <span class="meta-title">الفضل / المصدر:</span>
@@ -130,24 +135,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${benefitHtml}
             </div>
             <div class="card-footer">
-                <div class="counter-area">
-                    <button class="count-btn ${isCompleted ? 'done' : ''}" onclick="incrementCount('${sectionId}', ${index}, ${targetCount})">
-                        <i class="fas ${isCompleted ? 'fa-check' : 'fa-fingerprint'}"></i>
-                        <span>${isCompleted ? 'اكتملت' : 'اضغط للتسبيح'}</span>
-                    </button>
-                    
-                    <div class="count-display" id="display-${sectionId}-${index}">
-                        ${targetCount - currentCount}
+                <div class="counter-container">
+                    <div class="counter-ring">
+                        <svg width="50" height="50">
+                            <circle class="progress-ring__circle-bg" stroke="#e2e8f0" stroke-width="4" fill="transparent" r="${radius}" cx="25" cy="25"/>
+                            <circle class="progress-ring__circle" id="ring-${sectionId}-${index}" 
+                                stroke="#D4AF37" stroke-width="4" fill="transparent" r="${radius}" cx="25" cy="25"
+                                style="stroke-dasharray: ${circumference} ${circumference}; stroke-dashoffset: ${offset};"/>
+                        </svg>
+                        <span class="counter-text" id="display-${sectionId}-${index}" style="font-size: 1rem;">
+                            ${targetCount - currentCount}
+                        </span>
                     </div>
-
                     <button class="reset-single-btn" onclick="resetSingle('${sectionId}', ${index}, ${targetCount})" title="إعادة">
                         <i class="fas fa-redo"></i>
                     </button>
                 </div>
+                
+                <button class="count-btn ${isCompleted ? 'completed' : ''}" onclick="incrementCount('${sectionId}', ${index}, ${targetCount})">
+                    <i class="fas ${isCompleted ? 'fa-check' : 'fa-fingerprint'}"></i>
+                    <span>${isCompleted ? 'اكتملت' : 'اضغط للتسبيح'}</span>
+                </button>
             </div>
         `;
 
-        // Add click listener to whole card for easier tapping (except buttons)
+        // Add click listener
         card.addEventListener('click', (e) => {
             if (!e.target.closest('button')) {
                 incrementCount(sectionId, index, targetCount);
@@ -157,16 +169,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return card;
     }
 
-    // 7. Global Functions for OnClick access
+    // 7. Global Functions
     window.incrementCount = function(sectionId, index, target) {
         let current = getProgress(sectionId, index);
-        if (current >= target) return; // Already done
+        if (current >= target) return; 
 
         current++;
         saveProgress(sectionId, index, current);
         updateCardUI(sectionId, index, current, target);
 
-        // Haptic Feedback if available
+        // Haptic Feedback
         if (navigator.vibrate) {
             navigator.vibrate(50);
         }
@@ -183,20 +195,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const card = document.getElementById(`card-${sectionId}-${index}`);
         const btn = card.querySelector('.count-btn');
         const display = document.getElementById(`display-${sectionId}-${index}`);
+        const ring = document.getElementById(`ring-${sectionId}-${index}`);
+        
         const remaining = target - current;
-
         display.innerText = remaining;
+
+        // Update Ring
+        const radius = 22;
+        const circumference = 2 * Math.PI * radius;
+        const offset = circumference - (current / target) * circumference;
+        ring.style.strokeDashoffset = offset;
 
         if (current >= target) {
             card.classList.add('completed');
-            btn.classList.add('done');
+            btn.classList.add('completed'); // Fixed class name to match CSS
             btn.innerHTML = `<i class="fas fa-check"></i> <span>اكتملت</span>`;
-            
-            // Play success sound (soft click) - Optional
-            // const audio = new Audio('assets/click.mp3'); audio.play();
         } else {
             card.classList.remove('completed');
-            btn.classList.remove('done');
+            btn.classList.remove('completed');
             btn.innerHTML = `<i class="fas fa-fingerprint"></i> <span>اضغط للتسبيح</span>`;
         }
     }
