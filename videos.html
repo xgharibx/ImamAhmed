@@ -139,337 +139,63 @@
         </div>
     </section>
 
-    <!-- Categories Section -->
-    <section class="categories-section">
+        <!-- Dynamic Video Library Section -->
+    <section class="videos-library-section" id="library-top">
         <div class="container">
-            <div class="section-header" data-aos="fade-up">
-                <h2 class="section-title">الأقسام</h2>
-                <div class="section-divider">
-                    <span></span>
-                    <i class="fas fa-play-circle"></i>
-                    <span></span>
+            <!-- Filter Bar -->
+            <div class="video-filters-wrapper" data-aos="fade-down">
+                <div class="video-filters" id="video-filters">
+                    <button class="filter-btn active" data-filter="all">
+                        <i class="fas fa-layer-group"></i> الكل
+                    </button>
+                    <button class="filter-btn" data-filter="khutbah">
+                        <i class="fas fa-mosque"></i> خطب الجمعة
+                    </button>
+                    <button class="filter-btn" data-filter="lessons">
+                        <i class="fas fa-chalkboard-teacher"></i> الدروس والمحاضرات
+                    </button>
+                    <button class="filter-btn" data-filter="tafseer">
+                        <i class="fas fa-book-open"></i> التفسير
+                    </button>
+                    <button class="filter-btn" data-filter="quran">
+                        <i class="fas fa-quran"></i> تلاوات
+                    </button>
+                    <button class="filter-btn" data-filter="shorts">
+                        <i class="fas fa-mobile-alt"></i> مقاطع قصيرة
+                    </button>
                 </div>
             </div>
 
-            <div class="categories-grid" data-aos="fade-up">
-                <a href="#khutab-section" class="category-card" data-category="khutab">
-                    <div class="category-icon">
-                        <i class="fas fa-mosque"></i>
-                    </div>
-                    <h3>خطب الجمعة</h3>
-                    <span class="category-count">خطب مرئية</span>
-                </a>
-                <a href="#lectures-section" class="category-card" data-category="lectures">
-                    <div class="category-icon">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                    </div>
-                    <h3>محاضرات ودروس</h3>
-                    <span class="category-count">برامج تلفزيونية</span>
-                </a>
-                <a href="#programs-section" class="category-card" data-category="programs">
-                    <div class="category-icon">
-                        <i class="fas fa-tv"></i>
-                    </div>
-                    <h3>برامج تلفزيونية</h3>
-                    <span class="category-count">قصة وعبرة</span>
-                </a>
-                <a href="#hajj-section" class="category-card" data-category="hajj">
-                    <div class="category-icon">
-                        <i class="fas fa-kaaba"></i>
-                    </div>
-                    <h3>مناسك الحج</h3>
-                    <span class="category-count">شرح المناسك</span>
-                </a>
+            <!-- Videos Grid -->
+            <div class="videos-grid" id="videos-grid">
+                <!-- Javascript will populate this -->
+                <div class="grid-loader">
+                    <div class="islamic-pattern-loader"></div>
+                    <p style="margin-top: 1rem;">جاري تحميل المكتبة المرئية...</p>
+                </div>
+            </div>
+
+            <!-- Load More -->
+            <div class="load-more-wrapper">
+                <button id="load-more-btn" class="btn btn-outline" style="display:none;">
+                    عرض المزيد <i class="fas fa-chevron-down"></i>
+                </button>
             </div>
         </div>
     </section>
 
-    <!-- Friday Sermons Section - خطب الجمعة -->
-    <section class="videos-section" id="khutab-section">
-        <div class="container">
-            <div class="section-header" data-aos="fade-up">
-                <h2 class="section-title">
-                    <i class="fas fa-mosque"></i>
-                    خطب الجمعة المرئية
-                </h2>
-                <div class="section-divider">
-                    <span></span>
-                    <i class="fas fa-moon"></i>
-                    <span></span>
-                </div>
-                <p class="section-desc">مجموعة من خطب الجمعة المباركة للشيخ أحمد إسماعيل الفشني</p>
+    <!-- Video Modal -->
+    <div id="video-modal" class="video-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="video-wrapper">
+                <iframe id="modal-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
-
-            <div class="videos-grid" data-aos="fade-up">
-                <!-- Sermon 1 -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <div class="video-embed placeholder">
-                            <div class="play-overlay">
-                                <i class="fas fa-play-circle"></i>
-                                <span>شاهد على يوتيوب</span>
-                            </div>
-                        </div>
-                        <span class="video-category"><i class="fas fa-mosque"></i> خطبة جمعة</span>
-                    </div>
-                    <div class="video-content">
-                        <h3 class="video-title">البِيئَةُ هِيَ الرَّحِمُ الثَّانِي</h3>
-                        <p class="video-desc">خُطْبَةُ الْجُمُعَة ٢٤ أُكْتُوبَر ٢٠٢٥ - أهمية البيئة في تشكيل شخصية الإنسان وتربيته</p>
-                        <div class="video-meta">
-                            <span><i class="fas fa-calendar-alt"></i> ٢٤ أكتوبر ٢٠٢٥</span>
-                        </div>
-                        <a href="https://www.youtube.com/@ahmedelfashny" target="_blank" class="btn btn-outline btn-sm">
-                            <i class="fab fa-youtube"></i> شاهد على يوتيوب
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Sermon 2 -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <div class="video-embed placeholder">
-                            <div class="play-overlay">
-                                <i class="fas fa-play-circle"></i>
-                                <span>شاهد على يوتيوب</span>
-                            </div>
-                        </div>
-                        <span class="video-category"><i class="fas fa-mosque"></i> خطبة جمعة</span>
-                    </div>
-                    <div class="video-content">
-                        <h3 class="video-title">شَرَفُ الدِّفَاعِ عَنِ الْأَوْطَانِ</h3>
-                        <p class="video-desc">خُطْبَةُ الْجُمُعَة 3 أُكْتُوبَر ٢٠٢٥ - فضل الدفاع عن الوطن في الإسلام</p>
-                        <div class="video-meta">
-                            <span><i class="fas fa-calendar-alt"></i> ٣ أكتوبر ٢٠٢٥</span>
-                        </div>
-                        <a href="https://www.youtube.com/@ahmedelfashny" target="_blank" class="btn btn-outline btn-sm">
-                            <i class="fab fa-youtube"></i> شاهد على يوتيوب
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Sermon 3 -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <div class="video-embed placeholder">
-                            <div class="play-overlay">
-                                <i class="fas fa-play-circle"></i>
-                                <span>شاهد على يوتيوب</span>
-                            </div>
-                        </div>
-                        <span class="video-category"><i class="fas fa-mosque"></i> خطبة جمعة</span>
-                    </div>
-                    <div class="video-content">
-                        <h3 class="video-title">اليقين</h3>
-                        <p class="video-desc">خطبة الجمعة ٢٦ سبتمبر ٢٠٢٥ - اليقين بالله وأثره في حياة المسلم</p>
-                        <div class="video-meta">
-                            <span><i class="fas fa-calendar-alt"></i> ٢٦ سبتمبر ٢٠٢٥</span>
-                        </div>
-                        <a href="https://www.youtube.com/@ahmedelfashny" target="_blank" class="btn btn-outline btn-sm">
-                            <i class="fab fa-youtube"></i> شاهد على يوتيوب
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Sermon 4 -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <div class="video-embed placeholder">
-                            <div class="play-overlay">
-                                <i class="fas fa-play-circle"></i>
-                                <span>شاهد على يوتيوب</span>
-                            </div>
-                        </div>
-                        <span class="video-category"><i class="fas fa-mosque"></i> خطبة جمعة</span>
-                    </div>
-                    <div class="video-content">
-                        <h3 class="video-title">اترك عند الناس أثر طيب</h3>
-                        <p class="video-desc">خطبة الجمعة 12 سبتمبر ٢٠٢٥ - أهمية ترك الأثر الطيب والذكرى الحسنة</p>
-                        <div class="video-meta">
-                            <span><i class="fas fa-calendar-alt"></i> ١٢ سبتمبر ٢٠٢٥</span>
-                        </div>
-                        <a href="https://www.youtube.com/@ahmedelfashny" target="_blank" class="btn btn-outline btn-sm">
-                            <i class="fab fa-youtube"></i> شاهد على يوتيوب
-                        </a>
-                    </div>
-                </div>
+            <div class="modal-info">
+                <h3 id="modal-title"></h3>
             </div>
         </div>
-    </section>
-
-    <!-- Lectures Section - محاضرات ودروس -->
-    <section class="videos-section alt-bg" id="lectures-section">
-        <div class="container">
-            <div class="section-header" data-aos="fade-up">
-                <h2 class="section-title">
-                    <i class="fas fa-chalkboard-teacher"></i>
-                    محاضرات ودروس
-                </h2>
-                <div class="section-divider">
-                    <span></span>
-                    <i class="fas fa-moon"></i>
-                    <span></span>
-                </div>
-                <p class="section-desc">دروس ومحاضرات متنوعة في العلوم الشرعية والتزكية</p>
-            </div>
-
-            <div class="videos-grid" data-aos="fade-up">
-                <!-- Lecture 1 -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <div class="video-embed placeholder">
-                            <div class="play-overlay">
-                                <i class="fas fa-play-circle"></i>
-                                <span>شاهد على يوتيوب</span>
-                            </div>
-                        </div>
-                        <span class="video-category"><i class="fas fa-book-reader"></i> درس</span>
-                    </div>
-                    <div class="video-content">
-                        <h3 class="video-title">مجلس الأربعاء - أين أجد الراحة والسعادة</h3>
-                        <p class="video-desc">درس أسبوعي في التزكية والسلوك - البحث عن السعادة الحقيقية</p>
-                        <div class="video-meta">
-                            <span><i class="fas fa-book"></i> مجلس علم</span>
-                        </div>
-                        <a href="https://www.youtube.com/@ahmedelfashny" target="_blank" class="btn btn-outline btn-sm">
-                            <i class="fab fa-youtube"></i> شاهد على يوتيوب
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Lecture 2 -->
-                <div class="video-card">
-                    <div class="video-thumbnail">
-                        <div class="video-embed placeholder">
-                            <div class="play-overlay">
-                                <i class="fas fa-play-circle"></i>
-                                <span>شاهد على يوتيوب</span>
-                            </div>
-                        </div>
-                        <span class="video-category"><i class="fas fa-lightbulb"></i> محاضرة</span>
-                    </div>
-                    <div class="video-content">
-                        <h3 class="video-title">الفِكْرُ الْإِلْحَادِيُّ وَكَيْفِيَّةُ مُوَاجَهَتِهِ</h3>
-                        <p class="video-desc">محاضرة علمية في الرد على الشبهات ومواجهة الفكر الإلحادي</p>
-                        <div class="video-meta">
-                            <span><i class="fas fa-graduation-cap"></i> محاضرة علمية</span>
-                        </div>
-                        <a href="https://www.youtube.com/@ahmedelfashny" target="_blank" class="btn btn-outline btn-sm">
-                            <i class="fab fa-youtube"></i> شاهد على يوتيوب
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- TV Programs Section - برامج تلفزيونية -->
-    <section class="videos-section" id="programs-section">
-        <div class="container">
-            <div class="section-header" data-aos="fade-up">
-                <h2 class="section-title">
-                    <i class="fas fa-tv"></i>
-                    برامج تلفزيونية
-                </h2>
-                <div class="section-divider">
-                    <span></span>
-                    <i class="fas fa-moon"></i>
-                    <span></span>
-                </div>
-                <p class="section-desc">حلقات من البرامج التلفزيونية على القنوات المصرية</p>
-            </div>
-
-            <div class="videos-grid" data-aos="fade-up">
-                <!-- Program 1 -->
-                <div class="video-card featured">
-                    <div class="video-thumbnail">
-                        <div class="video-embed placeholder">
-                            <div class="play-overlay">
-                                <i class="fas fa-play-circle"></i>
-                                <span>شاهد على يوتيوب</span>
-                            </div>
-                        </div>
-                        <span class="video-category"><i class="fas fa-star"></i> برنامج مميز</span>
-                    </div>
-                    <div class="video-content">
-                        <h3 class="video-title">برنامج قِصَّةٌ وَعِبْرَةٌ - الحلقة الأولى: قِصَّةُ آدَمَ عليه السلام</h3>
-                        <p class="video-desc">برنامج قصصي يستعرض قصص الأنبياء والسلف الصالح مع استخلاص العبر والدروس المستفادة</p>
-                        <div class="video-meta">
-                            <span><i class="fas fa-tv"></i> برنامج تلفزيوني</span>
-                        </div>
-                        <a href="https://www.youtube.com/@ahmedelfashny" target="_blank" class="btn btn-outline btn-sm">
-                            <i class="fab fa-youtube"></i> شاهد على يوتيوب
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Program 2 -->
-                <div class="video-card featured">
-                    <div class="video-thumbnail">
-                        <div class="video-embed placeholder">
-                            <div class="play-overlay">
-                                <i class="fas fa-play-circle"></i>
-                                <span>شاهد على يوتيوب</span>
-                            </div>
-                        </div>
-                        <span class="video-category"><i class="fas fa-broadcast-tower"></i> التلفزيون المصري</span>
-                    </div>
-                    <div class="video-content">
-                        <h3 class="video-title">برنامج وقولوا للناس حسناً</h3>
-                        <p class="video-desc">برنامج على التلفزيون المصري يتناول آداب الخطاب والتعامل مع الناس في ضوء القرآن والسنة</p>
-                        <div class="video-meta">
-                            <span><i class="fas fa-tv"></i> التلفزيون المصري</span>
-                        </div>
-                        <a href="https://www.youtube.com/@ahmedelfashny" target="_blank" class="btn btn-outline btn-sm">
-                            <i class="fab fa-youtube"></i> شاهد على يوتيوب
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Hajj Section - مناسك الحج -->
-    <section class="videos-section alt-bg" id="hajj-section">
-        <div class="container">
-            <div class="section-header" data-aos="fade-up">
-                <h2 class="section-title">
-                    <i class="fas fa-kaaba"></i>
-                    الحج كما يجب أن يكون
-                </h2>
-                <div class="section-divider">
-                    <span></span>
-                    <i class="fas fa-moon"></i>
-                    <span></span>
-                </div>
-                <p class="section-desc">شرح مفصل لمناسك الحج والعمرة</p>
-            </div>
-
-            <div class="videos-grid" data-aos="fade-up">
-                <!-- Hajj Lecture -->
-                <div class="video-card hajj-card">
-                    <div class="video-thumbnail">
-                        <div class="video-embed placeholder hajj-bg">
-                            <div class="play-overlay">
-                                <i class="fas fa-kaaba"></i>
-                                <span>مجلس شرح المناسك</span>
-                            </div>
-                        </div>
-                        <span class="video-category"><i class="fas fa-kaaba"></i> مناسك الحج</span>
-                    </div>
-                    <div class="video-content">
-                        <h3 class="video-title">الحج كما يجب أن يكون - مجلس شرح مناسك الحج</h3>
-                        <p class="video-desc">شرح مفصل وعملي لجميع مناسك الحج والعمرة مع بيان الأحكام والآداب والأخطاء الشائعة</p>
-                        <div class="video-meta">
-                            <span><i class="fas fa-book"></i> مجلس علمي</span>
-                        </div>
-                        <a href="https://www.youtube.com/@ahmedelfashny" target="_blank" class="btn btn-outline btn-sm">
-                            <i class="fab fa-youtube"></i> شاهد على يوتيوب
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    </div>
 
     <!-- YouTube Channel Section -->
     <section class="youtube-section">
@@ -554,6 +280,7 @@
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="main.js"></script>
+    <script src="videos-dynamic.js"></script>
     <script>
         // Notify form submission
         document.getElementById('notifyForm')?.addEventListener('submit', async (e) => {
