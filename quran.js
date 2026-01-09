@@ -89,8 +89,22 @@ function openSurah(id) {
   }
   
   let surahText = '';
+  
+  // Clean Basmallah from first verse for non-Fatiha surahs
+  // The data sometimes includes Basmallah at the start of Verse 1
+  // Exact string from JSON seems to be: بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ 
+  const basmallahExact = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
+
   for (let i = 0; i < currentSurah.ayahs.length; i++) {
-    const ayah = currentSurah.ayahs[i];
+    let ayah = currentSurah.ayahs[i];
+    
+    // Remove Basmallah from first verse if present (except Fatiha)
+    if (i === 0 && currentSurah.id !== 1) {
+       if (ayah.startsWith(basmallahExact)) {
+           ayah = ayah.replace(basmallahExact, '').trim();
+       }
+    }
+
     const ayahNum = convertArabicNumbers((i + 1).toString());
     surahText += `
       <span class="ayah-text">${escapeHtml(ayah)}</span>
