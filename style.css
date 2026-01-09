@@ -84,6 +84,7 @@
 html {
     scroll-behavior: smooth;
     font-size: 16px;
+    overflow-x: hidden;
     /* Prevent text size adjustment on mobile */
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
@@ -1905,7 +1906,7 @@ section {
     .bar {
         width: 25px;
         height: 3px;
-        background: #2e7d32;
+        background: var(--primary-gold);
         border-radius: 3px;
         transition: var(--transition-normal);
     }
