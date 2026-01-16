@@ -1,8 +1,10 @@
+import argparse
 import json
-import re
+from pathlib import Path
 
-INPUT_FILE = r"m:\Sheikh Ahmed\data\youtube_raw.json"
-OUTPUT_FILE = r"m:\Sheikh Ahmed\data\videos.json"
+ROOT = Path(__file__).resolve().parent
+DEFAULT_INPUT = ROOT / 'data' / 'youtube_raw.json'
+DEFAULT_OUTPUT = ROOT / 'data' / 'videos.json'
 
 def get_category(title, duration):
     title_lower = title.lower()
@@ -39,6 +41,17 @@ def format_duration(seconds):
     return f"{m}:{s:02d}"
 
 def main():
+    ap = argparse.ArgumentParser(description='Convert yt-dlp raw JSONL export into data/videos.json')
+    ap.add_argument('--input', default=str(DEFAULT_INPUT), help='Path to raw youtube JSONL file')
+    ap.add_argument('--output', default=str(DEFAULT_OUTPUT), help='Path to output videos.json file')
+    args = ap.parse_args()
+
+    input_path = Path(args.input)
+    output_path = Path(args.output)
+
+    if not input_path.exists():
+        raise SystemExit(f"Missing input file: {input_path}. Generate it first (e.g., via yt-dlp) then re-run.")
+
     videos = []
     
     print("Reading raw file...")
@@ -46,14 +59,14 @@ def main():
     encoding = 'utf-16' 
     
     try:
-        with open(INPUT_FILE, 'r', encoding=encoding) as f:
+        with open(input_path, 'r', encoding=encoding) as f:
             # Check first char to be sure
             f.read(1)
             f.seek(0)
     except UnicodeError:
         encoding = 'utf-8'
 
-    with open(INPUT_FILE, 'r', encoding=encoding) as f:
+    with open(input_path, 'r', encoding=encoding) as f:
         for line in f:
             if not line.strip(): continue
             try:
@@ -86,10 +99,11 @@ def main():
     # Sort by date usually? Or just keep order (latest first usually from yt-dlp)
     # yt-dlp returns latest first by default on /videos
     
-    with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(videos, f, ensure_ascii=False, indent=2)
         
-    print(f"Saved to {OUTPUT_FILE}")
+    print(f"Saved to {output_path}")
 
 if __name__ == "__main__":
     main()
