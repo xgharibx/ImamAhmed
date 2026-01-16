@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize all components
     initPreloader();
     initNavigation();
+    initComingSoonLinks();
     initScrollEffects();
     initKhawaterSlider();
     initAnimations();
@@ -35,6 +36,7 @@ function initNavigation() {
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
     const navLinks = document.querySelectorAll('.nav-link');
+    const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
     
     // Mobile menu toggle
     hamburger?.addEventListener('click', () => {
@@ -46,9 +48,43 @@ function initNavigation() {
     // Close menu on link click
     navLinks.forEach(link => {
         link.addEventListener('click', () => {
+            if (link.classList.contains('dropdown-toggle')) return;
             hamburger?.classList.remove('active');
             navMenu?.classList.remove('active');
             document.body.style.overflow = '';
+        });
+    });
+
+    // Dropdown toggles (works for mobile + desktop click)
+    dropdownToggles.forEach(toggle => {
+        toggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const parent = toggle.closest('.nav-item.dropdown');
+            if (!parent) return;
+
+            // Close other dropdowns
+            document.querySelectorAll('.nav-item.dropdown.open').forEach(other => {
+                if (other !== parent) {
+                    other.classList.remove('open');
+                    const otherToggle = other.querySelector('.dropdown-toggle');
+                    if (otherToggle) otherToggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            const isOpen = parent.classList.toggle('open');
+            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.nav-item.dropdown')) return;
+        document.querySelectorAll('.nav-item.dropdown.open').forEach(dd => {
+            dd.classList.remove('open');
+            const ddToggle = dd.querySelector('.dropdown-toggle');
+            if (ddToggle) ddToggle.setAttribute('aria-expanded', 'false');
         });
     });
     
@@ -74,6 +110,38 @@ function updateActiveNavLink() {
         if (link.getAttribute('href') === currentPage) {
             link.classList.add('active');
         }
+    });
+}
+
+/* ============== Coming Soon (Global) ============== */
+function initComingSoonLinks() {
+    // Disable khutab audio/video everywhere (nav, cards, footer, etc.)
+    const comingSoonTargets = new Set(['khutab-audio.html', 'khutab-video.html']);
+
+    document.querySelectorAll('a[href]').forEach((a) => {
+        const rawHref = (a.getAttribute('href') || '').trim();
+        if (!rawHref) return;
+
+        // Ignore external links
+        if (/^(https?:|mailto:|tel:)/i.test(rawHref)) return;
+
+        const cleanHref = rawHref.split('#')[0].split('?')[0];
+        if (!comingSoonTargets.has(cleanHref)) return;
+
+        a.classList.add('is-disabled-link', 'has-soon-badge');
+        a.setAttribute('aria-disabled', 'true');
+        a.setAttribute('tabindex', '-1');
+        a.setAttribute('data-soon', 'قريباً');
+
+        // Extra safety in case CSS pointer-events is overridden somewhere
+        a.addEventListener(
+            'click',
+            (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            },
+            true
+        );
     });
 }
 

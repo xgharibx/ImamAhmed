@@ -3,28 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="التلاوة - تلاوات عطرة من الشيخ أحمد إسماعيل الفشني">
-    <meta name="keywords" content="تلاوة, قران, الشيخ أحمد الفشني, تلاوات">
-    <title>التلاوة | الشيخ أحمد إسماعيل الفشني</title>
-    
-    <!-- Google Fonts -->
+    <meta name="description" content="عرض خطبة مكتوبة - الشيخ أحمد إسماعيل الفشني">
+    <title>عرض خطبة | الشيخ أحمد إسماعيل الفشني</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@300;400;500;700;800;900&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- AOS Animation -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
-    <!-- Custom Styles -->
+
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="animations.css">
-    <link rel="stylesheet" href="tilawa.css">
+    <link rel="stylesheet" href="khutab.css">
 </head>
 <body>
-    <!-- Preloader -->
     <div id="preloader">
         <div class="loader">
             <div class="islamic-pattern-loader"></div>
@@ -32,12 +25,13 @@
         </div>
     </div>
 
-    <!-- Navigation -->
-    <header id="header">
+    <header id="header" class="scrolled">
         <nav class="navbar">
             <div class="nav-container">
                 <a href="index.html" class="logo">
-                    <div class="logo-icon"><span class="moon-icon">☾</span></div>
+                    <div class="logo-icon">
+                        <span class="moon-icon">☾</span>
+                    </div>
                     <div class="logo-text">
                         <span class="logo-title">الشيخ أحمد الفشني</span>
                         <span class="logo-subtitle">إمام وخطيب</span>
@@ -47,10 +41,11 @@
                 <ul class="nav-menu">
                     <li class="nav-item"><a href="about.html" class="nav-link"><i class="fas fa-user"></i> عن الشيخ</a></li>
                     <li class="nav-item"><a href="quran.html" class="nav-link"><i class="fas fa-quran"></i> القرآن الكريم</a></li>
-                    <li class="nav-item"><a href="tilawa.html" class="nav-link active"><i class="fas fa-microphone-alt"></i> التلاوة</a></li>
+                    <li class="nav-item"><a href="tilawa.html" class="nav-link"><i class="fas fa-microphone-alt"></i> التلاوة</a></li>
                     <li class="nav-item"><a href="hadith.html" class="nav-link"><i class="fas fa-book-quran"></i> الحديث الشريف</a></li>
                     <li class="nav-item"><a href="adhkar.html" class="nav-link"><i class="fas fa-praying-hands"></i> أذكار</a></li>
                     <li class="nav-item"><a href="videos.html" class="nav-link"><i class="fas fa-video"></i> الدروس والمحاضرات</a></li>
+
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" aria-expanded="false">
                             <i class="fas fa-mosque"></i>
@@ -63,6 +58,7 @@
                             <li><a href="khutab-video.html" class="nav-link"><i class="fas fa-video"></i> خطب مرئية</a></li>
                         </ul>
                     </li>
+
                     <li class="nav-item"><a href="articles.html" class="nav-link"><i class="fas fa-book-open"></i> المقالات</a></li>
                     <li class="nav-item"><a href="khawater.html" class="nav-link"><i class="fas fa-feather-alt"></i> الخواطر</a></li>
                     <li class="nav-item"><a href="books.html" class="nav-link"><i class="fas fa-book"></i> المؤلفات</a></li>
@@ -70,92 +66,63 @@
                 </ul>
 
                 <div class="hamburger">
-                    <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
                 </div>
             </div>
         </nav>
     </header>
 
-    <!-- Page Header -->
-    <section class="page-header" style="height: 300px;">
+    <section class="page-header">
         <div class="page-header-bg"></div>
         <div class="container">
             <div class="page-header-content" data-aos="fade-up">
                 <div class="breadcrumb">
                     <a href="index.html">الرئيسية</a>
                     <i class="fas fa-chevron-left"></i>
-                    <span>التلاوة</span>
+                    <a href="khutab-written.html">خطب مكتوبة</a>
+                    <i class="fas fa-chevron-left"></i>
+                    <span>عرض خطبة</span>
                 </div>
-                <h1 class="page-title">
-                    <span class="title-icon"><i class="fas fa-microphone-alt"></i></span>
-                    التلاوة
+                <h1 class="page-title" id="khutba-title">
+                    <span class="title-icon"><i class="fas fa-file-lines"></i></span>
+                    عرض خطبة
                 </h1>
+                <p class="page-subtitle" id="khutba-meta"></p>
             </div>
+        </div>
+        <div class="page-header-wave">
+            <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+                <path d="M0,64 C480,150 960,-20 1440,64 L1440,120 L0,120 Z" fill="var(--bg-primary)"/>
+            </svg>
         </div>
     </section>
 
-    <!-- Main Content -->
-    <main class="tilawa-sections">
+    <section class="khutab-section">
         <div class="container">
-            <!-- 1. Murattal Quran -->
-            <section class="tilawa-category" id="murattal" data-aos="fade-up">
-                <div class="category-header">
-                    <div class="category-icon"><i class="fas fa-quran"></i></div>
-                    <h2 class="category-title">المصحف المرتل</h2>
-                </div>
-                <!-- Content Placeholder -->
-                <div class="empty-category-msg">
-                    <i class="fas fa-hourglass-half" style="margin-left: 10px;"></i>
-                    سيتم إضافة التلاوات قريباً بإذن الله
-                </div>
-            </section>
+            <div class="khutba-actions" data-aos="fade-up">
+                <a class="btn btn-outline" href="khutab-written.html"><i class="fas fa-arrow-right"></i> الرجوع للقائمة</a>
+                <a class="btn" id="khutba-download" href="#" download style="display:none"><i class="fas fa-download"></i> تحميل PDF</a>
+            </div>
 
-            <!-- 2. Mujawwad Quran -->
-            <section class="tilawa-category" id="mujawwad" data-aos="fade-up">
-                <div class="category-header">
-                    <div class="category-icon"><i class="fas fa-star-and-crescent"></i></div>
-                    <h2 class="category-title">المصحف المجود</h2>
-                </div>
-                <!-- Content Placeholder -->
-                <div class="empty-category-msg">
-                    <i class="fas fa-hourglass-half" style="margin-left: 10px;"></i>
-                    سيتم إضافة التلاوات قريباً بإذن الله
-                </div>
-            </section>
-
-            <!-- 3. External Recitations -->
-            <section class="tilawa-category" id="external" data-aos="fade-up">
-                <div class="category-header">
-                    <div class="category-icon"><i class="fas fa-microphone-lines"></i></div>
-                    <h2 class="category-title">تلاوات خارجية</h2>
-                </div>
-                <!-- Content Placeholder -->
-                <div class="empty-category-msg">
-                    <i class="fas fa-hourglass-half" style="margin-left: 10px;"></i>
-                    سيتم إضافة التلاوات قريباً بإذن الله
-                </div>
-            </section>
-
-            <!-- 4. Mihrab Recitations -->
-            <section class="tilawa-category" id="mihrab" data-aos="fade-up">
-                <div class="category-header">
-                    <div class="category-icon"><i class="fas fa-mosque"></i></div>
-                    <h2 class="category-title">تلاوات المحراب</h2>
-                </div>
-                <!-- Content Placeholder -->
-                <div class="empty-category-msg">
-                    <i class="fas fa-hourglass-half" style="margin-left: 10px;"></i>
-                    سيتم إضافة التلاوات قريباً بإذن الله
-                </div>
-            </section>
+            <div class="khutba-content" id="khutba-content" data-aos="fade-up"></div>
         </div>
-    </main>
+    </section>
 
-    <!-- Scripts -->
+    <footer id="footer" class="footer">
+        <div class="footer-pattern"></div>
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; <span id="currentYear"></span> الشيخ أحمد الفشني. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <a href="#" class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></a>
+
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="main.js"></script>
-    <script>
-        AOS.init({duration: 800, once: true});
-    </script>
+    <script src="khutba-view.js"></script>
 </body>
 </html>

@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local virtual environments
+.venv/
+venv/
+
+# Local source/input folders (do not publish)
+KhotabText/
+
+# OCR training data (large; keep local)
+tessdata/
+
+# Derived/debug outputs
+data/khutab_written_missing_pdfs.json

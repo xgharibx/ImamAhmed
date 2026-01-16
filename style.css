@@ -116,6 +116,33 @@ a {
     -webkit-tap-highlight-color: transparent;
 }
 
+/* Global 'Coming Soon' disabled links (used by main.js) */
+a.is-disabled-link {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+a.has-soon-badge {
+    position: relative;
+}
+
+a.has-soon-badge::after {
+    content: attr(data-soon);
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    background: var(--primary-gold);
+    color: var(--primary-green-dark);
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 0.72rem;
+    line-height: 1.2;
+    box-shadow: var(--shadow-gold);
+    white-space: nowrap;
+}
+
 ul, ol {
     list-style: none;
 }
@@ -615,6 +642,60 @@ input, textarea, select {
 .nav-link.active i {
     opacity: 1;
     color: #0a2e1f;
+}
+
+/* Dropdown (Khutab) */
+.nav-item.dropdown {
+    position: relative;
+}
+
+.nav-item.dropdown .dropdown-caret {
+    font-size: 0.8rem;
+    opacity: 0.85;
+    margin-right: 0.25rem;
+    transition: var(--transition-normal);
+}
+
+.nav-item.dropdown.open .dropdown-caret,
+.nav-item.dropdown:hover .dropdown-caret {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 240px;
+    background: rgba(26, 95, 74, 0.98);
+    border: 1px solid rgba(201, 162, 39, 0.35);
+    border-radius: var(--radius-sm);
+    padding: 0.5rem;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: var(--transition-normal);
+    z-index: 1002;
+}
+
+.nav-item.dropdown:hover .dropdown-menu,
+.nav-item.dropdown.open .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-menu .nav-link {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    font-size: 0.95rem;
+    justify-content: flex-start;
+    border-radius: var(--radius-sm);
+}
+
+.dropdown-menu .nav-link:hover {
+    background: rgba(201, 162, 39, 0.2);
+    transform: none;
 }
 
 /* Hamburger Menu */
@@ -1948,6 +2029,37 @@ section {
         background: rgba(255, 255, 255, 0.15);
         transform: translateX(-10px);
         color: #c9a227;
+    }
+
+    /* Dropdown in mobile menu */
+    .dropdown-menu {
+        position: static;
+        top: auto;
+        right: auto;
+        min-width: auto;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: none;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        padding: 0;
+        margin-top: 0.25rem;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+
+    .nav-item.dropdown.open .dropdown-menu {
+        max-height: 400px;
+        padding: 0.5rem;
+    }
+
+    .dropdown-menu .nav-link {
+        justify-content: center;
+        font-size: 1.05rem;
+        padding: 0.85rem 1rem;
     }
     
     /* Reduce flying letters on tablet */
