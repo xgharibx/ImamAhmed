@@ -660,12 +660,28 @@
         return btn;
     }
 
-    function normalizeActionGroup(container) {
-        if (!container) return;
-        container.classList.add('pdf-action-group');
-        container.querySelectorAll('a.btn, a.btn-book, a.js-download-pdf').forEach((element) => {
-            element.classList.add('pdf-action-btn');
-        });
+    function ensureActionGroup(readBtn) {
+        if (!readBtn) return null;
+
+        const existingGroup = readBtn.closest('.pdf-action-group');
+        if (existingGroup) {
+            readBtn.classList.add('pdf-action-btn');
+            return existingGroup;
+        }
+
+        const parent = readBtn.parentElement;
+        if (parent && parent.classList.contains('book-actions')) {
+            parent.classList.add('pdf-action-group');
+            readBtn.classList.add('pdf-action-btn');
+            return parent;
+        }
+
+        const group = document.createElement('div');
+        group.className = 'pdf-action-group';
+        readBtn.insertAdjacentElement('beforebegin', group);
+        group.appendChild(readBtn);
+        readBtn.classList.add('pdf-action-btn');
+        return group;
     }
 
     function appendButtonsOnBooksPage() {
@@ -693,8 +709,8 @@
                 }
             });
 
-            readBtn.parentElement.appendChild(btn);
-            normalizeActionGroup(readBtn.parentElement);
+            const group = ensureActionGroup(readBtn);
+            group?.appendChild(btn);
         });
     }
 
@@ -721,8 +737,8 @@
                 }
             });
 
-            readBtn.parentElement.appendChild(btn);
-            normalizeActionGroup(readBtn.parentElement);
+            const group = ensureActionGroup(readBtn);
+            group?.appendChild(btn);
         });
     }
 

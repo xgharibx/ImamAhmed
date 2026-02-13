@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initBackToTop();
     initBrowserBackButton();
     initCounters();
+    initKhawaterShareButtons();
     initPerformanceOptimizations();
     setCurrentYear();
 });
@@ -461,6 +462,74 @@ function initCounters() {
     }, observerOptions);
     
     counters.forEach(counter => observer.observe(counter));
+}
+
+/* ============== Khawater Share ============== */
+function initKhawaterShareButtons() {
+    const shareButtons = document.querySelectorAll('.khatera-card .share-btn');
+    if (!shareButtons.length) return;
+
+    const signature = '— الشيخ أحمد إسماعيل الفشني';
+
+    shareButtons.forEach((button) => {
+        button.addEventListener('click', async (event) => {
+            event.preventDefault();
+
+            const card = button.closest('.khatera-card');
+            const text = card?.querySelector('.khatera-text')?.textContent?.trim();
+            if (!text) return;
+
+            const payloadText = `${text}\n\n${signature}`;
+            const pageUrl = window.location.href;
+            const title = document.title || 'خواطر الشيخ أحمد الفشني';
+
+            try {
+                if (navigator.share) {
+                    await navigator.share({
+                        title,
+                        text: payloadText,
+                        url: pageUrl
+                    });
+                    return;
+                }
+
+                await navigator.clipboard.writeText(`${payloadText}\n${pageUrl}`);
+                showShareToast('تم نسخ الخاطرة مع التوقيع');
+            } catch {
+                try {
+                    const fallbackTextArea = document.createElement('textarea');
+                    fallbackTextArea.value = `${payloadText}\n${pageUrl}`;
+                    fallbackTextArea.style.position = 'fixed';
+                    fallbackTextArea.style.opacity = '0';
+                    document.body.appendChild(fallbackTextArea);
+                    fallbackTextArea.select();
+                    document.execCommand('copy');
+                    fallbackTextArea.remove();
+                    showShareToast('تم نسخ الخاطرة مع التوقيع');
+                } catch {
+                    showShareToast('تعذر النسخ حالياً');
+                }
+            }
+        });
+    });
+}
+
+function showShareToast(message) {
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.left = '20px';
+    toast.style.zIndex = '9999';
+    toast.style.background = 'rgba(15, 23, 42, 0.9)';
+    toast.style.color = '#fff';
+    toast.style.padding = '10px 14px';
+    toast.style.borderRadius = '10px';
+    toast.style.fontSize = '0.9rem';
+    toast.style.fontFamily = 'Cairo, sans-serif';
+    toast.style.boxShadow = '0 8px 22px rgba(0,0,0,0.22)';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 1700);
 }
 
 function animateCounter(element, target) {

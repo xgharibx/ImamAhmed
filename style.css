@@ -1077,8 +1077,13 @@ input, textarea, select {
     align-items: center;
     justify-content: center;
     min-height: 44px;
-    flex: 1 1 180px;
+    flex: 0 1 auto;
+    min-width: 140px;
     white-space: nowrap;
+}
+
+.book-actions.pdf-action-group .pdf-action-btn {
+    flex: 1 1 0;
 }
 
 .pdf-action-group .js-download-pdf {
