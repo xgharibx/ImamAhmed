@@ -392,6 +392,7 @@
         const blocks = collectTextBlocksFromHtml(payload.contentHtml || '');
         const canvases = [];
         const chapterPerPage = payload.layoutMode === 'chapter-per-page';
+        let continuationCenteredUsed = false;
 
         let pageNumber = 1;
         let page = createPdfPageCanvas();
@@ -401,26 +402,34 @@
         const maxWidth = page.canvas.width - (marginX * 2);
         let y = 320;
 
-        const newPage = () => {
+        const newPage = ({ centerContinuation = false } = {}) => {
             drawPageFooter(page.ctx, pageNumber);
             canvases.push(page.canvas);
             pageNumber += 1;
             page = createPdfPageCanvas();
             drawPageHeader(page.ctx, payload, pageNumber);
-            y = 290;
+            y = centerContinuation ? 720 : 290;
         };
 
         for (const block of blocks) {
             if (chapterPerPage && block.kind === 'heading' && /الخاطرة\s*\(/.test(block.text) && y > 360) {
                 newPage();
+                continuationCenteredUsed = false;
             }
 
-            const style = {
-                heading: { font: 'bold 38px Cairo, Tahoma, Arial', color: '#1a5f4a', lineHeight: 56, gapBefore: 18, gapAfter: 16 },
-                quote: { font: '30px Cairo, Tahoma, Arial', color: '#2e7d32', lineHeight: 50, gapBefore: 12, gapAfter: 14 },
-                pre: { font: '28px Cairo, Tahoma, Arial', color: '#333', lineHeight: 46, gapBefore: 10, gapAfter: 10 },
-                paragraph: { font: '32px Cairo, Tahoma, Arial', color: '#222', lineHeight: 52, gapBefore: 8, gapAfter: 10 }
-            }[block.kind] || { font: '32px Cairo, Tahoma, Arial', color: '#222', lineHeight: 52, gapBefore: 8, gapAfter: 10 };
+            const style = chapterPerPage
+                ? ({
+                    heading: { font: 'bold 32px Cairo, Tahoma, Arial', color: '#1a5f4a', lineHeight: 46, gapBefore: 14, gapAfter: 12 },
+                    quote: { font: '25px Cairo, Tahoma, Arial', color: '#2e7d32', lineHeight: 38, gapBefore: 10, gapAfter: 10 },
+                    pre: { font: '23px Cairo, Tahoma, Arial', color: '#333', lineHeight: 34, gapBefore: 8, gapAfter: 8 },
+                    paragraph: { font: '24px Cairo, Tahoma, Arial', color: '#222', lineHeight: 36, gapBefore: 6, gapAfter: 8 }
+                }[block.kind] || { font: '24px Cairo, Tahoma, Arial', color: '#222', lineHeight: 36, gapBefore: 6, gapAfter: 8 })
+                : ({
+                    heading: { font: 'bold 38px Cairo, Tahoma, Arial', color: '#1a5f4a', lineHeight: 56, gapBefore: 18, gapAfter: 16 },
+                    quote: { font: '30px Cairo, Tahoma, Arial', color: '#2e7d32', lineHeight: 50, gapBefore: 12, gapAfter: 14 },
+                    pre: { font: '28px Cairo, Tahoma, Arial', color: '#333', lineHeight: 46, gapBefore: 10, gapAfter: 10 },
+                    paragraph: { font: '32px Cairo, Tahoma, Arial', color: '#222', lineHeight: 52, gapBefore: 8, gapAfter: 10 }
+                }[block.kind] || { font: '32px Cairo, Tahoma, Arial', color: '#222', lineHeight: 52, gapBefore: 8, gapAfter: 10 });
 
             y += style.gapBefore;
             page.ctx.direction = 'rtl';
@@ -431,7 +440,9 @@
             const lines = wrapTextLines(page.ctx, block.text, maxWidth);
             for (const line of lines) {
                 if (y > 1620) {
-                    newPage();
+                    const centerContinuation = chapterPerPage && !continuationCenteredUsed;
+                    newPage({ centerContinuation });
+                    if (centerContinuation) continuationCenteredUsed = true;
                     page.ctx.direction = 'rtl';
                     page.ctx.textAlign = 'right';
                     page.ctx.font = style.font;

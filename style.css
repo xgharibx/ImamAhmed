@@ -2013,7 +2013,7 @@ section {
     }
 }
 
-@media (max-width: 992px) {
+@media (max-width: 1200px) {
     #header {
         background: rgba(26, 95, 74, 0.94);
         backdrop-filter: blur(10px);
