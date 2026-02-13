@@ -466,14 +466,20 @@
         ctx.direction = 'rtl';
         ctx.textAlign = 'right';
 
+        const badgeX = 80;
+        const badgeY = 66;
+        const badgeW = 136;
+        const badgeH = 44;
         ctx.fillStyle = '#d4af37';
         ctx.beginPath();
-        ctx.roundRect(width - 215, 66, 136, 44, 22);
+        ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 22);
         ctx.fill();
 
         ctx.fillStyle = '#1a5f4a';
         ctx.font = 'bold 22px Cairo, Tahoma, Arial';
-        ctx.fillText(typeLabel(payload.type), width - 105, 93);
+        ctx.textAlign = 'center';
+        ctx.fillText(typeLabel(payload.type), badgeX + (badgeW / 2), 93);
+        ctx.textAlign = 'right';
 
         ctx.fillStyle = '#ffffff';
         const normalizedTitle = String(payload.title || 'محتوى').replace(/\s+/g, ' ').trim().slice(0, 220);
@@ -536,25 +542,35 @@
         const canvases = [];
         const chapterPerPage = payload.layoutMode === 'chapter-per-page';
         const isKhatraHeading = (block) => block.kind === 'heading' && /الخاطرة\s*\(/.test(String(block.text || ''));
+        const isCoverBoundaryHeading = (text) => /^(\d+[\)\-\.]|أولاً|ثانياً|ثالثاً|رابعاً|خامساً|سادساً|المجلس|الدرس|الفصل|الباب|المقدمة|الخاتمة|تمهيد|شرح|الخاطرة)/.test(String(text || '').trim());
         const isCoverCandidateIntroLine = (text) => {
             const normalized = String(text || '').replace(/\s+/g, ' ').trim();
             if (!normalized) return false;
             if (/^بسم\s+الله/.test(normalized)) return false;
+            if (/^(بقلم|أحمد\s+إسماعيل\s+الفشني)/.test(normalized)) return false;
             return normalized.length >= 24 && normalized.length <= 260;
         };
 
         let coverCenterLines = [];
-        if (chapterPerPage) {
+        if (payload.type === 'book') {
             const leadingIntroBlocks = [];
             for (const block of blocks) {
-                if (isKhatraHeading(block)) break;
+                if (block.kind === 'heading' && isCoverBoundaryHeading(block.text)) break;
                 leadingIntroBlocks.push(block);
+                if (leadingIntroBlocks.length >= 14) break;
             }
 
             coverCenterLines = leadingIntroBlocks
                 .filter(block => block.kind === 'paragraph' && isCoverCandidateIntroLine(block.text))
                 .map(block => block.text)
                 .slice(0, 2);
+        }
+
+        if (coverCenterLines.length) {
+            for (const line of coverCenterLines) {
+                const idx = blocks.findIndex(block => block.kind === 'paragraph' && block.text === line);
+                if (idx >= 0) blocks.splice(idx, 1);
+            }
         }
 
         canvases.push(createPdfCoverCanvas(payload, coverCenterLines));
@@ -581,7 +597,7 @@
         const isMajorHeading = (text) => {
             const normalized = String(text || '').trim();
             if (!normalized) return false;
-            return /^(\d+[\)\-\.]|أولاً|ثانياً|ثالثاً|رابعاً|خامساً|سادساً|المجلس|الدرس|الفصل|الباب|المقدمة|الخاتمة|تمهيد|شرح|الخاطرة)/.test(normalized);
+            return isCoverBoundaryHeading(normalized);
         };
 
         const refinedStyle = {
