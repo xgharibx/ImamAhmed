@@ -1969,6 +1969,7 @@ section {
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         box-shadow: var(--shadow-md);
+        padding-top: env(safe-area-inset-top, 0px);
     }
 
     .navbar {
@@ -1977,6 +1978,7 @@ section {
 
     .nav-container {
         min-height: 64px;
+        position: relative;
     }
 
     .hamburger {
@@ -1989,6 +1991,13 @@ section {
         background: rgba(0, 0, 0, 0.16);
         border: 1px solid rgba(201, 162, 39, 0.45);
         border-radius: 10px;
+        position: fixed;
+        top: calc(env(safe-area-inset-top, 0px) + 10px);
+        left: 12px;
+        right: auto;
+        opacity: 1 !important;
+        visibility: visible !important;
+        flex-shrink: 0;
     }
     
     .hamburger.active .bar:nth-child(1) {
