@@ -873,6 +873,21 @@ input, textarea, select {
     animation: shimmer 3s ease-in-out infinite;
 }
 
+@media (min-width: 1200px) {
+    .hero-section {
+        padding-top: 120px;
+    }
+
+    .calligraphy-container {
+        margin-top: 0.75rem;
+    }
+
+    .bismillah {
+        color: var(--primary-gold-light);
+        text-shadow: 0 4px 18px rgba(0, 0, 0, 0.45), 0 0 22px rgba(201, 162, 39, 0.35);
+    }
+}
+
 @keyframes shimmer {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.8; text-shadow: 0 0 20px rgba(201, 162, 39, 0.5); }
