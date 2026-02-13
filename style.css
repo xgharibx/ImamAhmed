@@ -2074,9 +2074,10 @@ section {
         flex-direction: column;
         gap: 0.5rem;
         transition: var(--transition-normal);
-        background: rgba(0, 0, 0, 0.16);
-        border: 1px solid rgba(201, 162, 39, 0.45);
-        border-radius: 10px;
+        background: linear-gradient(135deg, rgba(15, 61, 47, 0.92), rgba(26, 95, 74, 0.92));
+        border: 1px solid rgba(201, 162, 39, 0.52);
+        border-radius: 14px;
+        box-shadow: 0 8px 22px rgba(10, 46, 31, 0.28);
         position: fixed;
         top: calc(env(safe-area-inset-top, 0px) + 10px);
         right: 12px;
@@ -2084,6 +2085,10 @@ section {
         opacity: 1 !important;
         visibility: visible !important;
         flex-shrink: 0;
+    }
+
+    .hamburger:hover {
+        transform: translateY(-1px);
     }
     
     .hamburger.active .bar:nth-child(1) {
@@ -2099,10 +2104,11 @@ section {
     }
     
     .bar {
-        width: 25px;
-        height: 3px;
-        background: var(--primary-gold);
-        border-radius: 3px;
+        width: 24px;
+        height: 2.8px;
+        background: linear-gradient(90deg, var(--primary-gold-light), var(--primary-gold));
+        border-radius: 999px;
+        box-shadow: 0 0 8px rgba(201, 162, 39, 0.28);
         transition: var(--transition-normal);
     }
     
@@ -2113,7 +2119,9 @@ section {
         width: min(86vw, 360px);
         height: calc(100vh - var(--mobile-header-height));
         height: calc(100dvh - var(--mobile-header-height));
-        background: linear-gradient(180deg, #1a5f4a 0%, #2e7d32 50%, #1b5e20 100%);
+        background:
+            radial-gradient(circle at 18% 10%, rgba(201, 162, 39, 0.18), transparent 42%),
+            linear-gradient(180deg, #1a5f4a 0%, #2a744f 52%, #1a5f4a 100%);
         flex-direction: column;
         justify-content: flex-start;
         gap: 1rem;
@@ -2135,14 +2143,22 @@ section {
         width: 100%;
         justify-content: center;
         color: white;
-        border-radius: 10px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.04);
         transition: all 0.3s ease;
     }
     
     .nav-link:hover {
-        background: rgba(255, 255, 255, 0.15);
-        transform: translateX(-10px);
+        background: rgba(255, 255, 255, 0.14);
+        transform: translateX(-4px);
         color: #c9a227;
+    }
+
+    .nav-link.active {
+        background: rgba(201, 162, 39, 0.22);
+        border-color: rgba(201, 162, 39, 0.46);
+        color: var(--primary-gold-light) !important;
     }
 
     /* Dropdown in mobile menu */
