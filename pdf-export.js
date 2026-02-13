@@ -416,8 +416,6 @@
         const blocks = collectTextBlocksFromHtml(payload.contentHtml || '');
         const canvases = [];
         const chapterPerPage = payload.layoutMode === 'chapter-per-page';
-        let continuationCenteredUsed = false;
-        let beforeFirstKhatra = chapterPerPage;
 
         let pageNumber = 1;
         let page = createPdfPageCanvas();
@@ -425,7 +423,9 @@
 
         const marginX = 100;
         const maxWidth = page.canvas.width - (marginX * 2);
-        let y = 320;
+        const contentTop = 320;
+        const contentBottom = 1585;
+        let y = contentTop;
 
         const newPage = ({ centerContinuation = false } = {}) => {
             drawPageFooter(page.ctx, pageNumber);
@@ -433,7 +433,7 @@
             pageNumber += 1;
             page = createPdfPageCanvas();
             drawPageHeader(page.ctx, payload, pageNumber);
-            y = centerContinuation ? 720 : 320;
+            y = centerContinuation ? 720 : contentTop;
         };
 
         const isMajorHeading = (text) => {
@@ -449,54 +449,140 @@
             paragraph: { font: '26px Cairo, Tahoma, Arial', color: '#222', lineHeight: 40, gapBefore: 6, gapAfter: 8 }
         };
 
-        for (const block of blocks) {
-            if (chapterPerPage && block.kind === 'heading' && /الخاطرة\s*\(/.test(block.text)) {
-                beforeFirstKhatra = false;
-            }
-
-            if (!chapterPerPage && block.kind === 'heading' && isMajorHeading(block.text) && y > 1320) {
-                newPage();
-            }
-
-            if (chapterPerPage && block.kind === 'heading' && /الخاطرة\s*\(/.test(block.text) && y > 360) {
-                newPage();
-                continuationCenteredUsed = false;
-            }
-
-            const style = chapterPerPage
-                ? ({
-                    heading: { font: 'bold 32px Cairo, Tahoma, Arial', color: '#1a5f4a', lineHeight: 46, gapBefore: 14, gapAfter: 12 },
-                    quote: { font: '25px Cairo, Tahoma, Arial', color: '#2e7d32', lineHeight: 38, gapBefore: 10, gapAfter: 10 },
-                    pre: { font: '23px Cairo, Tahoma, Arial', color: '#333', lineHeight: 34, gapBefore: 8, gapAfter: 8 },
-                    paragraph: { font: '24px Cairo, Tahoma, Arial', color: '#222', lineHeight: 36, gapBefore: 6, gapAfter: 8 }
-                }[block.kind] || { font: '24px Cairo, Tahoma, Arial', color: '#222', lineHeight: 36, gapBefore: 6, gapAfter: 8 })
-                : (refinedStyle[block.kind] || refinedStyle.paragraph);
-
-            const usingCenteredIntro = chapterPerPage && beforeFirstKhatra;
-            const renderMaxWidth = usingCenteredIntro ? Math.min(maxWidth, 860) : maxWidth;
-
-            y += style.gapBefore;
-            page.ctx.direction = 'rtl';
-            page.ctx.textAlign = usingCenteredIntro ? 'center' : 'right';
-            page.ctx.font = style.font;
-            page.ctx.fillStyle = style.color;
-
-            const lines = wrapTextLines(page.ctx, block.text, renderMaxWidth);
-            for (const line of lines) {
-                if (y > 1585) {
-                    const centerContinuation = chapterPerPage && !continuationCenteredUsed;
-                    newPage({ centerContinuation });
-                    if (centerContinuation) continuationCenteredUsed = true;
-                    page.ctx.direction = 'rtl';
-                    page.ctx.textAlign = usingCenteredIntro ? 'center' : 'right';
-                    page.ctx.font = style.font;
-                    page.ctx.fillStyle = style.color;
+        if (!chapterPerPage) {
+            for (const block of blocks) {
+                if (block.kind === 'heading' && isMajorHeading(block.text) && y > 1320) {
+                    newPage();
                 }
-                page.ctx.fillText(line, usingCenteredIntro ? (page.canvas.width / 2) : (page.canvas.width - marginX), y);
-                y += style.lineHeight;
+
+                const style = refinedStyle[block.kind] || refinedStyle.paragraph;
+                y += style.gapBefore;
+                page.ctx.direction = 'rtl';
+                page.ctx.textAlign = 'right';
+                page.ctx.font = style.font;
+                page.ctx.fillStyle = style.color;
+
+                const lines = wrapTextLines(page.ctx, block.text, maxWidth);
+                for (const line of lines) {
+                    if (y > contentBottom) {
+                        newPage();
+                        page.ctx.direction = 'rtl';
+                        page.ctx.textAlign = 'right';
+                        page.ctx.font = style.font;
+                        page.ctx.fillStyle = style.color;
+                    }
+                    page.ctx.fillText(line, page.canvas.width - marginX, y);
+                    y += style.lineHeight;
+                }
+                y += style.gapAfter;
             }
-            y += style.gapAfter;
+
+            drawPageFooter(page.ctx, pageNumber);
+            canvases.push(page.canvas);
+            return canvases;
         }
+
+        const isKhatraHeading = (block) => block.kind === 'heading' && /الخاطرة\s*\(/.test(String(block.text || ''));
+        const chapterBase = {
+            heading: { weight: 'bold', size: 32, color: '#1a5f4a', lineHeight: 46, gapBefore: 14, gapAfter: 12 },
+            quote: { weight: '', size: 25, color: '#2e7d32', lineHeight: 38, gapBefore: 10, gapAfter: 10 },
+            pre: { weight: '', size: 23, color: '#333', lineHeight: 34, gapBefore: 8, gapAfter: 8 },
+            paragraph: { weight: '', size: 24, color: '#222', lineHeight: 36, gapBefore: 6, gapAfter: 8 }
+        };
+
+        const chapterStyleFor = (kind, scale) => {
+            const base = chapterBase[kind] || chapterBase.paragraph;
+            const px = Math.max(17, Math.round(base.size * scale));
+            const lineHeight = Math.max(24, Math.round(base.lineHeight * scale));
+            const gapBefore = Math.max(3, Math.round(base.gapBefore * scale));
+            const gapAfter = Math.max(4, Math.round(base.gapAfter * scale));
+            return {
+                font: `${base.weight ? `${base.weight} ` : ''}${px}px Cairo, Tahoma, Arial`,
+                color: base.color,
+                lineHeight,
+                gapBefore,
+                gapAfter
+            };
+        };
+
+        const measureSectionHeight = (sectionBlocks, scale, sectionMaxWidth) => {
+            let total = 0;
+            for (const block of sectionBlocks) {
+                const style = chapterStyleFor(block.kind, scale);
+                page.ctx.font = style.font;
+                const lines = wrapTextLines(page.ctx, block.text, sectionMaxWidth);
+                total += style.gapBefore + (lines.length * style.lineHeight) + style.gapAfter;
+            }
+            return total;
+        };
+
+        const introBlocks = [];
+        const khatraSections = [];
+        let activeSection = null;
+
+        for (const block of blocks) {
+            if (isKhatraHeading(block)) {
+                activeSection = [block];
+                khatraSections.push(activeSection);
+                continue;
+            }
+
+            if (activeSection) activeSection.push(block);
+            else introBlocks.push(block);
+        }
+
+        const renderSection = (sectionBlocks, { centered = false, forceNewPage = false } = {}) => {
+            if (!sectionBlocks.length) return;
+
+            if (forceNewPage && y > contentTop + 2) {
+                newPage();
+            }
+
+            const sectionMaxWidth = centered ? Math.min(maxWidth, 860) : maxWidth;
+            const availableHeight = contentBottom - contentTop;
+            const scales = centered
+                ? [1, 0.95, 0.9, 0.86, 0.82, 0.78]
+                : [1, 0.95, 0.9, 0.86, 0.82, 0.78, 0.74, 0.7, 0.66];
+
+            let selectedScale = scales[scales.length - 1];
+            for (const scale of scales) {
+                const neededHeight = measureSectionHeight(sectionBlocks, scale, sectionMaxWidth);
+                if (neededHeight <= availableHeight) {
+                    selectedScale = scale;
+                    break;
+                }
+            }
+
+            y = contentTop;
+            for (const block of sectionBlocks) {
+                const style = chapterStyleFor(block.kind, selectedScale);
+                y += style.gapBefore;
+
+                page.ctx.direction = 'rtl';
+                page.ctx.textAlign = centered ? 'center' : 'right';
+                page.ctx.font = style.font;
+                page.ctx.fillStyle = style.color;
+
+                const lines = wrapTextLines(page.ctx, block.text, sectionMaxWidth);
+                for (const line of lines) {
+                    if (y > contentBottom) {
+                        newPage({ centerContinuation: centered });
+                        y = centered ? 720 : contentTop;
+                        page.ctx.direction = 'rtl';
+                        page.ctx.textAlign = centered ? 'center' : 'right';
+                        page.ctx.font = style.font;
+                        page.ctx.fillStyle = style.color;
+                    }
+
+                    page.ctx.fillText(line, centered ? (page.canvas.width / 2) : (page.canvas.width - marginX), y);
+                    y += style.lineHeight;
+                }
+                y += style.gapAfter;
+            }
+        };
+
+        renderSection(introBlocks, { centered: true, forceNewPage: false });
+        khatraSections.forEach((section) => renderSection(section, { centered: false, forceNewPage: true }));
 
         drawPageFooter(page.ctx, pageNumber);
         canvases.push(page.canvas);
