@@ -99,6 +99,10 @@
     max-height: none;
 }
 
+.fatwa-answer.no-clamp {
+    max-height: none;
+}
+
 .fatwa-toggle {
     margin-top: .75rem;
     border: 0;

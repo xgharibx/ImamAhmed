@@ -18,16 +18,31 @@
         return value;
     }
 
+    function updateCardOverflowState(card) {
+        const answerEl = card.querySelector('.fatwa-answer');
+        const toggleBtn = card.querySelector('.fatwa-toggle');
+        if (!answerEl || !toggleBtn) return;
+
+        answerEl.classList.remove('expanded', 'no-clamp');
+        toggleBtn.textContent = 'عرض المزيد';
+        toggleBtn.hidden = false;
+
+        const isOverflowing = answerEl.scrollHeight > answerEl.clientHeight + 2;
+        if (!isOverflowing) {
+            answerEl.classList.add('no-clamp');
+            toggleBtn.hidden = true;
+        }
+    }
+
     function createFatwaCard(item) {
         const answerText = sanitizeAnswerText(item.answer || '');
-        const answerIsLong = answerText.length > 420;
         const card = document.createElement('article');
         card.className = 'fatwa-card';
         card.innerHTML = `
             <span class="fatwa-number">${item.id}</span>
             <h3 class="fatwa-question">${item.question || ''}</h3>
             <div class="fatwa-answer">${answerText}</div>
-            ${answerIsLong ? '<button class="fatwa-toggle" type="button">عرض المزيد</button>' : ''}
+            <button class="fatwa-toggle" type="button">عرض المزيد</button>
         `;
 
         const toggleBtn = card.querySelector('.fatwa-toggle');
@@ -53,6 +68,10 @@
         const fragment = document.createDocumentFragment();
         items.forEach((item) => fragment.appendChild(createFatwaCard(item)));
         grid.appendChild(fragment);
+
+        requestAnimationFrame(() => {
+            grid.querySelectorAll('.fatwa-card').forEach((card) => updateCardOverflowState(card));
+        });
     }
 
     async function initFatawaPage() {
