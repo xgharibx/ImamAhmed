@@ -29,6 +29,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 grouped[bucket].push(video);
             });
 
+            Object.keys(grouped).forEach((section) => {
+                grouped[section] = grouped[section]
+                    .map((video, index) => ({
+                        ...video,
+                        _sourceIndex: index,
+                        _sortTimestamp: extractVideoTimestamp(video)
+                    }))
+                    .sort(sortByNewest);
+            });
+
             Object.entries(grouped).forEach(([section, list]) => {
                 const target = sectionMap[section];
                 if (!target) return;
@@ -65,6 +75,59 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/\s+/g, ' ')
             .trim()
             .toLowerCase();
+    }
+
+    function normalizeDigits(text) {
+        return (text || '').replace(/[٠-٩]/g, (d) => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+    }
+
+    function extractDateFromText(text) {
+        const normalizedText = normalizeDigits((text || '').toString());
+        if (!normalizedText) return 0;
+
+        const slashMatch = normalizedText.match(/(\d{1,2})\s*[\/\-]\s*(\d{1,2})\s*[\/\-]\s*(\d{2,4})/);
+        if (slashMatch) {
+            const day = Number.parseInt(slashMatch[1], 10);
+            const month = Number.parseInt(slashMatch[2], 10);
+            const rawYear = Number.parseInt(slashMatch[3], 10);
+            const year = rawYear < 100 ? 2000 + rawYear : rawYear;
+            const ts = Date.UTC(year, month - 1, day);
+            return Number.isNaN(ts) ? 0 : ts;
+        }
+
+        const monthMap = {
+            'يناير': 1, 'فبراير': 2, 'مارس': 3, 'ابريل': 4, 'أبريل': 4,
+            'مايو': 5, 'يونيو': 6, 'يوليو': 7, 'اغسطس': 8, 'أغسطس': 8,
+            'سبتمبر': 9, 'اكتوبر': 10, 'أكتوبر': 10, 'نوفمبر': 11, 'ديسمبر': 12
+        };
+
+        const namedMatch = normalizedText.match(/(\d{1,2})\s+([\u0621-\u064A]+)\s+(\d{4})/);
+        if (namedMatch) {
+            const day = Number.parseInt(namedMatch[1], 10);
+            const monthName = namedMatch[2];
+            const year = Number.parseInt(namedMatch[3], 10);
+            const month = monthMap[monthName] || monthMap[normalizeArabic(monthName)] || 0;
+            if (month > 0) {
+                const ts = Date.UTC(year, month - 1, day);
+                return Number.isNaN(ts) ? 0 : ts;
+            }
+        }
+
+        const isoTs = Date.parse(normalizedText);
+        return Number.isNaN(isoTs) ? 0 : isoTs;
+    }
+
+    function extractVideoTimestamp(video) {
+        const fromDateField = extractDateFromText(video?.date || '');
+        if (fromDateField) return fromDateField;
+        return extractDateFromText(video?.title || '');
+    }
+
+    function sortByNewest(a, b) {
+        if (b._sortTimestamp !== a._sortTimestamp) {
+            return b._sortTimestamp - a._sortTimestamp;
+        }
+        return a._sourceIndex - b._sourceIndex;
     }
 
     function hasAnyKeyword(text, keywords) {
