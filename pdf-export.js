@@ -133,6 +133,17 @@
             .join('');
     }
 
+    function extractFallbackBodyHtml(doc) {
+        const clone = doc.body ? doc.body.cloneNode(true) : null;
+        if (!clone) return '';
+
+        clone.querySelectorAll('script,style,link,noscript,iframe,object,embed,canvas,svg,video,audio').forEach((el) => el.remove());
+        clone.querySelectorAll('header,nav,footer,.navbar,.nav-menu,.footer,.page-back-button,.back-btn,.btn,.book-actions,.mushaf-pagination').forEach((el) => el.remove());
+
+        const candidateHtml = clone.innerHTML || '';
+        return buildReadableContentHtml(candidateHtml);
+    }
+
     function slugify(text) {
         return (text || 'document')
             .toString()
@@ -286,7 +297,9 @@
     }
 
     function extractContentFromDocument(doc) {
-        const contentRoot = doc.querySelector('.book-container, .khutba-content, .newspaper-article, .content-section main, .content-section, main');
+        const contentRoot = doc.querySelector(
+            '.book-container, .khutba-content, .newspaper-article, .article-body, .content-card, .text-content, .book-content, .article-content, .content-section main, .content-section, main, article'
+        );
         const title =
             doc.querySelector('.main-title')?.textContent?.trim() ||
             doc.querySelector('#khutba-title')?.textContent?.trim() ||
@@ -305,11 +318,15 @@
             doc.querySelector('.author-name')?.textContent?.trim() ||
             '';
 
+        const primaryContent = buildReadableContentHtml(contentRoot ? contentRoot.innerHTML : '');
+        const fallbackContent = extractFallbackBodyHtml(doc);
+        const finalContent = primaryContent || fallbackContent || '<p>لا يوجد محتوى متاح للتصدير.</p>';
+
         return {
             title,
             subtitle,
             meta,
-            contentHtml: buildReadableContentHtml(contentRoot ? contentRoot.innerHTML : '') || '<p>لا يوجد محتوى متاح للتصدير.</p>'
+            contentHtml: finalContent
         };
     }
 
