@@ -465,6 +465,195 @@ function initCounters() {
 }
 
 /* ============== Khawater Share ============== */
+function normalizeInlineText(value) {
+    return String(value || '').replace(/\s+/g, ' ').trim();
+}
+
+function wrapCanvasTextByWords(ctx, text, maxWidth) {
+    const words = normalizeInlineText(text).split(' ').filter(Boolean);
+    const lines = [];
+    let current = '';
+
+    for (const word of words) {
+        const next = current ? `${current} ${word}` : word;
+        if (ctx.measureText(next).width <= maxWidth) {
+            current = next;
+        } else {
+            if (current) lines.push(current);
+            current = word;
+        }
+    }
+
+    if (current) lines.push(current);
+    return lines;
+}
+
+function canvasToBlob(canvas, type = 'image/png', quality = 0.95) {
+    return new Promise((resolve, reject) => {
+        if (!canvas?.toBlob) {
+            reject(new Error('Canvas toBlob is unavailable'));
+            return;
+        }
+        canvas.toBlob((blob) => {
+            if (blob) resolve(blob);
+            else reject(new Error('Failed to create image blob'));
+        }, type, quality);
+    });
+}
+
+async function createKhawateraShareImageBlob({ text, tag, number, signature }) {
+    if (document.fonts?.ready) {
+        await Promise.race([
+            document.fonts.ready,
+            new Promise((resolve) => setTimeout(resolve, 1200))
+        ]);
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 1080;
+    canvas.height = 1350;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('Canvas context unavailable');
+
+    const bgGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+    bgGradient.addColorStop(0, '#1a5f4a');
+    bgGradient.addColorStop(1, '#1f7a5a');
+    ctx.fillStyle = bgGradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = 'rgba(212, 175, 55, 0.09)';
+    for (let y = 34; y < canvas.height; y += 78) {
+        for (let x = 34; x < canvas.width; x += 78) {
+            ctx.beginPath();
+            ctx.arc(x, y, 2.1, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    const card = { x: 70, y: 190, width: 940, height: 980 };
+    ctx.fillStyle = 'rgba(255,255,255,0.97)';
+    ctx.beginPath();
+    ctx.roundRect(card.x, card.y, card.width, card.height, 30);
+    ctx.fill();
+
+    ctx.fillStyle = '#d4af37';
+    ctx.beginPath();
+    ctx.roundRect(card.x + card.width - 10, card.y + 14, 10, card.height - 28, 7);
+    ctx.fill();
+
+    ctx.direction = 'rtl';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#d4af37';
+    ctx.font = '700 35px Cairo, Tahoma, Arial';
+    ctx.fillText('خاطرة إيمانية', canvas.width / 2, 105);
+
+    const safeTag = normalizeInlineText(tag || 'خواطر');
+    const tagWidth = Math.min(430, Math.max(180, ctx.measureText(safeTag).width + 80));
+    const tagX = card.x + card.width - tagWidth - 42;
+    const tagY = card.y + 58;
+    ctx.fillStyle = 'rgba(26, 95, 74, 0.12)';
+    ctx.beginPath();
+    ctx.roundRect(tagX, tagY, tagWidth, 56, 28);
+    ctx.fill();
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#1a5f4a';
+    ctx.font = '700 28px Cairo, Tahoma, Arial';
+    ctx.fillText(safeTag, tagX + tagWidth - 28, tagY + 39);
+
+    const safeNumber = normalizeInlineText(number || '');
+    if (safeNumber) {
+        const numberX = card.x + 74;
+        const numberY = card.y + 86;
+        ctx.fillStyle = '#1a5f4a';
+        ctx.beginPath();
+        ctx.arc(numberX, numberY, 34, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#d4af37';
+        ctx.font = '700 34px Cairo, Tahoma, Arial';
+        ctx.fillText(safeNumber, numberX, numberY + 12);
+    }
+
+    ctx.textAlign = 'right';
+    ctx.fillStyle = 'rgba(212, 175, 55, 0.35)';
+    ctx.font = '700 132px Cairo, Tahoma, Arial';
+    ctx.fillText('”', card.x + card.width - 62, card.y + 205);
+
+    const maxTextWidth = card.width - 130;
+    const textStartY = card.y + 265;
+    const textBottomY = card.y + card.height - 190;
+
+    const safeText = normalizeInlineText(text);
+    let selected = null;
+    const fontSizes = [54, 50, 46, 42, 38, 34, 30];
+
+    for (const size of fontSizes) {
+        const lineHeight = Math.round(size * 1.78);
+        ctx.font = `600 ${size}px Cairo, Tahoma, Arial`;
+        const lines = wrapCanvasTextByWords(ctx, safeText, maxTextWidth);
+        const maxLines = Math.floor((textBottomY - textStartY) / lineHeight);
+        if (lines.length <= maxLines) {
+            selected = { size, lineHeight, lines };
+            break;
+        }
+    }
+
+    if (!selected) {
+        const size = 30;
+        const lineHeight = Math.round(size * 1.78);
+        ctx.font = `600 ${size}px Cairo, Tahoma, Arial`;
+        const lines = wrapCanvasTextByWords(ctx, safeText, maxTextWidth);
+        const maxLines = Math.max(3, Math.floor((textBottomY - textStartY) / lineHeight));
+        selected = { size, lineHeight, lines: lines.slice(0, maxLines) };
+        if (lines.length > maxLines && selected.lines.length) {
+            let last = selected.lines[selected.lines.length - 1];
+            while (last.length > 3 && ctx.measureText(`${last}…`).width > maxTextWidth) {
+                last = last.slice(0, -1).trim();
+            }
+            selected.lines[selected.lines.length - 1] = `${last}…`;
+        }
+    }
+
+    ctx.font = `600 ${selected.size}px Cairo, Tahoma, Arial`;
+    ctx.fillStyle = '#0f2f24';
+    let y = textStartY;
+    for (const line of selected.lines) {
+        ctx.fillText(line, card.x + card.width - 58, y);
+        y += selected.lineHeight;
+    }
+
+    const safeSignature = normalizeInlineText(signature || '— الشيخ أحمد إسماعيل الفشني');
+    const signatureLineY = card.y + card.height - 122;
+    ctx.strokeStyle = 'rgba(212, 175, 55, 0.45)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(card.x + 55, signatureLineY);
+    ctx.lineTo(card.x + card.width - 55, signatureLineY);
+    ctx.stroke();
+
+    ctx.fillStyle = '#1a5f4a';
+    ctx.font = '700 34px Cairo, Tahoma, Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(safeSignature, canvas.width / 2, signatureLineY + 58);
+
+    ctx.fillStyle = 'rgba(255,255,255,0.88)';
+    ctx.font = '600 20px Cairo, Tahoma, Arial';
+    ctx.fillText('ahmedelfashny.com', canvas.width / 2, canvas.height - 42);
+
+    return canvasToBlob(canvas, 'image/png', 0.96);
+}
+
+function triggerBlobDownload(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
 function initKhawaterShareButtons() {
     const shareButtons = document.querySelectorAll('.khatera-card .share-btn');
     if (!shareButtons.length) return;
@@ -477,24 +666,54 @@ function initKhawaterShareButtons() {
 
             const card = button.closest('.khatera-card');
             const text = card?.querySelector('.khatera-text')?.textContent?.trim();
+            const tag = normalizeInlineText(card?.querySelector('.card-tag')?.textContent || 'خواطر');
+            const number = normalizeInlineText(card?.querySelector('.card-number')?.textContent || '');
             if (!text) return;
 
             const payloadText = `${text}\n\n${signature}`;
             const pageUrl = window.location.href;
             const title = document.title || 'خواطر الشيخ أحمد الفشني';
+            const imageFileName = `khatera-${number || 'share'}.png`;
+
+            button.disabled = true;
+            const icon = button.querySelector('i');
+            const originalIconClass = icon?.className || '';
+            if (icon) icon.className = 'fas fa-spinner fa-spin';
 
             try {
-                if (navigator.share) {
+                const imageBlob = await createKhawateraShareImageBlob({
+                    text,
+                    tag,
+                    number,
+                    signature
+                });
+
+                const imageFile = new File([imageBlob], imageFileName, { type: 'image/png' });
+                const canShareImage = typeof navigator.canShare === 'function'
+                    && navigator.canShare({ files: [imageFile] });
+
+                if (navigator.share && canShareImage) {
                     await navigator.share({
+                        files: [imageFile],
                         title,
-                        text: payloadText,
+                        text: signature,
                         url: pageUrl
                     });
+                    showShareToast('تمت مشاركة الخاطرة كصورة');
                     return;
                 }
 
+                if (navigator.clipboard?.write && window.ClipboardItem) {
+                    await navigator.clipboard.write([
+                        new ClipboardItem({ 'image/png': imageBlob })
+                    ]);
+                    showShareToast('تم نسخ صورة الخاطرة للحافظة');
+                    return;
+                }
+
+                triggerBlobDownload(imageBlob, imageFileName);
                 await navigator.clipboard.writeText(`${payloadText}\n${pageUrl}`);
-                showShareToast('تم نسخ الخاطرة مع التوقيع');
+                showShareToast('تم تنزيل الصورة ونسخ النص مع التوقيع');
             } catch {
                 try {
                     const fallbackTextArea = document.createElement('textarea');
@@ -509,6 +728,9 @@ function initKhawaterShareButtons() {
                 } catch {
                     showShareToast('تعذر النسخ حالياً');
                 }
+            } finally {
+                button.disabled = false;
+                if (icon) icon.className = originalIconClass;
             }
         });
     });
