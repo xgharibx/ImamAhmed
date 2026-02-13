@@ -595,7 +595,10 @@ input, textarea, select {
 }
 
 .logo-subtitle {
-    font-size: 0.75rem;
+    font-size: 0.63rem;
+    line-height: 1.35;
+    max-width: 260px;
+    white-space: normal;
     color: var(--primary-gold-light);
     opacity: 0.8;
 }
