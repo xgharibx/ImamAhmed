@@ -161,6 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const detailUrl = toDetailUrl(item);
         const itemId = getItemId(item);
         const isReadable = !!itemId && state.latestReadableIds.has(itemId);
+        const hasExportContent = !!(item?.content_html || item?.content_text);
 
         const actionLabel = isReadable ? 'قراءة الخطبة' : 'قريباً';
         const actionHref = isReadable ? detailUrl : '#';
@@ -180,6 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <p class="khutab-item-excerpt">${escapeHtml(item.excerpt || '').slice(0, 180)}${(item.excerpt || '').length > 180 ? '…' : ''}</p>
             <div class="khutab-item-actions">
                 <a class="${actionClasses}" href="${actionHref}"${actionAttrs}>${escapeHtml(actionLabel)}</a>
+                ${isReadable && hasExportContent ? '<button type="button" class="btn btn-sm khutba-download-btn"><i class="fas fa-download"></i> تحميل PDF</button>' : ''}
             </div>
         `;
 
@@ -195,6 +197,28 @@ document.addEventListener('DOMContentLoaded', () => {
             div.addEventListener('dblclick', () => {
                 window.location.href = detailUrl;
             });
+
+            const downloadButton = div.querySelector('.khutba-download-btn');
+            downloadButton?.addEventListener('click', async (event) => {
+                event.preventDefault();
+                if (!window.SheikhPdfExporter?.exportKhutbaItem) {
+                    alert('ميزة تحميل PDF غير متاحة حالياً.');
+                    return;
+                }
+
+                const originalHtml = downloadButton.innerHTML;
+                downloadButton.disabled = true;
+                downloadButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جارِ التحضير...';
+                try {
+                    await window.SheikhPdfExporter.exportKhutbaItem(item);
+                } catch (error) {
+                    console.error(error);
+                    alert('تعذر إنشاء ملف PDF حالياً.');
+                } finally {
+                    downloadButton.disabled = false;
+                    downloadButton.innerHTML = originalHtml;
+                }
+            });
         }
 
         return div;
@@ -205,19 +229,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const dateDisplay = getDisplayDate(item);
         const author = item.author || '';
         modalMeta.textContent = [dateDisplay, author].filter(Boolean).join(' • ');
-
-        const attachments = Array.isArray(item.attachments) ? item.attachments : [];
-        const pdfUrl = item.pdf_url || attachments.find(a => a?.url && /\.pdf($|\?)/i.test(a.url))?.url || '';
-
-        const parts = [];
-        if (pdfUrl) {
-            parts.push(`
-                <div class="khutab-pdf-wrap">
-                    <iframe class="khutab-pdf" src="${escapeHtml(pdfUrl)}" title="PDF"></iframe>
-                    <p class="khutab-pdf-note">إذا لم يظهر الملف داخل الصفحة، استخدم زر "فتح المصدر" أو افتح رابط الـ PDF مباشرة.</p>
-                </div>
-            `);
-        }
         modalMeta.textContent = '';
         modalBody.innerHTML = '';
         document.body.style.overflow = '';

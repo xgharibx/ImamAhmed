@@ -1,0 +1,325 @@
+(function () {
+    const HTML2PDF_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+    let html2pdfLoader = null;
+
+    function loadHtml2Pdf() {
+        if (window.html2pdf) return Promise.resolve();
+        if (html2pdfLoader) return html2pdfLoader;
+
+        html2pdfLoader = new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = HTML2PDF_CDN;
+            script.async = true;
+            script.onload = () => resolve();
+            script.onerror = () => reject(new Error('Failed to load html2pdf library'));
+            document.head.appendChild(script);
+        });
+
+        return html2pdfLoader;
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text || '';
+        return div.innerHTML;
+    }
+
+    function sanitizeHtml(rawHtml) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(rawHtml || '', 'text/html');
+        doc.querySelectorAll('script,style,iframe,object,embed,form,button').forEach(el => el.remove());
+        doc.querySelectorAll('*').forEach((el) => {
+            [...el.attributes].forEach((attr) => {
+                const name = attr.name.toLowerCase();
+                if (name.startsWith('on')) {
+                    el.removeAttribute(attr.name);
+                }
+            });
+        });
+        return doc.body.innerHTML;
+    }
+
+    function slugify(text) {
+        return (text || 'document')
+            .toString()
+            .trim()
+            .replace(/[\s\/\\:|"'<>?*]+/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '')
+            .slice(0, 80) || 'document';
+    }
+
+    function typeLabel(type) {
+        if (type === 'book') return 'كتاب';
+        if (type === 'article') return 'مقال';
+        if (type === 'khutba') return 'خطبة';
+        return 'محتوى';
+    }
+
+    function buildPdfShell({ title, subtitle, meta, contentHtml, type }) {
+        const wrapper = document.createElement('div');
+        wrapper.setAttribute('dir', 'rtl');
+        wrapper.style.width = '794px';
+        wrapper.style.background = '#ffffff';
+        wrapper.style.color = '#1b1b1b';
+        wrapper.style.fontFamily = '"Cairo", "Tajawal", sans-serif';
+        wrapper.style.padding = '26px';
+        wrapper.style.boxSizing = 'border-box';
+
+        const label = typeLabel(type);
+        const safeTitle = escapeHtml(title || '');
+        const safeSubtitle = escapeHtml(subtitle || '');
+        const safeMeta = escapeHtml(meta || '');
+
+        wrapper.innerHTML = `
+            <style>
+                .pdf-card { border: 1px solid #e6e6e6; border-radius: 14px; overflow: hidden; }
+                .pdf-head { background: linear-gradient(135deg, #1a5f4a, #1f7a5a); color: #fff; padding: 18px 20px; }
+                .pdf-tag { display:inline-block; background:#d4af37; color:#1a5f4a; border-radius:999px; padding: 4px 12px; font-size: 12px; font-weight:700; margin-bottom: 10px; }
+                .pdf-title { margin:0; font-size: 28px; line-height: 1.6; font-weight: 800; }
+                .pdf-subtitle { margin: 8px 0 0; font-size: 16px; opacity: .95; }
+                .pdf-meta { margin-top: 10px; font-size: 13px; opacity: .92; }
+                .pdf-body { padding: 22px; font-size: 17px; line-height: 2.0; }
+                .pdf-body h1,.pdf-body h2,.pdf-body h3,.pdf-body h4 { color: #1a5f4a; line-height: 1.7; page-break-after: avoid; }
+                .pdf-body p,.pdf-body li,.pdf-body blockquote { page-break-inside: avoid; }
+                .pdf-foot { margin-top: 20px; text-align:center; color:#4d4d4d; font-size:12px; border-top:1px solid #efefef; padding-top:12px; }
+            </style>
+            <div class="pdf-card">
+                <div class="pdf-head">
+                    <div class="pdf-tag">${label}</div>
+                    <h1 class="pdf-title">${safeTitle}</h1>
+                    ${safeSubtitle ? `<p class="pdf-subtitle">${safeSubtitle}</p>` : ''}
+                    ${safeMeta ? `<div class="pdf-meta">${safeMeta}</div>` : ''}
+                </div>
+                <div class="pdf-body">${contentHtml || ''}</div>
+            </div>
+            <div class="pdf-foot">الشيخ أحمد إسماعيل الفشني</div>
+        `;
+
+        return wrapper;
+    }
+
+    function extractContentFromDocument(doc) {
+        const contentRoot = doc.querySelector('.book-container, .khutba-content, .newspaper-article, .content-section main, .content-section, main');
+        const title =
+            doc.querySelector('.main-title')?.textContent?.trim() ||
+            doc.querySelector('#khutba-title')?.textContent?.trim() ||
+            doc.querySelector('.page-title')?.textContent?.trim() ||
+            doc.querySelector('h1')?.textContent?.trim() ||
+            doc.title ||
+            'محتوى';
+
+        const subtitle =
+            doc.querySelector('.sub-title')?.textContent?.trim() ||
+            doc.querySelector('.page-subtitle')?.textContent?.trim() ||
+            '';
+
+        const meta =
+            doc.querySelector('#khutba-meta')?.textContent?.trim() ||
+            doc.querySelector('.author-name')?.textContent?.trim() ||
+            '';
+
+        return {
+            title,
+            subtitle,
+            meta,
+            contentHtml: sanitizeHtml(contentRoot ? contentRoot.innerHTML : '<p>لا يوجد محتوى متاح للتصدير.</p>')
+        };
+    }
+
+    async function exportPayload(payload, filenameHint) {
+        await loadHtml2Pdf();
+        const shell = buildPdfShell(payload);
+        document.body.appendChild(shell);
+
+        const filename = `${slugify(filenameHint || payload.title)}.pdf`;
+        try {
+            await window.html2pdf()
+                .set({
+                    margin: [8, 8, 8, 8],
+                    filename,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                    pagebreak: { mode: ['css', 'legacy'] }
+                })
+                .from(shell)
+                .save();
+        } finally {
+            shell.remove();
+        }
+    }
+
+    async function exportFromCurrentPage(options = {}) {
+        const extracted = extractContentFromDocument(document);
+        return exportPayload({
+            ...extracted,
+            type: options.type || 'content',
+            title: options.title || extracted.title,
+            subtitle: options.subtitle ?? extracted.subtitle,
+            meta: options.meta ?? extracted.meta
+        }, options.filename || extracted.title);
+    }
+
+    async function exportFromUrl(url, options = {}) {
+        const res = await fetch(url, { cache: 'no-cache' });
+        if (!res.ok) throw new Error('تعذر تحميل الصفحة للتصدير');
+
+        const html = await res.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const extracted = extractContentFromDocument(doc);
+
+        return exportPayload({
+            ...extracted,
+            type: options.type || 'content',
+            title: options.title || extracted.title,
+            subtitle: options.subtitle ?? extracted.subtitle,
+            meta: options.meta ?? extracted.meta
+        }, options.filename || extracted.title);
+    }
+
+    async function exportKhutbaItem(item) {
+        const title = item?.title || 'خطبة';
+        const dateDisplay = item?.date?.display || item?.date_display || item?.date || '';
+        const author = item?.author || '';
+        const meta = [dateDisplay, author].filter(Boolean).join(' • ');
+
+        const contentHtml = sanitizeHtml(item?.content_html || '') || (item?.content_text
+            ? item.content_text
+                .split(/\n{2,}/)
+                .map(p => `<p>${escapeHtml(p)}</p>`)
+                .join('')
+            : '<p>لا يوجد نص متاح للتصدير.</p>');
+
+        return exportPayload({
+            title,
+            subtitle: 'خطب منبرية',
+            meta,
+            contentHtml,
+            type: 'khutba'
+        }, title);
+    }
+
+    function makeButton(label, className) {
+        const btn = document.createElement('a');
+        btn.href = '#';
+        btn.className = className;
+        btn.innerHTML = `<i class="fas fa-download"></i> ${label}`;
+        return btn;
+    }
+
+    function appendButtonsOnBooksPage() {
+        document.querySelectorAll('.book-actions a.btn-book').forEach((readBtn) => {
+            if (readBtn.parentElement?.querySelector('.js-download-pdf')) return;
+            const href = readBtn.getAttribute('href');
+            if (!href) return;
+
+            const btn = makeButton('تحميل PDF', 'btn-book btn-read js-download-pdf');
+            btn.style.background = '#d4af37';
+            btn.style.color = '#1a5f4a';
+
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                btn.style.pointerEvents = 'none';
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جارِ التحضير...';
+                try {
+                    await exportFromUrl(new URL(href, window.location.href).href, { type: 'book' });
+                } catch (err) {
+                    console.error(err);
+                    alert('تعذر إنشاء ملف PDF حالياً.');
+                } finally {
+                    btn.style.pointerEvents = '';
+                    btn.innerHTML = '<i class="fas fa-download"></i> تحميل PDF';
+                }
+            });
+
+            readBtn.parentElement.appendChild(btn);
+        });
+    }
+
+    function appendButtonsOnArticlesPage() {
+        document.querySelectorAll('.newspaper-content .btn, .featured-content .btn').forEach((readBtn) => {
+            if (readBtn.parentElement?.querySelector('.js-download-pdf')) return;
+            const href = readBtn.getAttribute('href');
+            if (!href || !href.endsWith('.html')) return;
+
+            const btn = makeButton('تحميل PDF', readBtn.className + ' js-download-pdf');
+            btn.style.marginInlineStart = '0.5rem';
+
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                btn.style.pointerEvents = 'none';
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جارِ التحضير...';
+                try {
+                    await exportFromUrl(new URL(href, window.location.href).href, { type: 'article' });
+                } catch (err) {
+                    console.error(err);
+                    alert('تعذر إنشاء ملف PDF حالياً.');
+                } finally {
+                    btn.style.pointerEvents = '';
+                    btn.innerHTML = '<i class="fas fa-download"></i> تحميل PDF';
+                }
+            });
+
+            readBtn.parentElement.appendChild(btn);
+        });
+    }
+
+    function appendButtonOnBookDetailPage() {
+        const navContainer = document.querySelector('.nav-container');
+        if (!navContainer || navContainer.querySelector('.js-book-download-top')) return;
+
+        const btn = makeButton('تحميل PDF', 'btn-back js-book-download-top');
+        btn.style.marginInlineStart = '0.75rem';
+
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            btn.style.pointerEvents = 'none';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جارِ التحضير...';
+            try {
+                await exportFromCurrentPage({ type: 'book' });
+            } catch (err) {
+                console.error(err);
+                alert('تعذر إنشاء ملف PDF حالياً.');
+            } finally {
+                btn.style.pointerEvents = '';
+                btn.innerHTML = '<i class="fas fa-download"></i> تحميل PDF';
+            }
+        });
+
+        const backBtn = navContainer.querySelector('.btn-back');
+        if (backBtn) {
+            backBtn.insertAdjacentElement('afterend', btn);
+        } else {
+            navContainer.appendChild(btn);
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('autopdf') === '1') {
+            setTimeout(() => btn.click(), 200);
+        }
+    }
+
+    function pageKind() {
+        const path = window.location.pathname.toLowerCase();
+        if (path.endsWith('/books.html') || path.endsWith('books.html')) return 'books-list';
+        if (path.endsWith('/articles.html') || path.endsWith('articles.html')) return 'articles-list';
+        if (path.includes('/books/') && path.endsWith('.html')) return 'book-detail';
+        return 'other';
+    }
+
+    const SheikhPdfExporter = {
+        exportFromCurrentPage,
+        exportFromUrl,
+        exportKhutbaItem
+    };
+
+    window.SheikhPdfExporter = SheikhPdfExporter;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const kind = pageKind();
+        if (kind === 'books-list') appendButtonsOnBooksPage();
+        if (kind === 'articles-list') appendButtonsOnArticlesPage();
+        if (kind === 'book-detail') appendButtonOnBookDetailPage();
+    });
+})();

@@ -2,9 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const titleEl = document.getElementById('khutba-title');
     const metaEl = document.getElementById('khutba-meta');
     const contentEl = document.getElementById('khutba-content');
-    const downloadEl = document.getElementById('khutba-download');
-    const pdfWrap = document.getElementById('khutba-pdf-wrap');
-    const pdfIframe = document.getElementById('khutba-pdf');
+    const actionsEl = document.querySelector('.khutba-actions');
 
     function escapeHtml(text) {
         const div = document.createElement('div');
@@ -58,6 +56,40 @@ document.addEventListener('DOMContentLoaded', () => {
         return item?.date?.iso || item?.date_iso || '';
     }
 
+    function ensureDownloadButton(item) {
+        if (!actionsEl || !item) return;
+
+        let downloadButton = document.getElementById('khutba-download-pdf');
+        if (!downloadButton) {
+            downloadButton = document.createElement('button');
+            downloadButton.type = 'button';
+            downloadButton.id = 'khutba-download-pdf';
+            downloadButton.className = 'btn';
+            downloadButton.innerHTML = '<i class="fas fa-download"></i> تحميل PDF';
+            actionsEl.appendChild(downloadButton);
+        }
+
+        downloadButton.onclick = async () => {
+            if (!window.SheikhPdfExporter?.exportKhutbaItem) {
+                alert('ميزة تحميل PDF غير متاحة حالياً.');
+                return;
+            }
+
+            const originalHtml = downloadButton.innerHTML;
+            downloadButton.disabled = true;
+            downloadButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جارِ التحضير...';
+            try {
+                await window.SheikhPdfExporter.exportKhutbaItem(item);
+            } catch (error) {
+                console.error(error);
+                alert('تعذر إنشاء ملف PDF حالياً.');
+            } finally {
+                downloadButton.disabled = false;
+                downloadButton.innerHTML = originalHtml;
+            }
+        };
+    }
+
     function computeLatestItem(items) {
         const list = Array.isArray(items) ? items : [];
         if (list.length === 0) return null;
@@ -91,9 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
             renderError('لم يتم تحديد خطبة لعرضها.');
             return;
         }
-
-        // Default: hide download until we confirm access.
-        if (downloadEl) downloadEl.style.display = 'none';
 
         try {
             const res = await fetch('data/khutab_written.json', { cache: 'no-cache' });
@@ -165,13 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 contentEl.innerHTML = '<div class="khutab-empty">لم يتم استخراج نص الخطبة بعد.</div>';
             }
 
-            // Local PDF download button ONLY (no embed)
-            const pdfLocal = item.pdf_local || item.pdf_path || item.pdf_url_local || '';
-            if (pdfLocal) {
-                // Encode Arabic/space paths safely for the browser
-                downloadEl.href = encodeURI(pdfLocal);
-                downloadEl.style.display = 'inline-flex';
-            }
+            ensureDownloadButton(item);
 
             if (window.AOS) {
                 setTimeout(() => AOS.refresh(), 80);

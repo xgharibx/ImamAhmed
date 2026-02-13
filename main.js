@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollEffects();
     initKhawaterSlider();
     initAnimations();
-    initNewsletterForm();
+    initHomeWhatsappForm();
     initBackToTop();
     initBrowserBackButton();
     initCounters();
@@ -361,36 +361,33 @@ function initAnimations() {
     });
 }
 
-/* ============== Newsletter Form ============== */
-function initNewsletterForm() {
-    const form = document.getElementById('newsletterForm');
+/* ============== Home WhatsApp Form ============== */
+function initHomeWhatsappForm() {
+    const form = document.getElementById('homeWhatsappForm');
     if (!form) return;
-    
-    form.addEventListener('submit', async (e) => {
+
+    const whatsappNumber = '201030054301';
+
+    form.addEventListener('submit', (e) => {
         e.preventDefault();
-        
-        const email = form.querySelector('input[type="email"]').value;
+
+        const messageInput = document.getElementById('homeWhatsappMessage');
+        const messageValue = messageInput?.value.trim() || '';
         const button = form.querySelector('button');
         const originalText = button.innerHTML;
-        
-        // Show loading state
-        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الاشتراك...';
+
+        const message = messageValue || 'السلام عليكم ورحمة الله وبركاته، أود التواصل معكم.';
+        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحويل...';
         button.disabled = true;
-        
-        // Simulate API call (replace with actual implementation)
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        // Show success
-        button.innerHTML = '<i class="fas fa-check"></i> تم الاشتراك بنجاح!';
-        button.style.background = 'var(--primary-green)';
-        
-        // Reset after delay
+
+        window.open(whatsappUrl, '_blank', 'noopener');
+
         setTimeout(() => {
             button.innerHTML = originalText;
             button.disabled = false;
-            button.style.background = '';
-            form.reset();
-        }, 3000);
+        }, 1200);
     });
 }
 
