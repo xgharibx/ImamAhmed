@@ -307,49 +307,147 @@
         canvas.width = 1240;
         canvas.height = 1754;
         const ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#f9f3e7';
+        ctx.fillStyle = '#f7f3ea';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        const patternColor = 'rgba(201, 162, 39, 0.08)';
-        for (let y = 40; y < canvas.height; y += 70) {
-            for (let x = 40; x < canvas.width; x += 70) {
+        const patternColor = 'rgba(201, 162, 39, 0.065)';
+        for (let y = 34; y < canvas.height; y += 66) {
+            for (let x = 34; x < canvas.width; x += 66) {
                 ctx.fillStyle = patternColor;
                 ctx.beginPath();
-                ctx.arc(x, y, 1.6, 0, Math.PI * 2);
+                ctx.arc(x, y, 1.45, 0, Math.PI * 2);
                 ctx.fill();
             }
         }
 
-        const panelX = 55;
-        const panelY = 265;
-        const panelW = canvas.width - 110;
-        const panelH = canvas.height - 350;
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
-        ctx.strokeStyle = 'rgba(201, 162, 39, 0.30)';
+        const panelX = 52;
+        const panelY = 246;
+        const panelW = canvas.width - 104;
+        const panelH = canvas.height - 326;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.93)';
+        ctx.strokeStyle = 'rgba(201, 162, 39, 0.35)';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.roundRect(panelX, panelY, panelW, panelH, 18);
+        ctx.roundRect(panelX, panelY, panelW, panelH, 24);
         ctx.fill();
+        ctx.stroke();
+
+        ctx.strokeStyle = 'rgba(26, 95, 74, 0.12)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect(panelX + 12, panelY + 12, panelW - 24, panelH - 24, 20);
         ctx.stroke();
 
         return { canvas, ctx };
     }
 
+    function createPdfCoverCanvas(payload) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1240;
+        canvas.height = 1754;
+        const ctx = canvas.getContext('2d');
+
+        const coverGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        coverGradient.addColorStop(0, '#0f3d2f');
+        coverGradient.addColorStop(0.55, '#1a5f4a');
+        coverGradient.addColorStop(1, '#2b7b62');
+        ctx.fillStyle = coverGradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = 'rgba(212, 175, 55, 0.1)';
+        for (let y = 44; y < canvas.height; y += 90) {
+            for (let x = 44; x < canvas.width; x += 90) {
+                ctx.beginPath();
+                ctx.arc(x, y, 2.2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        const frameX = 88;
+        const frameY = 96;
+        const frameW = canvas.width - 176;
+        const frameH = canvas.height - 192;
+
+        ctx.strokeStyle = 'rgba(212, 175, 55, 0.86)';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.roundRect(frameX, frameY, frameW, frameH, 28);
+        ctx.stroke();
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.roundRect(frameX + 16, frameY + 16, frameW - 32, frameH - 32, 22);
+        ctx.stroke();
+
+        ctx.direction = 'rtl';
+        ctx.textAlign = 'center';
+
+        ctx.fillStyle = '#d4af37';
+        ctx.font = 'bold 30px Cairo, Tahoma, Arial';
+        ctx.fillText(typeLabel(payload.type), canvas.width / 2, 370);
+
+        const title = String(payload.title || 'محتوى').replace(/\s+/g, ' ').trim();
+        const subtitle = String(payload.subtitle || '').replace(/\s+/g, ' ').trim();
+        const maxTitleWidth = 860;
+        const baseTitleSize = title.length > 80 ? 58 : title.length > 52 ? 64 : 72;
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = `bold ${baseTitleSize}px Cairo, Tahoma, Arial`;
+        const titleLines = wrapTextLines(ctx, title, maxTitleWidth).slice(0, 3);
+        let titleY = 500;
+        const titleLineHeight = Math.round(baseTitleSize * 1.25);
+        for (const line of titleLines) {
+            ctx.fillText(line, canvas.width / 2, titleY);
+            titleY += titleLineHeight;
+        }
+
+        if (subtitle) {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
+            ctx.font = '34px Cairo, Tahoma, Arial';
+            const subtitleLines = wrapTextLines(ctx, subtitle, 920).slice(0, 2);
+            titleY += 28;
+            for (const line of subtitleLines) {
+                ctx.fillText(line, canvas.width / 2, titleY);
+                titleY += 52;
+            }
+        }
+
+        if (payload.meta) {
+            ctx.fillStyle = 'rgba(212, 175, 55, 0.95)';
+            ctx.font = '28px Cairo, Tahoma, Arial';
+            const metaLines = wrapTextLines(ctx, String(payload.meta), 930).slice(0, 2);
+            let metaY = Math.min(1220, titleY + 120);
+            for (const line of metaLines) {
+                ctx.fillText(line, canvas.width / 2, metaY);
+                metaY += 44;
+            }
+        }
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.font = '700 34px Cairo, Tahoma, Arial';
+        ctx.fillText('الشيخ أحمد إسماعيل الفشني', canvas.width / 2, 1530);
+
+        return canvas;
+    }
+
     function drawPageHeader(ctx, payload, pageNumber) {
         const width = 1240;
-        const headHeight = 205;
+        const headHeight = 184;
         const gradient = ctx.createLinearGradient(0, 0, width, headHeight);
-        gradient.addColorStop(0, '#1a5f4a');
+        gradient.addColorStop(0, '#145341');
         gradient.addColorStop(1, '#1f7a5a');
         ctx.fillStyle = gradient;
-        ctx.fillRect(40, 40, width - 80, headHeight);
+        ctx.beginPath();
+        ctx.roundRect(46, 42, width - 92, headHeight, 18);
+        ctx.fill();
 
         ctx.direction = 'rtl';
         ctx.textAlign = 'right';
 
         ctx.fillStyle = '#d4af37';
         ctx.beginPath();
-        ctx.roundRect(width - 210, 65, 130, 42, 21);
+        ctx.roundRect(width - 215, 66, 136, 44, 22);
         ctx.fill();
 
         ctx.fillStyle = '#1a5f4a';
@@ -364,7 +462,7 @@
             : (normalizedTitle.length > 110 ? 34 : normalizedTitle.length > 85 ? 36 : normalizedTitle.length > 60 ? 38 : 42);
         const titleLineHeight = Math.round(titleFontSize * 1.2);
         const titleMaxLines = 3;
-        const titleMaxWidth = width - 200;
+        const titleMaxWidth = width - 230;
 
         ctx.font = `bold ${titleFontSize}px Cairo, Tahoma, Arial`;
         const wrappedTitleLines = wrapTextLines(ctx, normalizedTitle, titleMaxWidth);
@@ -378,7 +476,7 @@
             titleLines[titleLines.length - 1] = `${lastLine}…`;
         }
 
-        let titleY = 145;
+        let titleY = 136;
         for (const line of titleLines) {
             ctx.fillText(line, width - 80, titleY);
             titleY += titleLineHeight;
@@ -386,7 +484,7 @@
 
         if (payload.subtitle) {
             ctx.font = '24px Cairo, Tahoma, Arial';
-            const subtitleY = Math.min(titleY + 8, 236);
+            const subtitleY = Math.min(titleY + 8, 226);
             ctx.fillText(String(payload.subtitle).slice(0, 160), width - 80, subtitleY);
         }
 
@@ -416,6 +514,8 @@
         const blocks = collectTextBlocksFromHtml(payload.contentHtml || '');
         const canvases = [];
         const chapterPerPage = payload.layoutMode === 'chapter-per-page';
+
+        canvases.push(createPdfCoverCanvas(payload));
 
         let pageNumber = 1;
         let page = createPdfPageCanvas();
