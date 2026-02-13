@@ -361,9 +361,9 @@
         const isKhutba = payload.type === 'khutba';
         const titleFontSize = isKhutba
             ? (normalizedTitle.length > 110 ? 32 : normalizedTitle.length > 85 ? 34 : normalizedTitle.length > 60 ? 36 : 40)
-            : (normalizedTitle.length > 70 ? 44 : 50);
+            : (normalizedTitle.length > 110 ? 34 : normalizedTitle.length > 85 ? 36 : normalizedTitle.length > 60 ? 38 : 42);
         const titleLineHeight = Math.round(titleFontSize * 1.2);
-        const titleMaxLines = isKhutba ? 3 : 2;
+        const titleMaxLines = 3;
         const titleMaxWidth = width - 200;
 
         ctx.font = `bold ${titleFontSize}px Cairo, Tahoma, Arial`;
@@ -385,7 +385,7 @@
         }
 
         if (payload.subtitle) {
-            ctx.font = '28px Cairo, Tahoma, Arial';
+            ctx.font = '24px Cairo, Tahoma, Arial';
             const subtitleY = Math.min(titleY + 8, 236);
             ctx.fillText(String(payload.subtitle).slice(0, 160), width - 80, subtitleY);
         }
@@ -432,10 +432,27 @@
             pageNumber += 1;
             page = createPdfPageCanvas();
             drawPageHeader(page.ctx, payload, pageNumber);
-            y = centerContinuation ? 720 : 290;
+            y = centerContinuation ? 720 : 320;
+        };
+
+        const isMajorHeading = (text) => {
+            const normalized = String(text || '').trim();
+            if (!normalized) return false;
+            return /^(\d+[\)\-\.]|أولاً|ثانياً|ثالثاً|رابعاً|خامساً|سادساً|المجلس|الدرس|الفصل|الباب|المقدمة|الخاتمة|تمهيد|شرح|الخاطرة)/.test(normalized);
+        };
+
+        const refinedStyle = {
+            heading: { font: 'bold 34px Cairo, Tahoma, Arial', color: '#1a5f4a', lineHeight: 48, gapBefore: 14, gapAfter: 12 },
+            quote: { font: '26px Cairo, Tahoma, Arial', color: '#2e7d32', lineHeight: 40, gapBefore: 10, gapAfter: 10 },
+            pre: { font: '24px Cairo, Tahoma, Arial', color: '#333', lineHeight: 36, gapBefore: 8, gapAfter: 8 },
+            paragraph: { font: '26px Cairo, Tahoma, Arial', color: '#222', lineHeight: 40, gapBefore: 6, gapAfter: 8 }
         };
 
         for (const block of blocks) {
+            if (!chapterPerPage && block.kind === 'heading' && isMajorHeading(block.text) && y > 1320) {
+                newPage();
+            }
+
             if (chapterPerPage && block.kind === 'heading' && /الخاطرة\s*\(/.test(block.text) && y > 360) {
                 newPage();
                 continuationCenteredUsed = false;
@@ -448,12 +465,7 @@
                     pre: { font: '23px Cairo, Tahoma, Arial', color: '#333', lineHeight: 34, gapBefore: 8, gapAfter: 8 },
                     paragraph: { font: '24px Cairo, Tahoma, Arial', color: '#222', lineHeight: 36, gapBefore: 6, gapAfter: 8 }
                 }[block.kind] || { font: '24px Cairo, Tahoma, Arial', color: '#222', lineHeight: 36, gapBefore: 6, gapAfter: 8 })
-                : ({
-                    heading: { font: 'bold 38px Cairo, Tahoma, Arial', color: '#1a5f4a', lineHeight: 56, gapBefore: 18, gapAfter: 16 },
-                    quote: { font: '30px Cairo, Tahoma, Arial', color: '#2e7d32', lineHeight: 50, gapBefore: 12, gapAfter: 14 },
-                    pre: { font: '28px Cairo, Tahoma, Arial', color: '#333', lineHeight: 46, gapBefore: 10, gapAfter: 10 },
-                    paragraph: { font: '32px Cairo, Tahoma, Arial', color: '#222', lineHeight: 52, gapBefore: 8, gapAfter: 10 }
-                }[block.kind] || { font: '32px Cairo, Tahoma, Arial', color: '#222', lineHeight: 52, gapBefore: 8, gapAfter: 10 });
+                : (refinedStyle[block.kind] || refinedStyle.paragraph);
 
             y += style.gapBefore;
             page.ctx.direction = 'rtl';
@@ -463,7 +475,7 @@
 
             const lines = wrapTextLines(page.ctx, block.text, maxWidth);
             for (const line of lines) {
-                if (y > 1620) {
+                if (y > 1585) {
                     const centerContinuation = chapterPerPage && !continuationCenteredUsed;
                     newPage({ centerContinuation });
                     if (centerContinuation) continuationCenteredUsed = true;
