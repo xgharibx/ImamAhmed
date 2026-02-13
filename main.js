@@ -217,14 +217,21 @@ function initScrollEffects() {
     // Parallax effect for hero
     const hero = document.querySelector('.hero-section');
     if (hero && !isMobile) {
+        let heroScrollTicking = false;
         window.addEventListener('scroll', () => {
+            if (heroScrollTicking) return;
+            heroScrollTicking = true;
+
+            window.requestAnimationFrame(() => {
             const scrolled = window.pageYOffset;
             const heroContent = hero.querySelector('.hero-content');
             if (heroContent && scrolled < window.innerHeight) {
                 heroContent.style.transform = `translateY(${scrolled * 0.3}px)`;
                 heroContent.style.opacity = 1 - (scrolled / window.innerHeight);
             }
-        });
+                heroScrollTicking = false;
+            });
+        }, { passive: true });
     }
 }
 
@@ -402,9 +409,10 @@ function initBackToTop() {
         } else {
             backToTopBtn.classList.remove('visible');
         }
-    });
+    }, { passive: true });
     
-    backToTopBtn.addEventListener('click', () => {
+    backToTopBtn.addEventListener('click', (e) => {
+        e.preventDefault();
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
