@@ -1395,6 +1395,13 @@ section {
     border-radius: var(--radius-full);
     color: var(--primary-gold);
     font-size: 1.2rem;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    appearance: none;
+    -webkit-appearance: none;
     transition: var(--transition-normal);
 }
 
@@ -1411,16 +1418,19 @@ section {
 .slider-dot {
     width: 12px;
     height: 12px;
-    background: rgba(255, 255, 255, 0.3);
+    background: transparent;
+    border: 1.5px solid rgba(255, 255, 255, 0.45);
     border-radius: var(--radius-full);
     cursor: pointer;
+    padding: 0;
+    appearance: none;
+    -webkit-appearance: none;
     transition: var(--transition-normal);
 }
 
 .slider-dot.active {
     background: var(--primary-gold);
-    width: 30px;
-    border-radius: 6px;
+    border-color: var(--primary-gold);
 }
 
 /* ============== About Section ============== */
