@@ -972,16 +972,18 @@ input, textarea, select {
 }
 
 .hero-subtitle-main {
-    font-size: clamp(1.05rem, 2.6vw, 1.5rem);
+    font-size: clamp(0.95rem, 2.2vw, 1.35rem);
     font-weight: 600;
     color: var(--primary-gold-light);
+    white-space: nowrap;
 }
 
 .hero-subtitle-sub {
-    font-size: clamp(0.82rem, 1.7vw, 1rem);
+    font-size: clamp(0.74rem, 1.35vw, 0.92rem);
     font-weight: 400;
     color: rgba(255, 255, 255, 0.88);
-    line-height: 1.9;
+    line-height: 1.8;
+    white-space: nowrap;
 }
 
 /* Hero Verse */
