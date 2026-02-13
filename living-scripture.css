@@ -87,9 +87,14 @@ body.living-scripture-theme #header.scrolled {
     background: rgba(10, 22, 40, 0.95);
 }
 
-body.living-scripture-theme .logo-title,
-body.living-scripture-theme .logo-subtitle {
+body.living-scripture-theme .logo-title {
     color: var(--white);
+}
+
+body.living-scripture-theme .logo-subtitle {
+    color: var(--gold-light);
+    opacity: 0.95;
+    text-shadow: 0 0 10px rgba(201, 162, 39, 0.35);
 }
 
 body.living-scripture-theme .logo-icon {
