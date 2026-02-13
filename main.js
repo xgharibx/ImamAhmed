@@ -770,9 +770,6 @@ function initKhawaterShareButtons() {
             const number = normalizeInlineText(card?.querySelector('.card-number')?.textContent || '');
             if (!text) return;
 
-            const payloadText = `${text}\n\n${signature}`;
-            const pageUrl = window.location.href;
-            const title = document.title || 'خواطر الشيخ أحمد الفشني';
             const imageFileName = `khatera-${number || 'share'}.png`;
 
             button.disabled = true;
@@ -793,10 +790,7 @@ function initKhawaterShareButtons() {
 
                 if (navigator.share && canShareImage) {
                     await navigator.share({
-                        files: [imageFile],
-                        title,
-                        text: signature,
-                        url: pageUrl
+                        files: [imageFile]
                     });
                     showShareToast('تمت مشاركة الخاطرة كصورة');
                     return;
@@ -811,21 +805,19 @@ function initKhawaterShareButtons() {
                 }
 
                 triggerBlobDownload(imageBlob, imageFileName);
-                await navigator.clipboard.writeText(`${payloadText}\n${pageUrl}`);
-                showShareToast('تم تنزيل الصورة ونسخ النص مع التوقيع');
+                showShareToast('تم تنزيل صورة الخاطرة');
             } catch {
                 try {
-                    const fallbackTextArea = document.createElement('textarea');
-                    fallbackTextArea.value = `${payloadText}\n${pageUrl}`;
-                    fallbackTextArea.style.position = 'fixed';
-                    fallbackTextArea.style.opacity = '0';
-                    document.body.appendChild(fallbackTextArea);
-                    fallbackTextArea.select();
-                    document.execCommand('copy');
-                    fallbackTextArea.remove();
-                    showShareToast('تم نسخ الخاطرة مع التوقيع');
+                    const fallbackBlob = await createKhawateraShareImageBlob({
+                        text,
+                        tag,
+                        number,
+                        signature
+                    });
+                    triggerBlobDownload(fallbackBlob, imageFileName);
+                    showShareToast('تم تنزيل صورة الخاطرة');
                 } catch {
-                    showShareToast('تعذر النسخ حالياً');
+                    showShareToast('تعذر مشاركة الصورة حالياً');
                 }
             } finally {
                 button.disabled = false;
@@ -899,6 +891,13 @@ function initPerformanceOptimizations() {
 
         if (!img.hasAttribute('loading')) {
             img.setAttribute('loading', index < 2 ? 'eager' : 'lazy');
+        }
+    });
+
+    const iframes = document.querySelectorAll('iframe');
+    iframes.forEach((iframe) => {
+        if (!iframe.hasAttribute('loading')) {
+            iframe.setAttribute('loading', 'lazy');
         }
     });
 }
