@@ -307,8 +307,31 @@
         canvas.width = 1240;
         canvas.height = 1754;
         const ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = '#f9f3e7';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const patternColor = 'rgba(201, 162, 39, 0.08)';
+        for (let y = 40; y < canvas.height; y += 70) {
+            for (let x = 40; x < canvas.width; x += 70) {
+                ctx.fillStyle = patternColor;
+                ctx.beginPath();
+                ctx.arc(x, y, 1.6, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        const panelX = 55;
+        const panelY = 265;
+        const panelW = canvas.width - 110;
+        const panelH = canvas.height - 350;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
+        ctx.strokeStyle = 'rgba(201, 162, 39, 0.30)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(panelX, panelY, panelW, panelH, 18);
+        ctx.fill();
+        ctx.stroke();
+
         return { canvas, ctx };
     }
 
@@ -348,7 +371,7 @@
     function drawPageFooter(ctx, pageNumber) {
         const width = 1240;
         const y = 1708;
-        ctx.strokeStyle = '#e5e7eb';
+        ctx.strokeStyle = 'rgba(201, 162, 39, 0.35)';
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(80, y - 34);
