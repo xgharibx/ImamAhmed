@@ -72,6 +72,7 @@
     --z-header: 1000;
     --z-modal: 1100;
     --z-decoration: 1;
+    --mobile-header-height: 72px;
 }
 
 /* ============== Reset & Base Styles ============== */
@@ -1963,6 +1964,21 @@ section {
 }
 
 @media (max-width: 992px) {
+    #header {
+        background: rgba(26, 95, 74, 0.94);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .navbar {
+        padding: 0.65rem 0;
+    }
+
+    .nav-container {
+        min-height: 64px;
+    }
+
     .hamburger {
         display: flex;
         z-index: 1001;
@@ -1970,6 +1986,9 @@ section {
         flex-direction: column;
         gap: 0.5rem;
         transition: var(--transition-normal);
+        background: rgba(0, 0, 0, 0.16);
+        border: 1px solid rgba(201, 162, 39, 0.45);
+        border-radius: 10px;
     }
     
     .hamburger.active .bar:nth-child(1) {
@@ -1994,20 +2013,20 @@ section {
     
     .nav-menu {
         position: fixed;
-        top: 0;
+        top: var(--mobile-header-height);
         right: -100%;
-        width: 80%;
-        max-width: 400px;
-        height: 100vh;
-        height: 100dvh;
+        width: min(86vw, 360px);
+        height: calc(100vh - var(--mobile-header-height));
+        height: calc(100dvh - var(--mobile-header-height));
         background: linear-gradient(180deg, #1a5f4a 0%, #2e7d32 50%, #1b5e20 100%);
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start;
         gap: 1rem;
-        padding: var(--spacing-lg);
+        padding: 1.25rem 1rem 2rem;
         transition: var(--transition-normal);
         box-shadow: -8px 0 32px rgba(46, 125, 50, 0.4);
         border-left: 4px solid #c9a227;
+        overflow-y: auto;
     }
     
     .nav-menu.active {
@@ -2167,7 +2186,7 @@ section {
     }
     
     .nav-menu {
-        padding-top: 80px;
+        padding-top: 1rem;
     }
     
     .nav-link {
@@ -2272,8 +2291,7 @@ section {
         font-size: 0.95rem;
         padding: 10px 15px;
     }
-}
-    
+
     .flying-letter {
         font-size: 1.2rem !important;
     }
