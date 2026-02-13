@@ -27,16 +27,72 @@
     function sanitizeHtml(rawHtml) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(rawHtml || '', 'text/html');
-        doc.querySelectorAll('script,style,iframe,object,embed,form,button').forEach(el => el.remove());
+        doc.querySelectorAll('script,style,iframe,object,embed,form,button,nav,header,footer,aside,canvas,svg,video,audio,noscript').forEach(el => el.remove());
         doc.querySelectorAll('*').forEach((el) => {
             [...el.attributes].forEach((attr) => {
                 const name = attr.name.toLowerCase();
-                if (name.startsWith('on')) {
+                if (
+                    name.startsWith('on') ||
+                    name === 'style' ||
+                    name === 'class' ||
+                    name === 'id' ||
+                    name === 'role' ||
+                    name.startsWith('aria-') ||
+                    name.startsWith('data-')
+                ) {
                     el.removeAttribute(attr.name);
                 }
             });
         });
         return doc.body.innerHTML;
+    }
+
+    function buildReadableContentHtml(rawHtml) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(sanitizeHtml(rawHtml || ''), 'text/html');
+        const blocks = [];
+
+        doc.querySelectorAll('h1,h2,h3,h4,h5,h6,p,li,blockquote,pre').forEach((node) => {
+            const tag = node.tagName.toLowerCase();
+            const text = (node.textContent || '').replace(/\s+/g, ' ').trim();
+            if (!text) return;
+
+            if (tag === 'li') {
+                blocks.push(`<p class="pdf-bullet">• ${escapeHtml(text)}</p>`);
+                return;
+            }
+
+            if (tag === 'blockquote') {
+                blocks.push(`<blockquote>${escapeHtml(text)}</blockquote>`);
+                return;
+            }
+
+            if (tag === 'pre') {
+                blocks.push(`<pre>${escapeHtml(node.textContent || '').trim()}</pre>`);
+                return;
+            }
+
+            if (tag.startsWith('h')) {
+                blocks.push(`<h2>${escapeHtml(text)}</h2>`);
+                return;
+            }
+
+            blocks.push(`<p>${escapeHtml(text)}</p>`);
+        });
+
+        if (blocks.length > 0) {
+            return blocks.join('');
+        }
+
+        const plain = (doc.body.textContent || '').trim();
+        if (!plain) return '';
+
+        return plain
+            .split(/\n{2,}/)
+            .map((segment) => segment.trim())
+            .filter(Boolean)
+            .map((segment) => `<p>${escapeHtml(segment)}</p>`)
+            .join('');
     }
 
     function slugify(text) {
@@ -59,12 +115,17 @@
     function buildPdfShell({ title, subtitle, meta, contentHtml, type }) {
         const wrapper = document.createElement('div');
         wrapper.setAttribute('dir', 'rtl');
+        wrapper.lang = 'ar';
         wrapper.style.width = '794px';
         wrapper.style.background = '#ffffff';
         wrapper.style.color = '#1b1b1b';
         wrapper.style.fontFamily = '"Cairo", "Tajawal", sans-serif';
         wrapper.style.padding = '26px';
         wrapper.style.boxSizing = 'border-box';
+        wrapper.style.position = 'fixed';
+        wrapper.style.left = '-10000px';
+        wrapper.style.top = '0';
+        wrapper.style.zIndex = '-1';
 
         const label = typeLabel(type);
         const safeTitle = escapeHtml(title || '');
@@ -73,15 +134,22 @@
 
         wrapper.innerHTML = `
             <style>
-                .pdf-card { border: 1px solid #e6e6e6; border-radius: 14px; overflow: hidden; }
+                .pdf-card { border: 1px solid #e6e6e6; border-radius: 14px; overflow: hidden; background: #fff; }
                 .pdf-head { background: linear-gradient(135deg, #1a5f4a, #1f7a5a); color: #fff; padding: 18px 20px; }
                 .pdf-tag { display:inline-block; background:#d4af37; color:#1a5f4a; border-radius:999px; padding: 4px 12px; font-size: 12px; font-weight:700; margin-bottom: 10px; }
                 .pdf-title { margin:0; font-size: 28px; line-height: 1.6; font-weight: 800; }
                 .pdf-subtitle { margin: 8px 0 0; font-size: 16px; opacity: .95; }
                 .pdf-meta { margin-top: 10px; font-size: 13px; opacity: .92; }
                 .pdf-body { padding: 22px; font-size: 17px; line-height: 2.0; }
-                .pdf-body h1,.pdf-body h2,.pdf-body h3,.pdf-body h4 { color: #1a5f4a; line-height: 1.7; page-break-after: avoid; }
-                .pdf-body p,.pdf-body li,.pdf-body blockquote { page-break-inside: avoid; }
+                .pdf-body, .pdf-body * { max-width: 100%; box-sizing: border-box; overflow-wrap: anywhere; }
+                .pdf-body h1,.pdf-body h2,.pdf-body h3,.pdf-body h4 { color: #1a5f4a; line-height: 1.7; page-break-after: avoid; margin: 1.1rem 0 .7rem; }
+                .pdf-body p,.pdf-body li,.pdf-body blockquote,.pdf-body pre { page-break-inside: avoid; margin: 0 0 .9rem; }
+                .pdf-body .pdf-bullet { padding-inline-start: .2rem; }
+                .pdf-body blockquote { border-right: 4px solid #d4af37; margin: 1rem 0; padding: .6rem 1rem; background: #faf8f0; border-radius: 8px; }
+                .pdf-body pre { background: #f6f7f8; border: 1px solid #e8ebee; border-radius: 8px; padding: .8rem; white-space: pre-wrap; }
+                .pdf-body img { display: block; height: auto; border-radius: 10px; margin: .8rem auto; }
+                .pdf-body table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+                .pdf-body th, .pdf-body td { border: 1px solid #e5e7eb; padding: .45rem; text-align: right; }
                 .pdf-foot { margin-top: 20px; text-align:center; color:#4d4d4d; font-size:12px; border-top:1px solid #efefef; padding-top:12px; }
             </style>
             <div class="pdf-card">
@@ -123,7 +191,7 @@
             title,
             subtitle,
             meta,
-            contentHtml: sanitizeHtml(contentRoot ? contentRoot.innerHTML : '<p>لا يوجد محتوى متاح للتصدير.</p>')
+            contentHtml: buildReadableContentHtml(contentRoot ? contentRoot.innerHTML : '') || '<p>لا يوجد محتوى متاح للتصدير.</p>'
         };
     }
 
@@ -131,6 +199,15 @@
         await loadHtml2Pdf();
         const shell = buildPdfShell(payload);
         document.body.appendChild(shell);
+
+        if (document.fonts?.ready) {
+            await Promise.race([
+                document.fonts.ready,
+                new Promise(resolve => setTimeout(resolve, 1200))
+            ]);
+        }
+
+        await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
         const filename = `${slugify(filenameHint || payload.title)}.pdf`;
         try {
@@ -191,11 +268,13 @@
                 .join('')
             : '<p>لا يوجد نص متاح للتصدير.</p>');
 
+        const normalizedContent = buildReadableContentHtml(contentHtml) || '<p>لا يوجد نص متاح للتصدير.</p>';
+
         return exportPayload({
             title,
             subtitle: 'خطب منبرية',
             meta,
-            contentHtml,
+            contentHtml: normalizedContent,
             type: 'khutba'
         }, title);
     }
