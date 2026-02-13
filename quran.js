@@ -1,7 +1,9 @@
 const quranState = {
   data: null,
+  pageMapMeta: null,
   currentSurah: null,
   mushafPages: [],
+  totalMushafPages: 0,
   currentMushafPage: 1,
   bookmarkedPages: new Set(),
   bookmarkedAyahs: new Set()
@@ -67,17 +69,34 @@ async function loadQuran() {
   try {
     container.innerHTML = '<div style="text-align:center;padding:40px;"><i class="fas fa-spinner fa-spin fa-3x" style="color:#2e7d32"></i><p style="margin-top:20px;color:#2e7d32;font-size:1.2rem;">جاري تحميل المصحف الشريف...</p></div>';
 
-    const response = await fetch('data/quran.json', { cache: 'no-cache' });
-    if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+    const [quranResponse, pageMapResponse] = await Promise.all([
+      fetch('data/quran.json', { cache: 'no-cache' }),
+      fetch('data/quran_page_map.json', { cache: 'no-cache' }).catch(() => null)
+    ]);
 
-    const json = await response.json();
+    if (!quranResponse.ok) throw new Error(`HTTP Error: ${quranResponse.status}`);
+
+    const json = await quranResponse.json();
     if (!json?.surahs?.length) throw new Error('بيانات المصحف فارغة');
 
+    let pageMapMeta = null;
+    if (pageMapResponse && pageMapResponse.ok) {
+      try {
+        pageMapMeta = await pageMapResponse.json();
+      } catch {
+        pageMapMeta = null;
+      }
+    }
+
     quranState.data = json;
+    quranState.pageMapMeta = pageMapMeta;
     renderSurahGrid();
     buildMushafPages();
     renderMushafPage(1);
-    if (status) status.textContent = `تم التحميل بنجاح: ${convertArabicNumbers(json.surahs.length)} سورة`;
+    if (status) {
+      const pagesLabel = quranState.totalMushafPages || 0;
+      status.textContent = `تم التحميل بنجاح: ${convertArabicNumbers(json.surahs.length)} سورة • ${convertArabicNumbers(pagesLabel)} صفحة`;
+    }
   } catch (error) {
     console.error('Error loading Quran:', error);
     container.innerHTML = `
@@ -174,16 +193,49 @@ function openSurah(id, highlightAyahNumber = null) {
 
 function buildMushafPages() {
   const surahs = quranState.data?.surahs || [];
+  const pageMap = quranState.pageMapMeta?.map || null;
+  const mappedTotal = Number(quranState.pageMapMeta?.totalPages) || 604;
+
+  if (pageMap) {
+    const pages = Array.from({ length: mappedTotal }, () => ({ items: [] }));
+    let fallbackPage = 1;
+
+    surahs.forEach((surah) => {
+      surah.ayahs.forEach((rawAyah, index) => {
+        const ayahNumber = index + 1;
+        const text = cleanFirstAyahBasmallah(rawAyah, surah.id, index);
+        if (!text) return;
+
+        const key = `${surah.id}:${ayahNumber}`;
+        const mappedPage = Number(pageMap[key]);
+        const page = mappedPage >= 1 && mappedPage <= mappedTotal ? mappedPage : fallbackPage;
+        fallbackPage = page;
+
+        pages[page - 1].items.push({
+          surahId: surah.id,
+          surahName: surah.name,
+          ayahNumber,
+          text,
+          isFirstAyahInSurah: ayahNumber === 1
+        });
+      });
+    });
+
+    quranState.mushafPages = pages;
+    quranState.totalMushafPages = mappedTotal;
+    if (quranState.currentMushafPage > mappedTotal) quranState.currentMushafPage = 1;
+    return;
+  }
+
   const maxCharsPerPage = 1400;
   const maxAyahsPerPage = 12;
-  const pages = [];
-
+  const fallbackPages = [];
   let pageItems = [];
   let pageCharCount = 0;
 
   const pushPage = () => {
     if (!pageItems.length) return;
-    pages.push({ items: pageItems });
+    fallbackPages.push({ items: pageItems });
     pageItems = [];
     pageCharCount = 0;
   };
@@ -201,23 +253,25 @@ function buildMushafPages() {
         surahId: surah.id,
         surahName: surah.name,
         ayahNumber,
-        text
+        text,
+        isFirstAyahInSurah: ayahNumber === 1
       });
       pageCharCount += text.length;
     });
   });
 
   pushPage();
-  quranState.mushafPages = pages;
-  if (quranState.currentMushafPage > pages.length) quranState.currentMushafPage = 1;
+  quranState.mushafPages = fallbackPages;
+  quranState.totalMushafPages = fallbackPages.length;
+  if (quranState.currentMushafPage > fallbackPages.length) quranState.currentMushafPage = 1;
 }
 
 function renderMushafPage(pageNumber) {
-  const total = quranState.mushafPages.length;
+  const total = quranState.totalMushafPages || quranState.mushafPages.length;
   if (!total) return;
 
   quranState.currentMushafPage = Math.min(Math.max(1, pageNumber), total);
-  const page = quranState.mushafPages[quranState.currentMushafPage - 1];
+  const page = quranState.mushafPages[quranState.currentMushafPage - 1] || { items: [] };
 
   document.getElementById('surah-grid-section').style.display = 'none';
   document.getElementById('surah-section').style.display = 'none';
@@ -243,14 +297,25 @@ function renderMushafPage(pageNumber) {
       : '<i class="far fa-bookmark"></i> تعليم الصفحة';
   }
 
-  const firstSurah = page.items[0]?.surahName || '';
-  const lastSurah = page.items[page.items.length - 1]?.surahName || '';
-  const surahSpan = firstSurah === lastSurah ? firstSurah : `${firstSurah} — ${lastSurah}`;
-
+  let lastSurahId = null;
   const lines = page.items.map((item) => {
+    const surahChanged = item.surahId !== lastSurahId;
+    lastSurahId = item.surahId;
+
     const key = ayahBookmarkKey(item.surahId, item.ayahNumber);
     const isBookmarked = quranState.bookmarkedAyahs.has(key);
+
+    const surahHeader = surahChanged
+      ? `<div class="mushaf-surah-divider"><span>${escapeHtml(item.surahName)}</span></div>`
+      : '';
+
+    const bismillah = item.isFirstAyahInSurah && item.surahId !== 1 && item.surahId !== 9
+      ? '<div class="bismillah-ayah"><span class="bismillah-text">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</span></div>'
+      : '';
+
     return `
+      ${surahHeader}
+      ${bismillah}
       <div class="ayah-line ${isBookmarked ? 'is-bookmarked-ayah' : ''}">
         <button type="button" class="bookmark-ayah-btn ${isBookmarked ? 'active' : ''}" data-surah-id="${item.surahId}" data-ayah-number="${item.ayahNumber}" aria-label="تعليم الآية">
           <i class="fas fa-bookmark"></i>
@@ -263,8 +328,7 @@ function renderMushafPage(pageNumber) {
 
   const container = document.getElementById('mushaf-page-container');
   container.innerHTML = `
-    <div class="mushaf-surah-span">${escapeHtml(surahSpan)}</div>
-    <div class="quran-text-block">${lines}</div>
+    ${page.items.length ? `<div class="quran-text-block">${lines}</div>` : '<div class="mushaf-page-empty">لا يوجد محتوى في هذه الصفحة.</div>'}
   `;
 
   attachAyahBookmarkHandlers(container);
