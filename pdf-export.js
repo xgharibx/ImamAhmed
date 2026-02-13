@@ -417,6 +417,7 @@
         const canvases = [];
         const chapterPerPage = payload.layoutMode === 'chapter-per-page';
         let continuationCenteredUsed = false;
+        let beforeFirstKhatra = chapterPerPage;
 
         let pageNumber = 1;
         let page = createPdfPageCanvas();
@@ -449,6 +450,10 @@
         };
 
         for (const block of blocks) {
+            if (chapterPerPage && block.kind === 'heading' && /الخاطرة\s*\(/.test(block.text)) {
+                beforeFirstKhatra = false;
+            }
+
             if (!chapterPerPage && block.kind === 'heading' && isMajorHeading(block.text) && y > 1320) {
                 newPage();
             }
@@ -467,24 +472,27 @@
                 }[block.kind] || { font: '24px Cairo, Tahoma, Arial', color: '#222', lineHeight: 36, gapBefore: 6, gapAfter: 8 })
                 : (refinedStyle[block.kind] || refinedStyle.paragraph);
 
+            const usingCenteredIntro = chapterPerPage && beforeFirstKhatra;
+            const renderMaxWidth = usingCenteredIntro ? Math.min(maxWidth, 860) : maxWidth;
+
             y += style.gapBefore;
             page.ctx.direction = 'rtl';
-            page.ctx.textAlign = 'right';
+            page.ctx.textAlign = usingCenteredIntro ? 'center' : 'right';
             page.ctx.font = style.font;
             page.ctx.fillStyle = style.color;
 
-            const lines = wrapTextLines(page.ctx, block.text, maxWidth);
+            const lines = wrapTextLines(page.ctx, block.text, renderMaxWidth);
             for (const line of lines) {
                 if (y > 1585) {
                     const centerContinuation = chapterPerPage && !continuationCenteredUsed;
                     newPage({ centerContinuation });
                     if (centerContinuation) continuationCenteredUsed = true;
                     page.ctx.direction = 'rtl';
-                    page.ctx.textAlign = 'right';
+                    page.ctx.textAlign = usingCenteredIntro ? 'center' : 'right';
                     page.ctx.font = style.font;
                     page.ctx.fillStyle = style.color;
                 }
-                page.ctx.fillText(line, page.canvas.width - marginX, y);
+                page.ctx.fillText(line, usingCenteredIntro ? (page.canvas.width / 2) : (page.canvas.width - marginX), y);
                 y += style.lineHeight;
             }
             y += style.gapAfter;
