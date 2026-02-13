@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initBackToTop();
     initBrowserBackButton();
     initCounters();
+    initKhawaterSearchFilters();
     initKhawaterShareButtons();
     initPerformanceOptimizations();
     setCurrentYear();
@@ -462,6 +463,95 @@ function initCounters() {
     }, observerOptions);
     
     counters.forEach(counter => observer.observe(counter));
+}
+
+/* ============== Khawater Search & Filters ============== */
+function initKhawaterSearchFilters() {
+    const section = document.querySelector('.khawater-main');
+    if (!section) return;
+
+    const searchInput = section.querySelector('.search-box input');
+    const filterButtons = section.querySelectorAll('.filter-tags .filter-tag');
+    const cards = Array.from(section.querySelectorAll('.khatera-card'));
+    if (!cards.length) return;
+
+    const searchUtils = window.SiteSearchUtils || null;
+    const normalizeSearchText = (value) => {
+        if (searchUtils?.normalize) return searchUtils.normalize(value);
+        return String(value || '')
+            .normalize('NFKD')
+            .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, '')
+            .replace(/[أإآٱ]/g, 'ا')
+            .replace(/[ؤئ]/g, 'ء')
+            .replace(/ى/g, 'ي')
+            .replace(/ة/g, 'ه')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .toLowerCase();
+    };
+
+    const createMatcher = (query) => {
+        if (searchUtils?.createMatcher) return searchUtils.createMatcher(query);
+        const normalized = normalizeSearchText(query);
+        return {
+            score(haystack) {
+                const target = normalizeSearchText(haystack);
+                if (!target) return 0;
+                if (!normalized) return 1;
+                return target.includes(normalized) ? 1 : 0;
+            }
+        };
+    };
+
+    const emptyState = document.createElement('div');
+    emptyState.className = 'khutab-empty';
+    emptyState.textContent = 'لا توجد نتائج مطابقة في الخواطر.';
+    emptyState.style.display = 'none';
+    emptyState.style.marginTop = '1rem';
+    const grid = section.querySelector('.khawater-grid');
+    grid?.parentElement?.appendChild(emptyState);
+
+    let activeTag = 'الكل';
+    let currentQuery = '';
+
+    const applyFilter = () => {
+        const normalizedActiveTag = normalizeSearchText(activeTag);
+        const matcher = createMatcher(currentQuery);
+        let visibleCount = 0;
+
+        cards.forEach((card) => {
+            const text = card.querySelector('.khatera-text')?.textContent || '';
+            const tag = card.querySelector('.card-tag')?.textContent || '';
+            const cardTagNormalized = normalizeSearchText(tag);
+
+            const matchesTag = normalizedActiveTag === 'الكل' || cardTagNormalized.includes(normalizedActiveTag);
+            const score = matcher.score(`${text} ${tag}`);
+            const matchesQuery = !currentQuery.trim() || score > 0;
+
+            const shouldShow = matchesTag && matchesQuery;
+            card.style.display = shouldShow ? '' : 'none';
+            if (shouldShow) visibleCount += 1;
+        });
+
+        emptyState.style.display = visibleCount ? 'none' : 'block';
+    };
+
+    filterButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            filterButtons.forEach((btn) => btn.classList.remove('active'));
+            button.classList.add('active');
+            activeTag = button.textContent.trim() || 'الكل';
+            applyFilter();
+        });
+    });
+
+    const debouncedApply = debounce(applyFilter, 220);
+    searchInput?.addEventListener('input', () => {
+        currentQuery = searchInput.value || '';
+        debouncedApply();
+    });
+
+    applyFilter();
 }
 
 /* ============== Khawater Share ============== */

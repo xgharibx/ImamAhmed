@@ -4,6 +4,7 @@
  */
 
 const API_BASE = 'https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1';
+const searchUtils = window.SiteSearchUtils || null;
 
 // Full Sunnah.com set in Arabic editions
 const books = [
@@ -29,6 +30,8 @@ const books = [
 
 // Cache for API responses (per edition)
 const cache = {};
+let hadithSearchIndex = [];
+let hadithSearchIndexBuilt = false;
 
 function toArabicDigits(value) {
     try {
@@ -37,6 +40,43 @@ function toArabicDigits(value) {
     } catch {
         return value;
     }
+}
+
+function normalizeForSearch(text) {
+    if (searchUtils?.normalize) return searchUtils.normalize(text);
+    return String(text || '')
+        .normalize('NFKD')
+        .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, '')
+        .replace(/[أإآٱ]/g, 'ا')
+        .replace(/[ؤئ]/g, 'ء')
+        .replace(/ى/g, 'ي')
+        .replace(/ة/g, 'ه')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toLowerCase();
+}
+
+function createSearchMatcher(query) {
+    if (searchUtils?.createMatcher) return searchUtils.createMatcher(query);
+    const normalized = normalizeForSearch(query);
+    return {
+        normalizedQuery: normalized,
+        tokens: normalized ? normalized.split(' ').filter(Boolean) : [],
+        score(haystack) {
+            const target = normalizeForSearch(haystack);
+            if (!target) return 0;
+            if (!normalized) return 1;
+            return target.includes(normalized) ? 1 : 0;
+        }
+    };
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(...args), wait);
+    };
 }
 
 // DOM Elements
@@ -201,7 +241,49 @@ async function loadBookData(edition) {
         hadiths: data.hadiths || []
     };
 
+    hadithSearchIndexBuilt = false;
+
     return cache[edition];
+}
+
+function buildHadithSearchIndex() {
+    const index = [];
+
+    books.filter(b => b.available).forEach(book => {
+        const data = cache[book.edition];
+        if (!data) return;
+
+        const sectionNames = new Map((data.sections || []).map((section) => [`${section.id}`, section.name]));
+
+        (data.hadiths || []).forEach((hadith, indexInBook) => {
+            const text = hadith.hadith || hadith.text || '';
+            if (!text) return;
+
+            const chapterId = `${hadith.reference?.book ?? ''}`;
+            const chapterName = sectionNames.get(chapterId) || `الفصل ${chapterId || '-'}`;
+            const hadithNumber = hadith.hadithnumber || hadith.arabicnumber || indexInBook + 1;
+            const haystack = normalizeForSearch([
+                text,
+                book.name,
+                chapterName,
+                String(hadithNumber),
+                chapterId
+            ].join(' '));
+
+            if (!haystack) return;
+
+            index.push({
+                bookName: book.name,
+                chapterName,
+                hadithNumber,
+                text,
+                haystack
+            });
+        });
+    });
+
+    hadithSearchIndex = index;
+    hadithSearchIndexBuilt = true;
 }
 
 // Load chapters for a book
@@ -280,7 +362,12 @@ window.loadHadiths = async function(sectionId, sectionName) {
 
 // Global search across all books
 async function searchHadiths(query) {
-    const normalized = query.trim();
+    const normalized = (query || '').trim();
+    if (!normalized) {
+        renderSearchResults([], '');
+        return;
+    }
+
     if (normalized.length < 2) {
         renderSearchResults([], 'اكتب كلمتين على الأقل للبحث.');
         return;
@@ -300,29 +387,22 @@ async function searchHadiths(query) {
             }
         }
 
-        const q = normalized.toLowerCase();
-        const results = [];
+        if (!hadithSearchIndexBuilt) {
+            buildHadithSearchIndex();
+        }
 
-        books.filter(b => b.available).forEach(book => {
-            const data = cache[book.edition];
-            if (!data) return;
+        const matcher = createSearchMatcher(normalized);
+        const results = hadithSearchIndex
+            .map(item => ({ ...item, _score: matcher.score(item.haystack) }))
+            .filter(item => item._score > 0)
+            .sort((a, b) => b._score - a._score || (b.text?.length || 0) - (a.text?.length || 0));
 
-            data.hadiths.forEach(h => {
-                const text = (h.hadith || h.text || '').toLowerCase();
-                if (text.includes(q)) {
-                    const chapterId = `${h.reference?.book ?? ''}`;
-                    const chapterName = data.sections.find(s => `${s.id}` === chapterId)?.name || `الفصل ${chapterId}`;
-                    results.push({
-                        bookName: book.name,
-                        chapterName,
-                        hadithNumber: h.hadithnumber || h.arabicnumber || '',
-                        text: h.hadith || h.text || ''
-                    });
-                }
-            });
-        });
+        if (!results.length) {
+            renderSearchResults([], 'لم يتم العثور على نتائج مطابقة.');
+            return;
+        }
 
-        renderSearchResults(results);
+        renderSearchResults(results, '');
     } catch (error) {
         console.error('Error searching hadiths:', error);
         renderSearchResults([], 'حدث خطأ أثناء البحث. حاول مرة أخرى.');
@@ -336,10 +416,12 @@ function renderSearchResults(results, statusMessage = '') {
     const listEl = document.getElementById('search-results');
     if (!statusEl || !listEl) return;
 
-    if (statusMessage) {
+    if (typeof statusMessage === 'string' && statusMessage.length > 0) {
         statusEl.textContent = statusMessage;
     } else if (results.length === 0) {
-        statusEl.textContent = 'لم يتم العثور على نتائج.';
+        statusEl.textContent = '';
+        listEl.innerHTML = '';
+        return;
     } else {
         statusEl.textContent = `تم العثور على ${toArabicDigits(results.length)} نتيجة.`;
     }
@@ -349,7 +431,7 @@ function renderSearchResults(results, statusMessage = '') {
         return;
     }
 
-    const limited = results.slice(0, 100); // cap to keep UI responsive
+    const limited = results.slice(0, 150); // cap to keep UI responsive
     listEl.innerHTML = limited.map(r => {
         const safeText = escapeHtml(r.text);
         const safeBook = escapeHtml(r.bookName);
@@ -523,5 +605,18 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             searchHadiths(searchInput.value);
         });
+
+        const onInputSearch = debounce(() => {
+            const value = (searchInput.value || '').trim();
+            if (!value) {
+                renderSearchResults([], '');
+                return;
+            }
+            if (value.length >= 2) {
+                searchHadiths(value);
+            }
+        }, 260);
+
+        searchInput.addEventListener('input', onInputSearch);
     }
 });

@@ -1,5 +1,8 @@
 (function () {
+    const searchUtils = window.SiteSearchUtils || null;
+
     function normalizeArabicForSearch(text) {
+        if (searchUtils?.normalize) return searchUtils.normalize(text);
         return String(text || '')
             .normalize('NFKD')
             .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, '')
@@ -10,6 +13,19 @@
             .replace(/\s+/g, ' ')
             .trim()
             .toLowerCase();
+    }
+
+    function createSearchMatcher(query) {
+        if (searchUtils?.createMatcher) return searchUtils.createMatcher(query);
+        const normalized = normalizeArabicForSearch(query);
+        return {
+            score(haystack) {
+                const target = normalizeArabicForSearch(haystack);
+                if (!target) return 0;
+                if (!normalized) return 1;
+                return target.includes(normalized) ? 1 : 0;
+            }
+        };
     }
 
     function sanitizeAnswerText(text) {
@@ -95,10 +111,14 @@
             }));
 
             const applyFilter = () => {
-                const query = normalizeArabicForSearch(searchInput.value || '');
+                const query = (searchInput.value || '').trim();
+                const matcher = createSearchMatcher(query);
                 const filtered = !query
                     ? searchable
-                    : searchable.filter((item) => item._haystack.includes(query));
+                    : searchable
+                        .map((item) => ({ ...item, _score: matcher.score(item._haystack) }))
+                        .filter((item) => item._score > 0)
+                        .sort((a, b) => b._score - a._score || Number(a.id || 0) - Number(b.id || 0));
                 renderFatawa(filtered, grid, empty);
             };
 

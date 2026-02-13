@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const searchUtils = window.SiteSearchUtils || null;
     const state = {
         all: [],
         filtered: [],
@@ -33,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function normalizeArabicForSearch(text) {
+        if (searchUtils?.normalize) return searchUtils.normalize(text);
         return (text || '')
             .toString()
             .normalize('NFKC')
@@ -43,6 +45,19 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/\s+/g, ' ')
             .trim()
             .toLowerCase();
+    }
+
+    function createSearchMatcher(query) {
+        if (searchUtils?.createMatcher) return searchUtils.createMatcher(query);
+        const normalized = normalizeArabicForSearch(query);
+        return {
+            score(haystack) {
+                const target = normalizeArabicForSearch(haystack);
+                if (!target) return 0;
+                if (!normalized) return 1;
+                return target.includes(normalized) ? 1 : 0;
+            }
+        };
     }
 
     function toDetailUrl(item) {
@@ -120,10 +135,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!q) {
             state.filtered = state.all.slice();
         } else {
-            state.filtered = state.all.filter(item => {
-                const haystack = normalizeArabicForSearch([item.title, item.author, item.excerpt].filter(Boolean).join(' '));
-                return haystack.includes(q);
-            });
+            const matcher = createSearchMatcher(q);
+            state.filtered = state.all
+                .map(item => {
+                    const haystack = normalizeArabicForSearch([item.title, item.author, item.excerpt, item.date || item.date_display || ''].filter(Boolean).join(' '));
+                    return { ...item, _searchScore: matcher.score(haystack) };
+                })
+                .filter(item => item._searchScore > 0)
+                .sort((a, b) => b._searchScore - a._searchScore);
         }
 
         // Default sort: newest first if ISO date is available

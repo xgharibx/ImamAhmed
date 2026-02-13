@@ -1,6 +1,7 @@
 const quranState = {
   data: null,
   pageMapMeta: null,
+  searchIndex: [],
   currentSurah: null,
   currentSurahPages: [],
   currentSurahPageIndex: 0,
@@ -14,6 +15,7 @@ const quranState = {
 
 const PAGE_BOOKMARKS_KEY = 'quran_page_bookmarks';
 const AYAH_BOOKMARKS_KEY = 'quran_ayah_bookmarks';
+const searchUtils = window.SiteSearchUtils || null;
 
 function ayahBookmarkKey(surahId, ayahNumber) {
   return `${surahId}:${ayahNumber}`;
@@ -48,13 +50,40 @@ function convertArabicNumbers(str) {
 }
 
 function normalizeForSearch(text) {
+  if (searchUtils?.normalize) return searchUtils.normalize(text);
   return (text || '')
-    .normalize('NFKC')
-    .replace(/[\u064B-\u065F\u0670]/g, '')
-    .replace(/أ|إ|آ/g, 'ا')
+    .normalize('NFKD')
+    .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, '')
+    .replace(/[أإآٱ]/g, 'ا')
+    .replace(/[ؤئ]/g, 'ء')
     .replace(/ى/g, 'ي')
     .replace(/ة/g, 'ه')
+    .replace(/\s+/g, ' ')
+    .trim()
     .toLowerCase();
+}
+
+function createSearchMatcher(query) {
+  if (searchUtils?.createMatcher) return searchUtils.createMatcher(query);
+  const normalized = normalizeForSearch(query);
+  return {
+    normalizedQuery: normalized,
+    tokens: normalized ? normalized.split(' ').filter(Boolean) : [],
+    score(haystack) {
+      const target = normalizeForSearch(haystack);
+      if (!target) return 0;
+      if (!normalized) return 1;
+      return target.includes(normalized) ? 1 : 0;
+    }
+  };
+}
+
+function debounce(func, wait) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
 }
 
 function cleanFirstAyahBasmallah(ayah, surahId, ayahIndex) {
@@ -347,6 +376,36 @@ function buildMushafPages() {
   if (quranState.currentMushafPage > fallbackPages.length) quranState.currentMushafPage = 1;
 }
 
+function buildQuranSearchIndex() {
+  const index = [];
+
+  (quranState.data?.surahs || []).forEach((surah) => {
+    (surah.ayahs || []).forEach((rawAyah, indexInSurah) => {
+      const ayahNumber = indexInSurah + 1;
+      const cleanedAyah = cleanFirstAyahBasmallah(rawAyah, surah.id, indexInSurah) || rawAyah;
+      const haystack = normalizeForSearch([
+        cleanedAyah,
+        surah.name,
+        surah.englishName || '',
+        String(surah.id),
+        String(ayahNumber)
+      ].join(' '));
+
+      if (!haystack) return;
+
+      index.push({
+        surahId: surah.id,
+        surahName: surah.name,
+        ayahText: cleanedAyah,
+        ayahNumber,
+        haystack
+      });
+    });
+  });
+
+  quranState.searchIndex = index;
+}
+
 function renderMushafPage(pageNumber) {
   const total = quranState.totalMushafPages || quranState.mushafPages.length;
   if (!total) return;
@@ -457,8 +516,13 @@ function togglePageBookmark() {
 
 function highlight(text, query) {
   const escapedText = escapeHtml(text);
-  const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const regex = new RegExp(`(${escapedQuery})`, 'gi');
+  const rawTokens = String(query || '').trim().split(/\s+/).filter(token => token.length > 1);
+  if (!rawTokens.length) return escapedText;
+  const escapedTokens = rawTokens
+    .map(token => token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+    .filter(Boolean);
+  if (!escapedTokens.length) return escapedText;
+  const regex = new RegExp(`(${escapedTokens.join('|')})`, 'gi');
   return escapedText.replace(regex, '<span class="highlight">$1</span>');
 }
 
@@ -469,25 +533,18 @@ function searchAyat(query) {
     return;
   }
 
-  const normalizedQ = normalizeForSearch(q);
-  const results = [];
-
-  for (const surah of quranState.data?.surahs || []) {
-    for (let i = 0; i < surah.ayahs.length; i++) {
-      const rawAyah = cleanFirstAyahBasmallah(surah.ayahs[i], surah.id, i);
-      const ayah = rawAyah || surah.ayahs[i];
-      const ayahMatch = normalizeForSearch(ayah).includes(normalizedQ);
-      const surahMatch = normalizeForSearch(surah.name).includes(normalizedQ);
-      if (ayahMatch || surahMatch) {
-        results.push({
-          surahId: surah.id,
-          surahName: surah.name,
-          ayahText: ayah,
-          ayahNumber: i + 1
-        });
-      }
-    }
+  if (!quranState.searchIndex.length) {
+    buildQuranSearchIndex();
   }
+
+  const matcher = createSearchMatcher(q);
+  const scored = quranState.searchIndex
+    .map(item => ({ ...item, _score: matcher.score(item.haystack) }))
+    .filter(item => item._score > 0)
+    .sort((a, b) => b._score - a._score || a.surahId - b.surahId || a.ayahNumber - b.ayahNumber);
+
+  const maxResults = 400;
+  const results = scored.slice(0, maxResults);
 
   document.getElementById('surah-grid-section').style.display = 'none';
   document.getElementById('surah-section').style.display = 'none';
@@ -503,7 +560,11 @@ function searchAyat(query) {
     return;
   }
 
-  if (titleEl) titleEl.textContent = `${convertArabicNumbers(results.length)} نتيجة`;
+  if (titleEl) {
+    titleEl.textContent = scored.length > maxResults
+      ? `${convertArabicNumbers(maxResults)} من أصل ${convertArabicNumbers(scored.length)} نتيجة`
+      : `${convertArabicNumbers(results.length)} نتيجة`;
+  }
   container.innerHTML = results.map((result) => `
     <button type="button" class="ayah search-result-item" data-surah-id="${result.surahId}" data-ayah-number="${result.ayahNumber}" style="width:100%;text-align:right;cursor:pointer;">
       <div style="font-size:0.9rem;color:#2e7d32;margin-bottom:8px;">${escapeHtml(result.surahName)}</div>
@@ -516,6 +577,7 @@ function searchAyat(query) {
 }
 
 function bindUi() {
+  const searchForm = document.getElementById('quran-search-form');
   const searchInput = document.getElementById('quran-search-input');
   const searchBtn = document.getElementById('quran-search-btn');
   const backBtn = document.getElementById('quran-back-btn');
@@ -529,6 +591,11 @@ function bindUi() {
   const surahGrid = document.getElementById('surah-grid-container');
   const searchResultsContainer = document.getElementById('search-results-container');
 
+  searchForm?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    searchAyat(searchInput?.value || '');
+  });
+
   searchBtn?.addEventListener('click', () => searchAyat(searchInput?.value || ''));
   searchInput?.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
@@ -536,6 +603,19 @@ function bindUi() {
       searchAyat(searchInput.value || '');
     }
   });
+
+  const debouncedSearch = debounce(() => {
+    const value = (searchInput?.value || '').trim();
+    if (!value) {
+      showSurahList();
+      return;
+    }
+    if (value.length >= 2) {
+      searchAyat(value);
+    }
+  }, 240);
+
+  searchInput?.addEventListener('input', debouncedSearch);
 
   backBtn?.addEventListener('click', showSurahList);
   showSurahModeBtn?.addEventListener('click', showSurahList);
