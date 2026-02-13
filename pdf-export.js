@@ -125,8 +125,8 @@
         wrapper.style.position = 'fixed';
         wrapper.style.left = '0';
         wrapper.style.top = '0';
-        wrapper.style.zIndex = '0';
-        wrapper.style.opacity = '0.01';
+        wrapper.style.zIndex = '2147483000';
+        wrapper.style.opacity = '1';
         wrapper.style.pointerEvents = 'none';
 
         const label = typeLabel(type);
@@ -226,24 +226,34 @@
 
         const filename = `${slugify(filenameHint || payload.title)}.pdf`;
         try {
-            await window.html2pdf()
+            const runExport = (scale) => window.html2pdf()
                 .set({
                     margin: [8, 8, 8, 8],
                     filename,
                     image: { type: 'jpeg', quality: 0.98 },
                     html2canvas: {
-                        scale: 2,
+                        scale,
                         useCORS: true,
                         backgroundColor: '#ffffff',
                         windowWidth: 794,
                         scrollX: 0,
-                        scrollY: 0
+                        scrollY: 0,
+                        removeContainer: true,
+                        logging: false
                     },
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
                     pagebreak: { mode: ['css', 'legacy'] }
                 })
                 .from(shell)
                 .save();
+
+            try {
+                await runExport(2);
+            } catch (firstError) {
+                console.warn('Primary PDF render failed, retrying with lower scale.', firstError);
+                await new Promise((resolve) => setTimeout(resolve, 200));
+                await runExport(1.35);
+            }
         } finally {
             shell.remove();
         }
