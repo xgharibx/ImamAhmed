@@ -165,7 +165,7 @@
                             </div>
                             <div class="info-content">
                                 <h3>واتس آب</h3>
-                                <p>01020252044</p>
+                                <p>+201030054301</p>
                             </div>
                         </div>
 
@@ -279,7 +279,7 @@
                         
                         <button type="submit" class="btn btn-primary submit-btn">
                             <i class="fas fa-paper-plane"></i>
-                            إرسال الرسالة
+                            إرسال عبر واتساب
                         </button>
                     </form>
 
@@ -288,8 +288,8 @@
                         <div class="success-icon">
                             <i class="fas fa-check-circle"></i>
                         </div>
-                        <h3>تم إرسال رسالتك بنجاح!</h3>
-                        <p>جزاكم الله خيراً، سنتواصل معكم قريباً إن شاء الله</p>
+                        <h3>تم تجهيز رسالتك بنجاح!</h3>
+                        <p>تم فتح واتساب لإرسال الرسالة إلى الشيخ مباشرة.</p>
                         <button class="btn btn-primary" onclick="resetForm()">
                             <i class="fas fa-redo"></i>
                             إرسال رسالة أخرى
@@ -380,8 +380,27 @@
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
             btn.disabled = true;
             
-            // Simulate form submission
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            const name = (contactForm.querySelector('#name')?.value || '').trim();
+            const email = (contactForm.querySelector('#email')?.value || '').trim();
+            const subjectSelect = contactForm.querySelector('#subject');
+            const subjectText = subjectSelect?.options?.[subjectSelect.selectedIndex]?.text || 'رسالة';
+            const message = (contactForm.querySelector('#message')?.value || '').trim();
+
+            const greeting = 'السلام عليكم يا شيخ احمد';
+            const compiledMessage = [
+                greeting,
+                '',
+                message,
+                '',
+                `الاسم: ${name}`,
+                `الموضوع: ${subjectText}`,
+                `البريد الإلكتروني: ${email}`
+            ].join('\n');
+
+            const whatsappNumber = '201030054301';
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(compiledMessage)}`;
+
+            window.open(whatsappUrl, '_blank', 'noopener');
             
             // Show success message
             contactForm.style.display = 'none';

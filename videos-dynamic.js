@@ -21,10 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('data/videos.json')
         .then(response => response.json())
         .then(data => {
-            allVideos = (Array.isArray(data) ? data : []).map(video => ({
-                ...video,
-                normalizedCategory: classifyVideo(video)
-            }));
+            allVideos = (Array.isArray(data) ? data : [])
+                .map(video => ({
+                    ...video,
+                    normalizedCategory: classifyVideo(video)
+                }))
+                .filter(video => video.normalizedCategory !== 'khutbah');
             // Initial filter
             filterVideos('all');
         })

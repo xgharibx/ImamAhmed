@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="animations.css">
     <link rel="stylesheet" href="khutab.css">
+    <link rel="stylesheet" href="videos.css">
 </head>
 <body>
     <!-- Preloader -->
@@ -98,7 +99,7 @@
                     <span class="title-icon"><i class="fas fa-video"></i></span>
                     خطب مرئية
                 </h1>
-                <p class="page-subtitle">قريباً: الخطب المرئية (فيديو) بإذن الله</p>
+                <p class="page-subtitle">مكتبة خطب الجمعة المرئية</p>
             </div>
         </div>
         <div class="page-header-wave">
@@ -113,42 +114,41 @@
         <div class="container">
             <div class="section-header" data-aos="fade-up">
                 <div class="section-icon"><i class="fas fa-mosque"></i></div>
-                <h2 class="section-title">الخطب المنبرية</h2>
+                <h2 class="section-title">خطب الجمعة المرئية</h2>
                 <div class="section-divider">
                     <span></span>
                     <i class="fas fa-moon"></i>
                     <span></span>
                 </div>
-                <p class="section-subtitle">اختر نوع الخطب</p>
-                <p class="soon-note">تنبيه: هذا القسم (الخطب المرئية) سيكون متاحاً قريباً بإذن الله.</p>
+                <p class="section-subtitle">تم نقل محتوى خطب الجمعة المرئية إلى هذه الصفحة</p>
             </div>
 
-            <div class="khutab-grid">
-                <div class="khutab-card" data-aos="fade-up" data-aos-delay="100">
-                    <div class="icon"><i class="fas fa-file-lines"></i></div>
-                    <h3>خطب مكتوبة</h3>
-                    <p>نصوص خطب مرتبة وموثقة.</p>
-                    <a href="khutab-written.html">تصفح <i class="fas fa-arrow-left"></i></a>
+            <div class="videos-grid" id="khutab-video-grid">
+                <div class="grid-loader">
+                    <div class="islamic-pattern-loader"></div>
+                    <p style="margin-top: 1rem;">جاري تحميل الخطب المرئية...</p>
                 </div>
+            </div>
 
-                <div class="khutab-card disabled" data-aos="fade-up" data-aos-delay="200">
-                    <div class="soon-badge">قريباً</div>
-                    <div class="icon"><i class="fas fa-volume-up"></i></div>
-                    <h3>خطب صوتية</h3>
-                    <p>مقاطع صوتية مختارة للخطب.</p>
-                    <a href="#" class="disabled-link" aria-disabled="true">استمع <i class="fas fa-lock"></i></a>
-                </div>
-
-                <div class="khutab-card disabled" data-aos="fade-up" data-aos-delay="300">
-                    <div class="soon-badge">قريباً</div>
-                    <div class="icon"><i class="fas fa-video"></i></div>
-                    <h3>خطب مرئية</h3>
-                    <p>خطب مرئية (فيديو) بإذن الله.</p>
-                    <a href="#" class="disabled-link" aria-disabled="true">شاهد <i class="fas fa-lock"></i></a>
-                </div>
+            <div class="load-more-wrapper">
+                <button id="khutab-video-load-more" class="btn btn-outline" style="display:none;">
+                    عرض المزيد <i class="fas fa-chevron-down"></i>
+                </button>
             </div>
         </div>
     </section>
+
+    <div id="video-modal" class="video-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="video-wrapper">
+                <iframe id="modal-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="modal-info">
+                <h3 id="modal-title"></h3>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer id="footer" class="footer">
@@ -225,5 +225,6 @@
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
     <script src="main.js" defer></script>
+    <script src="khutab-video.js" defer></script>
 </body>
 </html>
