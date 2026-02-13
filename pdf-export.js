@@ -341,7 +341,7 @@
         return { canvas, ctx };
     }
 
-    function createPdfCoverCanvas(payload) {
+    function createPdfCoverCanvas(payload, coverCenterLines = []) {
         const canvas = document.createElement('canvas');
         canvas.width = 1240;
         canvas.height = 1754;
@@ -424,9 +424,30 @@
             }
         }
 
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-        ctx.font = '700 34px Cairo, Tahoma, Arial';
-        ctx.fillText('الشيخ أحمد إسماعيل الفشني', canvas.width / 2, 1530);
+        if (coverCenterLines.length) {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
+            ctx.font = '32px Cairo, Tahoma, Arial';
+            const centerLines = coverCenterLines
+                .map(line => String(line || '').replace(/\s+/g, ' ').trim())
+                .filter(Boolean)
+                .slice(0, 2);
+            let centerY = 980;
+            for (const line of centerLines) {
+                const wrapped = wrapTextLines(ctx, line, 860).slice(0, 2);
+                for (const chunk of wrapped) {
+                    ctx.fillText(chunk, canvas.width / 2, centerY);
+                    centerY += 52;
+                }
+                centerY += 18;
+            }
+        }
+
+        const hasAuthorInMeta = /أحمد\s+إسماعيل\s+الفشني/.test(String(payload.meta || ''));
+        if (!hasAuthorInMeta) {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.font = '700 34px Cairo, Tahoma, Arial';
+            ctx.fillText('الشيخ أحمد إسماعيل الفشني', canvas.width / 2, 1530);
+        }
 
         return canvas;
     }
@@ -514,8 +535,29 @@
         const blocks = collectTextBlocksFromHtml(payload.contentHtml || '');
         const canvases = [];
         const chapterPerPage = payload.layoutMode === 'chapter-per-page';
+        const isKhatraHeading = (block) => block.kind === 'heading' && /الخاطرة\s*\(/.test(String(block.text || ''));
+        const isCoverCandidateIntroLine = (text) => {
+            const normalized = String(text || '').replace(/\s+/g, ' ').trim();
+            if (!normalized) return false;
+            if (/^بسم\s+الله/.test(normalized)) return false;
+            return normalized.length >= 24 && normalized.length <= 260;
+        };
 
-        canvases.push(createPdfCoverCanvas(payload));
+        let coverCenterLines = [];
+        if (chapterPerPage) {
+            const leadingIntroBlocks = [];
+            for (const block of blocks) {
+                if (isKhatraHeading(block)) break;
+                leadingIntroBlocks.push(block);
+            }
+
+            coverCenterLines = leadingIntroBlocks
+                .filter(block => block.kind === 'paragraph' && isCoverCandidateIntroLine(block.text))
+                .map(block => block.text)
+                .slice(0, 2);
+        }
+
+        canvases.push(createPdfCoverCanvas(payload, coverCenterLines));
 
         let pageNumber = 1;
         let page = createPdfPageCanvas();
@@ -582,7 +624,6 @@
             return canvases;
         }
 
-        const isKhatraHeading = (block) => block.kind === 'heading' && /الخاطرة\s*\(/.test(String(block.text || ''));
         const chapterBase = {
             heading: { weight: 'bold', size: 32, color: '#1a5f4a', lineHeight: 46, gapBefore: 14, gapAfter: 12 },
             quote: { weight: '', size: 25, color: '#2e7d32', lineHeight: 38, gapBefore: 10, gapAfter: 10 },
@@ -629,6 +670,18 @@
 
             if (activeSection) activeSection.push(block);
             else introBlocks.push(block);
+        }
+
+        if (coverCenterLines.length) {
+            let removed = 0;
+            for (let i = 0; i < introBlocks.length && removed < coverCenterLines.length; i += 1) {
+                const block = introBlocks[i];
+                if (block.kind !== 'paragraph') continue;
+                if (block.text !== coverCenterLines[removed]) continue;
+                introBlocks.splice(i, 1);
+                removed += 1;
+                i -= 1;
+            }
         }
 
         const renderSection = (sectionBlocks, { centered = false, forceNewPage = false } = {}) => {

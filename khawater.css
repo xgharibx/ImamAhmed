@@ -381,7 +381,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text-muted);
+    color: var(--primary-green-dark);
+    background: rgba(201, 162, 39, 0.18);
+    border: 1px solid rgba(201, 162, 39, 0.45);
     border-radius: var(--radius-full);
     transition: var(--transition-normal);
 }
