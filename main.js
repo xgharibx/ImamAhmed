@@ -337,9 +337,11 @@ function initKhawaterSlider() {
 /* ============== AOS Animations ============== */
 function initAnimations() {
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const animatedNodes = document.querySelectorAll('.animate-on-scroll');
 
     // Initialize AOS library
-    if (typeof AOS !== 'undefined') {
+    if (typeof AOS !== 'undefined' && !prefersReducedMotion) {
         AOS.init({
             duration: 800,
             easing: 'ease-out-cubic',
@@ -357,6 +359,10 @@ function initAnimations() {
         threshold: 0.1
     };
     
+    if (!animatedNodes.length || prefersReducedMotion || typeof IntersectionObserver === 'undefined') {
+        return;
+    }
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -365,7 +371,7 @@ function initAnimations() {
         });
     }, observerOptions);
     
-    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+    animatedNodes.forEach(el => {
         observer.observe(el);
     });
 }
@@ -882,14 +888,17 @@ function setCurrentYear() {
 /* ============== Performance Optimizations ============== */
 function initPerformanceOptimizations() {
     const images = document.querySelectorAll('img');
-    images.forEach((img) => {
+    images.forEach((img, index) => {
         if (!img.hasAttribute('decoding')) {
             img.setAttribute('decoding', 'async');
         }
+
+        if (!img.hasAttribute('fetchpriority')) {
+            img.setAttribute('fetchpriority', index < 2 ? 'high' : 'low');
+        }
+
         if (!img.hasAttribute('loading')) {
-            const rect = img.getBoundingClientRect();
-            const nearViewport = rect.top < (window.innerHeight || 900) * 1.5;
-            img.setAttribute('loading', nearViewport ? 'eager' : 'lazy');
+            img.setAttribute('loading', index < 2 ? 'eager' : 'lazy');
         }
     });
 }

@@ -2512,76 +2512,126 @@ section {
 }
 
 /* ============== Book Reading Experience ============== */
-.content-section .book-container {
+.book-container {
     position: relative;
-    overflow: hidden;
 }
 
+.book-container > .book-title-page,
 .content-section .book-container > .book-title-page {
     position: relative;
-    min-height: 420px;
+    min-height: clamp(360px, 58vh, 640px);
     display: flex !important;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: clamp(2rem, 5vw, 4rem) clamp(1.2rem, 3vw, 2.5rem) !important;
-    border: 2px solid rgba(201, 162, 39, 0.6) !important;
-    border-radius: 18px !important;
+    gap: 0.75rem;
+    isolation: isolate;
+    padding: clamp(2.2rem, 6vw, 5rem) clamp(1.2rem, 4vw, 3rem) !important;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+    border: 2px solid rgba(201, 162, 39, 0.65) !important;
+    border-radius: 22px !important;
     background:
-        linear-gradient(135deg, rgba(26, 95, 74, 0.12), rgba(201, 162, 39, 0.09)) !important;
+        radial-gradient(circle at 20% 20%, rgba(201, 162, 39, 0.16), transparent 45%),
+        radial-gradient(circle at 80% 80%, rgba(26, 95, 74, 0.14), transparent 48%),
+        linear-gradient(135deg, rgba(26, 95, 74, 0.1), rgba(201, 162, 39, 0.08)) !important;
     box-shadow:
         inset 0 0 0 1px rgba(255, 255, 255, 0.45),
-        0 14px 34px rgba(15, 23, 42, 0.15) !important;
+        0 16px 38px rgba(15, 23, 42, 0.14) !important;
 }
 
+.book-container > .book-title-page::before,
+.book-container > .book-title-page::after,
 .content-section .book-container > .book-title-page::before,
 .content-section .book-container > .book-title-page::after {
     content: '';
     position: absolute;
-    width: 64px;
-    height: 64px;
-    border: 2px solid rgba(201, 162, 39, 0.75);
+    width: 72px;
+    height: 72px;
+    border: 2px solid rgba(201, 162, 39, 0.78);
     pointer-events: none;
 }
 
+.book-container > .book-title-page::before,
 .content-section .book-container > .book-title-page::before {
     top: 18px;
     right: 18px;
     border-left: 0;
     border-bottom: 0;
-    border-radius: 0 12px 0 0;
+    border-radius: 0 14px 0 0;
 }
 
+.book-container > .book-title-page::after,
 .content-section .book-container > .book-title-page::after {
     left: 18px;
     bottom: 18px;
     border-right: 0;
     border-top: 0;
-    border-radius: 0 0 0 12px;
+    border-radius: 0 0 0 14px;
 }
 
-.content-section .book-container > #intro.chapter {
-    background: rgba(248, 243, 230, 0.7);
-    border: 1px solid rgba(201, 162, 39, 0.35);
-    border-radius: 14px;
-    padding: clamp(1.1rem, 3vw, 2rem);
+.book-container > .book-title-page .main-title {
+    letter-spacing: 0.4px;
+    line-height: 1.45;
 }
 
-.content-section .book-container > #intro.chapter .chapter-title {
+.book-container > .book-title-page .author-name {
+    display: inline-block;
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(201, 162, 39, 0.42);
+    background: rgba(255, 255, 255, 0.46);
+}
+
+/* Intro card as cover for books that use article-based layout */
+.book-content > .article-card:first-child,
+.book-content > article:first-child,
+.book-content > [id*="intro"]:first-child {
+    position: relative;
+    min-height: clamp(340px, 52vh, 580px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: center;
+    padding: clamp(1.4rem, 4vw, 3rem) !important;
+    border: 2px solid rgba(201, 162, 39, 0.55);
+    border-radius: 18px;
+    background:
+        linear-gradient(135deg, rgba(26, 95, 74, 0.08), rgba(201, 162, 39, 0.1));
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.1);
+}
+
+/* Subtle refinement for the rest of book pages */
+.book-container .chapter:not(#intro),
+.book-content .article-card:not(:first-child) {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.98));
+    border: 1px solid rgba(26, 95, 74, 0.08);
+    border-radius: 14px;
+    padding: clamp(1rem, 2.5vw, 1.8rem);
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+}
+
+/* Render-speed tuning for long book pages */
+.book-container .chapter,
+.book-content .article-card {
+    content-visibility: auto;
+    contain-intrinsic-size: 760px;
 }
 
 @media (max-width: 768px) {
+    .book-container > .book-title-page,
     .content-section .book-container > .book-title-page {
-        min-height: 320px;
+        min-height: 300px;
         border-radius: 14px !important;
     }
 
+    .book-container > .book-title-page::before,
+    .book-container > .book-title-page::after,
     .content-section .book-container > .book-title-page::before,
     .content-section .book-container > .book-title-page::after {
-        width: 46px;
-        height: 46px;
+        width: 48px;
+        height: 48px;
     }
 }
 
