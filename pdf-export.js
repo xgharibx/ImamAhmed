@@ -655,9 +655,17 @@
     function makeButton(label, className) {
         const btn = document.createElement('a');
         btn.href = '#';
-        btn.className = className;
+        btn.className = `${className} pdf-action-btn`;
         btn.innerHTML = `<i class="fas fa-download"></i> ${label}`;
         return btn;
+    }
+
+    function normalizeActionGroup(container) {
+        if (!container) return;
+        container.classList.add('pdf-action-group');
+        container.querySelectorAll('a.btn, a.btn-book, a.js-download-pdf').forEach((element) => {
+            element.classList.add('pdf-action-btn');
+        });
     }
 
     function appendButtonsOnBooksPage() {
@@ -686,6 +694,7 @@
             });
 
             readBtn.parentElement.appendChild(btn);
+            normalizeActionGroup(readBtn.parentElement);
         });
     }
 
@@ -696,7 +705,6 @@
             if (!href || !href.endsWith('.html')) return;
 
             const btn = makeButton('تحميل PDF', readBtn.className + ' js-download-pdf');
-            btn.style.marginInlineStart = '0.5rem';
 
             btn.addEventListener('click', async (e) => {
                 e.preventDefault();
@@ -714,6 +722,7 @@
             });
 
             readBtn.parentElement.appendChild(btn);
+            normalizeActionGroup(readBtn.parentElement);
         });
     }
 

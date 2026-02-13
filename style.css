@@ -1065,6 +1065,26 @@ input, textarea, select {
     box-shadow: var(--shadow-lg);
 }
 
+.pdf-action-group {
+    display: flex;
+    align-items: stretch;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.pdf-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    flex: 1 1 180px;
+    white-space: nowrap;
+}
+
+.pdf-action-group .js-download-pdf {
+    margin-inline-start: 0 !important;
+}
+
 /* Scroll Indicator */
 .scroll-indicator {
     position: absolute;
@@ -2148,6 +2168,16 @@ section {
         width: 100%;
         max-width: 300px;
         justify-content: center;
+    }
+
+    .pdf-action-group {
+        flex-direction: column;
+    }
+
+    .pdf-action-btn {
+        width: 100%;
+        max-width: none;
+        flex: 1 1 auto;
     }
     
     .about-stats {

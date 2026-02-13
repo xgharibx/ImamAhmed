@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetBtn = document.getElementById('reset-all-btn');
     const sidebar = document.querySelector('.azkar-sidebar');
     const mobileFab = document.getElementById('mobile-sidebar-toggle');
+    const closeSidebarBtn = document.getElementById('close-azkar-sidebar');
     
     // Create Overlay for Mobile
     const overlay = document.createElement('div');
@@ -16,7 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let allData = [];
     let currentCategory = 'morning';
     const STORE_KEY = 'azkar_progress_v1';
+    const STORE_DATE_KEY = 'azkar_progress_date_v1';
     let progress = loadProgress();
+    ensureDailyReset();
 
     // 1. Fetch Data
     fetch('data/adhkar.json')
@@ -147,30 +150,23 @@ document.addEventListener('DOMContentLoaded', () => {
                             ${targetCount - currentCount}
                         </span>
                     </div>
-                    <button class="reset-single-btn" onclick="resetSingle('${sectionId}', ${index}, ${targetCount})" title="إعادة">
+                    <button class="reset-single-btn" data-action="reset" data-section="${sectionId}" data-index="${index}" data-target="${targetCount}" title="إعادة">
                         <i class="fas fa-redo"></i>
                     </button>
                 </div>
                 
-                <button class="count-btn ${isCompleted ? 'completed' : ''}" onclick="incrementCount('${sectionId}', ${index}, ${targetCount})">
+                <button class="count-btn ${isCompleted ? 'completed' : ''}" data-action="count" data-section="${sectionId}" data-index="${index}" data-target="${targetCount}">
                     <i class="fas ${isCompleted ? 'fa-check' : 'fa-fingerprint'}"></i>
                     <span>${isCompleted ? 'اكتملت' : 'اضغط للتسبيح'}</span>
                 </button>
             </div>
         `;
 
-        // Add click listener
-        card.addEventListener('click', (e) => {
-            if (!e.target.closest('button')) {
-                incrementCount(sectionId, index, targetCount);
-            }
-        });
-
         return card;
     }
 
     // 7. Global Functions
-    window.incrementCount = function(sectionId, index, target) {
+    function incrementCount(sectionId, index, target) {
         let current = getProgress(sectionId, index);
         if (current >= target) return; 
 
@@ -182,14 +178,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (navigator.vibrate) {
             navigator.vibrate(50);
         }
-    };
+    }
 
-    window.resetSingle = function(sectionId, index, target) {
+    function resetSingle(sectionId, index, target) {
         if(confirm('هل تريد تصفير العداد لهذا الذكر؟')) {
             saveProgress(sectionId, index, 0);
             updateCardUI(sectionId, index, 0, target);
         }
-    };
+    }
 
     function updateCardUI(sectionId, index, current, target) {
         const card = document.getElementById(`card-${sectionId}-${index}`);
@@ -223,10 +219,21 @@ document.addEventListener('DOMContentLoaded', () => {
         return stored ? JSON.parse(stored) : {};
     }
 
+    function ensureDailyReset() {
+        const today = new Date().toISOString().slice(0, 10);
+        const storedDate = localStorage.getItem(STORE_DATE_KEY);
+        if (storedDate !== today) {
+            progress = {};
+            localStorage.setItem(STORE_KEY, JSON.stringify(progress));
+            localStorage.setItem(STORE_DATE_KEY, today);
+        }
+    }
+
     function saveProgress(sectionId, index, val) {
         if (!progress[sectionId]) progress[sectionId] = {};
         progress[sectionId][index] = val;
         localStorage.setItem(STORE_KEY, JSON.stringify(progress));
+        localStorage.setItem(STORE_DATE_KEY, new Date().toISOString().slice(0, 10));
     }
 
     function getProgress(sectionId, index) {
@@ -263,5 +270,36 @@ document.addEventListener('DOMContentLoaded', () => {
     function setupMobileEvents() {
         mobileFab.addEventListener('click', openSidebar);
         overlay.addEventListener('click', closeSidebar);
+        closeSidebarBtn?.addEventListener('click', closeSidebar);
+
+        container.addEventListener('click', (event) => {
+            const resetButton = event.target.closest('button[data-action="reset"]');
+            if (resetButton) {
+                const sectionId = resetButton.dataset.section;
+                const index = Number(resetButton.dataset.index);
+                const target = Number(resetButton.dataset.target);
+                resetSingle(sectionId, index, target);
+                return;
+            }
+
+            const countButton = event.target.closest('button[data-action="count"]');
+            if (countButton) {
+                const sectionId = countButton.dataset.section;
+                const index = Number(countButton.dataset.index);
+                const target = Number(countButton.dataset.target);
+                incrementCount(sectionId, index, target);
+                return;
+            }
+
+            const card = event.target.closest('.azkar-card');
+            if (!card) return;
+            const cardCountButton = card.querySelector('button[data-action="count"]');
+            if (!cardCountButton) return;
+
+            const sectionId = cardCountButton.dataset.section;
+            const index = Number(cardCountButton.dataset.index);
+            const target = Number(cardCountButton.dataset.target);
+            incrementCount(sectionId, index, target);
+        });
     }
 });

@@ -102,6 +102,22 @@
     border-bottom: 3px solid #D4AF37;
 }
 
+.sidebar-close-btn {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
 .sidebar-header h3 {
     margin: 0;
     font-family: 'Aref Ruqaa', serif;
@@ -409,6 +425,14 @@
         border-radius: 0;
         border: none;
         box-shadow: -5px 0 25px rgba(0,0,0,0.2);
+    }
+
+    .sidebar-header {
+        position: relative;
+    }
+
+    .sidebar-close-btn {
+        display: inline-flex;
     }
     
     .azkar-sidebar.active {
