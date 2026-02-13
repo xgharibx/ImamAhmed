@@ -661,6 +661,10 @@ function initKhawaterShareButtons() {
     const signature = '— الشيخ أحمد إسماعيل الفشني';
 
     shareButtons.forEach((button) => {
+        if (!button.querySelector('i')) {
+            button.innerHTML = '<i class="fas fa-share-alt"></i>';
+        }
+
         button.addEventListener('click', async (event) => {
             event.preventDefault();
 
@@ -676,9 +680,8 @@ function initKhawaterShareButtons() {
             const imageFileName = `khatera-${number || 'share'}.png`;
 
             button.disabled = true;
-            const icon = button.querySelector('i');
-            const originalIconClass = icon?.className || '';
-            if (icon) icon.className = 'fas fa-spinner fa-spin';
+            button.style.pointerEvents = 'none';
+            button.style.opacity = '0.85';
 
             try {
                 const imageBlob = await createKhawateraShareImageBlob({
@@ -730,7 +733,8 @@ function initKhawaterShareButtons() {
                 }
             } finally {
                 button.disabled = false;
-                if (icon) icon.className = originalIconClass;
+                button.style.pointerEvents = '';
+                button.style.opacity = '';
             }
         });
     });
