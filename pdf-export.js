@@ -1,21 +1,59 @@
 (function () {
     const HTML2PDF_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+    const HTML2CANVAS_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    const JSPDF_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
     let html2pdfLoader = null;
+    const scriptLoaders = new Map();
+
+    function loadScript(src) {
+        if (scriptLoaders.has(src)) return scriptLoaders.get(src);
+
+        const loader = new Promise((resolve, reject) => {
+            const existing = document.querySelector(`script[src="${src}"]`);
+            if (existing) {
+                if (existing.dataset.loaded === '1') {
+                    resolve();
+                    return;
+                }
+                existing.addEventListener('load', () => resolve(), { once: true });
+                existing.addEventListener('error', () => reject(new Error(`Failed to load script: ${src}`)), { once: true });
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = src;
+            script.async = true;
+            script.onload = () => {
+                script.dataset.loaded = '1';
+                resolve();
+            };
+            script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
+            document.head.appendChild(script);
+        });
+
+        scriptLoaders.set(src, loader);
+        return loader;
+    }
 
     function loadHtml2Pdf() {
         if (window.html2pdf) return Promise.resolve();
         if (html2pdfLoader) return html2pdfLoader;
 
-        html2pdfLoader = new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = HTML2PDF_CDN;
-            script.async = true;
-            script.onload = () => resolve();
-            script.onerror = () => reject(new Error('Failed to load html2pdf library'));
-            document.head.appendChild(script);
-        });
+        html2pdfLoader = loadScript(HTML2PDF_CDN);
 
         return html2pdfLoader;
+    }
+
+    async function ensurePdfDependencies() {
+        await loadHtml2Pdf();
+
+        if (!window.html2canvas) {
+            await loadScript(HTML2CANVAS_CDN);
+        }
+
+        if (!window.jspdf?.jsPDF) {
+            await loadScript(JSPDF_CDN);
+        }
     }
 
     function escapeHtml(text) {
@@ -276,7 +314,7 @@
     }
 
     async function exportPayload(payload, filenameHint) {
-        await loadHtml2Pdf();
+        await ensurePdfDependencies();
         const shell = buildPdfShell(payload);
         document.body.appendChild(shell);
 
@@ -303,16 +341,38 @@
 
         const filename = `${slugify(filenameHint || payload.title)}.pdf`;
         try {
-            let canvas = await renderShellToCanvas(shell, 2);
-            if (canvasLooksBlank(canvas)) {
-                canvas = await renderShellToCanvas(shell, 1.35);
-            }
+            try {
+                let canvas = await renderShellToCanvas(shell, 2);
+                if (canvasLooksBlank(canvas)) {
+                    canvas = await renderShellToCanvas(shell, 1.35);
+                }
 
-            if (canvasLooksBlank(canvas)) {
-                throw new Error('Rendered canvas is blank');
-            }
+                if (canvasLooksBlank(canvas)) {
+                    throw new Error('Rendered canvas is blank');
+                }
 
-            saveCanvasAsPdf(canvas, filename);
+                saveCanvasAsPdf(canvas, filename);
+            } catch (primaryError) {
+                console.warn('Primary PDF pipeline failed, trying html2pdf fallback.', primaryError);
+                await window.html2pdf()
+                    .set({
+                        margin: [8, 8, 8, 8],
+                        filename,
+                        image: { type: 'jpeg', quality: 0.98 },
+                        html2canvas: {
+                            scale: 1.5,
+                            useCORS: true,
+                            backgroundColor: '#ffffff',
+                            scrollX: 0,
+                            scrollY: 0,
+                            logging: false
+                        },
+                        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                        pagebreak: { mode: ['css', 'legacy'] }
+                    })
+                    .from(shell)
+                    .save();
+            }
         } finally {
             shell.remove();
         }
