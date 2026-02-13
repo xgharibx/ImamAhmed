@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const khutbahKeywords = ['خطبه', 'خطب', 'الجمعه', 'الجمعه'];
         const tafseerKeywords = ['تفسير', 'في نور القران', 'في نور القرآن'];
-        const tvKeywords = ['تلفزيون', 'التلفزيون', 'شاشه', 'شاشة', 'النيل الثقافيه', 'النيل الثقافية', 'قناه', 'قناة', 'اذيع', 'يذاع', 'لقاء', 'مناره الازهر', 'منارة الازهر', 'منارة الأزهر'];
+        const tvKeywords = ['برنامج', 'تلفزيون', 'التلفزيون', 'شاشه', 'شاشة', 'النيل الثقافيه', 'النيل الثقافية', 'قناه', 'قناة', 'اذيع', 'يذاع', 'لقاء', 'مناره الازهر', 'منارة الازهر', 'منارة الأزهر'];
         const directQuranKeywords = ['تلاوه', 'تلاوة', 'ما تيسر', 'سوره', 'سورة', 'المصحف', 'القران الكريم', 'القرآن الكريم', 'المجود', 'المرتل'];
         const mihrabHintKeywords = ['صلاه', 'صلاة', 'فجر', 'عشاء', 'محراب', 'تراويح', 'تهجد'];
         const shortKeywords = ['short', 'شورت', '#shorts', 'ريل'];
@@ -238,11 +238,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const looksLikeDirectQuran = hasAnyKeyword(title, directQuranKeywords) || hasAnyKeyword(title, mihrabHintKeywords);
         const isShort = hasAnyKeyword(title, shortKeywords) || (durationSeconds > 0 && durationSeconds <= 180);
 
+        if (isTv) return 'tv';
         if (isKhutbah) return 'khutbah';
         if (isTafseer) return 'tafseer';
         if (isShort && !looksLikeDirectQuran) return 'shorts';
         if (looksLikeDirectQuran && !isTv) return 'quran';
-        if (isTv) return 'tv';
         if (knownCategories.has(originalCategory)) return originalCategory;
         return 'lessons';
     }
