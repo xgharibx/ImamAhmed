@@ -1,0 +1,128 @@
+/* =====================================================
+   الشيخ أحمد إسماعيل الفشني - Fatawa Page Styles
+   ===================================================== */
+
+.fatawa-main {
+    padding: var(--spacing-xl) 0;
+    background: var(--bg-secondary);
+}
+
+.fatawa-toolbar {
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.fatawa-stats {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .75rem 1rem;
+    border-radius: var(--radius-md);
+    background: rgba(26, 95, 74, 0.08);
+    color: var(--primary-green-dark);
+    font-weight: 700;
+}
+
+.fatawa-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.fatwa-card {
+    position: relative;
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.04);
+    transition: var(--transition-normal);
+}
+
+.fatwa-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.fatwa-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 5px;
+    height: 100%;
+    background: var(--gradient-gold);
+}
+
+.fatwa-number {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary-green);
+    color: var(--primary-gold);
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fatwa-question {
+    margin: 0 0 1rem;
+    padding-inline-end: 12px;
+    font-family: var(--font-decorative);
+    color: var(--primary-green-dark);
+    line-height: 1.9;
+    font-size: 1.1rem;
+}
+
+.fatwa-answer {
+    color: var(--text-primary);
+    line-height: 2;
+    background: rgba(26,95,74,0.05);
+    border-right: 3px solid var(--primary-gold);
+    border-radius: var(--radius-sm);
+    padding: .9rem 1rem;
+    max-height: 240px;
+    overflow: hidden;
+    position: relative;
+}
+
+.fatwa-answer.expanded {
+    max-height: none;
+}
+
+.fatwa-toggle {
+    margin-top: .75rem;
+    border: 0;
+    background: transparent;
+    color: var(--primary-green);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.fatawa-empty {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 768px) {
+    .fatawa-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .fatwa-question {
+        font-size: 1.02rem;
+    }
+}

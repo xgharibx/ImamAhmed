@@ -1,38 +1,25 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html dir="rtl" lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="التلاوة - تلاوات عطرة من الشيخ أحمد إسماعيل الفشني">
-    <meta name="keywords" content="تلاوة, قران, الشيخ أحمد الفشني, تلاوات">
-    <title>التلاوة | الشيخ أحمد إسماعيل الفشني</title>
-    
-    <!-- Google Fonts -->
+    <meta name="description" content="فتاوى الشيخ أحمد إسماعيل الفشني - أسئلة وأجوبة شرعية وتربوية">
+    <meta name="keywords" content="فتاوى, أسئلة وأجوبة, الشيخ أحمد الفشني, فقه, دين">
+    <title>فتاوى | الشيخ أحمد إسماعيل الفشني</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@300;400;500;700;800;900&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- AOS Animation -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
-    <!-- Custom Styles -->
+
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="animations.css">
-    <link rel="stylesheet" href="videos.css">
+    <link rel="stylesheet" href="khawater.css">
+    <link rel="stylesheet" href="fatawa.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
 <body>
-    <!-- Preloader -->
-    <div id="preloader">
-        <div class="loader">
-            <div class="islamic-pattern-loader"></div>
-            <div class="bismillah-loader">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
-        </div>
-    </div>
-
-    <!-- Navigation -->
     <header id="header">
         <nav class="navbar">
             <div class="nav-container">
@@ -47,7 +34,7 @@
                 <ul class="nav-menu">
                     <li class="nav-item"><a href="about.html" class="nav-link"><i class="fas fa-user"></i> عن الشيخ</a></li>
                     <li class="nav-item"><a href="quran.html" class="nav-link"><i class="fas fa-quran"></i> القرآن الكريم</a></li>
-                    <li class="nav-item"><a href="tilawa.html" class="nav-link active"><i class="fas fa-microphone-alt"></i> التلاوة</a></li>
+                    <li class="nav-item"><a href="tilawa.html" class="nav-link"><i class="fas fa-microphone-alt"></i> التلاوة</a></li>
                     <li class="nav-item"><a href="hadith.html" class="nav-link"><i class="fas fa-book-quran"></i> الحديث الشريف</a></li>
                     <li class="nav-item"><a href="adhkar.html" class="nav-link"><i class="fas fa-praying-hands"></i> أذكار</a></li>
                     <li class="nav-item"><a href="videos.html" class="nav-link"><i class="fas fa-video"></i> الدروس والمحاضرات</a></li>
@@ -66,90 +53,67 @@
                     <li class="nav-item"><a href="articles.html" class="nav-link"><i class="fas fa-book-open"></i> المقالات</a></li>
                     <li class="nav-item"><a href="khawater.html" class="nav-link"><i class="fas fa-feather-alt"></i> الخواطر</a></li>
                     <li class="nav-item"><a href="books.html" class="nav-link"><i class="fas fa-book"></i> المؤلفات</a></li>
-                    <li class="nav-item"><a href="fatawa.html" class="nav-link"><i class="fas fa-circle-question"></i> فتاوى</a></li>
+                    <li class="nav-item"><a href="fatawa.html" class="nav-link active"><i class="fas fa-circle-question"></i> فتاوى</a></li>
                     <li class="nav-item"><a href="contact.html" class="nav-link"><i class="fas fa-envelope"></i> تواصل</a></li>
                 </ul>
 
                 <div class="hamburger">
-                    <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
                 </div>
             </div>
         </nav>
     </header>
 
-    <!-- Page Header -->
-    <section class="page-header" style="height: 300px;">
+    <section class="page-header">
         <div class="page-header-bg"></div>
         <div class="container">
             <div class="page-header-content" data-aos="fade-up">
-                <div class="breadcrumb">
-                    <a href="index.html">الرئيسية</a>
-                    <i class="fas fa-chevron-left"></i>
-                    <span>التلاوة</span>
-                </div>
                 <h1 class="page-title">
-                    <span class="title-icon"><i class="fas fa-microphone-alt"></i></span>
-                    التلاوة
+                    <span class="title-icon"><i class="fas fa-circle-question"></i></span>
+                    فتاوى
                 </h1>
+                <p class="page-subtitle">أسئلة وأجوبة من مجالس الشيخ أحمد إسماعيل الفشني</p>
             </div>
+        </div>
+        <div class="page-header-wave">
+            <svg viewBox="0 0 1200 80" preserveAspectRatio="none">
+                <path d="M0,0 C300,60 900,20 1200,60 L1200,80 L0,80 Z" fill="var(--bg-secondary)"></path>
+            </svg>
         </div>
     </section>
 
-    <section class="videos-library-section" id="library-top">
+    <section class="fatawa-main">
         <div class="container">
-            <div class="video-filters-wrapper" data-aos="fade-down">
-                <div class="video-filters" id="video-filters">
-                    <button class="filter-btn active" data-filter="all">
-                        <i class="fas fa-layer-group"></i> الكل
-                    </button>
-                    <button class="filter-btn" data-filter="murattal">
-                        <i class="fas fa-quran"></i> المصحف المرتل
-                    </button>
-                    <button class="filter-btn" data-filter="mujawwad">
-                        <i class="fas fa-star-and-crescent"></i> المصحف المجود
-                    </button>
-                    <button class="filter-btn" data-filter="external">
-                        <i class="fas fa-microphone-lines"></i> تلاوات خارجية
-                    </button>
-                    <button class="filter-btn" data-filter="mihrab">
-                        <i class="fas fa-mosque"></i> تلاوات المحراب
-                    </button>
+            <div class="fatawa-toolbar" data-aos="fade-up">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input id="fatawaSearchInput" type="text" placeholder="ابحث في الأسئلة والإجابات...">
                 </div>
+                <div class="fatawa-stats"><i class="fas fa-list-ol"></i> العدد: <span id="fatawaCount">0</span></div>
             </div>
 
-            <div class="videos-grid" id="tilawa-grid">
-                <div class="grid-loader">
-                    <div class="islamic-pattern-loader"></div>
-                    <p style="margin-top: 1rem;">جاري تحميل مكتبة التلاوات...</p>
-                </div>
-            </div>
-
-            <div class="load-more-wrapper">
-                <button id="tilawa-load-more" class="btn btn-outline" style="display:none;">
-                    عرض المزيد <i class="fas fa-chevron-down"></i>
-                </button>
-            </div>
+            <div id="fatawaGrid" class="fatawa-grid"></div>
+            <div id="fatawaEmpty" class="fatawa-empty" hidden>لا توجد نتائج مطابقة للبحث.</div>
         </div>
     </section>
 
-    <div id="video-modal" class="video-modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <div class="video-wrapper">
-                <iframe id="modal-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-            <div class="modal-info">
-                <h3 id="modal-title"></h3>
+    <footer id="footer" class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 الشيخ أحمد إسماعيل الفشني. جميع الحقوق محفوظة.</p>
             </div>
         </div>
-    </div>
+    </footer>
 
-    <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
     <script src="main.js" defer></script>
-    <script src="tilawa-dynamic.js" defer></script>
+    <script src="fatawa.js" defer></script>
     <script>
-        AOS.init({duration: 800, once: true});
+        if (typeof AOS !== 'undefined') {
+            AOS.init({ duration: 800, easing: 'ease-out-cubic', once: true, offset: 50, delay: 80 });
+        }
     </script>
 </body>
 </html>
