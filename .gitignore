@@ -10,6 +10,8 @@ venv/
 
 # Local source/input folders (do not publish)
 KhotabText/
+QA/
+Remaining/
 
 # OCR training data (large; keep local)
 tessdata/

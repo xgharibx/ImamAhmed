@@ -92,6 +92,9 @@
     overflow: hidden;
     flex-shrink: 0;
     border: 1px solid rgba(212, 175, 55, 0.2); /* Subtle Gold Border */
+    max-height: calc(100vh - 120px);
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar-header {
@@ -128,6 +131,9 @@
     list-style: none;
     padding: 0;
     margin: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
 }
 
 .azkar-nav-item {
@@ -420,11 +426,16 @@
         top: 0;
         right: -320px; /* Hidden default */
         height: 100vh;
+        max-height: 100vh;
         z-index: 1000;
         transition: right 0.3s ease;
         border-radius: 0;
         border: none;
         box-shadow: -5px 0 25px rgba(0,0,0,0.2);
+    }
+
+    .azkar-nav {
+        max-height: calc(100vh - 86px);
     }
 
     .sidebar-header {

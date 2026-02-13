@@ -272,6 +272,18 @@ document.addEventListener('DOMContentLoaded', () => {
         overlay.addEventListener('click', closeSidebar);
         closeSidebarBtn?.addEventListener('click', closeSidebar);
 
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeSidebar();
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 991) {
+                closeSidebar();
+            }
+        });
+
         container.addEventListener('click', (event) => {
             const resetButton = event.target.closest('button[data-action="reset"]');
             if (resetButton) {
