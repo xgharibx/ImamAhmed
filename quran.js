@@ -1,27 +1,83 @@
-// Quran page functionality
-let quranData = null;
-let currentSurah = null;
+const quranState = {
+  data: null,
+  currentSurah: null,
+  mushafPages: [],
+  currentMushafPage: 1,
+  bookmarkedPages: new Set(),
+  bookmarkedAyahs: new Set()
+};
+
+const PAGE_BOOKMARKS_KEY = 'quran_page_bookmarks';
+const AYAH_BOOKMARKS_KEY = 'quran_ayah_bookmarks';
+
+function ayahBookmarkKey(surahId, ayahNumber) {
+  return `${surahId}:${ayahNumber}`;
+}
+
+function saveBookmarks() {
+  localStorage.setItem(PAGE_BOOKMARKS_KEY, JSON.stringify([...quranState.bookmarkedPages]));
+  localStorage.setItem(AYAH_BOOKMARKS_KEY, JSON.stringify([...quranState.bookmarkedAyahs]));
+}
+
+function loadBookmarks() {
+  try {
+    const pageRaw = JSON.parse(localStorage.getItem(PAGE_BOOKMARKS_KEY) || '[]');
+    const ayahRaw = JSON.parse(localStorage.getItem(AYAH_BOOKMARKS_KEY) || '[]');
+    quranState.bookmarkedPages = new Set(Array.isArray(pageRaw) ? pageRaw : []);
+    quranState.bookmarkedAyahs = new Set(Array.isArray(ayahRaw) ? ayahRaw : []);
+  } catch {
+    quranState.bookmarkedPages = new Set();
+    quranState.bookmarkedAyahs = new Set();
+  }
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function convertArabicNumbers(str) {
+  const arabicNums = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+  return String(str).replace(/[0-9]/g, (digit) => arabicNums[Number(digit)]);
+}
+
+function normalizeForSearch(text) {
+  return (text || '')
+    .normalize('NFKC')
+    .replace(/[\u064B-\u065F\u0670]/g, '')
+    .replace(/أ|إ|آ/g, 'ا')
+    .replace(/ى/g, 'ي')
+    .replace(/ة/g, 'ه')
+    .toLowerCase();
+}
+
+function cleanFirstAyahBasmallah(ayah, surahId, ayahIndex) {
+  const basmallah = 'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ';
+  if (surahId !== 1 && ayahIndex === 0 && ayah.startsWith(basmallah)) {
+    return ayah.replace(basmallah, '').trim();
+  }
+  return ayah;
+}
 
 async function loadQuran() {
   const container = document.getElementById('surah-grid-container');
+  const status = document.getElementById('quran-search-status');
+
   try {
-    // Show loading state
     container.innerHTML = '<div style="text-align:center;padding:40px;"><i class="fas fa-spinner fa-spin fa-3x" style="color:#2e7d32"></i><p style="margin-top:20px;color:#2e7d32;font-size:1.2rem;">جاري تحميل المصحف الشريف...</p></div>';
-    
-    // Attempt local fetch
-    const response = await fetch('data/quran.json');
-    
-    if (!response.ok) {
-        throw new Error(`HTTP Error: ${response.status}`);
-    }
-    
-    quranData = await response.json();
-    
-    if (!quranData || !quranData.surahs || quranData.surahs.length === 0) {
-        throw new Error('بيانات المصحف فارغة');
-    }
-    
+
+    const response = await fetch('data/quran.json', { cache: 'no-cache' });
+    if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+
+    const json = await response.json();
+    if (!json?.surahs?.length) throw new Error('بيانات المصحف فارغة');
+
+    quranState.data = json;
     renderSurahGrid();
+    buildMushafPages();
+    renderMushafPage(1);
+    if (status) status.textContent = `تم التحميل بنجاح: ${convertArabicNumbers(json.surahs.length)} سورة`;
   } catch (error) {
     console.error('Error loading Quran:', error);
     container.innerHTML = `
@@ -38,208 +94,329 @@ async function loadQuran() {
 
 function renderSurahGrid() {
   const container = document.getElementById('surah-grid-container');
-  if (!quranData || !quranData.surahs) {
+  const surahs = quranState.data?.surahs || [];
+  if (!surahs.length) {
     container.innerHTML = '<p>لا توجد بيانات</p>';
     return;
   }
 
-  let html = '';
-  for (const surah of quranData.surahs) {
-    html += `
-      <div class="surah-card" onclick="openSurah(${surah.id})">
-        <div class="surah-name">${surah.name}</div>
-        <div class="surah-meta">
-          <div>${surah.englishName}</div>
-          <div style="margin-top:6px;font-size:0.85rem;">${surah.ayahs.length} آية</div>
-        </div>
+  container.innerHTML = surahs.map((surah) => `
+    <button type="button" class="surah-card" data-surah-id="${surah.id}">
+      <div class="surah-name">${escapeHtml(surah.name)}</div>
+      <div class="surah-meta">
+        <div>${escapeHtml(surah.englishName || '')}</div>
+        <div style="margin-top:6px;font-size:0.85rem;">${convertArabicNumbers(surah.ayahs.length)} آية</div>
       </div>
-    `;
-  }
-  container.innerHTML = html;
-  
-  // Trigger AOS animations if available
-  if (typeof AOS !== 'undefined') {
-    AOS.refresh();
-  }
-}
+    </button>
+  `).join('');
 
-function openSurah(id) {
-  currentSurah = quranData.surahs.find(s => s.id === id);
-  if (!currentSurah) return;
-
-  // Hide grid, show surah section
-  document.getElementById('surah-grid-section').style.display = 'none';
-  document.getElementById('surah-section').style.display = 'block';
-  document.getElementById('search-results-section').style.display = 'none';
-
-  // Populate surah header
-  document.querySelector('.surah-title').textContent = currentSurah.name;
-
-  // Render ayat
-  const container = document.getElementById('ayah-container');
-  let html = '';
-  
-  // Add Bismillah for all surahs except Al-Fatiha (id 1)
-  if (currentSurah.id !== 1) {
-    html += `
-      <div class="bismillah-ayah">
-        <span class="bismillah-text">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</span>
-      </div>
-    `;
-  }
-  
-  let surahText = '';
-  
-  // Clean Basmallah from first verse for non-Fatiha surahs
-  // The data sometimes includes Basmallah at the start of Verse 1
-  // Exact string from JSON seems to be: بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ 
-  const basmallahExact = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
-
-  for (let i = 0; i < currentSurah.ayahs.length; i++) {
-    let ayah = currentSurah.ayahs[i];
-    
-    // Remove Basmallah from first verse if present (except Fatiha)
-    if (i === 0 && currentSurah.id !== 1) {
-       if (ayah.startsWith(basmallahExact)) {
-           ayah = ayah.replace(basmallahExact, '').trim();
-       }
-    }
-
-    const ayahNum = convertArabicNumbers((i + 1).toString());
-    surahText += `
-      <span class="ayah-text">${escapeHtml(ayah)}</span>
-      <span class="ayah-end-marker">﴿${ayahNum}﴾</span>
-    `;
-  }
-  html += `<div class="quran-text-block">${surahText}</div>`;
-  
-  container.innerHTML = html;
-
-  // Scroll to top
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (typeof AOS !== 'undefined') AOS.refresh();
 }
 
 function showSurahList() {
-  currentSurah = null;
+  quranState.currentSurah = null;
   document.getElementById('surah-grid-section').style.display = 'block';
   document.getElementById('surah-section').style.display = 'none';
   document.getElementById('search-results-section').style.display = 'none';
+  document.getElementById('mushaf-section').style.display = 'none';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+function openSurah(id, highlightAyahNumber = null) {
+  const surah = quranState.data?.surahs?.find((item) => item.id === Number(id));
+  if (!surah) return;
+
+  quranState.currentSurah = surah;
+  document.getElementById('surah-grid-section').style.display = 'none';
+  document.getElementById('surah-section').style.display = 'block';
+  document.getElementById('search-results-section').style.display = 'none';
+  document.getElementById('mushaf-section').style.display = 'none';
+
+  const titleEl = document.querySelector('.surah-title');
+  if (titleEl) titleEl.textContent = surah.name;
+
+  const container = document.getElementById('ayah-container');
+  const lines = surah.ayahs.map((rawAyah, index) => {
+    const ayahNumber = index + 1;
+    const cleanedAyah = cleanFirstAyahBasmallah(rawAyah, surah.id, index);
+    if (!cleanedAyah) return '';
+
+    const key = ayahBookmarkKey(surah.id, ayahNumber);
+    const isBookmarked = quranState.bookmarkedAyahs.has(key);
+    const lineId = `ayah-line-${surah.id}-${ayahNumber}`;
+
+    return `
+      <div id="${lineId}" class="ayah-line ${isBookmarked ? 'is-bookmarked-ayah' : ''}">
+        <button type="button" class="bookmark-ayah-btn ${isBookmarked ? 'active' : ''}" data-surah-id="${surah.id}" data-ayah-number="${ayahNumber}" aria-label="تعليم الآية">
+          <i class="fas fa-bookmark"></i>
+        </button>
+        <span class="ayah-text">${escapeHtml(cleanedAyah)}</span>
+        <span class="ayah-end-marker">﴿${convertArabicNumbers(ayahNumber)}﴾</span>
+      </div>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    ${surah.id !== 1 ? '<div class="bismillah-ayah"><span class="bismillah-text">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</span></div>' : ''}
+    <div class="quran-text-block">${lines}</div>
+  `;
+
+  attachAyahBookmarkHandlers(container);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (highlightAyahNumber) {
+    const target = document.getElementById(`ayah-line-${surah.id}-${highlightAyahNumber}`);
+    if (target) {
+      setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 120);
+    }
+  }
+}
+
+function buildMushafPages() {
+  const surahs = quranState.data?.surahs || [];
+  const maxCharsPerPage = 1400;
+  const maxAyahsPerPage = 12;
+  const pages = [];
+
+  let pageItems = [];
+  let pageCharCount = 0;
+
+  const pushPage = () => {
+    if (!pageItems.length) return;
+    pages.push({ items: pageItems });
+    pageItems = [];
+    pageCharCount = 0;
+  };
+
+  surahs.forEach((surah) => {
+    surah.ayahs.forEach((rawAyah, index) => {
+      const ayahNumber = index + 1;
+      const text = cleanFirstAyahBasmallah(rawAyah, surah.id, index);
+      if (!text) return;
+
+      const wouldOverflow = pageItems.length >= maxAyahsPerPage || (pageCharCount + text.length) > maxCharsPerPage;
+      if (wouldOverflow) pushPage();
+
+      pageItems.push({
+        surahId: surah.id,
+        surahName: surah.name,
+        ayahNumber,
+        text
+      });
+      pageCharCount += text.length;
+    });
+  });
+
+  pushPage();
+  quranState.mushafPages = pages;
+  if (quranState.currentMushafPage > pages.length) quranState.currentMushafPage = 1;
+}
+
+function renderMushafPage(pageNumber) {
+  const total = quranState.mushafPages.length;
+  if (!total) return;
+
+  quranState.currentMushafPage = Math.min(Math.max(1, pageNumber), total);
+  const page = quranState.mushafPages[quranState.currentMushafPage - 1];
+
+  document.getElementById('surah-grid-section').style.display = 'none';
+  document.getElementById('surah-section').style.display = 'none';
+  document.getElementById('search-results-section').style.display = 'none';
+  document.getElementById('mushaf-section').style.display = 'block';
+
+  const pageIndicator = document.getElementById('mushaf-page-indicator');
+  const prevBtn = document.getElementById('mushaf-prev-btn');
+  const nextBtn = document.getElementById('mushaf-next-btn');
+  const bookmarkPageBtn = document.getElementById('bookmark-page-btn');
+
+  if (pageIndicator) {
+    pageIndicator.textContent = `الصفحة ${convertArabicNumbers(quranState.currentMushafPage)} من ${convertArabicNumbers(total)}`;
+  }
+  if (prevBtn) prevBtn.disabled = quranState.currentMushafPage === 1;
+  if (nextBtn) nextBtn.disabled = quranState.currentMushafPage === total;
+
+  const isBookmarkedPage = quranState.bookmarkedPages.has(quranState.currentMushafPage);
+  if (bookmarkPageBtn) {
+    bookmarkPageBtn.classList.toggle('active', isBookmarkedPage);
+    bookmarkPageBtn.innerHTML = isBookmarkedPage
+      ? '<i class="fas fa-bookmark"></i> الصفحة مُعلّمة'
+      : '<i class="far fa-bookmark"></i> تعليم الصفحة';
+  }
+
+  const firstSurah = page.items[0]?.surahName || '';
+  const lastSurah = page.items[page.items.length - 1]?.surahName || '';
+  const surahSpan = firstSurah === lastSurah ? firstSurah : `${firstSurah} — ${lastSurah}`;
+
+  const lines = page.items.map((item) => {
+    const key = ayahBookmarkKey(item.surahId, item.ayahNumber);
+    const isBookmarked = quranState.bookmarkedAyahs.has(key);
+    return `
+      <div class="ayah-line ${isBookmarked ? 'is-bookmarked-ayah' : ''}">
+        <button type="button" class="bookmark-ayah-btn ${isBookmarked ? 'active' : ''}" data-surah-id="${item.surahId}" data-ayah-number="${item.ayahNumber}" aria-label="تعليم الآية">
+          <i class="fas fa-bookmark"></i>
+        </button>
+        <span class="ayah-text">${escapeHtml(item.text)}</span>
+        <span class="ayah-end-marker">﴿${convertArabicNumbers(item.ayahNumber)}﴾</span>
+      </div>
+    `;
+  }).join('');
+
+  const container = document.getElementById('mushaf-page-container');
+  container.innerHTML = `
+    <div class="mushaf-surah-span">${escapeHtml(surahSpan)}</div>
+    <div class="quran-text-block">${lines}</div>
+  `;
+
+  attachAyahBookmarkHandlers(container);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function attachAyahBookmarkHandlers(scopeElement) {
+  scopeElement.querySelectorAll('.bookmark-ayah-btn').forEach((button) => {
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      const surahId = Number(button.getAttribute('data-surah-id'));
+      const ayahNumber = Number(button.getAttribute('data-ayah-number'));
+      toggleAyahBookmark(surahId, ayahNumber);
+    });
+  });
+}
+
+function toggleAyahBookmark(surahId, ayahNumber) {
+  const key = ayahBookmarkKey(surahId, ayahNumber);
+  if (quranState.bookmarkedAyahs.has(key)) {
+    quranState.bookmarkedAyahs.delete(key);
+  } else {
+    quranState.bookmarkedAyahs.add(key);
+  }
+  saveBookmarks();
+
+  if (quranState.currentSurah) {
+    openSurah(quranState.currentSurah.id, ayahNumber);
+  } else {
+    renderMushafPage(quranState.currentMushafPage);
+  }
+}
+
+function togglePageBookmark() {
+  const page = quranState.currentMushafPage;
+  if (quranState.bookmarkedPages.has(page)) {
+    quranState.bookmarkedPages.delete(page);
+  } else {
+    quranState.bookmarkedPages.add(page);
+  }
+  saveBookmarks();
+  renderMushafPage(page);
+}
+
+function highlight(text, query) {
+  const escapedText = escapeHtml(text);
+  const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`(${escapedQuery})`, 'gi');
+  return escapedText.replace(regex, '<span class="highlight">$1</span>');
+}
+
 function searchAyat(query) {
-  if (!query.trim()) {
+  const q = (query || '').trim();
+  if (!q) {
     showSurahList();
     return;
   }
 
+  const normalizedQ = normalizeForSearch(q);
   const results = [];
-  const q = query.toLowerCase();
 
-  for (const surah of quranData.surahs) {
+  for (const surah of quranState.data?.surahs || []) {
     for (let i = 0; i < surah.ayahs.length; i++) {
-      const ayah = surah.ayahs[i];
-      if (ayah.toLowerCase().includes(q) || surah.name.toLowerCase().includes(q)) {
+      const rawAyah = cleanFirstAyahBasmallah(surah.ayahs[i], surah.id, i);
+      const ayah = rawAyah || surah.ayahs[i];
+      const ayahMatch = normalizeForSearch(ayah).includes(normalizedQ);
+      const surahMatch = normalizeForSearch(surah.name).includes(normalizedQ);
+      if (ayahMatch || surahMatch) {
         results.push({
-          surah: surah,
-          ayah: ayah,
-          ayahIndex: i + 1,
-          text: ayah
+          surahId: surah.id,
+          surahName: surah.name,
+          ayahText: ayah,
+          ayahNumber: i + 1
         });
       }
     }
   }
 
-  // Show results
   document.getElementById('surah-grid-section').style.display = 'none';
   document.getElementById('surah-section').style.display = 'none';
+  document.getElementById('mushaf-section').style.display = 'none';
   document.getElementById('search-results-section').style.display = 'block';
 
+  const titleEl = document.getElementById('search-results-title');
   const container = document.getElementById('search-results-container');
-  const header = document.querySelector('.search-results-header h3');
 
-  if (results.length === 0) {
-    header.textContent = 'لم يتم العثور على نتائج';
+  if (!results.length) {
+    if (titleEl) titleEl.textContent = 'لم يتم العثور على نتائج';
     container.innerHTML = '<p style="text-align:center;color:#999;">جرب مصطلحاً آخر</p>';
-  } else {
-    header.textContent = `${results.length} نتيجة`;
-    let html = '';
-    for (const result of results) {
-      const highlightedText = highlight(result.text, query);
-      const ayahNum = convertArabicNumbers(result.ayahIndex.toString());
-      html += `
-        <div class="ayah" onclick="openSurah(${result.surah.id})" style="cursor:pointer;">
-          <div style="font-size:0.9rem;color:#999;margin-bottom:8px;">${result.surah.name}</div>
-          ${highlightedText}
-          <span class="ayah-num">(${ayahNum})</span>
-        </div>
-      `;
-    }
-    container.innerHTML = html;
+    return;
   }
+
+  if (titleEl) titleEl.textContent = `${convertArabicNumbers(results.length)} نتيجة`;
+  container.innerHTML = results.map((result) => `
+    <button type="button" class="ayah search-result-item" data-surah-id="${result.surahId}" data-ayah-number="${result.ayahNumber}" style="width:100%;text-align:right;cursor:pointer;">
+      <div style="font-size:0.9rem;color:#2e7d32;margin-bottom:8px;">${escapeHtml(result.surahName)}</div>
+      ${highlight(result.ayahText, q)}
+      <span class="ayah-num">(${convertArabicNumbers(result.ayahNumber)})</span>
+    </button>
+  `).join('');
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function clearSearch() {
-  document.getElementById('quran-search-input').value = '';
-  showSurahList();
-}
-
-function highlight(text, query) {
-  const escapedText = escapeHtml(text);
-  const regex = new RegExp(`(${query})`, 'gi');
-  return escapedText.replace(regex, '<span class="highlight">$1</span>');
-}
-
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-function convertArabicNumbers(str) {
-  const arabicNums = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
-  let result = '';
-  for (let char of str.toString()) {
-    if (char >= '0' && char <= '9') {
-      result += arabicNums[parseInt(char)];
-    } else {
-      result += char;
-    }
-  }
-  return result;
-}
-
-// Event listeners
-document.addEventListener('DOMContentLoaded', () => {
-  loadQuran();
-
+function bindUi() {
   const searchInput = document.getElementById('quran-search-input');
   const searchBtn = document.getElementById('quran-search-btn');
   const backBtn = document.getElementById('quran-back-btn');
+  const showSurahModeBtn = document.getElementById('show-surah-mode-btn');
+  const showMushafModeBtn = document.getElementById('show-mushaf-mode-btn');
+  const mushafPrevBtn = document.getElementById('mushaf-prev-btn');
+  const mushafNextBtn = document.getElementById('mushaf-next-btn');
+  const bookmarkPageBtn = document.getElementById('bookmark-page-btn');
+  const surahGrid = document.getElementById('surah-grid-container');
+  const searchResultsContainer = document.getElementById('search-results-container');
 
-  if (searchBtn) {
-    searchBtn.addEventListener('click', () => {
-      const query = searchInput.value.trim();
-      searchAyat(query);
-    });
-  }
+  searchBtn?.addEventListener('click', () => searchAyat(searchInput?.value || ''));
+  searchInput?.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      searchAyat(searchInput.value || '');
+    }
+  });
 
-  if (searchInput) {
-    searchInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        const query = searchInput.value.trim();
-        searchAyat(query);
-      }
-    });
-  }
+  backBtn?.addEventListener('click', showSurahList);
+  showSurahModeBtn?.addEventListener('click', showSurahList);
+  showMushafModeBtn?.addEventListener('click', () => renderMushafPage(quranState.currentMushafPage || 1));
 
-  if (backBtn) {
-    backBtn.addEventListener('click', showSurahList);
-  }
+  mushafPrevBtn?.addEventListener('click', () => renderMushafPage(quranState.currentMushafPage - 1));
+  mushafNextBtn?.addEventListener('click', () => renderMushafPage(quranState.currentMushafPage + 1));
+  bookmarkPageBtn?.addEventListener('click', togglePageBookmark);
 
-  // Initialize AOS animations
+  surahGrid?.addEventListener('click', (event) => {
+    const card = event.target.closest('.surah-card[data-surah-id]');
+    if (!card) return;
+    openSurah(card.getAttribute('data-surah-id'));
+  });
+
+  searchResultsContainer?.addEventListener('click', (event) => {
+    const button = event.target.closest('.search-result-item[data-surah-id]');
+    if (!button) return;
+    const surahId = Number(button.getAttribute('data-surah-id'));
+    const ayahNumber = Number(button.getAttribute('data-ayah-number'));
+    openSurah(surahId, ayahNumber);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  loadBookmarks();
+  bindUi();
+  await loadQuran();
+
   if (typeof AOS !== 'undefined') {
     AOS.init({
       duration: 800,

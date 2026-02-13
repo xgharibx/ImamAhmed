@@ -147,6 +147,10 @@
           <input id="quran-search-input" type="text" class="quran-search-input" placeholder="ابحث عن سورة أو آية..." />
           <button id="quran-search-btn" class="quran-search-btn" type="button"><i class="fas fa-search"></i></button>
         </form>
+        <div class="quran-mode-switch" style="margin-top: 1rem; display:flex; gap:.6rem; justify-content:center; flex-wrap:wrap;">
+          <button id="show-surah-mode-btn" type="button" class="quran-back-btn"><i class="fas fa-list"></i> عرض السور</button>
+          <button id="show-mushaf-mode-btn" type="button" class="quran-back-btn"><i class="fas fa-book-open"></i> عرض الصفحات</button>
+        </div>
         <div id="quran-search-status" class="quran-search-status"></div>
       </div>
 
@@ -167,10 +171,32 @@
         <div id="ayah-container" class="ayah-container"></div>
       </div>
 
+      <!-- Mushaf Pages Section -->
+      <div id="mushaf-section" class="surah-section" style="display:none;">
+        <div class="section-header" style="margin-bottom: 1.25rem;">
+          <h2 class="surah-title section-title">صفحات المصحف</h2>
+          <div class="section-divider">
+             <span></span><i class="fas fa-moon"></i><span></span>
+          </div>
+        </div>
+
+        <div class="mushaf-toolbar">
+          <button id="mushaf-prev-btn" type="button" class="quran-back-btn"><i class="fas fa-arrow-right"></i> الصفحة السابقة</button>
+          <div id="mushaf-page-indicator" class="mushaf-page-indicator">صفحة ١</div>
+          <button id="mushaf-next-btn" type="button" class="quran-back-btn">الصفحة التالية <i class="fas fa-arrow-left"></i></button>
+        </div>
+
+        <div class="mushaf-actions">
+          <button id="bookmark-page-btn" type="button" class="quran-back-btn"><i class="fas fa-bookmark"></i> تعليم الصفحة</button>
+        </div>
+
+        <div id="mushaf-page-container" class="ayah-container"></div>
+      </div>
+
       <!-- Search Results Section -->
       <div id="search-results-section" class="quran-search-results" style="display:none;">
         <div class="section-header">
-          <h3 class="section-title">نتائج البحث</h3>
+          <h3 id="search-results-title" class="section-title">نتائج البحث</h3>
           <div class="section-divider">
              <span></span><i class="fas fa-moon"></i><span></span>
           </div>

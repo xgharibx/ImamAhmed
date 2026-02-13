@@ -123,9 +123,11 @@
         wrapper.style.padding = '26px';
         wrapper.style.boxSizing = 'border-box';
         wrapper.style.position = 'fixed';
-        wrapper.style.left = '-10000px';
+        wrapper.style.left = '0';
         wrapper.style.top = '0';
-        wrapper.style.zIndex = '-1';
+        wrapper.style.zIndex = '0';
+        wrapper.style.opacity = '0.01';
+        wrapper.style.pointerEvents = 'none';
 
         const label = typeLabel(type);
         const safeTitle = escapeHtml(title || '');
@@ -148,6 +150,7 @@
                 .pdf-body blockquote { border-right: 4px solid #d4af37; margin: 1rem 0; padding: .6rem 1rem; background: #faf8f0; border-radius: 8px; }
                 .pdf-body pre { background: #f6f7f8; border: 1px solid #e8ebee; border-radius: 8px; padding: .8rem; white-space: pre-wrap; }
                 .pdf-body img { display: block; height: auto; border-radius: 10px; margin: .8rem auto; }
+                .pdf-body *[hidden] { display: none !important; }
                 .pdf-body table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
                 .pdf-body th, .pdf-body td { border: 1px solid #e5e7eb; padding: .45rem; text-align: right; }
                 .pdf-foot { margin-top: 20px; text-align:center; color:#4d4d4d; font-size:12px; border-top:1px solid #efefef; padding-top:12px; }
@@ -200,6 +203,18 @@
         const shell = buildPdfShell(payload);
         document.body.appendChild(shell);
 
+        const images = Array.from(shell.querySelectorAll('img'));
+        if (images.length) {
+            await Promise.all(images.map((img) => {
+                if (img.complete) return Promise.resolve();
+                return new Promise((resolve) => {
+                    img.addEventListener('load', resolve, { once: true });
+                    img.addEventListener('error', resolve, { once: true });
+                    setTimeout(resolve, 1200);
+                });
+            }));
+        }
+
         if (document.fonts?.ready) {
             await Promise.race([
                 document.fonts.ready,
@@ -216,7 +231,14 @@
                     margin: [8, 8, 8, 8],
                     filename,
                     image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+                    html2canvas: {
+                        scale: 2,
+                        useCORS: true,
+                        backgroundColor: '#ffffff',
+                        windowWidth: 794,
+                        scrollX: 0,
+                        scrollY: 0
+                    },
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
                     pagebreak: { mode: ['css', 'legacy'] }
                 })

@@ -14,6 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('khutab-search');
     const statsEl = document.getElementById('khutab-stats');
 
+    if (!listEl) {
+        return;
+    }
+
     // Access notice for currently readable khutab.
     const toolbarEl = document.querySelector('.khutab-toolbar');
     const latestOnlyNoteEl = document.createElement('div');
@@ -78,12 +82,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function computeLatestReadableIds(items, limit = 5) {
         const list = (Array.isArray(items) ? items : []).slice();
+        const hasIsoDates = list.some((item) => !!getIsoDate(item));
+
+        if (!hasIsoDates) {
+            return new Set(list.slice(0, limit).map(getItemId).filter(Boolean));
+        }
+
         list.sort((a, b) => {
             const isoA = getIsoDate(a) || '';
             const isoB = getIsoDate(b) || '';
             return isoB.localeCompare(isoA);
         });
         return new Set(list.slice(0, limit).map(getItemId).filter(Boolean));
+    }
+
+    function normalizeItems(raw) {
+        const list = Array.isArray(raw) ? raw : (raw?.items || []);
+        return list
+            .filter((item) => item && typeof item === 'object')
+            .map((item, index) => ({
+                id: String(item.id ?? index + 1),
+                title: item.title || 'خطبة',
+                author: item.author || 'الشيخ أحمد الفشني',
+                excerpt: item.excerpt || '',
+                date: item.date || item.date_display || '',
+                date_display: item.date_display,
+                date_iso: item.date_iso,
+                content_html: item.content_html,
+                content_text: item.content_text
+            }));
     }
 
     function applyFilter() {
@@ -224,16 +251,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return div;
     }
 
-    function openModal(item) {
-        modalTitle.textContent = item.title || '';
-        const dateDisplay = getDisplayDate(item);
-        const author = item.author || '';
-        modalMeta.textContent = [dateDisplay, author].filter(Boolean).join(' • ');
-        modalMeta.textContent = '';
-        modalBody.innerHTML = '';
-        document.body.style.overflow = '';
-    }
-
     function wireUi() {
         if (searchInput) {
             searchInput.addEventListener('input', () => {
@@ -252,10 +269,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadData() {
         try {
-            const res = await fetch('data/khutab_written.json', { cache: 'no-cache' });
-            if (!res.ok) throw new Error('Failed to load JSON');
-            const json = await res.json();
-            state.all = Array.isArray(json) ? json : (json.items || []);
+            const candidateUrls = ['data/khutab_written.json', './data/khutab_written.json', '/data/khutab_written.json'];
+            let json = null;
+
+            for (const url of candidateUrls) {
+                try {
+                    const res = await fetch(url, { cache: 'no-cache' });
+                    if (!res.ok) continue;
+                    json = await res.json();
+                    break;
+                } catch {
+                }
+            }
+
+            if (!json) throw new Error('Failed to load JSON');
+            state.all = normalizeItems(json);
+
+            if (!state.all.length) {
+                throw new Error('No khutab items found in data source');
+            }
+
             state.latestId = computeLatestId(state.all);
             state.latestReadableIds = computeLatestReadableIds(state.all, 5);
 
@@ -271,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             console.error('Error loading khutab:', err);
             listEl.innerHTML = '<p class="khutab-empty">عذراً، تعذر تحميل الخطب حالياً.</p>';
-            loadMoreBtn.style.display = 'none';
+            if (loadMoreBtn) loadMoreBtn.style.display = 'none';
         }
     }
 
