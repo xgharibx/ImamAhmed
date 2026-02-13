@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .map((video, index) => ({
                     ...video,
                     normalizedCategory: classifyVideo(video),
+                    supplementalCategories: getSupplementalCategories(video),
                     _sourceIndex: index,
                     _sortTimestamp: extractVideoTimestamp(video)
                 }))
@@ -53,7 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (category === 'all') {
             filteredVideos = allVideos;
         } else {
-            filteredVideos = allVideos.filter(v => v.normalizedCategory === category);
+            filteredVideos = allVideos.filter(v =>
+                v.normalizedCategory === category || (v.supplementalCategories || []).includes(category)
+            );
         }
 
         // Render
@@ -245,6 +248,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (looksLikeDirectQuran && !isTv) return 'quran';
         if (knownCategories.has(originalCategory)) return originalCategory;
         return 'lessons';
+    }
+
+    function getSupplementalCategories(video) {
+        const title = normalizeArabic(video?.title || '');
+        const tafseerKeywords = ['تفسير', 'في نور القران', 'في نور القرآن'];
+        const tvKeywords = ['برنامج', 'تلفزيون', 'التلفزيون', 'شاشه', 'شاشة', 'النيل الثقافيه', 'النيل الثقافية', 'قناه', 'قناة', 'اذيع', 'يذاع', 'لقاء', 'مناره الازهر', 'منارة الازهر', 'منارة الأزهر'];
+
+        const isTafseer = hasAnyKeyword(title, tafseerKeywords);
+        const isTv = hasAnyKeyword(title, tvKeywords);
+
+        if (isTv && isTafseer) {
+            return ['tafseer'];
+        }
+
+        return [];
     }
 
     // Event Listeners

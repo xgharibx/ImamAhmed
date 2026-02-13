@@ -157,8 +157,8 @@ function updateActiveNavLink() {
 
 /* ============== Coming Soon (Global) ============== */
 function initComingSoonLinks() {
-    // Disable khutab audio/video everywhere (nav, cards, footer, etc.)
-    const comingSoonTargets = new Set(['khutab-audio.html', 'khutab-video.html']);
+    // Disable only khutab audio everywhere (video is now live)
+    const comingSoonTargets = new Set(['khutab-audio.html']);
 
     document.querySelectorAll('a[href]').forEach((a) => {
         const rawHref = (a.getAttribute('href') || '').trim();
