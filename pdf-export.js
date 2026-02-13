@@ -343,11 +343,6 @@
             ctx.fillText(String(payload.subtitle).slice(0, 160), width - 80, 208);
         }
 
-        if (pageNumber > 1) {
-            ctx.fillStyle = '#4d4d4d';
-            ctx.font = '20px Cairo, Tahoma, Arial';
-            ctx.fillText(`تابع - الصفحة ${pageNumber}`, width - 80, 280);
-        }
     }
 
     function drawPageFooter(ctx, pageNumber) {
