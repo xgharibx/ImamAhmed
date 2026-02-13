@@ -15,11 +15,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalTitle = document.getElementById('modal-title');
     const closeModal = document.querySelector('.close-modal');
 
+    const knownCategories = new Set(['khutbah', 'lessons', 'tv', 'tafseer', 'quran', 'shorts']);
+
     // Fetch Data
     fetch('data/videos.json')
         .then(response => response.json())
         .then(data => {
-            allVideos = data;
+            allVideos = (Array.isArray(data) ? data : []).map(video => ({
+                ...video,
+                normalizedCategory: classifyVideo(video)
+            }));
             // Initial filter
             filterVideos('all');
         })
@@ -43,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (category === 'all') {
             filteredVideos = allVideos;
         } else {
-            filteredVideos = allVideos.filter(v => v.category === category);
+            filteredVideos = allVideos.filter(v => v.normalizedCategory === category);
         }
 
         // Render
@@ -85,10 +90,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Icon mapping
         let icon = 'fa-play-circle';
         let catText = 'فيديو';
-        if (video.category === 'khutbah') { icon = 'fa-mosque'; catText = 'خطبة جمعة'; }
-        else if (video.category === 'quran') { icon = 'fa-quran'; catText = 'تلاوة'; }
-        else if (video.category === 'shorts') { icon = 'fa-mobile-alt'; catText = 'شورت'; }
-        else if (video.category === 'tafseer') { icon = 'fa-book-open'; catText = 'تفسير'; }
+        if (video.normalizedCategory === 'khutbah') { icon = 'fa-mosque'; catText = 'خطبة جمعة'; }
+        else if (video.normalizedCategory === 'quran') { icon = 'fa-quran'; catText = 'تلاوة'; }
+        else if (video.normalizedCategory === 'shorts') { icon = 'fa-mobile-alt'; catText = 'شورت'; }
+        else if (video.normalizedCategory === 'tafseer') { icon = 'fa-book-open'; catText = 'تفسير'; }
+        else if (video.normalizedCategory === 'tv') { icon = 'fa-tv'; catText = 'لقاء تلفزيوني'; }
         else { icon = 'fa-chalkboard-teacher'; catText = 'درس'; }
 
         div.innerHTML = `
@@ -120,12 +126,67 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Escape Helper
     function escapeHtml(text) {
-        return text
+        return (text || '')
+            .toString()
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
+    }
+
+    function normalizeArabic(text) {
+        return (text || '')
+            .toString()
+            .normalize('NFKC')
+            .replace(/[\u064B-\u0652\u0670]/g, '')
+            .replace(/أ|إ|آ/g, 'ا')
+            .replace(/ى/g, 'ي')
+            .replace(/ة/g, 'ه')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .toLowerCase();
+    }
+
+    function parseDurationSeconds(rawDuration) {
+        const durationText = (rawDuration || '').toString().trim();
+        if (!durationText) return 0;
+        const parts = durationText.split(':').map(p => Number.parseInt(p, 10));
+        if (parts.some(Number.isNaN)) return 0;
+        if (parts.length === 2) return (parts[0] * 60) + parts[1];
+        if (parts.length === 3) return (parts[0] * 3600) + (parts[1] * 60) + parts[2];
+        return 0;
+    }
+
+    function hasAnyKeyword(text, keywords) {
+        return keywords.some(keyword => text.includes(keyword));
+    }
+
+    function classifyVideo(video) {
+        const title = normalizeArabic(video?.title || '');
+        const originalCategory = (video?.category || '').toString().trim().toLowerCase();
+        const durationSeconds = parseDurationSeconds(video?.duration);
+
+        const khutbahKeywords = ['خطبه', 'خطب', 'الجمعه', 'الجمعه'];
+        const tafseerKeywords = ['تفسير', 'في نور القران', 'في نور القرآن'];
+        const tvKeywords = ['تلفزيون', 'التلفزيون', 'شاشه', 'شاشة', 'النيل الثقافيه', 'النيل الثقافية', 'قناه', 'قناة', 'اذيع', 'يذاع', 'لقاء', 'مناره الازهر', 'منارة الازهر', 'منارة الأزهر'];
+        const directQuranKeywords = ['تلاوه', 'تلاوة', 'ما تيسر', 'سوره', 'سورة', 'المصحف', 'القران الكريم', 'القرآن الكريم', 'المجود', 'المرتل'];
+        const mihrabHintKeywords = ['صلاه', 'صلاة', 'فجر', 'عشاء', 'محراب', 'تراويح', 'تهجد'];
+        const shortKeywords = ['short', 'شورت', '#shorts', 'ريل'];
+
+        const isKhutbah = hasAnyKeyword(title, khutbahKeywords);
+        const isTafseer = hasAnyKeyword(title, tafseerKeywords);
+        const isTv = hasAnyKeyword(title, tvKeywords);
+        const looksLikeDirectQuran = hasAnyKeyword(title, directQuranKeywords) || hasAnyKeyword(title, mihrabHintKeywords);
+        const isShort = hasAnyKeyword(title, shortKeywords) || (durationSeconds > 0 && durationSeconds <= 180);
+
+        if (isKhutbah) return 'khutbah';
+        if (isTafseer) return 'tafseer';
+        if (isShort && !looksLikeDirectQuran) return 'shorts';
+        if (looksLikeDirectQuran && !isTv) return 'quran';
+        if (isTv) return 'tv';
+        if (knownCategories.has(originalCategory)) return originalCategory;
+        return 'lessons';
     }
 
     // Event Listeners
