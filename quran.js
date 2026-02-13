@@ -164,24 +164,42 @@ function openSurah(id, highlightAyahNumber = null) {
   const titleEl = document.querySelector('.surah-title');
   if (titleEl) titleEl.textContent = surah.name;
 
-  let lastPage = 1;
-  const pageMap = new Map();
-  surah.ayahs.forEach((rawAyah, index) => {
-    const ayahNumber = index + 1;
-    const text = cleanFirstAyahBasmallah(rawAyah, surah.id, index);
-    if (!text) return;
-    const page = getMappedPageForAyah(surah.id, ayahNumber, lastPage);
-    lastPage = page;
-    if (!pageMap.has(page)) pageMap.set(page, []);
-    pageMap.get(page).push({ ayahNumber, text, isFirstAyahInSurah: ayahNumber === 1 });
-  });
+  const pages = (quranState.mushafPages || [])
+    .map((page, index) => ({
+      pageNumber: index + 1,
+      ayahs: (page.items || [])
+        .filter((item) => item.surahId === surah.id)
+        .map((item) => ({
+          ayahNumber: item.ayahNumber,
+          text: item.text,
+          isFirstAyahInSurah: item.isFirstAyahInSurah
+        }))
+    }))
+    .filter((page) => page.ayahs.length > 0);
 
-  const pages = [...pageMap.entries()].sort((a, b) => a[0] - b[0]).map(([pageNumber, ayahs]) => ({ pageNumber, ayahs }));
-  quranState.currentSurahPages = pages;
+  if (!pages.length) {
+    let lastPage = 1;
+    const pageMap = new Map();
+    surah.ayahs.forEach((rawAyah, index) => {
+      const ayahNumber = index + 1;
+      const text = cleanFirstAyahBasmallah(rawAyah, surah.id, index);
+      if (!text) return;
+      const page = getMappedPageForAyah(surah.id, ayahNumber, lastPage);
+      lastPage = page;
+      if (!pageMap.has(page)) pageMap.set(page, []);
+      pageMap.get(page).push({ ayahNumber, text, isFirstAyahInSurah: ayahNumber === 1 });
+    });
+
+    quranState.currentSurahPages = [...pageMap.entries()]
+      .sort((a, b) => a[0] - b[0])
+      .map(([pageNumber, ayahs]) => ({ pageNumber, ayahs }));
+  } else {
+    quranState.currentSurahPages = pages;
+  }
 
   let targetPageIndex = 0;
   if (highlightAyahNumber) {
-    const matchedIndex = pages.findIndex((page) => page.ayahs.some((ayah) => ayah.ayahNumber === Number(highlightAyahNumber)));
+    const matchedIndex = quranState.currentSurahPages.findIndex((page) => page.ayahs.some((ayah) => ayah.ayahNumber === Number(highlightAyahNumber)));
     targetPageIndex = matchedIndex >= 0 ? matchedIndex : 0;
     quranState.pendingSurahHighlightAyah = Number(highlightAyahNumber);
   } else {
@@ -215,7 +233,7 @@ function renderCurrentSurahPage() {
   }
 
   if (indicator) {
-    indicator.textContent = `الصفحة ${convertArabicNumbers(currentPage.pageNumber)} • ${convertArabicNumbers(safeIndex + 1)} / ${convertArabicNumbers(pages.length)}`;
+    indicator.textContent = `الصفحة ${convertArabicNumbers(currentPage.pageNumber)}`;
   }
   if (prevBtn) prevBtn.disabled = safeIndex === 0;
   if (nextBtn) nextBtn.disabled = safeIndex === pages.length - 1;

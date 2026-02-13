@@ -170,6 +170,83 @@
         return wrapper;
     }
 
+    function canvasLooksBlank(canvas) {
+        try {
+            const context = canvas.getContext('2d', { willReadFrequently: true });
+            if (!context) return false;
+            const width = canvas.width;
+            const height = canvas.height;
+            if (!width || !height) return true;
+
+            const samplePoints = [
+                [Math.floor(width * 0.1), Math.floor(height * 0.1)],
+                [Math.floor(width * 0.5), Math.floor(height * 0.5)],
+                [Math.floor(width * 0.9), Math.floor(height * 0.9)],
+                [Math.floor(width * 0.2), Math.floor(height * 0.8)],
+                [Math.floor(width * 0.8), Math.floor(height * 0.2)]
+            ];
+
+            let nonWhiteCount = 0;
+            for (const [x, y] of samplePoints) {
+                const pixel = context.getImageData(x, y, 1, 1).data;
+                const [r, g, b, a] = pixel;
+                const isWhiteLike = a > 0 && r >= 250 && g >= 250 && b >= 250;
+                if (!isWhiteLike) nonWhiteCount += 1;
+            }
+            return nonWhiteCount === 0;
+        } catch {
+            return false;
+        }
+    }
+
+    async function renderShellToCanvas(shell, scale) {
+        if (!window.html2canvas) {
+            throw new Error('html2canvas is unavailable');
+        }
+        return window.html2canvas(shell, {
+            scale,
+            useCORS: true,
+            backgroundColor: '#ffffff',
+            windowWidth: 794,
+            scrollX: 0,
+            scrollY: 0,
+            removeContainer: true,
+            logging: false
+        });
+    }
+
+    function saveCanvasAsPdf(canvas, filename) {
+        const JsPdfCtor = window.jspdf?.jsPDF;
+        if (!JsPdfCtor) {
+            throw new Error('jsPDF is unavailable');
+        }
+
+        const pdf = new JsPdfCtor({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const margin = 8;
+        const printableWidth = pageWidth - (margin * 2);
+        const printableHeight = pageHeight - (margin * 2);
+
+        const imageData = canvas.toDataURL('image/jpeg', 0.98);
+        const imageHeight = (canvas.height * printableWidth) / canvas.width;
+
+        let heightLeft = imageHeight;
+        let yPosition = margin;
+
+        pdf.addImage(imageData, 'JPEG', margin, yPosition, printableWidth, imageHeight);
+        heightLeft -= printableHeight;
+
+        while (heightLeft > 0) {
+            yPosition = margin - (imageHeight - heightLeft);
+            pdf.addPage();
+            pdf.addImage(imageData, 'JPEG', margin, yPosition, printableWidth, imageHeight);
+            heightLeft -= printableHeight;
+        }
+
+        pdf.save(filename);
+    }
+
     function extractContentFromDocument(doc) {
         const contentRoot = doc.querySelector('.book-container, .khutba-content, .newspaper-article, .content-section main, .content-section, main');
         const title =
@@ -226,34 +303,16 @@
 
         const filename = `${slugify(filenameHint || payload.title)}.pdf`;
         try {
-            const runExport = (scale) => window.html2pdf()
-                .set({
-                    margin: [8, 8, 8, 8],
-                    filename,
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: {
-                        scale,
-                        useCORS: true,
-                        backgroundColor: '#ffffff',
-                        windowWidth: 794,
-                        scrollX: 0,
-                        scrollY: 0,
-                        removeContainer: true,
-                        logging: false
-                    },
-                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                    pagebreak: { mode: ['css', 'legacy'] }
-                })
-                .from(shell)
-                .save();
-
-            try {
-                await runExport(2);
-            } catch (firstError) {
-                console.warn('Primary PDF render failed, retrying with lower scale.', firstError);
-                await new Promise((resolve) => setTimeout(resolve, 200));
-                await runExport(1.35);
+            let canvas = await renderShellToCanvas(shell, 2);
+            if (canvasLooksBlank(canvas)) {
+                canvas = await renderShellToCanvas(shell, 1.35);
             }
+
+            if (canvasLooksBlank(canvas)) {
+                throw new Error('Rendered canvas is blank');
+            }
+
+            saveCanvasAsPdf(canvas, filename);
         } finally {
             shell.remove();
         }
