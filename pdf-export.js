@@ -357,13 +357,37 @@
         ctx.fillText(typeLabel(payload.type), width - 105, 93);
 
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 50px Cairo, Tahoma, Arial';
-        const title = (payload.title || 'محتوى').slice(0, 120);
-        ctx.fillText(title, width - 80, 160);
+        const normalizedTitle = String(payload.title || 'محتوى').replace(/\s+/g, ' ').trim().slice(0, 220);
+        const isKhutba = payload.type === 'khutba';
+        const titleFontSize = isKhutba
+            ? (normalizedTitle.length > 110 ? 32 : normalizedTitle.length > 85 ? 34 : normalizedTitle.length > 60 ? 36 : 40)
+            : (normalizedTitle.length > 70 ? 44 : 50);
+        const titleLineHeight = Math.round(titleFontSize * 1.2);
+        const titleMaxLines = isKhutba ? 3 : 2;
+        const titleMaxWidth = width - 200;
+
+        ctx.font = `bold ${titleFontSize}px Cairo, Tahoma, Arial`;
+        const wrappedTitleLines = wrapTextLines(ctx, normalizedTitle, titleMaxWidth);
+        const titleLines = wrappedTitleLines.slice(0, titleMaxLines);
+
+        if (wrappedTitleLines.length > titleMaxLines && titleLines.length) {
+            let lastLine = titleLines[titleLines.length - 1];
+            while (lastLine.length > 4 && ctx.measureText(`${lastLine}…`).width > titleMaxWidth) {
+                lastLine = lastLine.slice(0, -1).trim();
+            }
+            titleLines[titleLines.length - 1] = `${lastLine}…`;
+        }
+
+        let titleY = 145;
+        for (const line of titleLines) {
+            ctx.fillText(line, width - 80, titleY);
+            titleY += titleLineHeight;
+        }
 
         if (payload.subtitle) {
             ctx.font = '28px Cairo, Tahoma, Arial';
-            ctx.fillText(String(payload.subtitle).slice(0, 160), width - 80, 208);
+            const subtitleY = Math.min(titleY + 8, 236);
+            ctx.fillText(String(payload.subtitle).slice(0, 160), width - 80, subtitleY);
         }
 
     }
