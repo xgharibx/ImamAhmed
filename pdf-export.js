@@ -391,6 +391,7 @@
     function renderPayloadToCanvases(payload) {
         const blocks = collectTextBlocksFromHtml(payload.contentHtml || '');
         const canvases = [];
+        const chapterPerPage = payload.layoutMode === 'chapter-per-page';
 
         let pageNumber = 1;
         let page = createPdfPageCanvas();
@@ -410,6 +411,10 @@
         };
 
         for (const block of blocks) {
+            if (chapterPerPage && block.kind === 'heading' && /الخاطرة\s*\(/.test(block.text) && y > 360) {
+                newPage();
+            }
+
             const style = {
                 heading: { font: 'bold 38px Cairo, Tahoma, Arial', color: '#1a5f4a', lineHeight: 56, gapBefore: 18, gapAfter: 16 },
                 quote: { font: '30px Cairo, Tahoma, Arial', color: '#2e7d32', lineHeight: 50, gapBefore: 12, gapAfter: 14 },
@@ -607,7 +612,8 @@
             type: options.type || 'content',
             title: options.title || extracted.title,
             subtitle: options.subtitle ?? extracted.subtitle,
-            meta: options.meta ?? extracted.meta
+            meta: options.meta ?? extracted.meta,
+            layoutMode: options.layoutMode || extracted.layoutMode
         }, options.filename || extracted.title);
     }
 
@@ -624,7 +630,8 @@
             type: options.type || 'content',
             title: options.title || extracted.title,
             subtitle: options.subtitle ?? extracted.subtitle,
-            meta: options.meta ?? extracted.meta
+            meta: options.meta ?? extracted.meta,
+            layoutMode: options.layoutMode || extracted.layoutMode
         }, options.filename || extracted.title);
     }
 
@@ -699,7 +706,11 @@
                 btn.style.pointerEvents = 'none';
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جارِ التحضير...';
                 try {
-                    await exportFromUrl(new URL(href, window.location.href).href, { type: 'book' });
+                    const isHowTheyLivedBook = /how-they-lived-how-we-live\.html$/i.test(href);
+                    await exportFromUrl(new URL(href, window.location.href).href, {
+                        type: 'book',
+                        layoutMode: isHowTheyLivedBook ? 'chapter-per-page' : undefined
+                    });
                 } catch (err) {
                     console.error(err);
                     alert('تعذر إنشاء ملف PDF حالياً.');
