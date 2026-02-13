@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="animations.css">
     <link rel="stylesheet" href="tilawa.css">
+    <link rel="stylesheet" href="videos.css">
 </head>
 <body>
     <!-- Preloader -->
@@ -94,62 +95,54 @@
         </div>
     </section>
 
-    <!-- Main Content -->
-    <main class="tilawa-sections">
+    <section class="videos-library-section" id="library-top">
         <div class="container">
-            <!-- 1. Murattal Quran -->
-            <section class="tilawa-category" id="murattal" data-aos="fade-up">
-                <div class="category-header">
-                    <div class="category-icon"><i class="fas fa-quran"></i></div>
-                    <h2 class="category-title">المصحف المرتل</h2>
+            <div class="video-filters-wrapper" data-aos="fade-down">
+                <div class="video-filters" id="video-filters">
+                    <button class="filter-btn active" data-filter="all">
+                        <i class="fas fa-layer-group"></i> الكل
+                    </button>
+                    <button class="filter-btn" data-filter="murattal">
+                        <i class="fas fa-quran"></i> المصحف المرتل
+                    </button>
+                    <button class="filter-btn" data-filter="mujawwad">
+                        <i class="fas fa-star-and-crescent"></i> المصحف المجود
+                    </button>
+                    <button class="filter-btn" data-filter="external">
+                        <i class="fas fa-microphone-lines"></i> تلاوات خارجية
+                    </button>
+                    <button class="filter-btn" data-filter="mihrab">
+                        <i class="fas fa-mosque"></i> تلاوات المحراب
+                    </button>
                 </div>
-                <div class="empty-category-msg">
-                    <i class="fas fa-hourglass-half" style="margin-left: 10px;"></i>
-                    سيتم إضافة التلاوات قريباً بإذن الله
-                </div>
-                <div class="tilawa-videos-grid"></div>
-            </section>
+            </div>
 
-            <!-- 2. Mujawwad Quran -->
-            <section class="tilawa-category" id="mujawwad" data-aos="fade-up">
-                <div class="category-header">
-                    <div class="category-icon"><i class="fas fa-star-and-crescent"></i></div>
-                    <h2 class="category-title">المصحف المجود</h2>
+            <div class="videos-grid" id="tilawa-grid">
+                <div class="grid-loader">
+                    <div class="islamic-pattern-loader"></div>
+                    <p style="margin-top: 1rem;">جاري تحميل مكتبة التلاوات...</p>
                 </div>
-                <div class="empty-category-msg">
-                    <i class="fas fa-hourglass-half" style="margin-left: 10px;"></i>
-                    سيتم إضافة التلاوات قريباً بإذن الله
-                </div>
-                <div class="tilawa-videos-grid"></div>
-            </section>
+            </div>
 
-            <!-- 3. External Recitations -->
-            <section class="tilawa-category" id="external" data-aos="fade-up">
-                <div class="category-header">
-                    <div class="category-icon"><i class="fas fa-microphone-lines"></i></div>
-                    <h2 class="category-title">تلاوات خارجية</h2>
-                </div>
-                <div class="empty-category-msg">
-                    <i class="fas fa-hourglass-half" style="margin-left: 10px;"></i>
-                    سيتم إضافة التلاوات قريباً بإذن الله
-                </div>
-                <div class="tilawa-videos-grid"></div>
-            </section>
-
-            <!-- 4. Mihrab Recitations -->
-            <section class="tilawa-category" id="mihrab" data-aos="fade-up">
-                <div class="category-header">
-                    <div class="category-icon"><i class="fas fa-mosque"></i></div>
-                    <h2 class="category-title">تلاوات المحراب</h2>
-                </div>
-                <div class="empty-category-msg">
-                    <i class="fas fa-hourglass-half" style="margin-left: 10px;"></i>
-                    سيتم إضافة التلاوات قريباً بإذن الله
-                </div>
-                <div class="tilawa-videos-grid"></div>
-            </section>
+            <div class="load-more-wrapper">
+                <button id="tilawa-load-more" class="btn btn-outline" style="display:none;">
+                    عرض المزيد <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
         </div>
-    </main>
+    </section>
+
+    <div id="video-modal" class="video-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="video-wrapper">
+                <iframe id="modal-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="modal-info">
+                <h3 id="modal-title"></h3>
+            </div>
+        </div>
+    </div>
 
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>

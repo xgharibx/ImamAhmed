@@ -1,68 +1,125 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const sectionMap = {
-        murattal: document.querySelector('#murattal .tilawa-videos-grid'),
-        mujawwad: document.querySelector('#mujawwad .tilawa-videos-grid'),
-        external: document.querySelector('#external .tilawa-videos-grid'),
-        mihrab: document.querySelector('#mihrab .tilawa-videos-grid')
-    };
+    let allTilawat = [];
+    let filteredTilawat = [];
+    let currentPage = 1;
+    const itemsPerPage = 20;
+    let currentCategory = 'all';
 
-    const emptyMessages = {
-        murattal: document.querySelector('#murattal .empty-category-msg'),
-        mujawwad: document.querySelector('#mujawwad .empty-category-msg'),
-        external: document.querySelector('#external .empty-category-msg'),
-        mihrab: document.querySelector('#mihrab .empty-category-msg')
-    };
+    const grid = document.getElementById('tilawa-grid');
+    const loadMoreBtn = document.getElementById('tilawa-load-more');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const modal = document.getElementById('video-modal');
+    const modalIframe = document.getElementById('modal-iframe');
+    const modalTitle = document.getElementById('modal-title');
+    const closeModal = document.querySelector('.close-modal');
 
     fetch('data/videos.json')
         .then((response) => response.json())
         .then((rawData) => {
-            const videos = (Array.isArray(rawData) ? rawData : []).filter(isDirectTilawah);
-            const grouped = {
-                murattal: [],
-                mujawwad: [],
-                external: [],
-                mihrab: []
-            };
+            allTilawat = (Array.isArray(rawData) ? rawData : [])
+                .filter(isDirectTilawah)
+                .map((video, index) => ({
+                    ...video,
+                    tilawaCategory: detectTilawahSection(video),
+                    _sourceIndex: index,
+                    _sortTimestamp: extractVideoTimestamp(video)
+                }))
+                .sort(sortByNewest);
 
-            videos.forEach((video) => {
-                const bucket = detectTilawahSection(video);
-                grouped[bucket].push(video);
-            });
-
-            Object.keys(grouped).forEach((section) => {
-                grouped[section] = grouped[section]
-                    .map((video, index) => ({
-                        ...video,
-                        _sourceIndex: index,
-                        _sortTimestamp: extractVideoTimestamp(video)
-                    }))
-                    .sort(sortByNewest);
-            });
-
-            Object.entries(grouped).forEach(([section, list]) => {
-                const target = sectionMap[section];
-                if (!target) return;
-
-                if (list.length === 0) {
-                    target.innerHTML = '<p class="tilawa-empty-note">لا توجد تلاوات مصنفة في هذا القسم حالياً.</p>';
-                    return;
-                }
-
-                if (emptyMessages[section]) {
-                    emptyMessages[section].style.display = 'none';
-                }
-
-                list.forEach((video) => target.appendChild(createCard(video)));
-            });
+            filterVideos('all');
         })
         .catch((error) => {
             console.error('Failed to load tilawah videos:', error);
-            Object.values(sectionMap).forEach((target) => {
-                if (target) {
-                    target.innerHTML = '<p class="tilawa-empty-note">تعذر تحميل التلاوات حالياً.</p>';
-                }
-            });
+            grid.innerHTML = '<p class="error-msg">تعذر تحميل التلاوات حالياً.</p>';
         });
+
+    function filterVideos(category) {
+        currentCategory = category;
+        currentPage = 1;
+
+        filterButtons.forEach((btn) => {
+            if (btn.dataset.filter === category) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+
+        if (category === 'all') {
+            filteredTilawat = allTilawat;
+        } else {
+            filteredTilawat = allTilawat.filter((video) => video.tilawaCategory === category);
+        }
+
+        grid.innerHTML = '';
+        renderNextBatch();
+    }
+
+    function renderNextBatch() {
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const batch = filteredTilawat.slice(start, end);
+
+        if (batch.length === 0 && currentPage === 1) {
+            grid.innerHTML = '<p class="no-videos">لا توجد تلاوات في هذا القسم حالياً.</p>';
+            loadMoreBtn.style.display = 'none';
+            return;
+        }
+
+        batch.forEach((video) => {
+            grid.appendChild(createVideoCard(video));
+        });
+
+        if (end >= filteredTilawat.length) {
+            loadMoreBtn.style.display = 'none';
+        } else {
+            loadMoreBtn.style.display = 'block';
+        }
+    }
+
+    function createVideoCard(video) {
+        const div = document.createElement('div');
+        div.className = 'video-card aos-init aos-animate';
+        div.setAttribute('data-aos', 'fade-up');
+
+        const title = escapeHtml(video?.title || 'تلاوة');
+        const videoId = (video?.id || '').toString().trim();
+        const thumbnail = escapeHtml(video?.thumbnail || `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`);
+        const duration = escapeHtml(video?.duration || '--:--');
+
+        const categoryMap = {
+            murattal: { icon: 'fa-quran', text: 'المصحف المرتل' },
+            mujawwad: { icon: 'fa-star-and-crescent', text: 'المصحف المجود' },
+            external: { icon: 'fa-microphone-lines', text: 'تلاوات خارجية' },
+            mihrab: { icon: 'fa-mosque', text: 'تلاوات المحراب' }
+        };
+
+        const categoryMeta = categoryMap[video.tilawaCategory] || categoryMap.external;
+
+        div.innerHTML = `
+            <div class="video-thumbnail" onclick="openTilawaVideo('${videoId}', '${title}')">
+                <img src="${thumbnail}" alt="${title}" loading="lazy">
+                <div class="video-embed placeholder">
+                    <div class="play-overlay">
+                        <i class="fas fa-play-circle"></i>
+                        <span>تشغيل</span>
+                    </div>
+                </div>
+                <div class="duration-badge">${duration}</div>
+                <span class="video-category"><i class="fas ${categoryMeta.icon}"></i> ${categoryMeta.text}</span>
+            </div>
+            <div class="video-content">
+                <h3 class="video-title" title="${title}">${title}</h3>
+                <div class="video-actions">
+                    <button class="btn btn-outline btn-sm" onclick="openTilawaVideo('${videoId}', '${title}')">
+                        <i class="fas fa-play"></i> مشاهدة
+                    </button>
+                    <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" class="btn-yt-icon" title="فتح في يوتيوب" rel="noopener">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        `;
+
+        return div;
+    }
 
     function normalizeArabic(text) {
         return (text || '')
@@ -168,31 +225,36 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/'/g, '&#039;');
     }
 
-    function createCard(video) {
-        const card = document.createElement('article');
-        card.className = 'tilawa-video-card';
+    filterButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+            filterVideos(btn.dataset.filter);
+        });
+    });
 
-        const title = escapeHtml(video?.title || 'تلاوة');
-        const videoId = (video?.id || '').toString().trim();
-        const thumbnail = escapeHtml(video?.thumbnail || `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`);
-        const duration = escapeHtml(video?.duration || '--:--');
+    loadMoreBtn?.addEventListener('click', () => {
+        currentPage += 1;
+        renderNextBatch();
+    });
 
-        card.innerHTML = `
-            <div class="tilawa-video-thumb" onclick="window.open('https://www.youtube.com/watch?v=${videoId}', '_blank', 'noopener')">
-                <img src="${thumbnail}" alt="${title}" loading="lazy">
-                <div class="tilawa-play-overlay"><i class="fas fa-play-circle"></i></div>
-                <span class="tilawa-duration">${duration}</span>
-            </div>
-            <div class="tilawa-video-body">
-                <h3 class="tilawa-video-title">${title}</h3>
-                <div class="tilawa-video-actions">
-                    <a class="btn btn-outline btn-sm" href="https://www.youtube.com/watch?v=${videoId}" target="_blank" rel="noopener">
-                        <i class="fas fa-play"></i> مشاهدة
-                    </a>
-                </div>
-            </div>
-        `;
+    window.openTilawaVideo = (id, title) => {
+        const cleanId = (id || '').toString().trim();
+        modalTitle.textContent = title;
+        modalIframe.src = `https://www.youtube.com/embed/${cleanId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    };
 
-        return card;
+    closeModal?.addEventListener('click', closeVideoModal);
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeVideoModal();
+        }
+    });
+
+    function closeVideoModal() {
+        modal.classList.remove('active');
+        modalIframe.src = '';
+        document.body.style.overflow = '';
     }
 });
