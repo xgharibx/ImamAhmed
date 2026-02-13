@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
         currentPage: 1,
         perPage: 12,
         query: '',
-        latestId: ''
+        latestId: '',
+        latestReadableIds: new Set()
     };
 
     const listEl = document.getElementById('khutab-list');
@@ -13,11 +14,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('khutab-search');
     const statsEl = document.getElementById('khutab-stats');
 
-    // Show a simple notice that only the newest khutba is available for viewing.
+    // Access notice for currently readable khutab.
     const toolbarEl = document.querySelector('.khutab-toolbar');
     const latestOnlyNoteEl = document.createElement('div');
     latestOnlyNoteEl.className = 'soon-note';
-    latestOnlyNoteEl.textContent = 'متاح حالياً أحدث خطبة فقط.';
+    latestOnlyNoteEl.textContent = 'متاح حالياً آخر 5 خطب.';
 
     // We render a list page and navigate to an internal detail page (no external redirects)
 
@@ -41,8 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function toDetailUrl(item) {
-        const id = (item?.id || '').trim();
+        const id = String(item?.id || '').trim();
         return `khutba-view.html?id=${encodeURIComponent(id)}`;
+    }
+
+    function getItemId(item) {
+        return String(item?.id || '').trim();
     }
 
     function getDisplayDate(item) {
@@ -68,7 +73,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 bestIso = iso;
             }
         }
-        return (best?.id || '').trim();
+        return getItemId(best);
+    }
+
+    function computeLatestReadableIds(items, limit = 5) {
+        const list = (Array.isArray(items) ? items : []).slice();
+        list.sort((a, b) => {
+            const isoA = getIsoDate(a) || '';
+            const isoB = getIsoDate(b) || '';
+            return isoB.localeCompare(isoA);
+        });
+        return new Set(list.slice(0, limit).map(getItemId).filter(Boolean));
     }
 
     function applyFilter() {
@@ -144,14 +159,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const author = item.author || '—';
         const dateDisplay = getDisplayDate(item);
         const detailUrl = toDetailUrl(item);
-        const isLatest = !!state.latestId && (item?.id === state.latestId);
+        const itemId = getItemId(item);
+        const isReadable = !!itemId && state.latestReadableIds.has(itemId);
 
-        const actionLabel = isLatest ? 'قراءة الخطبة' : 'قريباً';
-        const actionHref = isLatest ? detailUrl : '#';
-        const actionAttrs = isLatest
+        const actionLabel = isReadable ? 'قراءة الخطبة' : 'قريباً';
+        const actionHref = isReadable ? detailUrl : '#';
+        const actionAttrs = isReadable
             ? ''
             : ' aria-disabled="true" tabindex="-1"';
-        const actionClasses = isLatest
+        const actionClasses = isReadable
             ? 'btn btn-outline btn-sm'
             : 'btn btn-outline btn-sm is-disabled-link has-soon-badge';
 
@@ -167,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
 
-        if (!isLatest) {
+        if (!isReadable) {
             const a = div.querySelector('a');
             a?.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -175,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }, true);
         }
 
-        if (isLatest) {
+        if (isReadable) {
             div.addEventListener('dblclick', () => {
                 window.location.href = detailUrl;
             });
@@ -230,6 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const json = await res.json();
             state.all = Array.isArray(json) ? json : (json.items || []);
             state.latestId = computeLatestId(state.all);
+            state.latestReadableIds = computeLatestReadableIds(state.all, 5);
 
             // Show notice when we actually have more than one khutba.
             if (toolbarEl && state.all.length > 1) {

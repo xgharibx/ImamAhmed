@@ -1979,6 +1979,19 @@ section {
     .nav-container {
         min-height: 64px;
         position: relative;
+        padding-right: calc(var(--spacing-md) + 56px);
+    }
+
+    .logo {
+        transform: translateX(-6px);
+    }
+
+    .logo-icon {
+        transform: translateX(-4px);
+    }
+
+    .logo-title::before {
+        right: -20px;
     }
 
     .hamburger {
@@ -1993,8 +2006,8 @@ section {
         border-radius: 10px;
         position: fixed;
         top: calc(env(safe-area-inset-top, 0px) + 10px);
-        left: 12px;
-        right: auto;
+        right: 12px;
+        left: auto;
         opacity: 1 !important;
         visibility: visible !important;
         flex-shrink: 0;
@@ -2134,6 +2147,19 @@ section {
     }
     
     /* Optimize flying letters for mobile */
+    .floating-decorations,
+    .flying-letters {
+        display: none;
+    }
+
+    .about-image,
+    .about-image img,
+    .sheikh-photo-home {
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: block !important;
+    }
+
     .flying-letter {
         font-size: 1.5rem !important;
         opacity: 0.25;
@@ -2186,6 +2212,10 @@ section {
 }
 
 @media (max-width: 480px) {
+    .logo {
+        transform: translateX(-8px);
+    }
+
     .logo-title {
         font-size: 1.1rem;
     }

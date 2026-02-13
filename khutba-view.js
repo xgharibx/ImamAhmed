@@ -17,6 +17,35 @@ document.addEventListener('DOMContentLoaded', () => {
         return (params.get('id') || '').trim();
     }
 
+    function getItemId(item) {
+        return String(item?.id || '').trim();
+    }
+
+    function sanitizeKhutbaHtml(rawHtml) {
+        if (typeof rawHtml !== 'string' || !rawHtml.trim()) return '';
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(rawHtml, 'text/html');
+
+        doc.querySelectorAll('script,style,iframe,object,embed,form').forEach(el => el.remove());
+
+        doc.querySelectorAll('*').forEach((el) => {
+            for (const attr of [...el.attributes]) {
+                const name = attr.name.toLowerCase();
+                const value = (attr.value || '').toLowerCase();
+                if (name.startsWith('on')) {
+                    el.removeAttribute(attr.name);
+                    continue;
+                }
+                if ((name === 'href' || name === 'src') && value.startsWith('javascript:')) {
+                    el.removeAttribute(attr.name);
+                }
+            }
+        });
+
+        return (doc.body?.innerHTML || '').trim();
+    }
+
     function renderError(msg) {
         contentEl.innerHTML = `<div class="khutab-empty">${escapeHtml(msg)}</div>`;
     }
@@ -46,6 +75,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return best;
     }
 
+    function computeLatestReadableIds(items, limit = 5) {
+        const list = (Array.isArray(items) ? items : []).slice();
+        list.sort((a, b) => {
+            const isoA = getIsoDate(a) || '';
+            const isoB = getIsoDate(b) || '';
+            return isoB.localeCompare(isoA);
+        });
+        return new Set(list.slice(0, limit).map(getItemId).filter(Boolean));
+    }
+
     async function load() {
         const id = getId();
         if (!id) {
@@ -63,13 +102,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const items = Array.isArray(raw) ? raw : (raw.items || []);
 
             const latest = computeLatestItem(items);
-            if (latest && latest.id && id !== latest.id) {
-                const latestUrl = `khutba-view.html?id=${encodeURIComponent(latest.id)}`;
+            const latestReadableIds = computeLatestReadableIds(items, 5);
+            const latestId = getItemId(latest);
+            if (latestId && !latestReadableIds.has(id)) {
+                const latestUrl = `khutba-view.html?id=${encodeURIComponent(latestId)}`;
                 titleEl.innerHTML = `<span class="title-icon"><i class="fas fa-lock"></i></span> ${escapeHtml('غير متاح حالياً')}`;
                 metaEl.textContent = '';
                 contentEl.innerHTML = `
                     <div class="khutab-empty">
-                        هذه الخطبة غير متاحة للعرض حالياً. المتاح الآن: أحدث خطبة فقط.
+                        هذه الخطبة غير متاحة للعرض حالياً. المتاح الآن: آخر 5 خطب فقط.
                         <div style="margin-top: 0.75rem;">
                             <a class="btn btn-outline" href="${latestUrl}">عرض أحدث خطبة</a>
                             <a class="btn" href="khutab-written.html" style="margin-right: 0.5rem;">العودة للأرشيف</a>
@@ -79,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            const item = items.find(x => x.id === id);
+            const item = items.find(x => getItemId(x) === id);
             if (!item) {
                 renderError('تعذر العثور على هذه الخطبة.');
                 return;
@@ -93,15 +134,18 @@ document.addEventListener('DOMContentLoaded', () => {
             metaEl.textContent = [dateDisplay, author].filter(Boolean).join(' • ');
 
             // Render extracted content (HTML preferred, fallback to text)
-            if (item.content_html) {
+            const sanitizedHtml = sanitizeKhutbaHtml(item.content_html);
+            const hasUsefulHtml = sanitizedHtml && sanitizedHtml.replace(/<[^>]*>/g, '').trim().length > 20;
+
+            if (hasUsefulHtml) {
                 contentEl.innerHTML = `
                     <article class="khutba-article">
                         <div class="khutba-body">
-                            ${item.content_html}
+                            ${sanitizedHtml}
                         </div>
                     </article>
                 `;
-            } else if (item.content_text) {
+            } else if (typeof item.content_text === 'string' && item.content_text.trim()) {
                 // Fallback: render plain text as paragraphs
                 const paragraphs = item.content_text
                     .split(/\n{2,}/)

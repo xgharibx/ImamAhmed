@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initBackToTop();
     initBrowserBackButton();
     initCounters();
+    initPerformanceOptimizations();
     setCurrentYear();
 });
 
@@ -23,10 +24,12 @@ function initPreloader() {
     const preloader = document.getElementById('preloader');
     
     window.addEventListener('load', () => {
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        const delay = isMobile ? 600 : 1500;
         setTimeout(() => {
             preloader.classList.add('hidden');
             document.body.style.overflow = 'visible';
-        }, 1500);
+        }, delay);
     });
 }
 
@@ -186,6 +189,8 @@ function initComingSoonLinks() {
 
 /* ============== Scroll Effects ============== */
 function initScrollEffects() {
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
@@ -202,7 +207,7 @@ function initScrollEffects() {
     
     // Parallax effect for hero
     const hero = document.querySelector('.hero-section');
-    if (hero) {
+    if (hero && !isMobile) {
         window.addEventListener('scroll', () => {
             const scrolled = window.pageYOffset;
             const heroContent = hero.querySelector('.hero-content');
@@ -313,6 +318,8 @@ function initKhawaterSlider() {
 
 /* ============== AOS Animations ============== */
 function initAnimations() {
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
     // Initialize AOS library
     if (typeof AOS !== 'undefined') {
         AOS.init({
@@ -320,7 +327,8 @@ function initAnimations() {
             easing: 'ease-out-cubic',
             once: true,
             offset: 50,
-            delay: 100
+            delay: 100,
+            disable: isMobile
         });
     }
     
@@ -470,6 +478,21 @@ function setCurrentYear() {
     if (yearElement) {
         yearElement.textContent = new Date().getFullYear();
     }
+}
+
+/* ============== Performance Optimizations ============== */
+function initPerformanceOptimizations() {
+    const images = document.querySelectorAll('img');
+    images.forEach((img) => {
+        if (!img.hasAttribute('decoding')) {
+            img.setAttribute('decoding', 'async');
+        }
+        if (!img.hasAttribute('loading')) {
+            const rect = img.getBoundingClientRect();
+            const nearViewport = rect.top < (window.innerHeight || 900) * 1.5;
+            img.setAttribute('loading', nearViewport ? 'eager' : 'lazy');
+        }
+    });
 }
 
 /* ============== Utility Functions ============== */
