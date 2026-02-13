@@ -45,14 +45,16 @@
     }
 
     async function ensurePdfDependencies() {
-        await loadHtml2Pdf();
-
-        if (!window.html2canvas) {
-            await loadScript(HTML2CANVAS_CDN);
-        }
-
         if (!window.jspdf?.jsPDF) {
             await loadScript(JSPDF_CDN);
+        }
+
+        if (!window.html2pdf) {
+            await loadHtml2Pdf().catch(() => {});
+        }
+
+        if (!window.html2canvas) {
+            await loadScript(HTML2CANVAS_CDN).catch(() => {});
         }
     }
 
@@ -248,6 +250,181 @@
         }
     }
 
+    function collectTextBlocksFromHtml(contentHtml) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(contentHtml || '', 'text/html');
+        const blocks = [];
+
+        doc.querySelectorAll('h1,h2,h3,h4,h5,h6,p,blockquote,pre').forEach((node) => {
+            const text = (node.textContent || '').replace(/\s+/g, ' ').trim();
+            if (!text) return;
+            const tag = node.tagName.toLowerCase();
+            if (tag.startsWith('h')) {
+                blocks.push({ kind: 'heading', text });
+                return;
+            }
+            if (tag === 'blockquote') {
+                blocks.push({ kind: 'quote', text: `❝ ${text} ❞` });
+                return;
+            }
+            if (tag === 'pre') {
+                blocks.push({ kind: 'pre', text });
+                return;
+            }
+            blocks.push({ kind: 'paragraph', text });
+        });
+
+        if (blocks.length) return blocks;
+
+        const plain = (doc.body.textContent || '').replace(/\s+/g, ' ').trim();
+        if (!plain) return [];
+        return plain.split(/\s{2,}/).filter(Boolean).map((text) => ({ kind: 'paragraph', text }));
+    }
+
+    function wrapTextLines(ctx, text, maxWidth) {
+        const words = String(text || '').split(' ').filter(Boolean);
+        if (!words.length) return [];
+
+        const lines = [];
+        let currentLine = '';
+
+        for (const word of words) {
+            const trial = currentLine ? `${currentLine} ${word}` : word;
+            if (ctx.measureText(trial).width <= maxWidth) {
+                currentLine = trial;
+            } else {
+                if (currentLine) lines.push(currentLine);
+                currentLine = word;
+            }
+        }
+
+        if (currentLine) lines.push(currentLine);
+        return lines;
+    }
+
+    function createPdfPageCanvas() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1240;
+        canvas.height = 1754;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        return { canvas, ctx };
+    }
+
+    function drawPageHeader(ctx, payload, pageNumber) {
+        const width = 1240;
+        const headHeight = 205;
+        const gradient = ctx.createLinearGradient(0, 0, width, headHeight);
+        gradient.addColorStop(0, '#1a5f4a');
+        gradient.addColorStop(1, '#1f7a5a');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(40, 40, width - 80, headHeight);
+
+        ctx.direction = 'rtl';
+        ctx.textAlign = 'right';
+
+        ctx.fillStyle = '#d4af37';
+        ctx.beginPath();
+        ctx.roundRect(width - 210, 65, 130, 42, 21);
+        ctx.fill();
+
+        ctx.fillStyle = '#1a5f4a';
+        ctx.font = 'bold 22px Cairo, Tahoma, Arial';
+        ctx.fillText(typeLabel(payload.type), width - 105, 93);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 50px Cairo, Tahoma, Arial';
+        const title = (payload.title || 'محتوى').slice(0, 120);
+        ctx.fillText(title, width - 80, 160);
+
+        if (payload.subtitle) {
+            ctx.font = '28px Cairo, Tahoma, Arial';
+            ctx.fillText(String(payload.subtitle).slice(0, 160), width - 80, 208);
+        }
+
+        if (pageNumber > 1) {
+            ctx.fillStyle = '#4d4d4d';
+            ctx.font = '20px Cairo, Tahoma, Arial';
+            ctx.fillText(`تابع - الصفحة ${pageNumber}`, width - 80, 280);
+        }
+    }
+
+    function drawPageFooter(ctx, pageNumber) {
+        const width = 1240;
+        const y = 1708;
+        ctx.strokeStyle = '#e5e7eb';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(80, y - 34);
+        ctx.lineTo(width - 80, y - 34);
+        ctx.stroke();
+
+        ctx.direction = 'rtl';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#666';
+        ctx.font = '20px Cairo, Tahoma, Arial';
+        ctx.fillText('الشيخ أحمد إسماعيل الفشني', width / 2, y);
+
+        ctx.textAlign = 'left';
+        ctx.fillText(String(pageNumber), 90, y);
+    }
+
+    function renderPayloadToCanvases(payload) {
+        const blocks = collectTextBlocksFromHtml(payload.contentHtml || '');
+        const canvases = [];
+
+        let pageNumber = 1;
+        let page = createPdfPageCanvas();
+        drawPageHeader(page.ctx, payload, pageNumber);
+
+        const marginX = 100;
+        const maxWidth = page.canvas.width - (marginX * 2);
+        let y = 320;
+
+        const newPage = () => {
+            drawPageFooter(page.ctx, pageNumber);
+            canvases.push(page.canvas);
+            pageNumber += 1;
+            page = createPdfPageCanvas();
+            drawPageHeader(page.ctx, payload, pageNumber);
+            y = 290;
+        };
+
+        for (const block of blocks) {
+            const style = {
+                heading: { font: 'bold 38px Cairo, Tahoma, Arial', color: '#1a5f4a', lineHeight: 56, gapBefore: 18, gapAfter: 16 },
+                quote: { font: '30px Cairo, Tahoma, Arial', color: '#2e7d32', lineHeight: 50, gapBefore: 12, gapAfter: 14 },
+                pre: { font: '28px Cairo, Tahoma, Arial', color: '#333', lineHeight: 46, gapBefore: 10, gapAfter: 10 },
+                paragraph: { font: '32px Cairo, Tahoma, Arial', color: '#222', lineHeight: 52, gapBefore: 8, gapAfter: 10 }
+            }[block.kind] || { font: '32px Cairo, Tahoma, Arial', color: '#222', lineHeight: 52, gapBefore: 8, gapAfter: 10 };
+
+            y += style.gapBefore;
+            page.ctx.direction = 'rtl';
+            page.ctx.textAlign = 'right';
+            page.ctx.font = style.font;
+            page.ctx.fillStyle = style.color;
+
+            const lines = wrapTextLines(page.ctx, block.text, maxWidth);
+            for (const line of lines) {
+                if (y > 1620) {
+                    newPage();
+                    page.ctx.direction = 'rtl';
+                    page.ctx.textAlign = 'right';
+                    page.ctx.font = style.font;
+                    page.ctx.fillStyle = style.color;
+                }
+                page.ctx.fillText(line, page.canvas.width - marginX, y);
+                y += style.lineHeight;
+            }
+            y += style.gapAfter;
+        }
+
+        drawPageFooter(page.ctx, pageNumber);
+        canvases.push(page.canvas);
+        return canvases;
+    }
+
     async function renderShellToCanvas(shell, scale) {
         if (!window.html2canvas) {
             throw new Error('html2canvas is unavailable');
@@ -292,6 +469,25 @@
             pdf.addImage(imageData, 'JPEG', margin, yPosition, printableWidth, imageHeight);
             heightLeft -= printableHeight;
         }
+
+        pdf.save(filename);
+    }
+
+    function saveCanvasesAsPdf(canvases, filename) {
+        const JsPdfCtor = window.jspdf?.jsPDF;
+        if (!JsPdfCtor) {
+            throw new Error('jsPDF is unavailable');
+        }
+
+        const pdf = new JsPdfCtor({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+
+        canvases.forEach((canvas, index) => {
+            const imageData = canvas.toDataURL('image/jpeg', 0.95);
+            if (index > 0) pdf.addPage();
+            pdf.addImage(imageData, 'JPEG', 0, 0, pageWidth, pageHeight);
+        });
 
         pdf.save(filename);
     }
@@ -359,6 +555,17 @@
         const filename = `${slugify(filenameHint || payload.title)}.pdf`;
         try {
             try {
+                const templateCanvases = renderPayloadToCanvases(payload);
+                if (!templateCanvases.length || templateCanvases.every((canvas) => canvasLooksBlank(canvas))) {
+                    throw new Error('Template pipeline produced blank output');
+                }
+                saveCanvasesAsPdf(templateCanvases, filename);
+            } catch (primaryError) {
+                console.warn('Template PDF pipeline failed, trying visual capture fallback.', primaryError);
+                if (!window.html2canvas) {
+                    throw primaryError;
+                }
+
                 let canvas = await renderShellToCanvas(shell, 2);
                 if (canvasLooksBlank(canvas)) {
                     canvas = await renderShellToCanvas(shell, 1.35);
@@ -369,26 +576,6 @@
                 }
 
                 saveCanvasAsPdf(canvas, filename);
-            } catch (primaryError) {
-                console.warn('Primary PDF pipeline failed, trying html2pdf fallback.', primaryError);
-                await window.html2pdf()
-                    .set({
-                        margin: [8, 8, 8, 8],
-                        filename,
-                        image: { type: 'jpeg', quality: 0.98 },
-                        html2canvas: {
-                            scale: 1.5,
-                            useCORS: true,
-                            backgroundColor: '#ffffff',
-                            scrollX: 0,
-                            scrollY: 0,
-                            logging: false
-                        },
-                        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                        pagebreak: { mode: ['css', 'legacy'] }
-                    })
-                    .from(shell)
-                    .save();
             }
         } finally {
             shell.remove();
