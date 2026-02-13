@@ -302,7 +302,7 @@
         return lines;
     }
 
-    function createPdfPageCanvas() {
+    function createPdfPageCanvas({ premiumBook = false } = {}) {
         const canvas = document.createElement('canvas');
         canvas.width = 1240;
         canvas.height = 1754;
@@ -338,7 +338,74 @@
         ctx.roundRect(panelX + 12, panelY + 12, panelW - 24, panelH - 24, 20);
         ctx.stroke();
 
+        if (premiumBook) {
+            const ribbon = ctx.createLinearGradient(panelX, panelY, panelX + panelW, panelY);
+            ribbon.addColorStop(0, 'rgba(26, 95, 74, 0.16)');
+            ribbon.addColorStop(1, 'rgba(201, 162, 39, 0.18)');
+            ctx.fillStyle = ribbon;
+            ctx.beginPath();
+            ctx.roundRect(panelX + 18, panelY + 18, panelW - 36, 16, 8);
+            ctx.fill();
+
+            ctx.fillStyle = 'rgba(26, 95, 74, 0.12)';
+            ctx.beginPath();
+            ctx.arc(panelX + 30, panelY + 40, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(panelX + panelW - 30, panelY + 40, 3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
         return { canvas, ctx };
+    }
+
+    function createPdfOutroCanvas(payload, outroLine = '') {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1240;
+        canvas.height = 1754;
+        const ctx = canvas.getContext('2d');
+
+        const outroGradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        outroGradient.addColorStop(0, '#1a5f4a');
+        outroGradient.addColorStop(0.55, '#145341');
+        outroGradient.addColorStop(1, '#0f3d2f');
+        ctx.fillStyle = outroGradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.strokeStyle = 'rgba(212, 175, 55, 0.85)';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.roundRect(86, 94, canvas.width - 172, canvas.height - 188, 28);
+        ctx.stroke();
+
+        ctx.direction = 'rtl';
+        ctx.textAlign = 'center';
+
+        ctx.fillStyle = '#d4af37';
+        ctx.font = 'bold 54px Cairo, Tahoma, Arial';
+        ctx.fillText('تم بحمد الله', canvas.width / 2, 500);
+
+        const safeOutro = String(outroLine || '').replace(/\s+/g, ' ').trim();
+        if (safeOutro) {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.93)';
+            ctx.font = '32px Cairo, Tahoma, Arial';
+            const lines = wrapTextLines(ctx, safeOutro, 860).slice(0, 3);
+            let y = 650;
+            for (const line of lines) {
+                ctx.fillText(line, canvas.width / 2, y);
+                y += 56;
+            }
+        }
+
+        ctx.fillStyle = 'rgba(212, 175, 55, 0.98)';
+        ctx.font = '700 30px Cairo, Tahoma, Arial';
+        ctx.fillText(typeLabel(payload.type), canvas.width / 2, 1320);
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.font = '700 36px Cairo, Tahoma, Arial';
+        ctx.fillText('الشيخ أحمد إسماعيل الفشني', canvas.width / 2, 1480);
+
+        return canvas;
     }
 
     function createPdfCoverCanvas(payload, coverCenterLines = []) {
@@ -517,7 +584,7 @@
 
     }
 
-    function drawPageFooter(ctx, pageNumber) {
+    function drawPageFooter(ctx, pageNumber, payload) {
         const width = 1240;
         const y = 1708;
         ctx.strokeStyle = 'rgba(201, 162, 39, 0.35)';
@@ -529,7 +596,8 @@
 
         ctx.direction = 'rtl';
         ctx.textAlign = 'center';
-        ctx.fillStyle = '#666';
+        const isBook = payload?.type === 'book';
+        ctx.fillStyle = isBook ? '#4b5f57' : '#666';
         ctx.font = '20px Cairo, Tahoma, Arial';
         ctx.fillText('الشيخ أحمد إسماعيل الفشني', width / 2, y);
 
@@ -540,6 +608,7 @@
     function renderPayloadToCanvases(payload) {
         const blocks = collectTextBlocksFromHtml(payload.contentHtml || '');
         const canvases = [];
+        const isBook = payload.type === 'book';
         const chapterPerPage = payload.layoutMode === 'chapter-per-page';
         const isKhatraHeading = (block) => block.kind === 'heading' && /الخاطرة\s*\(/.test(String(block.text || ''));
         const isCoverBoundaryHeading = (text) => /^(\d+[\)\-\.]|أولاً|ثانياً|ثالثاً|رابعاً|خامساً|سادساً|المجلس|الدرس|الفصل|الباب|المقدمة|الخاتمة|تمهيد|شرح|الخاطرة)/.test(String(text || '').trim());
@@ -573,10 +642,24 @@
             }
         }
 
+        const extractOutroLine = () => {
+            for (let i = blocks.length - 1; i >= 0; i -= 1) {
+                const block = blocks[i];
+                if (block.kind !== 'paragraph' && block.kind !== 'quote') continue;
+                const line = String(block.text || '').replace(/\s+/g, ' ').trim();
+                if (!line) continue;
+                if (line.length < 30 || line.length > 240) continue;
+                if (/^(بقلم|أحمد\s+إسماعيل\s+الفشني|هذا\s+وما|والله\s+ورسوله)/.test(line)) continue;
+                return line;
+            }
+            return '';
+        };
+        const outroLine = isBook ? extractOutroLine() : '';
+
         canvases.push(createPdfCoverCanvas(payload, coverCenterLines));
 
         let pageNumber = 1;
-        let page = createPdfPageCanvas();
+        let page = createPdfPageCanvas({ premiumBook: isBook });
         drawPageHeader(page.ctx, payload, pageNumber);
 
         const marginX = 100;
@@ -586,10 +669,10 @@
         let y = contentTop;
 
         const newPage = ({ centerContinuation = false } = {}) => {
-            drawPageFooter(page.ctx, pageNumber);
+            drawPageFooter(page.ctx, pageNumber, payload);
             canvases.push(page.canvas);
             pageNumber += 1;
-            page = createPdfPageCanvas();
+            page = createPdfPageCanvas({ premiumBook: isBook });
             drawPageHeader(page.ctx, payload, pageNumber);
             y = centerContinuation ? 720 : contentTop;
         };
@@ -600,12 +683,19 @@
             return isCoverBoundaryHeading(normalized);
         };
 
-        const refinedStyle = {
-            heading: { font: 'bold 34px Cairo, Tahoma, Arial', color: '#1a5f4a', lineHeight: 48, gapBefore: 14, gapAfter: 12 },
-            quote: { font: '26px Cairo, Tahoma, Arial', color: '#2e7d32', lineHeight: 40, gapBefore: 10, gapAfter: 10 },
-            pre: { font: '24px Cairo, Tahoma, Arial', color: '#333', lineHeight: 36, gapBefore: 8, gapAfter: 8 },
-            paragraph: { font: '26px Cairo, Tahoma, Arial', color: '#222', lineHeight: 40, gapBefore: 6, gapAfter: 8 }
-        };
+        const refinedStyle = isBook
+            ? {
+                heading: { font: 'bold 35px Cairo, Tahoma, Arial', color: '#145341', lineHeight: 50, gapBefore: 15, gapAfter: 12 },
+                quote: { font: '27px Cairo, Tahoma, Arial', color: '#2f765a', lineHeight: 42, gapBefore: 10, gapAfter: 10 },
+                pre: { font: '24px Cairo, Tahoma, Arial', color: '#333', lineHeight: 37, gapBefore: 8, gapAfter: 8 },
+                paragraph: { font: '27px Cairo, Tahoma, Arial', color: '#1f2c2a', lineHeight: 41, gapBefore: 6, gapAfter: 9 }
+            }
+            : {
+                heading: { font: 'bold 34px Cairo, Tahoma, Arial', color: '#1a5f4a', lineHeight: 48, gapBefore: 14, gapAfter: 12 },
+                quote: { font: '26px Cairo, Tahoma, Arial', color: '#2e7d32', lineHeight: 40, gapBefore: 10, gapAfter: 10 },
+                pre: { font: '24px Cairo, Tahoma, Arial', color: '#333', lineHeight: 36, gapBefore: 8, gapAfter: 8 },
+                paragraph: { font: '26px Cairo, Tahoma, Arial', color: '#222', lineHeight: 40, gapBefore: 6, gapAfter: 8 }
+            };
 
         if (!chapterPerPage) {
             for (const block of blocks) {
@@ -635,17 +725,27 @@
                 y += style.gapAfter;
             }
 
-            drawPageFooter(page.ctx, pageNumber);
+            drawPageFooter(page.ctx, pageNumber, payload);
             canvases.push(page.canvas);
+            if (isBook) {
+                canvases.push(createPdfOutroCanvas(payload, outroLine));
+            }
             return canvases;
         }
 
-        const chapterBase = {
-            heading: { weight: 'bold', size: 32, color: '#1a5f4a', lineHeight: 46, gapBefore: 14, gapAfter: 12 },
-            quote: { weight: '', size: 25, color: '#2e7d32', lineHeight: 38, gapBefore: 10, gapAfter: 10 },
-            pre: { weight: '', size: 23, color: '#333', lineHeight: 34, gapBefore: 8, gapAfter: 8 },
-            paragraph: { weight: '', size: 24, color: '#222', lineHeight: 36, gapBefore: 6, gapAfter: 8 }
-        };
+        const chapterBase = isBook
+            ? {
+                heading: { weight: 'bold', size: 34, color: '#145341', lineHeight: 48, gapBefore: 14, gapAfter: 12 },
+                quote: { weight: '', size: 26, color: '#2f765a', lineHeight: 40, gapBefore: 10, gapAfter: 10 },
+                pre: { weight: '', size: 24, color: '#333', lineHeight: 35, gapBefore: 8, gapAfter: 8 },
+                paragraph: { weight: '', size: 25, color: '#1f2c2a', lineHeight: 37, gapBefore: 6, gapAfter: 8 }
+            }
+            : {
+                heading: { weight: 'bold', size: 32, color: '#1a5f4a', lineHeight: 46, gapBefore: 14, gapAfter: 12 },
+                quote: { weight: '', size: 25, color: '#2e7d32', lineHeight: 38, gapBefore: 10, gapAfter: 10 },
+                pre: { weight: '', size: 23, color: '#333', lineHeight: 34, gapBefore: 8, gapAfter: 8 },
+                paragraph: { weight: '', size: 24, color: '#222', lineHeight: 36, gapBefore: 6, gapAfter: 8 }
+            };
 
         const chapterStyleFor = (kind, scale) => {
             const base = chapterBase[kind] || chapterBase.paragraph;
@@ -753,8 +853,11 @@
         renderSection(introBlocks, { centered: true, forceNewPage: false });
         khatraSections.forEach((section) => renderSection(section, { centered: false, forceNewPage: true }));
 
-        drawPageFooter(page.ctx, pageNumber);
+        drawPageFooter(page.ctx, pageNumber, payload);
         canvases.push(page.canvas);
+        if (isBook) {
+            canvases.push(createPdfOutroCanvas(payload, outroLine));
+        }
         return canvases;
     }
 
