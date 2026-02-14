@@ -2633,7 +2633,7 @@ section {
 .book-container .chapter,
 .book-content .article-card {
     content-visibility: auto;
-    contain-intrinsic-size: 760px;
+    contain-intrinsic-size: auto 760px;
 }
 
 @media (max-width: 768px) {
@@ -2649,6 +2649,12 @@ section {
     .content-section .book-container > .book-title-page::after {
         width: 48px;
         height: 48px;
+    }
+
+    .book-container .chapter,
+    .book-content .article-card {
+        content-visibility: visible;
+        contain-intrinsic-size: auto;
     }
 }
 
