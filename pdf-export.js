@@ -950,10 +950,14 @@
 
         const chapterStyleFor = (kind, scale) => {
             const base = chapterBase[kind] || chapterBase.paragraph;
-            const px = Math.max(17, Math.round(base.size * scale));
-            const lineHeight = Math.max(24, Math.round(base.lineHeight * scale));
-            const gapBefore = Math.max(3, Math.round(base.gapBefore * scale));
-            const gapAfter = Math.max(4, Math.round(base.gapAfter * scale));
+            const minFont = storyPerPage ? 11 : 17;
+            const minLineHeight = storyPerPage ? 16 : 24;
+            const px = Math.max(minFont, Math.round(base.size * scale));
+            const lineHeight = Math.max(minLineHeight, Math.round(base.lineHeight * scale));
+            const minGapBefore = storyPerPage ? 1 : 3;
+            const minGapAfter = storyPerPage ? 2 : 4;
+            const gapBefore = Math.max(minGapBefore, Math.round(base.gapBefore * scale));
+            const gapAfter = Math.max(minGapAfter, Math.round(base.gapAfter * scale));
             return {
                 font: `${base.weight ? `${base.weight} ` : ''}${px}px Cairo, Tahoma, Arial`,
                 color: base.color,
@@ -1018,16 +1022,36 @@
 
             const sectionMaxWidth = centered ? Math.min(maxWidth, 860) : maxWidth;
             const availableHeight = contentBottom - contentTop;
-            const scales = centered
-                ? [1, 0.95, 0.9, 0.86, 0.82, 0.78]
-                : [1, 0.95, 0.9, 0.86, 0.82, 0.78, 0.74, 0.7, 0.66, 0.62, 0.58, 0.54, 0.5];
+            let selectedScale;
+            if (storyPerPage && !centered) {
+                let low = 0.18;
+                let high = 1.0;
+                for (let i = 0; i < 16; i += 1) {
+                    const mid = (low + high) / 2;
+                    const needed = measureSectionHeight(sectionBlocks, mid, sectionMaxWidth);
+                    if (needed <= availableHeight * 0.985) low = mid;
+                    else high = mid;
+                }
+                selectedScale = low;
+            } else {
+                const scales = centered
+                    ? [1, 0.95, 0.9, 0.86, 0.82, 0.78]
+                    : [1, 0.95, 0.9, 0.86, 0.82, 0.78, 0.74, 0.7, 0.66, 0.62, 0.58, 0.54, 0.5];
 
-            let selectedScale = scales[scales.length - 1];
-            for (const scale of scales) {
-                const neededHeight = measureSectionHeight(sectionBlocks, scale, sectionMaxWidth);
-                if (neededHeight <= availableHeight) {
-                    selectedScale = scale;
-                    break;
+                selectedScale = scales[scales.length - 1];
+                for (const scale of scales) {
+                    const neededHeight = measureSectionHeight(sectionBlocks, scale, sectionMaxWidth);
+                    if (neededHeight <= availableHeight) {
+                        selectedScale = scale;
+                        break;
+                    }
+                }
+            }
+
+            if (storyPerPage && !centered) {
+                const neededHeight = measureSectionHeight(sectionBlocks, selectedScale, sectionMaxWidth);
+                if (neededHeight > 0 && neededHeight > availableHeight) {
+                    selectedScale = Math.max(0.16, selectedScale * ((availableHeight * 0.98) / neededHeight));
                 }
             }
 
