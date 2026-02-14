@@ -129,7 +129,7 @@
             }
 
             if (tag.startsWith('h')) {
-                blocks.push(`<h2>${escapeHtml(text)}</h2>`);
+                blocks.push(`<${tag}>${escapeHtml(text)}</${tag}>`);
                 return;
             }
 
@@ -985,7 +985,11 @@
         const isStorySectionStart = (block) => {
             if (!storyPerPage || block.kind !== 'heading') return false;
             const normalized = normalizeArabic(block.text);
-            return (Number(block.level || 3) <= 2) || /^((ال)?قصه\s+\S+|سلسله|الحلقه\s+\S+)/.test(normalized);
+            const level = Number(block.level || 3);
+            if (level > 2) return false;
+            if (isIntroHeading(block.text)) return false;
+            if (/^(المقدمه|القصه\s+باختصار|الدروس\s+والعبر|الخاتمه)$/.test(normalized)) return false;
+            return true;
         };
 
         for (const block of blocks) {
