@@ -163,6 +163,82 @@
         return 'محتوى';
     }
 
+    function normalizeComparableText(value) {
+        return String(value || '')
+            .replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]/g, '')
+            .replace(/ـ/g, '')
+            .replace(/[إأآٱ]/g, 'ا')
+            .replace(/ى/g, 'ي')
+            .replace(/ة/g, 'ه')
+            .replace(/["“”'`’:,؛.،!?؟()\[\]{}]/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .toLowerCase();
+    }
+
+    function similarityScore(textA, textB) {
+        const a = normalizeComparableText(textA)
+            .replace(/^(المقدمه|القصه باختصار|الدروس والعبر|الخاتمه)\s+/, '')
+            .trim();
+        const b = normalizeComparableText(textB)
+            .replace(/^(المقدمه|القصه باختصار|الدروس والعبر|الخاتمه)\s+/, '')
+            .trim();
+
+        if (!a || !b) return 0;
+        if (a === b) return 1;
+
+        const minLen = Math.min(a.length, b.length);
+        const maxLen = Math.max(a.length, b.length);
+        if (minLen >= 28 && (a.includes(b) || b.includes(a))) {
+            return minLen / maxLen;
+        }
+
+        const aTokens = new Set(a.split(' ').filter(Boolean));
+        const bTokens = new Set(b.split(' ').filter(Boolean));
+        let common = 0;
+        aTokens.forEach((token) => {
+            if (bTokens.has(token)) common += 1;
+        });
+
+        return common / Math.max(aTokens.size, bTokens.size, 1);
+    }
+
+    function dedupeSequentialTextBlocks(blocks) {
+        if (!Array.isArray(blocks) || blocks.length < 2) return blocks || [];
+
+        const result = [];
+        for (const block of blocks) {
+            const prev = result[result.length - 1];
+            if (!prev) {
+                result.push(block);
+                continue;
+            }
+
+            const score = similarityScore(block.text, prev.text);
+            const isCurrentParagraph = block.kind === 'paragraph';
+            const isCurrentHeading = block.kind === 'heading';
+            if ((isCurrentParagraph && score >= 0.84) || (isCurrentHeading && score >= 0.9)) {
+                continue;
+            }
+
+            result.push(block);
+        }
+
+        return result;
+    }
+
+    function getBookCoverSubtitle({ type, title, subtitle }) {
+        if (type !== 'book') return subtitle || '';
+        if (String(subtitle || '').trim()) return subtitle;
+
+        const normalizedTitle = normalizeComparableText(title);
+        if (normalizedTitle === 'قصص الانبياء') {
+            return 'رحلة إيمانية في سير الأنبياء، نستخلص منها الدروس والعبر لبناء النفس والمجتمع.';
+        }
+
+        return '';
+    }
+
     function buildPdfShell({ title, subtitle, meta, contentHtml, type }) {
         const wrapper = document.createElement('div');
         wrapper.setAttribute('dir', 'rtl');
@@ -606,7 +682,7 @@
     }
 
     function renderPayloadToCanvases(payload) {
-        let blocks = collectTextBlocksFromHtml(payload.contentHtml || '');
+        let blocks = dedupeSequentialTextBlocks(collectTextBlocksFromHtml(payload.contentHtml || ''));
         const canvases = [];
         const isBook = payload.type === 'book';
         const chapterPerPage = payload.layoutMode === 'chapter-per-page';
@@ -1127,14 +1203,17 @@
 
     async function exportFromCurrentPage(options = {}) {
         const extracted = extractContentFromDocument(document);
+        const resolvedType = options.type || 'content';
+        const resolvedTitle = options.title || extracted.title;
+        const resolvedSubtitle = options.subtitle ?? extracted.subtitle;
         return exportPayload({
             ...extracted,
-            type: options.type || 'content',
-            title: options.title || extracted.title,
-            subtitle: options.subtitle ?? extracted.subtitle,
+            type: resolvedType,
+            title: resolvedTitle,
+            subtitle: getBookCoverSubtitle({ type: resolvedType, title: resolvedTitle, subtitle: resolvedSubtitle }),
             meta: options.meta ?? extracted.meta,
             layoutMode: options.layoutMode || extracted.layoutMode
-        }, options.filename || extracted.title);
+        }, options.filename || resolvedTitle);
     }
 
     async function exportFromUrl(url, options = {}) {
@@ -1144,15 +1223,18 @@
         const html = await res.text();
         const doc = new DOMParser().parseFromString(html, 'text/html');
         const extracted = extractContentFromDocument(doc);
+        const resolvedType = options.type || 'content';
+        const resolvedTitle = options.title || extracted.title;
+        const resolvedSubtitle = options.subtitle ?? extracted.subtitle;
 
         return exportPayload({
             ...extracted,
-            type: options.type || 'content',
-            title: options.title || extracted.title,
-            subtitle: options.subtitle ?? extracted.subtitle,
+            type: resolvedType,
+            title: resolvedTitle,
+            subtitle: getBookCoverSubtitle({ type: resolvedType, title: resolvedTitle, subtitle: resolvedSubtitle }),
             meta: options.meta ?? extracted.meta,
             layoutMode: options.layoutMode || extracted.layoutMode
-        }, options.filename || extracted.title);
+        }, options.filename || resolvedTitle);
     }
 
     async function exportKhutbaItem(item) {

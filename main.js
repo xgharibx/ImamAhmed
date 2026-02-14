@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initCounters();
     initKhawaterSearchFilters();
     initKhawaterShareButtons();
+    initStoriesOfProphetsDeduplication();
     initPerformanceOptimizations();
     setCurrentYear();
 });
@@ -558,6 +559,78 @@ function initKhawaterSearchFilters() {
     });
 
     applyFilter();
+}
+
+function initStoriesOfProphetsDeduplication() {
+    const path = (window.location.pathname || '').toLowerCase();
+    if (!/stories-of-prophets\.html$/.test(path)) return;
+
+    const normalize = (value) => String(value || '')
+        .replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]/g, '')
+        .replace(/ـ/g, '')
+        .replace(/[إأآٱ]/g, 'ا')
+        .replace(/ى/g, 'ي')
+        .replace(/ة/g, 'ه')
+        .replace(/["“”'`’:,؛.،!?؟()\[\]{}]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toLowerCase();
+
+    const stripLead = (value) => normalize(value)
+        .replace(/^(المقدمه|القصه باختصار|الدروس والعبر|الخاتمه)\s+/, '')
+        .trim();
+
+    const similarity = (a, b) => {
+        const textA = stripLead(a);
+        const textB = stripLead(b);
+        if (!textA || !textB) return 0;
+        if (textA === textB) return 1;
+
+        const minLen = Math.min(textA.length, textB.length);
+        const maxLen = Math.max(textA.length, textB.length);
+        if (minLen >= 28 && (textA.includes(textB) || textB.includes(textA))) {
+            return minLen / maxLen;
+        }
+
+        const tokensA = new Set(textA.split(' ').filter(Boolean));
+        const tokensB = new Set(textB.split(' ').filter(Boolean));
+        let common = 0;
+        tokensA.forEach((token) => {
+            if (tokensB.has(token)) common += 1;
+        });
+
+        const denom = Math.max(tokensA.size, tokensB.size, 1);
+        return common / denom;
+    };
+
+    const shouldRemoveAsDuplicate = (currentEl, prevEl) => {
+        if (!currentEl || !prevEl) return false;
+        const currentText = (currentEl.textContent || '').trim();
+        const prevText = (prevEl.textContent || '').trim();
+        if (!currentText || !prevText) return false;
+
+        const score = similarity(currentText, prevText);
+        if (currentEl.tagName === 'P' && score >= 0.84) return true;
+        if ((currentEl.tagName === 'H3' || currentEl.tagName === 'H4') && score >= 0.9) return true;
+        return false;
+    };
+
+    document.querySelectorAll('.book-content .article-text').forEach((container) => {
+        let prevKept = null;
+        Array.from(container.children).forEach((el) => {
+            const tag = el.tagName;
+            if (!['P', 'H3', 'H4'].includes(tag)) {
+                return;
+            }
+
+            if (shouldRemoveAsDuplicate(el, prevKept)) {
+                el.remove();
+                return;
+            }
+
+            prevKept = el;
+        });
+    });
 }
 
 /* ============== Khawater Share ============== */
