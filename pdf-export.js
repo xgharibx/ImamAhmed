@@ -89,13 +89,29 @@
 
     function buildReadableContentHtml(rawHtml) {
         const parser = new DOMParser();
-        const doc = parser.parseFromString(sanitizeHtml(rawHtml || ''), 'text/html');
+        const doc = parser.parseFromString(rawHtml || '', 'text/html');
         const blocks = [];
 
-        doc.querySelectorAll('h1,h2,h3,h4,h5,h6,p,li,blockquote,pre').forEach((node) => {
+        doc.querySelectorAll('script,style,iframe,object,embed,form,button,nav,header,footer,aside,canvas,svg,video,audio,noscript').forEach(el => el.remove());
+
+        doc.querySelectorAll('h1,h2,h3,h4,h5,h6,p,li,blockquote,pre,.list-item,.quran-box,.hadith-box,.poetry-box').forEach((node) => {
+            if (node.closest('.list-item,.quran-box,.hadith-box,.poetry-box') && !node.matches('.list-item,.quran-box,.hadith-box,.poetry-box')) {
+                return;
+            }
+
             const tag = node.tagName.toLowerCase();
             const text = (node.textContent || '').replace(/\s+/g, ' ').trim();
             if (!text) return;
+
+            if (node.matches('.list-item')) {
+                blocks.push(`<p class="pdf-bullet">• ${escapeHtml(text)}</p>`);
+                return;
+            }
+
+            if (node.matches('.quran-box,.hadith-box,.poetry-box')) {
+                blocks.push(`<blockquote>${escapeHtml(text)}</blockquote>`);
+                return;
+            }
 
             if (tag === 'li') {
                 blocks.push(`<p class="pdf-bullet">• ${escapeHtml(text)}</p>`);
@@ -217,7 +233,13 @@
             const score = similarityScore(block.text, prev.text);
             const isCurrentParagraph = block.kind === 'paragraph';
             const isCurrentHeading = block.kind === 'heading';
-            if ((isCurrentParagraph && score >= 0.84) || (isCurrentHeading && score >= 0.9)) {
+            const normalizedCurrent = normalizeComparableText(block.text);
+            const normalizedPrev = normalizeComparableText(prev.text);
+            const minLen = Math.min(normalizedCurrent.length, normalizedPrev.length);
+            const maxLen = Math.max(normalizedCurrent.length, normalizedPrev.length);
+            const strictContains = minLen >= 24 && maxLen > 0 && (normalizedCurrent.includes(normalizedPrev) || normalizedPrev.includes(normalizedCurrent)) && (minLen / maxLen >= 0.92);
+
+            if ((isCurrentParagraph && (score >= 0.95 || strictContains)) || (isCurrentHeading && (score >= 0.97 || strictContains))) {
                 continue;
             }
 
@@ -336,7 +358,7 @@
             if (!text) return;
             const tag = node.tagName.toLowerCase();
             if (tag.startsWith('h')) {
-                blocks.push({ kind: 'heading', text });
+                blocks.push({ kind: 'heading', text, level: Number(tag.slice(1)) || 3 });
                 return;
             }
             if (tag === 'blockquote') {
@@ -686,6 +708,7 @@
         const canvases = [];
         const isBook = payload.type === 'book';
         const chapterPerPage = payload.layoutMode === 'chapter-per-page';
+        const storyPerPage = payload.layoutMode === 'story-per-page';
         const isKhatraHeading = (block) => block.kind === 'heading' && /الخاطرة\s*\(/.test(String(block.text || ''));
         const isCoverBoundaryHeading = (text) => /^(\d+[\)\-\.]|أولاً|ثانياً|ثالثاً|رابعاً|خامساً|سادساً|المجلس|الدرس|الفصل|الباب|المقدمة|الخاتمة|تمهيد|شرح|الخاطرة)/.test(String(text || '').trim());
         const normalizeArabic = (text) => String(text || '')
@@ -869,7 +892,7 @@
             return true;
         };
 
-        if (!chapterPerPage) {
+        if (!chapterPerPage && !storyPerPage) {
             const renderedIntroPage = renderIntroAsSinglePage(introSectionBlocks);
             if (renderedIntroPage && blocks.length) {
                 newPage();
@@ -952,13 +975,19 @@
         };
 
         const introBlocks = [];
-        const khatraSections = [];
+        const contentSections = [];
         let activeSection = null;
 
+        const isStorySectionStart = (block) => {
+            if (!storyPerPage || block.kind !== 'heading') return false;
+            const normalized = normalizeArabic(block.text);
+            return (Number(block.level || 3) <= 2) || /^((ال)?قصه\s+\S+|سلسله|الحلقه\s+\S+)/.test(normalized);
+        };
+
         for (const block of blocks) {
-            if (isKhatraHeading(block)) {
+            if (isKhatraHeading(block) || isStorySectionStart(block)) {
                 activeSection = [block];
-                khatraSections.push(activeSection);
+                contentSections.push(activeSection);
                 continue;
             }
 
@@ -991,7 +1020,7 @@
             const availableHeight = contentBottom - contentTop;
             const scales = centered
                 ? [1, 0.95, 0.9, 0.86, 0.82, 0.78]
-                : [1, 0.95, 0.9, 0.86, 0.82, 0.78, 0.74, 0.7, 0.66];
+                : [1, 0.95, 0.9, 0.86, 0.82, 0.78, 0.74, 0.7, 0.66, 0.62, 0.58, 0.54, 0.5];
 
             let selectedScale = scales[scales.length - 1];
             for (const scale of scales) {
@@ -1031,10 +1060,14 @@
         };
 
         const renderedIntroPage = renderIntroAsSinglePage(centeredIntroBlocks);
-        if (renderedIntroPage && khatraSections.length) {
+        if (renderedIntroPage && contentSections.length) {
             newPage();
         }
-        khatraSections.forEach((section) => renderSection(section, { centered: false, forceNewPage: true }));
+        contentSections.forEach((section) => renderSection(section, { centered: false, forceNewPage: true }));
+
+        if (!contentSections.length && introBlocks.length && !introSectionBlocks.length) {
+            renderSection(introBlocks, { centered: false, forceNewPage: false });
+        }
 
         drawPageFooter(page.ctx, pageNumber, payload);
         canvases.push(page.canvas);
@@ -1309,9 +1342,12 @@
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جارِ التحضير...';
                 try {
                     const isHowTheyLivedBook = /how-they-lived-how-we-live\.html$/i.test(href);
+                    const isStoriesOfProphetsBook = /stories-of-prophets\.html$/i.test(href);
                     await exportFromUrl(new URL(href, window.location.href).href, {
                         type: 'book',
-                        layoutMode: isHowTheyLivedBook ? 'chapter-per-page' : undefined
+                        layoutMode: isHowTheyLivedBook
+                            ? 'chapter-per-page'
+                            : (isStoriesOfProphetsBook ? 'story-per-page' : undefined)
                     });
                 } catch (err) {
                     console.error(err);
@@ -1367,7 +1403,12 @@
             btn.style.pointerEvents = 'none';
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جارِ التحضير...';
             try {
-                await exportFromCurrentPage({ type: 'book' });
+                const path = (window.location.pathname || '').toLowerCase();
+                const isStoriesOfProphetsBook = /stories-of-prophets\.html$/.test(path);
+                await exportFromCurrentPage({
+                    type: 'book',
+                    layoutMode: isStoriesOfProphetsBook ? 'story-per-page' : undefined
+                });
             } catch (err) {
                 console.error(err);
                 alert('تعذر إنشاء ملف PDF حالياً.');
