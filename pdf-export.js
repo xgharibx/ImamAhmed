@@ -606,13 +606,24 @@
     }
 
     function renderPayloadToCanvases(payload) {
-        const blocks = collectTextBlocksFromHtml(payload.contentHtml || '');
+        let blocks = collectTextBlocksFromHtml(payload.contentHtml || '');
         const canvases = [];
         const isBook = payload.type === 'book';
         const chapterPerPage = payload.layoutMode === 'chapter-per-page';
         const isKhatraHeading = (block) => block.kind === 'heading' && /الخاطرة\s*\(/.test(String(block.text || ''));
         const isCoverBoundaryHeading = (text) => /^(\d+[\)\-\.]|أولاً|ثانياً|ثالثاً|رابعاً|خامساً|سادساً|المجلس|الدرس|الفصل|الباب|المقدمة|الخاتمة|تمهيد|شرح|الخاطرة)/.test(String(text || '').trim());
-        const isIntroHeading = (text) => /^(المقدمة|مقدمة(?:\s+الكتاب)?)/.test(String(text || '').trim());
+        const normalizeArabic = (text) => String(text || '')
+            .replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]/g, '')
+            .replace(/ـ/g, '')
+            .replace(/[إأآٱ]/g, 'ا')
+            .replace(/ى/g, 'ي')
+            .replace(/ة/g, 'ه')
+            .replace(/\s+/g, ' ')
+            .trim();
+        const isIntroHeading = (text) => {
+            const normalized = normalizeArabic(text);
+            return /^(المقدمه|مقدمه)(\s+الكتاب)?$/.test(normalized);
+        };
         const isCoverCandidateIntroLine = (text) => {
             const normalized = String(text || '').replace(/\s+/g, ' ').trim();
             if (!normalized) return false;
@@ -640,6 +651,17 @@
             for (const line of coverCenterLines) {
                 const idx = blocks.findIndex(block => block.kind === 'paragraph' && block.text === line);
                 if (idx >= 0) blocks.splice(idx, 1);
+            }
+        }
+
+        let introSectionBlocks = [];
+        if (isBook && blocks.length) {
+            const firstHeadingIndex = blocks.findIndex((block) => block.kind === 'heading');
+            if (firstHeadingIndex >= 0 && isIntroHeading(blocks[firstHeadingIndex].text)) {
+                const nextHeadingIndex = blocks.findIndex((block, idx) => idx > firstHeadingIndex && block.kind === 'heading');
+                const introEndIndex = nextHeadingIndex >= 0 ? nextHeadingIndex - 1 : blocks.length - 1;
+                introSectionBlocks = blocks.slice(0, introEndIndex + 1);
+                blocks = blocks.slice(introEndIndex + 1);
             }
         }
 
@@ -698,22 +720,87 @@
                 paragraph: { font: '26px Cairo, Tahoma, Arial', color: '#222', lineHeight: 40, gapBefore: 6, gapAfter: 8 }
             };
 
-        let introSectionEndIndex = -1;
-        if (isBook && blocks.length) {
-            const firstHeadingIndex = blocks.findIndex((block) => block.kind === 'heading');
-            if (firstHeadingIndex >= 0 && isIntroHeading(blocks[firstHeadingIndex].text)) {
-                const nextHeadingIndex = blocks.findIndex((block, idx) => idx > firstHeadingIndex && block.kind === 'heading');
-                introSectionEndIndex = nextHeadingIndex >= 0 ? nextHeadingIndex - 1 : blocks.length - 1;
+        const introBase = {
+            heading: { weight: 'bold', size: 42, color: '#145341', lineHeight: 60, gapBefore: 18, gapAfter: 16 },
+            quote: { weight: '', size: 32, color: '#2f765a', lineHeight: 50, gapBefore: 12, gapAfter: 12 },
+            pre: { weight: '', size: 28, color: '#333', lineHeight: 45, gapBefore: 10, gapAfter: 10 },
+            paragraph: { weight: '', size: 34, color: '#1f2c2a', lineHeight: 54, gapBefore: 10, gapAfter: 12 }
+        };
+
+        const introStyleFor = (kind, scale) => {
+            const base = introBase[kind] || introBase.paragraph;
+            const px = Math.max(14, Math.round(base.size * scale));
+            const lineHeight = Math.max(22, Math.round(base.lineHeight * scale));
+            const gapBefore = Math.max(2, Math.round(base.gapBefore * scale));
+            const gapAfter = Math.max(3, Math.round(base.gapAfter * scale));
+            return {
+                font: `${base.weight ? `${base.weight} ` : ''}${px}px Cairo, Tahoma, Arial`,
+                color: base.color,
+                lineHeight,
+                gapBefore,
+                gapAfter
+            };
+        };
+
+        const measureFittedIntroHeight = (sectionBlocks, scale, sectionMaxWidth) => {
+            let total = 0;
+            for (const block of sectionBlocks) {
+                const style = introStyleFor(block.kind, scale);
+                page.ctx.font = style.font;
+                const lines = wrapTextLines(page.ctx, block.text, sectionMaxWidth);
+                total += style.gapBefore + (lines.length * style.lineHeight) + style.gapAfter;
             }
-        }
+            return total;
+        };
+
+        const renderIntroAsSinglePage = (sectionBlocks) => {
+            if (!isBook || !sectionBlocks.length) return false;
+
+            const sectionMaxWidth = Math.min(maxWidth, 900);
+            const availableHeight = contentBottom - contentTop;
+            const targetHeight = availableHeight * 0.985;
+
+            let low = 0.28;
+            let high = 2.2;
+            for (let i = 0; i < 16; i += 1) {
+                const mid = (low + high) / 2;
+                const needed = measureFittedIntroHeight(sectionBlocks, mid, sectionMaxWidth);
+                if (needed <= targetHeight) low = mid;
+                else high = mid;
+            }
+
+            const scale = low;
+            const neededHeight = measureFittedIntroHeight(sectionBlocks, scale, sectionMaxWidth);
+            y = contentTop + Math.max(0, (availableHeight - neededHeight) / 2);
+
+            for (const block of sectionBlocks) {
+                const style = introStyleFor(block.kind, scale);
+                y += style.gapBefore;
+
+                page.ctx.direction = 'rtl';
+                page.ctx.textAlign = 'center';
+                page.ctx.font = style.font;
+                page.ctx.fillStyle = style.color;
+
+                const lines = wrapTextLines(page.ctx, block.text, sectionMaxWidth);
+                for (const line of lines) {
+                    page.ctx.fillText(line, page.canvas.width / 2, y);
+                    y += style.lineHeight;
+                }
+                y += style.gapAfter;
+            }
+
+            return true;
+        };
 
         if (!chapterPerPage) {
+            const renderedIntroPage = renderIntroAsSinglePage(introSectionBlocks);
+            if (renderedIntroPage && blocks.length) {
+                newPage();
+            }
+
             for (let index = 0; index < blocks.length; index += 1) {
                 const block = blocks[index];
-                if (introSectionEndIndex >= 0 && index === introSectionEndIndex + 1 && y > contentTop + 2) {
-                    newPage();
-                }
-
                 if (block.kind === 'heading' && isMajorHeading(block.text) && y > 1320) {
                     newPage();
                 }
@@ -815,6 +902,8 @@
             }
         }
 
+        const centeredIntroBlocks = introSectionBlocks.length ? introSectionBlocks : introBlocks;
+
         const renderSection = (sectionBlocks, { centered = false, forceNewPage = false } = {}) => {
             if (!sectionBlocks.length) return;
 
@@ -865,7 +954,10 @@
             }
         };
 
-        renderSection(introBlocks, { centered: true, forceNewPage: false });
+        const renderedIntroPage = renderIntroAsSinglePage(centeredIntroBlocks);
+        if (renderedIntroPage && khatraSections.length) {
+            newPage();
+        }
         khatraSections.forEach((section) => renderSection(section, { centered: false, forceNewPage: true }));
 
         drawPageFooter(page.ctx, pageNumber, payload);
