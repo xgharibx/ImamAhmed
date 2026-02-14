@@ -981,33 +981,52 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         AOS.init({
-            duration: 800,
-            once: true
+            duration: 700,
+            once: true,
+            disable: () => window.innerWidth < 992
         });
         
         // Active TOC link on scroll
-        const sections = document.querySelectorAll('.article-card');
-        const navLi = document.querySelectorAll('.toc-link');
-        
+        const sections = Array.from(document.querySelectorAll('.article-card'));
+        const navLinks = Array.from(document.querySelectorAll('.toc-link'));
+        let currentActiveId = '';
+        let ticking = false;
+
+        function updateActiveToc() {
+            const markerY = window.scrollY + 220;
+            let current = sections[0]?.id || '';
+
+            for (const section of sections) {
+                if (section.offsetTop <= markerY) {
+                    current = section.id;
+                } else {
+                    break;
+                }
+            }
+
+            if (!current || current === currentActiveId) return;
+            currentActiveId = current;
+
+            navLinks.forEach((link) => {
+                const isActive = link.getAttribute('href') === `#${current}`;
+                link.classList.toggle('active', isActive);
+                if (isActive) {
+                    link.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'nearest' });
+                }
+            });
+        }
+
         window.addEventListener('scroll', () => {
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (scrollY >= (sectionTop - 200)) {
-                    current = section.getAttribute('id');
-                }
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(() => {
+                updateActiveToc();
+                ticking = false;
             });
-            
-            navLi.forEach(a => {
-                a.classList.remove('active');
-                if (a.getAttribute('href').includes(current)) {
-                    a.classList.add('active');
-                    // Scroll sidebar to active element
-                    a.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }
-            });
-        });
+        }, { passive: true });
+
+        window.addEventListener('resize', updateActiveToc, { passive: true });
+        updateActiveToc();
     </script>
     <script src="../pdf-export.js"></script>
 </body>

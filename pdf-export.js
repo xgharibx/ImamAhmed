@@ -784,10 +784,10 @@
 
         const refinedStyle = isBook
             ? {
-                heading: { font: 'bold 35px Cairo, Tahoma, Arial', color: '#145341', lineHeight: 50, gapBefore: 15, gapAfter: 12 },
-                quote: { font: '27px Cairo, Tahoma, Arial', color: '#2f765a', lineHeight: 42, gapBefore: 10, gapAfter: 10 },
-                pre: { font: '24px Cairo, Tahoma, Arial', color: '#333', lineHeight: 37, gapBefore: 8, gapAfter: 8 },
-                paragraph: { font: '27px Cairo, Tahoma, Arial', color: '#1f2c2a', lineHeight: 41, gapBefore: 6, gapAfter: 9 }
+                heading: { font: 'bold 30px Cairo, Tahoma, Arial', color: '#145341', lineHeight: 44, gapBefore: 13, gapAfter: 10 },
+                quote: { font: '23px Cairo, Tahoma, Arial', color: '#2f765a', lineHeight: 36, gapBefore: 8, gapAfter: 8 },
+                pre: { font: '21px Cairo, Tahoma, Arial', color: '#333', lineHeight: 32, gapBefore: 6, gapAfter: 6 },
+                paragraph: { font: '23px Cairo, Tahoma, Arial', color: '#1f2c2a', lineHeight: 35, gapBefore: 5, gapAfter: 7 }
             }
             : {
                 heading: { font: 'bold 34px Cairo, Tahoma, Arial', color: '#1a5f4a', lineHeight: 48, gapBefore: 14, gapAfter: 12 },
@@ -913,10 +913,10 @@
 
         const chapterBase = isBook
             ? {
-                heading: { weight: 'bold', size: 34, color: '#145341', lineHeight: 48, gapBefore: 14, gapAfter: 12 },
-                quote: { weight: '', size: 26, color: '#2f765a', lineHeight: 40, gapBefore: 10, gapAfter: 10 },
-                pre: { weight: '', size: 24, color: '#333', lineHeight: 35, gapBefore: 8, gapAfter: 8 },
-                paragraph: { weight: '', size: 25, color: '#1f2c2a', lineHeight: 37, gapBefore: 6, gapAfter: 8 }
+                heading: { weight: 'bold', size: 29, color: '#145341', lineHeight: 41, gapBefore: 11, gapAfter: 9 },
+                quote: { weight: '', size: 22, color: '#2f765a', lineHeight: 33, gapBefore: 8, gapAfter: 7 },
+                pre: { weight: '', size: 20, color: '#333', lineHeight: 30, gapBefore: 6, gapAfter: 6 },
+                paragraph: { weight: '', size: 21, color: '#1f2c2a', lineHeight: 31, gapBefore: 5, gapAfter: 6 }
             }
             : {
                 heading: { weight: 'bold', size: 32, color: '#1a5f4a', lineHeight: 46, gapBefore: 14, gapAfter: 12 },
