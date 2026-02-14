@@ -612,6 +612,7 @@
         const chapterPerPage = payload.layoutMode === 'chapter-per-page';
         const isKhatraHeading = (block) => block.kind === 'heading' && /الخاطرة\s*\(/.test(String(block.text || ''));
         const isCoverBoundaryHeading = (text) => /^(\d+[\)\-\.]|أولاً|ثانياً|ثالثاً|رابعاً|خامساً|سادساً|المجلس|الدرس|الفصل|الباب|المقدمة|الخاتمة|تمهيد|شرح|الخاطرة)/.test(String(text || '').trim());
+        const isIntroHeading = (text) => /^(المقدمة|مقدمة(?:\s+الكتاب)?)/.test(String(text || '').trim());
         const isCoverCandidateIntroLine = (text) => {
             const normalized = String(text || '').replace(/\s+/g, ' ').trim();
             if (!normalized) return false;
@@ -697,8 +698,22 @@
                 paragraph: { font: '26px Cairo, Tahoma, Arial', color: '#222', lineHeight: 40, gapBefore: 6, gapAfter: 8 }
             };
 
+        let introSectionEndIndex = -1;
+        if (isBook && blocks.length) {
+            const firstHeadingIndex = blocks.findIndex((block) => block.kind === 'heading');
+            if (firstHeadingIndex >= 0 && isIntroHeading(blocks[firstHeadingIndex].text)) {
+                const nextHeadingIndex = blocks.findIndex((block, idx) => idx > firstHeadingIndex && block.kind === 'heading');
+                introSectionEndIndex = nextHeadingIndex >= 0 ? nextHeadingIndex - 1 : blocks.length - 1;
+            }
+        }
+
         if (!chapterPerPage) {
-            for (const block of blocks) {
+            for (let index = 0; index < blocks.length; index += 1) {
+                const block = blocks[index];
+                if (introSectionEndIndex >= 0 && index === introSectionEndIndex + 1 && y > contentTop + 2) {
+                    newPage();
+                }
+
                 if (block.kind === 'heading' && isMajorHeading(block.text) && y > 1320) {
                     newPage();
                 }
