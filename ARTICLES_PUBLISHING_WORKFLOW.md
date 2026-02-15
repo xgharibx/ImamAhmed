@@ -21,8 +21,20 @@ powershell -ExecutionPolicy Bypass -File "scripts/publish_docx_article.ps1" `
 ## 2) إضافة بطاقة المقال في صفحة المقالات
 أضف بطاقة في `articles.html` بنفس النمط الحالي مع رابط الصفحة الجديدة.
 
-## 3) تفعيل وسوم المشاركة (thumbnail) على الصفحات القديمة والجديدة
-لتطبيق وسوم المشاركة على كل صفحات HTML التي لا تحتويها بعد:
+## 3) توليد صورة thumbnail مستقلة لكل رابط
+لتوليد صور مشاركة لكل صفحات الموقع (الحالية والجديدة):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File "scripts/generate_page_thumbnails.ps1"
+```
+
+### الناتج
+- صور PNG بالمقاس القياسي للمشاركة `1200x630`
+- مكان الحفظ: `assets/og/*.png`
+- اسم صورة فريد لكل صفحة (مثال: `books-ramadan-basirat-altakhtit-anwar-altalluq.png`)
+
+## 4) تحديث وسوم المشاركة (OG/Twitter) على كل الصفحات
+بعد توليد الصور، حدّث جميع صفحات HTML لتستخدم الصورة الخاصة بكل صفحة + الدومين من `CNAME`:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File "scripts/add_social_meta.ps1"
@@ -31,15 +43,16 @@ powershell -ExecutionPolicy Bypass -File "scripts/add_social_meta.ps1"
 ### ماذا يضيف السكربت؟
 - `og:title`, `og:description`, `og:image`, `og:url`
 - `twitter:title`, `twitter:description`, `twitter:image`
-- صورة افتراضية للمشاركة: `sheikh-photo.png`
+- `og:image:width=1200` و `og:image:height=630`
+- يعتمد تلقائيًا على الدومين من ملف `CNAME` (مثل `https://ahmedelfashny.com`)
 
-## 4) النشر
+## 5) النشر
 ```powershell
 git add .
-git commit -m "Publish article and update social sharing metadata"
+git commit -m "Publish article and update per-page social thumbnails"
 git push --force origin main
 ```
 
 ## ملاحظات
 - إذا لم تظهر thumbnail مباشرة بعد النشر، افعل تحديث قوي للمتصفح (`Ctrl+F5`) وانتظر تحديث كاش المنصات الاجتماعية.
-- يمكن لاحقًا تخصيص صورة مشاركة مختلفة لكل صفحة بدل الصورة الافتراضية.
+- واتساب/فيسبوك/تويتر قد يحتفظوا بكاش للرابط؛ أحيانًا يلزم إعادة مشاركة الرابط بعد دقائق ليظهر التصميم الجديد.

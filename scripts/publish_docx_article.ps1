@@ -6,7 +6,8 @@ param(
     [string]$Slug,
 
     [string]$RootPath = "m:\Sheikh Ahmed",
-    [string]$Author = "بقلم: فضيلة الشيخ أحمد إسماعيل الفشني"
+    [string]$Author = "بقلم: فضيلة الشيخ أحمد إسماعيل الفشني",
+    [string]$BaseUrl = ""
 )
 
 $ErrorActionPreference = 'Stop'
@@ -36,8 +37,27 @@ if ($paragraphs.Count -lt 3) {
     throw "Extracted content is too short; stopping."
 }
 
+function Resolve-BaseUrl {
+    param([string]$root, [string]$fallback)
+
+    if (-not [string]::IsNullOrWhiteSpace($fallback)) {
+        return $fallback.TrimEnd('/')
+    }
+
+    $cnamePath = Join-Path $root 'CNAME'
+    if (Test-Path $cnamePath) {
+        $domain = (Get-Content -Path $cnamePath -Raw -Encoding UTF8).Trim()
+        if ($domain) { return "https://$domain" }
+    }
+
+    return "https://xgharibx.github.io/ImamAhmed"
+}
+
 $title = $paragraphs[0]
 $bodyParagraphs = $paragraphs | Select-Object -Skip 1
+$resolvedBaseUrl = Resolve-BaseUrl -root $RootPath -fallback $BaseUrl
+$pageUrl = "$resolvedBaseUrl/books/$Slug.html"
+$ogImageUrl = "$resolvedBaseUrl/assets/og/books-$Slug.png"
 
 $processedDir = Join-Path $RootPath 'Articals\\processed'
 if (-not (Test-Path $processedDir)) { New-Item -ItemType Directory -Path $processedDir | Out-Null }
@@ -74,11 +94,12 @@ $html = @"
     <meta property="og:site_name" content="الشيخ أحمد إسماعيل الفشني">
     <meta property="og:title" content="$title">
     <meta property="og:description" content="مقال بقلم فضيلة الشيخ أحمد إسماعيل الفشني.">
-    <meta property="og:image" content="https://xgharibx.github.io/ImamAhmed/sheikh-photo.png">
+    <meta property="og:image" content="$ogImageUrl">
+    <meta property="og:url" content="$pageUrl">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="$title">
     <meta name="twitter:description" content="مقال بقلم فضيلة الشيخ أحمد إسماعيل الفشني.">
-    <meta name="twitter:image" content="https://xgharibx.github.io/ImamAhmed/sheikh-photo.png">
+    <meta name="twitter:image" content="$ogImageUrl">
     <link rel="stylesheet" href="../style.css">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">

@@ -1,16 +1,44 @@
 param(
     [string]$RootPath = "m:\Sheikh Ahmed",
-    [string]$BaseUrl = "https://xgharibx.github.io/ImamAhmed",
-    [string]$DefaultImage = "https://xgharibx.github.io/ImamAhmed/sheikh-photo.png",
+    [string]$BaseUrl = "",
     [string]$SiteName = "Sheikh Ahmed Ismail Al-Fashni"
 )
 
 $ErrorActionPreference = 'Stop'
 
+function Get-BaseUrl {
+    param([string]$root, [string]$fallback)
+
+    if (-not [string]::IsNullOrWhiteSpace($fallback)) {
+        return $fallback.TrimEnd('/')
+    }
+
+    $cnamePath = Join-Path $root 'CNAME'
+    if (Test-Path $cnamePath) {
+        $domain = (Get-Content -Path $cnamePath -Raw -Encoding UTF8).Trim()
+        if ($domain) {
+            return "https://$domain"
+        }
+    }
+
+    return "https://xgharibx.github.io/ImamAhmed"
+}
+
+function HtmlEscape {
+    param([string]$text)
+
+    if ($null -eq $text) { return '' }
+    return $text.Replace('&', '&amp;').Replace('"', '&quot;').Replace('<', '&lt;').Replace('>', '&gt;')
+}
+
 function Get-MetaDescription {
     param([string]$html)
 
-    $descMatch = [regex]::Match($html, '<meta\s+name="description"\s+content="([^"]*)"\s*/?>', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+    $descMatch = [regex]::Match(
+        $html,
+        '<meta\s+name="description"\s+content="([^"]*)"\s*/?>',
+        [System.Text.RegularExpressions.RegexOptions]::IgnoreCase
+    )
     if ($descMatch.Success) {
         return $descMatch.Groups[1].Value.Trim()
     }
@@ -20,30 +48,57 @@ function Get-MetaDescription {
 function Get-TitleText {
     param([string]$html)
 
-    $titleMatch = [regex]::Match($html, '<title>(.*?)</title>', [System.Text.RegularExpressions.RegexOptions]::IgnoreCase -bor [System.Text.RegularExpressions.RegexOptions]::Singleline)
+    $titleMatch = [regex]::Match(
+        $html,
+        '<title>(.*?)</title>',
+        [System.Text.RegularExpressions.RegexOptions]::IgnoreCase -bor [System.Text.RegularExpressions.RegexOptions]::Singleline
+    )
     if ($titleMatch.Success) {
         return ($titleMatch.Groups[1].Value -replace '\s+', ' ').Trim()
     }
     return $SiteName
 }
 
+function Get-OgImageName {
+    param([string]$relativePath)
+
+    $name = $relativePath.ToLowerInvariant()
+    if ($name -eq 'index.html') {
+        return 'index.png'
+    }
+
+    $name = $name -replace '\.html$', ''
+    $name = $name -replace '[^a-z0-9\-/]+', '-'
+    $name = $name -replace '/+', '-'
+    $name = $name -replace '-+', '-'
+    $name = $name.Trim('-')
+
+    if ([string]::IsNullOrWhiteSpace($name)) {
+        return 'page.png'
+    }
+
+    return "$name.png"
+}
+
+$resolvedBaseUrl = Get-BaseUrl -root $RootPath -fallback $BaseUrl
 $files = Get-ChildItem -Path $RootPath -Filter '*.html' -File -Recurse
 $updated = 0
-$skipped = 0
 
 foreach ($file in $files) {
     $content = Get-Content -Path $file.FullName -Raw -Encoding UTF8
 
-    if ($content -match 'property="og:title"') {
-        $skipped++
-        continue
-    }
-
-    $title = Get-TitleText -html $content
-    $description = Get-MetaDescription -html $content
-
     $relativePath = $file.FullName.Substring($RootPath.Length).TrimStart('\\') -replace '\\', '/'
-    $fullUrl = "$BaseUrl/$relativePath"
+    $fullUrl = "$resolvedBaseUrl/$relativePath"
+    $imageName = Get-OgImageName -relativePath $relativePath
+    $imageUrl = "$resolvedBaseUrl/assets/og/$imageName"
+
+    $title = HtmlEscape (Get-TitleText -html $content)
+    $description = HtmlEscape (Get-MetaDescription -html $content)
+
+    $cleaned = $content
+    $cleaned = [regex]::Replace($cleaned, '<meta\s+property="og:[^"]+"\s+content="[^"]*"\s*/?>\r?\n?', '', 'IgnoreCase')
+    $cleaned = [regex]::Replace($cleaned, '<meta\s+name="twitter:[^"]+"\s+content="[^"]*"\s*/?>\r?\n?', '', 'IgnoreCase')
+    $cleaned = [regex]::Replace($cleaned, '<meta\s+property="twitter:[^"]+"\s+content="[^"]*"\s*/?>\r?\n?', '', 'IgnoreCase')
 
     $metaBlock = @"
     <meta property="og:type" content="website">
@@ -51,16 +106,18 @@ foreach ($file in $files) {
     <meta property="og:site_name" content="$SiteName">
     <meta property="og:title" content="$title">
     <meta property="og:description" content="$description">
-    <meta property="og:image" content="$DefaultImage">
+    <meta property="og:image" content="$imageUrl">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta property="og:url" content="$fullUrl">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="$title">
     <meta name="twitter:description" content="$description">
-    <meta name="twitter:image" content="$DefaultImage">
+    <meta name="twitter:image" content="$imageUrl">
 "@
 
     $newContent = [regex]::Replace(
-        $content,
+        $cleaned,
         '</head>',
         "$metaBlock`r`n</head>",
         [System.Text.RegularExpressions.RegexOptions]::IgnoreCase
@@ -72,5 +129,5 @@ foreach ($file in $files) {
     }
 }
 
+Write-Output "Base URL: $resolvedBaseUrl"
 Write-Output "Updated files: $updated"
-Write-Output "Skipped files (already had OG tags): $skipped"
