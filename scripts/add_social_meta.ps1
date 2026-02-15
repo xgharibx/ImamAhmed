@@ -2,7 +2,7 @@ param(
     [string]$RootPath = "m:\Sheikh Ahmed",
     [string]$BaseUrl = "",
     [string]$SiteName = "Sheikh Ahmed Ismail Al-Fashni",
-    [string]$DefaultImagePath = "assets/og/sheikh-ahmed-share.png"
+    [string]$DefaultImagePath = "assets/og/sheikh-ahmed-share.jpg"
 )
 
 $ErrorActionPreference = 'Stop'
@@ -101,15 +101,16 @@ foreach ($file in $files) {
     $cleaned = [regex]::Replace($cleaned, '<meta\s+property="twitter:[^"]+"\s+content="[^"]*"\s*/?>\r?\n?', '', 'IgnoreCase')
 
     $metaBlock = @"
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="article">
     <meta property="og:locale" content="ar_AR">
     <meta property="og:site_name" content="$SiteName">
     <meta property="og:title" content="$title">
     <meta property="og:description" content="$description">
     <meta property="og:image" content="$sharedImageUrl">
+    <meta property="og:image:url" content="$sharedImageUrl">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:type" content="image/jpeg">
     <meta property="og:image:secure_url" content="$sharedImageUrl">
     <meta property="og:url" content="$fullUrl">
     <meta name="twitter:card" content="summary_large_image">
