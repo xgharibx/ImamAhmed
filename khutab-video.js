@@ -138,6 +138,17 @@ document.addEventListener('DOMContentLoaded', () => {
             return Number.isNaN(ts) ? 0 : ts;
         }
 
+        const spacedMatch = normalizedText.match(/(?:^|\D)(\d{1,2})\s+(\d{1,2})\s+(\d{4})(?:\D|$)/);
+        if (spacedMatch) {
+            const day = Number.parseInt(spacedMatch[1], 10);
+            const month = Number.parseInt(spacedMatch[2], 10);
+            const year = Number.parseInt(spacedMatch[3], 10);
+            if (month >= 1 && month <= 12) {
+                const ts = Date.UTC(year, month - 1, day);
+                return Number.isNaN(ts) ? 0 : ts;
+            }
+        }
+
         const monthMap = {
             'يناير': 1, 'فبراير': 2, 'مارس': 3, 'ابريل': 4, 'أبريل': 4,
             'مايو': 5, 'يونيو': 6, 'يوليو': 7, 'اغسطس': 8, 'أغسطس': 8,
