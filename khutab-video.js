@@ -178,6 +178,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function classifyVideo(video) {
+        const explicitCategory = normalizeArabic(video?.category || '');
+        if (explicitCategory === 'khutbah') {
+            return 'khutbah';
+        }
+
         const title = normalizeArabic(video?.title || '');
         const khutbahKeywords = ['خطبه', 'خطب', 'الجمعه'];
         return hasAnyKeyword(title, khutbahKeywords) ? 'khutbah' : 'other';
