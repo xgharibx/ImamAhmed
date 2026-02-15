@@ -1,7 +1,8 @@
 param(
     [string]$RootPath = "m:\Sheikh Ahmed",
     [string]$BaseUrl = "",
-    [string]$SiteName = "Sheikh Ahmed Ismail Al-Fashni"
+    [string]$SiteName = "Sheikh Ahmed Ismail Al-Fashni",
+    [string]$DefaultImagePath = "assets/og/sheikh-ahmed-share.png"
 )
 
 $ErrorActionPreference = 'Stop'
@@ -78,28 +79,9 @@ function Ensure-LibrarySuffix {
     return "$baseTitle | $suffix"
 }
 
-function Get-OgImageName {
-    param([string]$relativePath)
-
-    $name = $relativePath.ToLowerInvariant()
-    if ($name -eq 'index.html') {
-        return 'index.png'
-    }
-
-    $name = $name -replace '\.html$', ''
-    $name = $name -replace '[^a-z0-9\-/]+', '-'
-    $name = $name -replace '/+', '-'
-    $name = $name -replace '-+', '-'
-    $name = $name.Trim('-')
-
-    if ([string]::IsNullOrWhiteSpace($name)) {
-        return 'page.png'
-    }
-
-    return "$name.png"
-}
-
 $resolvedBaseUrl = Get-BaseUrl -root $RootPath -fallback $BaseUrl
+$cleanDefaultImagePath = $DefaultImagePath.TrimStart('/').Replace('\\', '/')
+$sharedImageUrl = "$resolvedBaseUrl/$cleanDefaultImagePath"
 $files = Get-ChildItem -Path $RootPath -Filter '*.html' -File -Recurse
 $updated = 0
 
@@ -108,8 +90,6 @@ foreach ($file in $files) {
 
     $relativePath = $file.FullName.Substring($RootPath.Length).TrimStart('\\') -replace '\\', '/'
     $fullUrl = "$resolvedBaseUrl/$relativePath"
-    $imageName = Get-OgImageName -relativePath $relativePath
-    $imageUrl = "$resolvedBaseUrl/assets/og/$imageName"
 
     $resolvedTitle = Ensure-LibrarySuffix (Get-TitleText -html $content)
     $title = HtmlEscape $resolvedTitle
@@ -126,14 +106,16 @@ foreach ($file in $files) {
     <meta property="og:site_name" content="$SiteName">
     <meta property="og:title" content="$title">
     <meta property="og:description" content="$description">
-    <meta property="og:image" content="$imageUrl">
+    <meta property="og:image" content="$sharedImageUrl">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:secure_url" content="$sharedImageUrl">
     <meta property="og:url" content="$fullUrl">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="$title">
     <meta name="twitter:description" content="$description">
-    <meta name="twitter:image" content="$imageUrl">
+    <meta name="twitter:image" content="$sharedImageUrl">
 "@
 
     $newContent = [regex]::Replace(

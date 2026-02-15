@@ -57,7 +57,7 @@ $title = $paragraphs[0]
 $bodyParagraphs = $paragraphs | Select-Object -Skip 1
 $resolvedBaseUrl = Resolve-BaseUrl -root $RootPath -fallback $BaseUrl
 $pageUrl = "$resolvedBaseUrl/books/$Slug.html"
-$ogImageUrl = "$resolvedBaseUrl/assets/og/books-$Slug.png"
+$ogImageUrl = "$resolvedBaseUrl/assets/og/sheikh-ahmed-share.png"
 
 $processedDir = Join-Path $RootPath 'Articals\\processed'
 if (-not (Test-Path $processedDir)) { New-Item -ItemType Directory -Path $processedDir | Out-Null }
