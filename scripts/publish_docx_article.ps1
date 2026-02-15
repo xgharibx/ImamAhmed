@@ -92,12 +92,12 @@ $html = @"
     <meta property="og:type" content="article">
     <meta property="og:locale" content="ar_AR">
     <meta property="og:site_name" content="الشيخ أحمد إسماعيل الفشني">
-    <meta property="og:title" content="$title">
+    <meta property="og:title" content="$title | مكتبة الشيخ أحمد">
     <meta property="og:description" content="مقال بقلم فضيلة الشيخ أحمد إسماعيل الفشني.">
     <meta property="og:image" content="$ogImageUrl">
     <meta property="og:url" content="$pageUrl">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="$title">
+    <meta name="twitter:title" content="$title | مكتبة الشيخ أحمد">
     <meta name="twitter:description" content="مقال بقلم فضيلة الشيخ أحمد إسماعيل الفشني.">
     <meta name="twitter:image" content="$ogImageUrl">
     <link rel="stylesheet" href="../style.css">

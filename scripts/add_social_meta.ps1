@@ -59,6 +59,25 @@ function Get-TitleText {
     return $SiteName
 }
 
+function Ensure-LibrarySuffix {
+    param([string]$title)
+
+    $suffix = [string]::Concat(
+        [char]0x0645, [char]0x0643, [char]0x062A, [char]0x0628, [char]0x0629,
+        [char]0x0020,
+        [char]0x0627, [char]0x0644, [char]0x0634, [char]0x064A, [char]0x062E,
+        [char]0x0020,
+        [char]0x0623, [char]0x062D, [char]0x0645, [char]0x062F
+    )
+
+    if ([string]::IsNullOrWhiteSpace($title)) {
+        return $suffix
+    }
+
+    $baseTitle = ($title -split '\|')[0].Trim()
+    return "$baseTitle | $suffix"
+}
+
 function Get-OgImageName {
     param([string]$relativePath)
 
@@ -92,7 +111,8 @@ foreach ($file in $files) {
     $imageName = Get-OgImageName -relativePath $relativePath
     $imageUrl = "$resolvedBaseUrl/assets/og/$imageName"
 
-    $title = HtmlEscape (Get-TitleText -html $content)
+    $resolvedTitle = Ensure-LibrarySuffix (Get-TitleText -html $content)
+    $title = HtmlEscape $resolvedTitle
     $description = HtmlEscape (Get-MetaDescription -html $content)
 
     $cleaned = $content
