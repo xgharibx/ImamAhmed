@@ -60,23 +60,14 @@ function Get-TitleText {
     return $SiteName
 }
 
-function Ensure-LibrarySuffix {
+function Normalize-ShareTitle {
     param([string]$title)
 
-    $suffix = [string]::Concat(
-        [char]0x0645, [char]0x0643, [char]0x062A, [char]0x0628, [char]0x0629,
-        [char]0x0020,
-        [char]0x0627, [char]0x0644, [char]0x0634, [char]0x064A, [char]0x062E,
-        [char]0x0020,
-        [char]0x0623, [char]0x062D, [char]0x0645, [char]0x062F
-    )
-
     if ([string]::IsNullOrWhiteSpace($title)) {
-        return $suffix
+        return 'Sheikh Ahmed Ismail Al-Fashni'
     }
 
-    $baseTitle = ($title -split '\|')[0].Trim()
-    return "$baseTitle | $suffix"
+    return ($title -split '\|')[0].Trim()
 }
 
 $resolvedBaseUrl = Get-BaseUrl -root $RootPath -fallback $BaseUrl
@@ -91,7 +82,7 @@ foreach ($file in $files) {
     $relativePath = $file.FullName.Substring($RootPath.Length).TrimStart('\\') -replace '\\', '/'
     $fullUrl = "$resolvedBaseUrl/$relativePath"
 
-    $resolvedTitle = Ensure-LibrarySuffix (Get-TitleText -html $content)
+    $resolvedTitle = Normalize-ShareTitle (Get-TitleText -html $content)
     $title = HtmlEscape $resolvedTitle
     $description = HtmlEscape (Get-MetaDescription -html $content)
 
