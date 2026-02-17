@@ -906,6 +906,16 @@
             return isCoverBoundaryHeading(normalized);
         };
 
+        const getKhutbaSectionKey = (text) => {
+            const normalized = normalizeArabic(text);
+            if (!normalized) return '';
+            if (/^عناصر\s+الخطبه/.test(normalized)) return 'anasir';
+            if (/^الخطبه\s+الاولي/.test(normalized)) return 'first';
+            if (/^الخطبه\s+الثانيه/.test(normalized)) return 'second';
+            if (/^الدعاء$/.test(normalized)) return 'dua';
+            return '';
+        };
+
         const refinedStyle = isBook
             ? {
                 heading: { font: 'bold 30px Cairo, Tahoma, Arial', color: '#145341', lineHeight: 44, gapBefore: 13, gapAfter: 10 },
@@ -997,6 +1007,102 @@
             const renderedIntroPage = renderIntroAsSinglePage(introSectionBlocks);
             if (renderedIntroPage && blocks.length) {
                 newPage();
+            }
+
+            if (payload.type === 'khutba') {
+                const orderedSections = [];
+                const ensureSection = (key, title) => {
+                    let section = orderedSections.find((s) => s.key === key);
+                    if (!section) {
+                        section = { key, title, blocks: [] };
+                        orderedSections.push(section);
+                    }
+                    return section;
+                };
+
+                let currentSection = ensureSection('preface', '');
+                for (const block of blocks) {
+                    if (block.kind === 'heading') {
+                        const key = getKhutbaSectionKey(block.text);
+                        if (key) {
+                            currentSection = ensureSection(key, block.text);
+                            currentSection.blocks.push(block);
+                            continue;
+                        }
+                    }
+                    currentSection.blocks.push(block);
+                }
+
+                const sectionPriority = ['anasir', 'first', 'second', 'dua', 'preface'];
+                const sectionsToRender = orderedSections
+                    .filter((section) => section.blocks.length)
+                    .sort((a, b) => {
+                        const ai = sectionPriority.indexOf(a.key);
+                        const bi = sectionPriority.indexOf(b.key);
+                        const safeAi = ai === -1 ? 99 : ai;
+                        const safeBi = bi === -1 ? 99 : bi;
+                        return safeAi - safeBi;
+                    });
+
+                const drawKhutbaSection = (section, forceNewPage) => {
+                    if (!section?.blocks?.length) return;
+                    if (forceNewPage && y > contentTop + 2) {
+                        newPage();
+                    }
+
+                    y = contentTop;
+                    for (const block of section.blocks) {
+                        const rawText = String(block.text || '').trim();
+                        const isHeading = block.kind === 'heading';
+                        const isBulletLike = !isHeading && /^•\s+/.test(rawText);
+
+                        const style = isHeading
+                            ? { font: 'bold 42px Cairo, Tahoma, Arial', color: '#145341', lineHeight: 58, gapBefore: 12, gapAfter: 14, align: 'center' }
+                            : isBulletLike
+                                ? { font: '700 28px Cairo, Tahoma, Arial', color: '#2f765a', lineHeight: 44, gapBefore: 8, gapAfter: 8, align: 'right' }
+                                : { font: '26px Cairo, Tahoma, Arial', color: '#222', lineHeight: 41, gapBefore: 6, gapAfter: 8, align: 'right' };
+
+                        y += style.gapBefore;
+                        page.ctx.direction = 'rtl';
+                        page.ctx.textAlign = style.align;
+                        page.ctx.font = style.font;
+                        page.ctx.fillStyle = style.color;
+
+                        const maxSectionWidth = isHeading ? (maxWidth - 120) : maxWidth;
+                        const lines = wrapTextLines(page.ctx, rawText, maxSectionWidth);
+
+                        for (const line of lines) {
+                            if (y > contentBottom) {
+                                newPage();
+                                y = contentTop;
+                                page.ctx.direction = 'rtl';
+                                page.ctx.textAlign = style.align;
+                                page.ctx.font = style.font;
+                                page.ctx.fillStyle = style.color;
+                            }
+
+                            const x = style.align === 'center' ? (page.canvas.width / 2) : (page.canvas.width - marginX);
+                            page.ctx.fillText(line, x, y);
+                            y += style.lineHeight;
+                        }
+
+                        y += style.gapAfter;
+                    }
+                };
+
+                let firstRendered = true;
+                for (const section of sectionsToRender) {
+                    drawKhutbaSection(section, !firstRendered);
+                    firstRendered = false;
+                }
+
+                drawPageFooter(page.ctx, pageNumber, payload);
+                canvases.push(page.canvas);
+                if (shouldRenderOutro) {
+                    const contactLines = payload.type === 'khutba' ? (payload.contactLines || []) : [];
+                    canvases.push(createPdfOutroCanvas(payload, outroLine, contactLines));
+                }
+                return canvases;
             }
 
             for (let index = 0; index < blocks.length; index += 1) {
