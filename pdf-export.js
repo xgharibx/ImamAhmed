@@ -967,6 +967,47 @@
             return '';
         };
 
+        const khutbaHeadingLabelByKey = (key) => {
+            if (key === 'anasir') return 'عَنَاصِرُ الْخُطْبَةِ';
+            if (key === 'first') return 'الْخُطْبَةُ الْأُولَى';
+            if (key === 'second') return 'الْخُطْبَةُ الثَّانِيَة';
+            if (key === 'dua') return 'الدُّعَاءُ';
+            return '';
+        };
+
+        if (payload.type === 'khutba' && blocks.length) {
+            const normalizedBlocks = [];
+            for (const block of blocks) {
+                if (block.kind !== 'paragraph') {
+                    normalizedBlocks.push(block);
+                    continue;
+                }
+
+                const rawText = String(block.text || '').replace(/\s+/g, ' ').trim();
+                if (!rawText) continue;
+
+                const split = rawText.match(/^([^:：]{2,90})\s*[:：]\s*(.*)$/);
+                if (!split) {
+                    normalizedBlocks.push(block);
+                    continue;
+                }
+
+                const head = (split[1] || '').trim();
+                const tail = (split[2] || '').trim();
+                const sectionKey = getKhutbaSectionKey(head);
+                if (!sectionKey) {
+                    normalizedBlocks.push(block);
+                    continue;
+                }
+
+                normalizedBlocks.push({ kind: 'heading', text: khutbaHeadingLabelByKey(sectionKey), level: 2 });
+                if (tail) {
+                    normalizedBlocks.push({ kind: 'paragraph', text: tail });
+                }
+            }
+            blocks = normalizedBlocks;
+        }
+
         const refinedStyle = isBook
             ? {
                 heading: { font: 'bold 30px Cairo, Tahoma, Arial', color: '#145341', lineHeight: 44, gapBefore: 13, gapAfter: 10 },
@@ -1084,7 +1125,7 @@
                     currentSection.blocks.push(block);
                 }
 
-                const sectionPriority = ['anasir', 'first', 'second', 'dua', 'preface'];
+                const sectionPriority = ['preface', 'anasir', 'first', 'second', 'dua'];
                 const sectionsToRender = orderedSections
                     .filter((section) => section.blocks.length)
                     .sort((a, b) => {
@@ -1101,14 +1142,20 @@
                         newPage();
                     }
 
-                    y = contentTop;
                     for (const block of section.blocks) {
                         const rawText = String(block.text || '').trim();
                         const isHeading = block.kind === 'heading';
                         const isBulletLike = !isHeading && /^•\s+/.test(rawText);
+                        const keywordLead = !isHeading
+                            ? rawText.match(/^([^:：]{3,64})\s*[:：]\s+/)
+                            : null;
+                        const keywordLeadNorm = keywordLead ? normalizeArabic(keywordLead[1]) : '';
+                        const isKeyPhraseLine = Boolean(keywordLeadNorm) && /^(العنصر|اولا|ثانيا|ثالثا|رابعا|خامسا|سادسا|سابعا|ثامنا|تاسعا|عاشرا|فلسفه|جهاد|الكرم|موسوعه|البخل|المسؤوليه|خطه|النصيحه|الجانب|مشاهد|جدول)\b/.test(keywordLeadNorm);
 
                         const style = isHeading
                             ? { font: 'bold 42px Cairo, Tahoma, Arial', color: '#145341', lineHeight: 58, gapBefore: 12, gapAfter: 14, align: 'center' }
+                            : isKeyPhraseLine
+                                ? { font: '700 30px Cairo, Tahoma, Arial', color: '#1f7a5f', lineHeight: 46, gapBefore: 8, gapAfter: 10, align: 'right' }
                             : isBulletLike
                                 ? { font: '700 28px Cairo, Tahoma, Arial', color: '#2f765a', lineHeight: 44, gapBefore: 8, gapAfter: 8, align: 'right' }
                                 : { font: '26px Cairo, Tahoma, Arial', color: '#222', lineHeight: 41, gapBefore: 6, gapAfter: 8, align: 'right' };
@@ -1141,10 +1188,9 @@
                     }
                 };
 
-                let firstRendered = true;
                 for (const section of sectionsToRender) {
-                    drawKhutbaSection(section, !firstRendered);
-                    firstRendered = false;
+                    const shouldStartOnNewPage = section.key === 'first' || section.key === 'second';
+                    drawKhutbaSection(section, shouldStartOnNewPage);
                 }
 
                 drawPageFooter(page.ctx, pageNumber, payload);
