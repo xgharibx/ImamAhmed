@@ -138,6 +138,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const isSubHeading = (line) => /^(الْعُنْصَرُ|العنصر|أولاً|ثانياً|ثالثاً|رابعاً|خامساً|سادساً|سابعاً|ثامناً|تاسعاً|عاشراً)\b/.test(line);
         const isNumberedListItem = (line) => /^\s*[0-9٠-٩]+\s*[\)\-\.:،]?\s+/.test(line);
+        const isKeyPhraseLabel = (head) => {
+            const n = normalizeArabic(head);
+            return /^(العنصر|اولا|ثانيا|ثالثا|رابعا|خامسا|سادسا|سابعا|ثامنا|تاسعا|عاشرا|فلسفه|جهاد|الكرم|موسوعه|البخل|المسؤوليه|خطه|النصيحه|الجانب|مشاهد|جدول)\b/.test(n);
+        };
 
         lines.forEach((line, index) => {
             const split = splitAtColon(line);
@@ -170,6 +174,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (currentSectionKey === 'anasir' && line.length >= 10) {
                 listBuffer.push(line.replace(/^[-•]\s*/, '').trim());
+                return;
+            }
+
+            if (split.tail && isKeyPhraseLabel(split.head)) {
+                flushList();
+                const introClass = index < 3 ? ' khutba-intro-line' : '';
+                parts.push(
+                    `<p class="khutba-paragraph khutba-keyline${introClass}"><span class="khutba-keyline-lead">${escapeHtml(split.head)}:</span> ${escapeHtml(split.tail)}</p>`
+                );
                 return;
             }
 
