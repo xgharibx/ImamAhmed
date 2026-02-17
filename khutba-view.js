@@ -12,7 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getId() {
         const params = new URLSearchParams(window.location.search);
-        return (params.get('id') || '').trim();
+        const fromQuery = (params.get('id') || '').trim();
+        if (fromQuery) return fromQuery;
+
+        const fromGlobal = String(window.KHUTBA_ID || '').trim();
+        if (fromGlobal) return fromGlobal;
+
+        const fromBody = String(document.body?.dataset?.khutbaId || '').trim();
+        return fromBody;
     }
 
     function getItemId(item) {
@@ -216,6 +223,11 @@ document.addEventListener('DOMContentLoaded', () => {
             .slice(0, 90) || 'خطبة';
     }
 
+    function toKhutbaSlugUrl(item) {
+        const slug = slugifyArabic(item?.title || 'خطبة');
+        return `khutab/${encodeURIComponent(slug)}.html`;
+    }
+
     function getIsoDate(item) {
         return item?.date?.iso || item?.date_iso || '';
     }
@@ -298,8 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const latestReadableIds = computeLatestReadableIds(items, 6);
             const latestId = getItemId(latest);
             if (latestId && !latestReadableIds.has(id)) {
-                const latestSlug = slugifyArabic(latest?.title || 'خطبة');
-                const latestUrl = `khutab/${encodeURIComponent(latestSlug)}.html?id=${encodeURIComponent(latestId)}`;
+                const latestUrl = toKhutbaSlugUrl(latest);
                 titleEl.innerHTML = `<span class="title-icon"><i class="fas fa-lock"></i></span> ${escapeHtml('غير متاح حالياً')}`;
                 metaEl.textContent = '';
                 contentEl.innerHTML = `

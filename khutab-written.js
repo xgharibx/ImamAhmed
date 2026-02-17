@@ -60,9 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function toDetailUrl(item) {
-        const id = String(item?.id || '').trim();
         const titleSlug = slugifyArabic(item?.title || 'خطبة');
-        return `khutab/${encodeURIComponent(titleSlug)}.html?id=${encodeURIComponent(id)}`;
+        return `khutab/${encodeURIComponent(titleSlug)}.html`;
     }
 
     function slugifyArabic(text) {
