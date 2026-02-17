@@ -60,21 +60,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function toDetailUrl(item) {
-        const titleSlug = slugifyArabic(item?.title || 'خطبة');
-        return `khutab/${encodeURIComponent(titleSlug)}.html`;
+        const shortSlug = buildShortKhutbaSlug(item);
+        return `khutab/${encodeURIComponent(shortSlug)}.html`;
     }
 
-    function slugifyArabic(text) {
-        return String(text || 'خطبة')
-            .replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]/g, '')
-            .replace(/[إأآٱ]/g, 'ا')
-            .replace(/ى/g, 'ي')
-            .replace(/ة/g, 'ه')
-            .replace(/[^\u0621-\u064A0-9\s-]/g, ' ')
-            .replace(/\s+/g, '-')
-            .replace(/-+/g, '-')
-            .replace(/^-|-$/g, '')
-            .slice(0, 90) || 'خطبة';
+    function buildShortKhutbaSlug(item) {
+        const iso = (getIsoDate(item) || '').replace(/[^0-9]/g, '').slice(0, 8);
+        const seed = String(item?.id || item?.title || 'khutba').trim();
+        const encoded = unescape(encodeURIComponent(seed));
+        const compact = btoa(encoded)
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=+$/g, '')
+            .toLowerCase()
+            .slice(0, 12);
+        return iso ? `k-${iso}-${compact}` : `k-${compact || 'x1'}`;
     }
 
     function getItemId(item) {

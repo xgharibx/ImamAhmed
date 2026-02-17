@@ -210,22 +210,30 @@ document.addEventListener('DOMContentLoaded', () => {
         return item?.date?.display || item?.date_display || item?.date || '';
     }
 
-    function slugifyArabic(text) {
-        return String(text || 'خطبة')
-            .replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]/g, '')
-            .replace(/[إأآٱ]/g, 'ا')
-            .replace(/ى/g, 'ي')
-            .replace(/ة/g, 'ه')
-            .replace(/[^\u0621-\u064A0-9\s-]/g, ' ')
-            .replace(/\s+/g, '-')
-            .replace(/-+/g, '-')
-            .replace(/^-|-$/g, '')
-            .slice(0, 90) || 'خطبة';
+    function toKhutbaSlugUrl(item) {
+        const slug = buildShortKhutbaSlug(item);
+        return buildKhutbaPath(slug);
     }
 
-    function toKhutbaSlugUrl(item) {
-        const slug = slugifyArabic(item?.title || 'خطبة');
-        return `khutab/${encodeURIComponent(slug)}.html`;
+    function buildKhutbaPath(slug) {
+        const encodedSlug = encodeURIComponent(slug);
+        const inKhutabDirectory = /\/khutab\/[^/]+\.html?$/i.test(window.location.pathname);
+        return inKhutabDirectory
+            ? `${encodedSlug}.html`
+            : `khutab/${encodedSlug}.html`;
+    }
+
+    function buildShortKhutbaSlug(item) {
+        const iso = (getIsoDate(item) || '').replace(/[^0-9]/g, '').slice(0, 8);
+        const seed = String(item?.id || item?.title || 'khutba').trim();
+        const encoded = unescape(encodeURIComponent(seed));
+        const compact = btoa(encoded)
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=+$/g, '')
+            .toLowerCase()
+            .slice(0, 12);
+        return iso ? `k-${iso}-${compact}` : `k-${compact || 'x1'}`;
     }
 
     function getIsoDate(item) {
@@ -301,9 +309,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const res = await fetch('data/khutab_written.json', { cache: 'no-cache' });
-            if (!res.ok) throw new Error('Failed to load khutab JSON');
-            const raw = await res.json();
+            const candidateUrls = [
+                'data/khutab_written.json',
+                './data/khutab_written.json',
+                '../data/khutab_written.json',
+                '/data/khutab_written.json'
+            ];
+
+            let raw = null;
+            for (const url of candidateUrls) {
+                try {
+                    const res = await fetch(url, { cache: 'no-cache' });
+                    if (!res.ok) continue;
+                    raw = await res.json();
+                    break;
+                } catch {
+                }
+            }
+
+            if (!raw) throw new Error('Failed to load khutab JSON');
             const items = Array.isArray(raw) ? raw : (raw.items || []);
 
             const latest = computeLatestItem(items);
@@ -328,6 +352,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const item = items.find(x => getItemId(x) === id);
             if (!item) {
                 renderError('تعذر العثور على هذه الخطبة.');
+                return;
+            }
+
+            const currentFileName = decodeURIComponent((window.location.pathname.split('/').pop() || '').trim());
+            const expectedShortFileName = `${buildShortKhutbaSlug(item)}.html`;
+            const isKhutabStandalonePage = /\/khutab\/[^/]+\.html?$/i.test(window.location.pathname);
+            if (isKhutabStandalonePage && currentFileName && currentFileName !== expectedShortFileName) {
+                window.location.replace(expectedShortFileName);
                 return;
             }
 
