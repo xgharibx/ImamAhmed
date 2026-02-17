@@ -851,7 +851,7 @@
                 introSectionBlocks = blocks.slice(0, introEndIndex + 1);
                 blocks = blocks.slice(introEndIndex + 1);
             }
-        } else if ((payload.type === 'khutba' || payload.type === 'article') && blocks.length) {
+        } else if ((payload.type === 'khutba' || payload.type === 'article') && blocks.length && !payload.skipIntroPage) {
             for (const block of blocks) {
                 if (block.kind === 'heading' && isCoverBoundaryHeading(block.text)) break;
                 if (block.kind !== 'paragraph' && block.kind !== 'quote') continue;
@@ -1423,6 +1423,7 @@
             meta,
             contentHtml: normalizedContent,
             type: 'khutba',
+            skipIntroPage: !!item?.pdf_options?.skip_intro_page,
             contactLines: [
                 'الموقع الرسمي: ahmedelfashny.com',
                 'فيسبوك: facebook.com/share/1AcZYBDpD5',
