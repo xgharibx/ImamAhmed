@@ -61,7 +61,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function toDetailUrl(item) {
         const id = String(item?.id || '').trim();
-        return `khutba-view.html?id=${encodeURIComponent(id)}`;
+        const titleSlug = slugifyArabic(item?.title || 'خطبة');
+        return `khutab/${encodeURIComponent(titleSlug)}.html?id=${encodeURIComponent(id)}`;
+    }
+
+    function slugifyArabic(text) {
+        return String(text || 'خطبة')
+            .replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]/g, '')
+            .replace(/[إأآٱ]/g, 'ا')
+            .replace(/ى/g, 'ي')
+            .replace(/ة/g, 'ه')
+            .replace(/[^\u0621-\u064A0-9\s-]/g, ' ')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '')
+            .slice(0, 90) || 'خطبة';
     }
 
     function getItemId(item) {

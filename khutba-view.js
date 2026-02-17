@@ -203,6 +203,19 @@ document.addEventListener('DOMContentLoaded', () => {
         return item?.date?.display || item?.date_display || item?.date || '';
     }
 
+    function slugifyArabic(text) {
+        return String(text || 'خطبة')
+            .replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]/g, '')
+            .replace(/[إأآٱ]/g, 'ا')
+            .replace(/ى/g, 'ي')
+            .replace(/ة/g, 'ه')
+            .replace(/[^\u0621-\u064A0-9\s-]/g, ' ')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '')
+            .slice(0, 90) || 'خطبة';
+    }
+
     function getIsoDate(item) {
         return item?.date?.iso || item?.date_iso || '';
     }
@@ -285,7 +298,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const latestReadableIds = computeLatestReadableIds(items, 6);
             const latestId = getItemId(latest);
             if (latestId && !latestReadableIds.has(id)) {
-                const latestUrl = `khutba-view.html?id=${encodeURIComponent(latestId)}`;
+                const latestSlug = slugifyArabic(latest?.title || 'خطبة');
+                const latestUrl = `khutab/${encodeURIComponent(latestSlug)}.html?id=${encodeURIComponent(latestId)}`;
                 titleEl.innerHTML = `<span class="title-icon"><i class="fas fa-lock"></i></span> ${escapeHtml('غير متاح حالياً')}`;
                 metaEl.textContent = '';
                 contentEl.innerHTML = `
