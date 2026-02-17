@@ -44,6 +44,69 @@ document.addEventListener('DOMContentLoaded', () => {
         return (doc.body?.innerHTML || '').trim();
     }
 
+    function htmlToPlainText(rawHtml) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(rawHtml || '', 'text/html');
+        return (doc.body?.textContent || '').replace(/\r/g, '').trim();
+    }
+
+    function buildStructuredKhutbaHtmlFromText(rawText) {
+        const text = String(rawText || '').replace(/\r/g, '').trim();
+        if (!text) return '';
+
+        const lines = text
+            .split(/\n+/)
+            .map((line) => line.replace(/\s+/g, ' ').trim())
+            .filter(Boolean);
+
+        if (!lines.length) return '';
+
+        const parts = [];
+        let listBuffer = [];
+
+        const flushList = () => {
+            if (!listBuffer.length) return;
+            const items = listBuffer
+                .map((item) => `<li>${escapeHtml(item)}</li>`)
+                .join('');
+            parts.push(`<ol class="khutba-list khutba-list-ordered">${items}</ol>`);
+            listBuffer = [];
+        };
+
+        const isMainHeading = (line) => /^(عناصر الخطبة|عناصر الخطبه|عَنَاصِرُ الْخُطْبَةِ|الْخُطْبَةُ الْأُولَى|الْخُطْبَةُ الثَّانِيَة|الْخُطْبَةُ الثَّانِيَة|الدُّعَاءُ|الدعاء|الموضوع|الْمَوْضُوع)\s*[:：]?$/.test(line);
+        const isSubHeading = (line) => /^(الْعُنْصَرُ|العنصر|أولاً|ثانياً|ثالثاً|رابعاً|خامساً|سادساً|سابعاً|ثامناً|تاسعاً|عاشراً)\b/.test(line);
+        const isNumberedListItem = (line) => /^\s*[0-9٠-٩]+\s*[\)\-\.:،]?\s+/.test(line);
+
+        lines.forEach((line, index) => {
+            if (isMainHeading(line)) {
+                flushList();
+                parts.push(`<h2 class="khutba-heading">${escapeHtml(line.replace(/\s*[:：]\s*$/, ''))}</h2>`);
+                return;
+            }
+
+            if (isSubHeading(line)) {
+                flushList();
+                parts.push(`<h3 class="khutba-subheading">${escapeHtml(line)}</h3>`);
+                return;
+            }
+
+            if (isNumberedListItem(line)) {
+                const cleanItem = line.replace(/^\s*[0-9٠-٩]+\s*[\)\-\.:،]?\s+/, '').trim();
+                if (cleanItem) {
+                    listBuffer.push(cleanItem);
+                }
+                return;
+            }
+
+            flushList();
+            const introClass = index < 3 ? ' khutba-intro-line' : '';
+            parts.push(`<p class="khutba-paragraph${introClass}">${escapeHtml(line)}</p>`);
+        });
+
+        flushList();
+        return parts.join('');
+    }
+
     function renderError(msg) {
         contentEl.innerHTML = `<div class="khutab-empty">${escapeHtml(msg)}</div>`;
     }
@@ -162,31 +225,17 @@ document.addEventListener('DOMContentLoaded', () => {
             titleEl.innerHTML = `<span class="title-icon"><i class="fas fa-file-lines"></i></span> ${escapeHtml(title)}`;
             metaEl.textContent = [dateDisplay, author].filter(Boolean).join(' • ');
 
-            // Render extracted content (HTML preferred, fallback to text)
             const sanitizedHtml = sanitizeKhutbaHtml(item.content_html);
-            const hasUsefulHtml = sanitizedHtml && sanitizedHtml.replace(/<[^>]*>/g, '').trim().length > 20;
+            const plainText = (typeof item.content_text === 'string' && item.content_text.trim())
+                ? item.content_text
+                : htmlToPlainText(sanitizedHtml);
+            const structuredHtml = buildStructuredKhutbaHtmlFromText(plainText);
 
-            if (hasUsefulHtml) {
+            if (structuredHtml) {
                 contentEl.innerHTML = `
-                    <article class="khutba-article">
+                    <article class="khutba-article khutba-article-premium">
                         <div class="khutba-body">
-                            ${sanitizedHtml}
-                        </div>
-                    </article>
-                `;
-            } else if (typeof item.content_text === 'string' && item.content_text.trim()) {
-                // Fallback: render plain text as paragraphs
-                const paragraphs = item.content_text
-                    .split(/\n{2,}/)
-                    .map(p => p.trim())
-                    .filter(Boolean)
-                    .map(p => `<p class="khutba-paragraph">${escapeHtml(p)}</p>`)
-                    .join('');
-
-                contentEl.innerHTML = `
-                    <article class="khutba-article">
-                        <div class="khutba-body">
-                            ${paragraphs}
+                            ${structuredHtml}
                         </div>
                     </article>
                 `;

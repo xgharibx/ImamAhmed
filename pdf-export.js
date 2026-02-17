@@ -151,6 +151,58 @@
             .join('');
     }
 
+    function buildStructuredKhutbaHtmlFromText(rawText) {
+        const text = String(rawText || '').replace(/\r/g, '').trim();
+        if (!text) return '';
+
+        const lines = text
+            .split(/\n+/)
+            .map((line) => line.replace(/\s+/g, ' ').trim())
+            .filter(Boolean);
+
+        if (!lines.length) return '';
+
+        const htmlParts = [];
+        let listBuffer = [];
+
+        const flushList = () => {
+            if (!listBuffer.length) return;
+            const listItems = listBuffer.map((item) => `<li>${escapeHtml(item)}</li>`).join('');
+            htmlParts.push(`<ol>${listItems}</ol>`);
+            listBuffer = [];
+        };
+
+        const isMainHeading = (line) => /^(عناصر الخطبة|عناصر الخطبه|عَنَاصِرُ الْخُطْبَةِ|الْخُطْبَةُ الْأُولَى|الْخُطْبَةُ الثَّانِيَة|الْخُطْبَةُ الثَّانِيَة|الدُّعَاءُ|الدعاء|الموضوع|الْمَوْضُوع)\s*[:：]?$/.test(line);
+        const isSubHeading = (line) => /^(الْعُنْصَرُ|العنصر|أولاً|ثانياً|ثالثاً|رابعاً|خامساً|سادساً|سابعاً|ثامناً|تاسعاً|عاشراً)\b/.test(line);
+        const isNumberedListItem = (line) => /^\s*[0-9٠-٩]+\s*[\)\-\.:،]?\s+/.test(line);
+
+        for (const line of lines) {
+            if (isMainHeading(line)) {
+                flushList();
+                htmlParts.push(`<h2>${escapeHtml(line.replace(/\s*[:：]\s*$/, ''))}</h2>`);
+                continue;
+            }
+
+            if (isSubHeading(line)) {
+                flushList();
+                htmlParts.push(`<h3>${escapeHtml(line)}</h3>`);
+                continue;
+            }
+
+            if (isNumberedListItem(line)) {
+                const normalizedItem = line.replace(/^\s*[0-9٠-٩]+\s*[\)\-\.:،]?\s+/, '').trim();
+                if (normalizedItem) listBuffer.push(normalizedItem);
+                continue;
+            }
+
+            flushList();
+            htmlParts.push(`<p>${escapeHtml(line)}</p>`);
+        }
+
+        flushList();
+        return htmlParts.join('');
+    }
+
     function extractFallbackBodyHtml(doc) {
         const clone = doc.body ? doc.body.cloneNode(true) : null;
         if (!clone) return '';
@@ -457,7 +509,7 @@
         return { canvas, ctx };
     }
 
-    function createPdfOutroCanvas(payload, outroLine = '') {
+    function createPdfOutroCanvas(payload, outroLine = '', contactLines = []) {
         const canvas = document.createElement('canvas');
         canvas.width = 1240;
         canvas.height = 1754;
@@ -492,6 +544,43 @@
             for (const line of lines) {
                 ctx.fillText(line, canvas.width / 2, y);
                 y += 56;
+            }
+        }
+
+        const safeContactLines = Array.isArray(contactLines)
+            ? contactLines.map((line) => String(line || '').replace(/\s+/g, ' ').trim()).filter(Boolean).slice(0, 4)
+            : [];
+
+        if (safeContactLines.length) {
+            const boxX = 170;
+            const boxY = 840;
+            const boxW = canvas.width - 340;
+            const boxH = 310;
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+            ctx.beginPath();
+            ctx.roundRect(boxX, boxY, boxW, boxH, 18);
+            ctx.fill();
+
+            ctx.strokeStyle = 'rgba(212, 175, 55, 0.75)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.roundRect(boxX, boxY, boxW, boxH, 18);
+            ctx.stroke();
+
+            ctx.fillStyle = '#d4af37';
+            ctx.font = '700 30px Cairo, Tahoma, Arial';
+            ctx.fillText('للتواصل', canvas.width / 2, boxY + 56);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+            ctx.font = '28px Cairo, Tahoma, Arial';
+            let contactY = boxY + 118;
+            for (const line of safeContactLines) {
+                const chunks = wrapTextLines(ctx, line, boxW - 80).slice(0, 2);
+                for (const chunk of chunks) {
+                    ctx.fillText(chunk, canvas.width / 2, contactY);
+                    contactY += 42;
+                }
             }
         }
 
@@ -776,7 +865,8 @@
             }
             return '';
         };
-        const outroLine = isBook ? extractOutroLine() : '';
+        const shouldRenderOutro = ['book', 'article', 'khutba'].includes(payload.type);
+        const outroLine = shouldRenderOutro ? extractOutroLine() : '';
 
         canvases.push(createPdfCoverCanvas(payload, coverCenterLines));
 
@@ -928,8 +1018,9 @@
 
             drawPageFooter(page.ctx, pageNumber, payload);
             canvases.push(page.canvas);
-            if (isBook) {
-                canvases.push(createPdfOutroCanvas(payload, outroLine));
+            if (shouldRenderOutro) {
+                const contactLines = payload.type === 'khutba' ? (payload.contactLines || []) : [];
+                canvases.push(createPdfOutroCanvas(payload, outroLine, contactLines));
             }
             return canvases;
         }
@@ -1099,8 +1190,9 @@
 
         drawPageFooter(page.ctx, pageNumber, payload);
         canvases.push(page.canvas);
-        if (isBook) {
-            canvases.push(createPdfOutroCanvas(payload, outroLine));
+        if (shouldRenderOutro) {
+            const contactLines = payload.type === 'khutba' ? (payload.contactLines || []) : [];
+            canvases.push(createPdfOutroCanvas(payload, outroLine, contactLines));
         }
         return canvases;
     }
@@ -1304,21 +1396,27 @@
         const author = item?.author || '';
         const meta = [dateDisplay, author].filter(Boolean).join(' • ');
 
-        const contentHtml = sanitizeHtml(item?.content_html || '') || (item?.content_text
-            ? item.content_text
-                .split(/\n{2,}/)
-                .map(p => `<p>${escapeHtml(p)}</p>`)
-                .join('')
-            : '<p>لا يوجد نص متاح للتصدير.</p>');
+        const fromText = typeof item?.content_text === 'string' ? item.content_text.trim() : '';
+        const fromHtml = sanitizeHtml(item?.content_html || '');
+        const fallbackText = fromHtml
+            ? (new DOMParser().parseFromString(fromHtml, 'text/html').body.textContent || '').trim()
+            : '';
+        const sourceText = fromText || fallbackText;
 
-        const normalizedContent = buildReadableContentHtml(contentHtml) || '<p>لا يوجد نص متاح للتصدير.</p>';
+        const structuredKhutbaHtml = buildStructuredKhutbaHtmlFromText(sourceText);
+        const normalizedContent = buildReadableContentHtml(structuredKhutbaHtml || fromHtml || '<p>لا يوجد نص متاح للتصدير.</p>') || '<p>لا يوجد نص متاح للتصدير.</p>';
 
         return exportPayload({
             title,
             subtitle: 'خطب منبرية',
             meta,
             contentHtml: normalizedContent,
-            type: 'khutba'
+            type: 'khutba',
+            contactLines: [
+                'الموقع الرسمي: ahmedelfashny.com',
+                'فيسبوك: facebook.com/share/1AcZYBDpD5',
+                'يوتيوب: youtube.com/@ahmedelfashny'
+            ]
         }, title);
     }
 
