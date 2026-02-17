@@ -5,9 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
         filtered: [],
         currentPage: 1,
         perPage: 12,
-        query: '',
-        latestId: '',
-        latestReadableIds: new Set()
+        query: ''
     };
 
     const listEl = document.getElementById('khutab-list');
@@ -18,12 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!listEl) {
         return;
     }
-
-    // Access notice for currently readable khutab.
-    const toolbarEl = document.querySelector('.khutab-toolbar');
-    const latestOnlyNoteEl = document.createElement('div');
-    latestOnlyNoteEl.className = 'soon-note';
-    latestOnlyNoteEl.textContent = 'متاح حالياً آخر 5 خطب.';
 
     // We render a list page and navigate to an internal detail page (no external redirects)
 
@@ -75,40 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getIsoDate(item) {
         return item?.date?.iso || item?.date_iso || '';
-    }
-
-    function computeLatestId(items) {
-        const list = Array.isArray(items) ? items : [];
-        if (list.length === 0) return '';
-
-        // Prefer ISO date if present; fallback to current JSON order.
-        let best = list[0];
-        let bestIso = getIsoDate(best);
-
-        for (const item of list) {
-            const iso = getIsoDate(item);
-            if (iso && (!bestIso || iso.localeCompare(bestIso) > 0)) {
-                best = item;
-                bestIso = iso;
-            }
-        }
-        return getItemId(best);
-    }
-
-    function computeLatestReadableIds(items, limit = 5) {
-        const list = (Array.isArray(items) ? items : []).slice();
-        const hasIsoDates = list.some((item) => !!getIsoDate(item));
-
-        if (!hasIsoDates) {
-            return new Set(list.slice(0, limit).map(getItemId).filter(Boolean));
-        }
-
-        list.sort((a, b) => {
-            const isoA = getIsoDate(a) || '';
-            const isoB = getIsoDate(b) || '';
-            return isoB.localeCompare(isoA);
-        });
-        return new Set(list.slice(0, limit).map(getItemId).filter(Boolean));
     }
 
     function normalizeItems(raw) {
@@ -205,8 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const author = item.author || '—';
         const dateDisplay = getDisplayDate(item);
         const detailUrl = toDetailUrl(item);
-        const itemId = getItemId(item);
-        const isReadable = !!itemId && state.latestReadableIds.has(itemId);
+        const isReadable = true;
         const hasExportContent = !!(item?.content_html || item?.content_text);
 
         const actionLabel = isReadable ? 'قراءة الخطبة' : 'قريباً';
@@ -308,16 +265,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('No khutab items found in data source');
             }
 
-            state.latestId = computeLatestId(state.all);
-            state.latestReadableIds = computeLatestReadableIds(state.all, 5);
-
-            // Show notice when we actually have more than one khutba.
-            if (toolbarEl && state.all.length > 1) {
-                // Avoid duplicates if loadData is called again.
-                if (!toolbarEl.parentElement?.querySelector('.soon-note')) {
-                    toolbarEl.parentElement?.insertBefore(latestOnlyNoteEl, toolbarEl.nextSibling);
-                }
-            }
             state.filtered = state.all.slice();
             applyFilter();
         } catch (err) {

@@ -117,13 +117,13 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const getMainHeadingKey = (line) => {
-            const n = normalizeArabic(line);
+            const n = normalizeArabic(line).replace(/^[^\u0621-\u064A0-9]+/, '');
             if (!n) return '';
-            if (/^عناصر\s+الخطبه\b/.test(n)) return 'anasir';
-            if (/^الخطبه\s+الاولي\b/.test(n)) return 'first';
-            if (/^الخطبه\s+الثانيه\b/.test(n)) return 'second';
-            if (/^الدعاء\b/.test(n)) return 'dua';
-            if (/^الموضوع\b/.test(n)) return 'topic';
+            if (n.includes('عناصر الخطبه')) return 'anasir';
+            if (n.includes('الخطبه الاولي')) return 'first';
+            if (n.includes('الخطبه الثانيه')) return 'second';
+            if (n.startsWith('الدعاء')) return 'dua';
+            if (n.startsWith('الموضوع')) return 'topic';
             return '';
         };
 
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         lines.forEach((line, index) => {
             const split = splitAtColon(line);
-            const mainKey = getMainHeadingKey(split.head);
+            const mainKey = getMainHeadingKey(split.head) || getMainHeadingKey(line);
             if (mainKey) {
                 openSection(mainKey, toMainHeadingLabel(mainKey));
                 if (split.tail) {
@@ -280,25 +280,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!res.ok) throw new Error('Failed to load khutab JSON');
             const raw = await res.json();
             const items = Array.isArray(raw) ? raw : (raw.items || []);
-
-            const latest = computeLatestItem(items);
-            const latestReadableIds = computeLatestReadableIds(items, 5);
-            const latestId = getItemId(latest);
-            if (latestId && !latestReadableIds.has(id)) {
-                const latestUrl = `khutba-view.html?id=${encodeURIComponent(latestId)}`;
-                titleEl.innerHTML = `<span class="title-icon"><i class="fas fa-lock"></i></span> ${escapeHtml('غير متاح حالياً')}`;
-                metaEl.textContent = '';
-                contentEl.innerHTML = `
-                    <div class="khutab-empty">
-                        هذه الخطبة غير متاحة للعرض حالياً. المتاح الآن: آخر 5 خطب فقط.
-                        <div style="margin-top: 0.75rem;">
-                            <a class="btn btn-outline" href="${latestUrl}">عرض أحدث خطبة</a>
-                            <a class="btn" href="khutab-written.html" style="margin-right: 0.5rem;">العودة للأرشيف</a>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
 
             const item = items.find(x => getItemId(x) === id);
             if (!item) {
