@@ -851,6 +851,17 @@
                 introSectionBlocks = blocks.slice(0, introEndIndex + 1);
                 blocks = blocks.slice(introEndIndex + 1);
             }
+        } else if ((payload.type === 'khutba' || payload.type === 'article') && blocks.length) {
+            for (const block of blocks) {
+                if (block.kind === 'heading' && isCoverBoundaryHeading(block.text)) break;
+                if (block.kind !== 'paragraph' && block.kind !== 'quote') continue;
+                introSectionBlocks.push(block);
+                if (introSectionBlocks.length >= 4) break;
+            }
+
+            if (introSectionBlocks.length) {
+                blocks = blocks.slice(introSectionBlocks.length);
+            }
         }
 
         const extractOutroLine = () => {
@@ -943,7 +954,7 @@
         };
 
         const renderIntroAsSinglePage = (sectionBlocks) => {
-            if (!isBook || !sectionBlocks.length) return false;
+            if (!sectionBlocks.length) return false;
 
             const sectionMaxWidth = Math.min(maxWidth, 900);
             const availableHeight = contentBottom - contentTop;
