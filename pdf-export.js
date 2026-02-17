@@ -164,6 +164,7 @@
 
         const htmlParts = [];
         let listBuffer = [];
+        let currentSectionKey = '';
 
         const flushList = () => {
             if (!listBuffer.length) return;
@@ -172,14 +173,59 @@
             listBuffer = [];
         };
 
-        const isMainHeading = (line) => /^(عناصر الخطبة|عناصر الخطبه|عَنَاصِرُ الْخُطْبَةِ|الْخُطْبَةُ الْأُولَى|الْخُطْبَةُ الثَّانِيَة|الْخُطْبَةُ الثَّانِيَة|الدُّعَاءُ|الدعاء|الموضوع|الْمَوْضُوع)\s*[:：]?$/.test(line);
+        const normalizeArabic = (value) => String(value || '')
+            .replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]/g, '')
+            .replace(/ـ/g, '')
+            .replace(/[إأآٱ]/g, 'ا')
+            .replace(/ى/g, 'ي')
+            .replace(/ة/g, 'ه')
+            .replace(/["“”'`’]/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+
+        const splitAtColon = (line) => {
+            const match = String(line || '').match(/^([^:：]+)\s*[:：]\s*(.+)$/);
+            if (!match) return { head: line, tail: '' };
+            return { head: (match[1] || '').trim(), tail: (match[2] || '').trim() };
+        };
+
+        const getMainHeadingKey = (line) => {
+            const n = normalizeArabic(line);
+            if (!n) return '';
+            if (/^عناصر\s+الخطبه\b/.test(n)) return 'anasir';
+            if (/^الخطبه\s+الاولي\b/.test(n)) return 'first';
+            if (/^الخطبه\s+الثانيه\b/.test(n)) return 'second';
+            if (/^الدعاء\b/.test(n)) return 'dua';
+            if (/^الموضوع\b/.test(n)) return 'topic';
+            return '';
+        };
+
+        const toMainHeadingLabel = (key) => {
+            if (key === 'anasir') return 'عَنَاصِرُ الْخُطْبَةِ';
+            if (key === 'first') return 'الْخُطْبَةُ الْأُولَى';
+            if (key === 'second') return 'الْخُطْبَةُ الثَّانِيَة';
+            if (key === 'dua') return 'الدُّعَاءُ';
+            if (key === 'topic') return 'الْمَوْضُوع';
+            return '';
+        };
+
         const isSubHeading = (line) => /^(الْعُنْصَرُ|العنصر|أولاً|ثانياً|ثالثاً|رابعاً|خامساً|سادساً|سابعاً|ثامناً|تاسعاً|عاشراً)\b/.test(line);
         const isNumberedListItem = (line) => /^\s*[0-9٠-٩]+\s*[\)\-\.:،]?\s+/.test(line);
 
         for (const line of lines) {
-            if (isMainHeading(line)) {
+            const split = splitAtColon(line);
+            const headingKey = getMainHeadingKey(split.head);
+            if (headingKey) {
                 flushList();
-                htmlParts.push(`<h2>${escapeHtml(line.replace(/\s*[:：]\s*$/, ''))}</h2>`);
+                currentSectionKey = headingKey;
+                htmlParts.push(`<h2>${escapeHtml(toMainHeadingLabel(headingKey))}</h2>`);
+                if (split.tail) {
+                    if (headingKey === 'anasir') {
+                        listBuffer.push(split.tail);
+                    } else {
+                        htmlParts.push(`<p>${escapeHtml(split.tail)}</p>`);
+                    }
+                }
                 continue;
             }
 
@@ -192,6 +238,11 @@
             if (isNumberedListItem(line)) {
                 const normalizedItem = line.replace(/^\s*[0-9٠-٩]+\s*[\)\-\.:،]?\s+/, '').trim();
                 if (normalizedItem) listBuffer.push(normalizedItem);
+                continue;
+            }
+
+            if (currentSectionKey === 'anasir' && line.length >= 10) {
+                listBuffer.push(line.replace(/^[-•]\s*/, '').trim());
                 continue;
             }
 

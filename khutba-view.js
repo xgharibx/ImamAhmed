@@ -50,6 +50,24 @@ document.addEventListener('DOMContentLoaded', () => {
         return (doc.body?.textContent || '').replace(/\r/g, '').trim();
     }
 
+    function normalizeArabic(value) {
+        return String(value || '')
+            .replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]/g, '')
+            .replace(/ـ/g, '')
+            .replace(/[إأآٱ]/g, 'ا')
+            .replace(/ى/g, 'ي')
+            .replace(/ة/g, 'ه')
+            .replace(/["“”'`’]/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
+    function splitAtColon(line) {
+        const match = String(line || '').match(/^([^:：]+)\s*[:：]\s*(.+)$/);
+        if (!match) return { head: line, tail: '' };
+        return { head: (match[1] || '').trim(), tail: (match[2] || '').trim() };
+    }
+
     function buildStructuredKhutbaHtmlFromText(rawText) {
         const text = String(rawText || '').replace(/\r/g, '').trim();
         if (!text) return '';
@@ -63,24 +81,76 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const parts = [];
         let listBuffer = [];
+        let currentSectionOpen = false;
+        let currentSectionKey = '';
 
         const flushList = () => {
             if (!listBuffer.length) return;
             const items = listBuffer
                 .map((item) => `<li>${escapeHtml(item)}</li>`)
                 .join('');
-            parts.push(`<ol class="khutba-list khutba-list-ordered">${items}</ol>`);
+            const listClass = currentSectionKey === 'anasir'
+                ? 'khutba-list khutba-list-ordered khutba-elements-list'
+                : 'khutba-list khutba-list-ordered';
+            parts.push(`<ol class="${listClass}">${items}</ol>`);
             listBuffer = [];
         };
 
-        const isMainHeading = (line) => /^(عناصر الخطبة|عناصر الخطبه|عَنَاصِرُ الْخُطْبَةِ|الْخُطْبَةُ الْأُولَى|الْخُطْبَةُ الثَّانِيَة|الْخُطْبَةُ الثَّانِيَة|الدُّعَاءُ|الدعاء|الموضوع|الْمَوْضُوع)\s*[:：]?$/.test(line);
+        const closeSection = () => {
+            flushList();
+            if (currentSectionOpen) {
+                parts.push('</section>');
+                currentSectionOpen = false;
+                currentSectionKey = '';
+            }
+        };
+
+        const openSection = (key, headingText) => {
+            closeSection();
+            const sectionClasses = key === 'anasir'
+                ? 'khutba-section-card khutba-elements-card'
+                : 'khutba-section-card';
+            parts.push(`<section class="${sectionClasses}">`);
+            parts.push(`<h2 class="khutba-heading">${escapeHtml(headingText)}</h2>`);
+            currentSectionOpen = true;
+            currentSectionKey = key;
+        };
+
+        const getMainHeadingKey = (line) => {
+            const n = normalizeArabic(line);
+            if (!n) return '';
+            if (/^عناصر\s+الخطبه\b/.test(n)) return 'anasir';
+            if (/^الخطبه\s+الاولي\b/.test(n)) return 'first';
+            if (/^الخطبه\s+الثانيه\b/.test(n)) return 'second';
+            if (/^الدعاء\b/.test(n)) return 'dua';
+            if (/^الموضوع\b/.test(n)) return 'topic';
+            return '';
+        };
+
+        const toMainHeadingLabel = (key) => {
+            if (key === 'anasir') return 'عَنَاصِرُ الْخُطْبَةِ';
+            if (key === 'first') return 'الْخُطْبَةُ الْأُولَى';
+            if (key === 'second') return 'الْخُطْبَةُ الثَّانِيَة';
+            if (key === 'dua') return 'الدُّعَاءُ';
+            if (key === 'topic') return 'الْمَوْضُوع';
+            return '';
+        };
+
         const isSubHeading = (line) => /^(الْعُنْصَرُ|العنصر|أولاً|ثانياً|ثالثاً|رابعاً|خامساً|سادساً|سابعاً|ثامناً|تاسعاً|عاشراً)\b/.test(line);
         const isNumberedListItem = (line) => /^\s*[0-9٠-٩]+\s*[\)\-\.:،]?\s+/.test(line);
 
         lines.forEach((line, index) => {
-            if (isMainHeading(line)) {
-                flushList();
-                parts.push(`<h2 class="khutba-heading">${escapeHtml(line.replace(/\s*[:：]\s*$/, ''))}</h2>`);
+            const split = splitAtColon(line);
+            const mainKey = getMainHeadingKey(split.head);
+            if (mainKey) {
+                openSection(mainKey, toMainHeadingLabel(mainKey));
+                if (split.tail) {
+                    if (mainKey === 'anasir') {
+                        listBuffer.push(split.tail);
+                    } else {
+                        parts.push(`<p class="khutba-paragraph">${escapeHtml(split.tail)}</p>`);
+                    }
+                }
                 return;
             }
 
@@ -98,12 +168,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            if (currentSectionKey === 'anasir' && line.length >= 10) {
+                listBuffer.push(line.replace(/^[-•]\s*/, '').trim());
+                return;
+            }
+
             flushList();
             const introClass = index < 3 ? ' khutba-intro-line' : '';
             parts.push(`<p class="khutba-paragraph${introClass}">${escapeHtml(line)}</p>`);
         });
 
-        flushList();
+        closeSection();
         return parts.join('');
     }
 

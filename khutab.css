@@ -379,6 +379,19 @@
     border-radius: 10px;
 }
 
+.khutba-section-card {
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(201, 162, 39, 0.24);
+    border-radius: 16px;
+    padding: 0.8rem 1rem 0.6rem;
+    margin: 1.25rem 0;
+}
+
+.khutba-elements-card {
+    background: linear-gradient(180deg, rgba(22, 89, 70, 0.06), rgba(212, 175, 55, 0.08));
+    border-color: rgba(26, 95, 74, 0.3);
+}
+
 .khutba-subheading {
     font-family: var(--font-decorative);
     color: var(--primary-green-dark);
@@ -396,6 +409,15 @@
     margin: 0.55rem 0;
     line-height: 2.2;
     color: var(--text-primary);
+}
+
+.khutba-elements-list li {
+    font-weight: 700;
+    color: var(--primary-green-dark);
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(201, 162, 39, 0.22);
+    border-radius: 10px;
+    padding: 0.45rem 0.6rem;
 }
 
 .khutba-list-ordered {
