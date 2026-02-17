@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return best;
     }
 
-    function computeLatestReadableIds(items, limit = 5) {
+    function computeLatestReadableIds(items, limit = 6) {
         const list = (Array.isArray(items) ? items : []).slice();
         list.sort((a, b) => {
             const isoA = getIsoDate(a) || '';
@@ -280,6 +280,25 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!res.ok) throw new Error('Failed to load khutab JSON');
             const raw = await res.json();
             const items = Array.isArray(raw) ? raw : (raw.items || []);
+
+            const latest = computeLatestItem(items);
+            const latestReadableIds = computeLatestReadableIds(items, 6);
+            const latestId = getItemId(latest);
+            if (latestId && !latestReadableIds.has(id)) {
+                const latestUrl = `khutba-view.html?id=${encodeURIComponent(latestId)}`;
+                titleEl.innerHTML = `<span class="title-icon"><i class="fas fa-lock"></i></span> ${escapeHtml('غير متاح حالياً')}`;
+                metaEl.textContent = '';
+                contentEl.innerHTML = `
+                    <div class="khutab-empty">
+                        هذه الخطبة غير متاحة للعرض حالياً. المتاح الآن: آخر 6 خطب فقط.
+                        <div style="margin-top: 0.75rem;">
+                            <a class="btn btn-outline" href="${latestUrl}">عرض أحدث خطبة</a>
+                            <a class="btn" href="khutab-written.html" style="margin-right: 0.5rem;">العودة للأرشيف</a>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
 
             const item = items.find(x => getItemId(x) === id);
             if (!item) {

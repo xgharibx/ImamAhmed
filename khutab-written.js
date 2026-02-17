@@ -5,17 +5,24 @@ document.addEventListener('DOMContentLoaded', () => {
         filtered: [],
         currentPage: 1,
         perPage: 12,
-        query: ''
+        query: '',
+        latestReadableIds: new Set()
     };
 
     const listEl = document.getElementById('khutab-list');
     const loadMoreBtn = document.getElementById('khutab-load-more');
     const searchInput = document.getElementById('khutab-search');
     const statsEl = document.getElementById('khutab-stats');
+    const toolbarEl = document.querySelector('.khutab-toolbar');
+    const isMobileViewport = window.matchMedia('(max-width: 768px)').matches;
 
     if (!listEl) {
         return;
     }
+
+    const latestOnlyNoteEl = document.createElement('div');
+    latestOnlyNoteEl.className = 'soon-note';
+    latestOnlyNoteEl.textContent = 'متاح حالياً آخر 6 خطب.';
 
     // We render a list page and navigate to an internal detail page (no external redirects)
 
@@ -67,6 +74,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getIsoDate(item) {
         return item?.date?.iso || item?.date_iso || '';
+    }
+
+    function computeLatestReadableIds(items, limit = 6) {
+        const list = (Array.isArray(items) ? items : []).slice();
+        const hasIsoDates = list.some((item) => !!getIsoDate(item));
+
+        if (!hasIsoDates) {
+            return new Set(list.slice(0, limit).map(getItemId).filter(Boolean));
+        }
+
+        list.sort((a, b) => {
+            const isoA = getIsoDate(a) || '';
+            const isoB = getIsoDate(b) || '';
+            return isoB.localeCompare(isoA);
+        });
+        return new Set(list.slice(0, limit).map(getItemId).filter(Boolean));
     }
 
     function normalizeItems(raw) {
@@ -157,13 +180,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function createCard(item) {
         const div = document.createElement('div');
         div.className = 'khutab-item-card';
-        div.setAttribute('data-aos', 'fade-up');
+        if (!isMobileViewport) {
+            div.setAttribute('data-aos', 'fade-up');
+        }
 
         const title = truncate(item.title || 'خطبة', 80);
         const author = item.author || '—';
         const dateDisplay = getDisplayDate(item);
         const detailUrl = toDetailUrl(item);
-        const isReadable = true;
+        const itemId = getItemId(item);
+        const isReadable = !!itemId && state.latestReadableIds.has(itemId);
         const hasExportContent = !!(item?.content_html || item?.content_text);
 
         const actionLabel = isReadable ? 'قراءة الخطبة' : 'قريباً';
@@ -263,6 +289,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!state.all.length) {
                 throw new Error('No khutab items found in data source');
+            }
+
+            state.latestReadableIds = computeLatestReadableIds(state.all, 6);
+
+            if (toolbarEl && state.all.length > 6) {
+                if (!toolbarEl.parentElement?.querySelector('.soon-note')) {
+                    toolbarEl.parentElement?.insertBefore(latestOnlyNoteEl, toolbarEl.nextSibling);
+                }
             }
 
             state.filtered = state.all.slice();

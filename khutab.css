@@ -573,3 +573,10 @@
     display: flex;
     justify-content: flex-end;
 }
+
+@media (max-width: 768px) {
+    .khutab-item-card[data-aos] {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}
