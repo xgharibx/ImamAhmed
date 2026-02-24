@@ -917,6 +917,23 @@
             if (introSectionBlocks.length) {
                 blocks = blocks.slice(introSectionBlocks.length);
             }
+        } else if (payload.type === 'competition' && blocks.length) {
+            const answersHeadingIndex = blocks.findIndex((block) =>
+                block.kind === 'heading' && normalizeArabic(block.text) === 'الاجابات'
+            );
+
+            if (answersHeadingIndex > 0) {
+                introSectionBlocks = blocks.slice(0, answersHeadingIndex);
+                blocks = blocks.slice(answersHeadingIndex + 1);
+            } else {
+                const firstQuestionCategoryIndex = blocks.findIndex((block) =>
+                    block.kind === 'heading' && /^\s*[0-9٠-٩]+\)/.test(String(block.text || '').trim())
+                );
+                if (firstQuestionCategoryIndex > 0) {
+                    introSectionBlocks = blocks.slice(0, firstQuestionCategoryIndex);
+                    blocks = blocks.slice(firstQuestionCategoryIndex);
+                }
+            }
         }
 
         const extractOutroLine = () => {
@@ -1219,9 +1236,17 @@
                     newPage();
                 }
 
+                let renderText = String(block.text || '').trim();
                 let style = refinedStyle[block.kind] || refinedStyle.paragraph;
                 if (payload.type === 'competition') {
-                    const lineText = String(block.text || '').trim();
+                    const lineText = renderText;
+                    if (block.kind === 'heading') {
+                        const categoryMatch = lineText.match(/^\s*([0-9٠-٩]+\))\s*(.+)$/);
+                        if (categoryMatch) {
+                            renderText = `${categoryMatch[1]}  ◉  التصنيف: ${categoryMatch[2]}`;
+                            style = { font: '700 26px Cairo, Tahoma, Arial', color: '#6b4a0a', lineHeight: 40, gapBefore: 10, gapAfter: 8 };
+                        }
+                    }
                     if (block.kind === 'paragraph' && /^(الاسم|السن|العنوان|الهاتف)\s*[:：]/.test(lineText)) {
                         style = { font: '700 23px Cairo, Tahoma, Arial', color: '#11463a', lineHeight: 36, gapBefore: 5, gapAfter: 6 };
                     }
@@ -1238,7 +1263,7 @@
                 page.ctx.font = style.font;
                 page.ctx.fillStyle = style.color;
 
-                const lines = wrapTextLines(page.ctx, block.text, maxWidth);
+                const lines = wrapTextLines(page.ctx, renderText, maxWidth);
                 for (const line of lines) {
                     if (y > contentBottom) {
                         newPage();
