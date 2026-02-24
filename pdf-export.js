@@ -279,6 +279,7 @@
         if (type === 'book') return 'كتاب';
         if (type === 'article') return 'مقال';
         if (type === 'khutba') return 'خطبة';
+        if (type === 'competition') return 'مسابقة';
         return 'محتوى';
     }
 
@@ -789,9 +790,12 @@
         ctx.fillStyle = '#ffffff';
         const normalizedTitle = String(payload.title || 'محتوى').replace(/\s+/g, ' ').trim().slice(0, 220);
         const isKhutba = payload.type === 'khutba';
-        const titleFontSize = isKhutba
-            ? (normalizedTitle.length > 110 ? 32 : normalizedTitle.length > 85 ? 34 : normalizedTitle.length > 60 ? 36 : 40)
-            : (normalizedTitle.length > 110 ? 34 : normalizedTitle.length > 85 ? 36 : normalizedTitle.length > 60 ? 38 : 42);
+        const isCompetition = payload.type === 'competition';
+        const titleFontSize = isCompetition
+            ? (normalizedTitle.length > 110 ? 28 : normalizedTitle.length > 85 ? 30 : normalizedTitle.length > 60 ? 32 : 34)
+            : (isKhutba
+                ? (normalizedTitle.length > 110 ? 32 : normalizedTitle.length > 85 ? 34 : normalizedTitle.length > 60 ? 36 : 40)
+                : (normalizedTitle.length > 110 ? 34 : normalizedTitle.length > 85 ? 36 : normalizedTitle.length > 60 ? 38 : 42));
         const titleLineHeight = Math.round(titleFontSize * 1.2);
         const titleMaxLines = 3;
         const titleMaxWidth = width - 230;
@@ -1008,7 +1012,14 @@
             blocks = normalizedBlocks;
         }
 
-        const refinedStyle = isBook
+        const refinedStyle = payload.type === 'competition'
+            ? {
+                heading: { font: 'bold 32px Cairo, Tahoma, Arial', color: '#145341', lineHeight: 44, gapBefore: 12, gapAfter: 10 },
+                quote: { font: '24px Cairo, Tahoma, Arial', color: '#7a4f0a', lineHeight: 37, gapBefore: 8, gapAfter: 9 },
+                pre: { font: '22px Cairo, Tahoma, Arial', color: '#333', lineHeight: 34, gapBefore: 7, gapAfter: 7 },
+                paragraph: { font: '24px Cairo, Tahoma, Arial', color: '#1f2c2a', lineHeight: 37, gapBefore: 6, gapAfter: 8 }
+            }
+            : isBook
             ? {
                 heading: { font: 'bold 30px Cairo, Tahoma, Arial', color: '#145341', lineHeight: 44, gapBefore: 13, gapAfter: 10 },
                 quote: { font: '23px Cairo, Tahoma, Arial', color: '#2f765a', lineHeight: 36, gapBefore: 8, gapAfter: 8 },
@@ -1208,7 +1219,19 @@
                     newPage();
                 }
 
-                const style = refinedStyle[block.kind] || refinedStyle.paragraph;
+                let style = refinedStyle[block.kind] || refinedStyle.paragraph;
+                if (payload.type === 'competition') {
+                    const lineText = String(block.text || '').trim();
+                    if (block.kind === 'paragraph' && /^(الاسم|السن|العنوان|الهاتف)\s*[:：]/.test(lineText)) {
+                        style = { font: '700 23px Cairo, Tahoma, Arial', color: '#11463a', lineHeight: 36, gapBefore: 5, gapAfter: 6 };
+                    }
+                    if (block.kind === 'paragraph' && /^السؤال\s*[:：]/.test(lineText)) {
+                        style = { font: '700 23px Cairo, Tahoma, Arial', color: '#1f6f58', lineHeight: 36, gapBefore: 6, gapAfter: 7 };
+                    }
+                    if (block.kind === 'quote' || (block.kind === 'paragraph' && /^الإجابة\s*[:：]/.test(lineText))) {
+                        style = { font: '23px Cairo, Tahoma, Arial', color: '#7a4f0a', lineHeight: 36, gapBefore: 6, gapAfter: 8 };
+                    }
+                }
                 y += style.gapBefore;
                 page.ctx.direction = 'rtl';
                 page.ctx.textAlign = 'right';
@@ -1635,6 +1658,25 @@
         }, title);
     }
 
+    async function exportCompetitionItem(item) {
+        const title = item?.title || 'مسابقة';
+        const dateDisplay = item?.date?.display || item?.date_display || item?.date || '';
+        const author = item?.author || '';
+        const meta = [dateDisplay, author].filter(Boolean).join(' • ');
+
+        const fromHtml = sanitizeHtml(item?.content_html || '');
+        const normalizedContent = buildReadableContentHtml(fromHtml || '<p>لا يوجد نص متاح للتصدير.</p>') || '<p>لا يوجد نص متاح للتصدير.</p>';
+
+        return exportPayload({
+            title,
+            subtitle: item?.subtitle || '',
+            meta,
+            contentHtml: normalizedContent,
+            type: 'competition',
+            skipIntroPage: true
+        }, title);
+    }
+
     function makeButton(label, className) {
         const btn = document.createElement('a');
         btn.href = '#';
@@ -1783,7 +1825,8 @@
     const SheikhPdfExporter = {
         exportFromCurrentPage,
         exportFromUrl,
-        exportKhutbaItem
+        exportKhutbaItem,
+        exportCompetitionItem
     };
 
     window.SheikhPdfExporter = SheikhPdfExporter;

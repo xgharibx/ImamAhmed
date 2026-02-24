@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         const payload = collectAnswers(config.questions || []);
-        if (!window.SheikhPdfExporter || typeof window.SheikhPdfExporter.exportKhutbaItem !== 'function') {
+        if (!window.SheikhPdfExporter || typeof window.SheikhPdfExporter.exportCompetitionItem !== 'function') {
             alert('تعذر إنشاء PDF حالياً.');
             return;
         }
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const answersHtml = payload.answers.map((item) => `
                 <h3>${escapeHtml(String(item.number))}) ${escapeHtml(item.axis || '')}</h3>
-                <p>${escapeHtml(item.question || '')}</p>
+                <p>السؤال: ${escapeHtml(item.question || '')}</p>
                 <blockquote>الإجابة: ${escapeHtml(item.answer || 'بدون إجابة')}</blockquote>
             `).join('');
 
@@ -74,14 +74,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <h2>بيانات المشارك</h2>
                 <p><strong>الاسم:</strong> ${escapeHtml(payload.participant.fullName || '')}</p>
                 <p><strong>السن:</strong> ${escapeHtml(payload.participant.age || '')}</p>
-                <p><strong>العنوان:</strong> ${escapeHtml(payload.participant.address || '')}</p>
                 <p><strong>الهاتف:</strong> ${escapeHtml(payload.participant.phone || '')}</p>
+                <p><strong>العنوان:</strong> ${escapeHtml(payload.participant.address || '')}</p>
                 <h2>الإجابات</h2>
             `;
 
-            await window.SheikhPdfExporter.exportKhutbaItem({
+            await window.SheikhPdfExporter.exportCompetitionItem({
                 title: titleForFile,
-                author: 'المشارك في المسابقة',
+                subtitle: '',
+                author: `المشارك: ${participantName}`,
                 date_display: config.deadlineText || '',
                 content_html: participantHeader + answersHtml
             });
