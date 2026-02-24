@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const latestOnlyNoteEl = document.createElement('div');
     latestOnlyNoteEl.className = 'soon-note';
-    latestOnlyNoteEl.textContent = 'متاح حالياً آخر 6 خطب.';
+    latestOnlyNoteEl.textContent = 'متاح حالياً آخر 7 خطب.';
 
     // We render a list page and navigate to an internal detail page (no external redirects)
 
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return item?.date?.iso || item?.date_iso || '';
     }
 
-    function computeLatestReadableIds(items, limit = 6) {
+    function computeLatestReadableIds(items, limit = 7) {
         const list = (Array.isArray(items) ? items : []).slice();
         const hasIsoDates = list.some((item) => !!getIsoDate(item));
 
@@ -304,9 +304,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('No khutab items found in data source');
             }
 
-            state.latestReadableIds = computeLatestReadableIds(state.all, 6);
+            state.latestReadableIds = computeLatestReadableIds(state.all, 7);
 
-            if (toolbarEl && state.all.length > 6) {
+            if (toolbarEl && state.all.length > 7) {
                 if (!toolbarEl.parentElement?.querySelector('.soon-note')) {
                     toolbarEl.parentElement?.insertBefore(latestOnlyNoteEl, toolbarEl.nextSibling);
                 }
