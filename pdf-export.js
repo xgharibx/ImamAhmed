@@ -1057,8 +1057,16 @@
             paragraph: { weight: '', size: 34, color: '#1f2c2a', lineHeight: 54, gapBefore: 10, gapAfter: 12 }
         };
 
+        const introBaseCompetition = {
+            heading: { weight: 'bold', size: 32, color: '#145341', lineHeight: 46, gapBefore: 12, gapAfter: 10 },
+            quote: { weight: '', size: 24, color: '#2f765a', lineHeight: 36, gapBefore: 8, gapAfter: 8 },
+            pre: { weight: '', size: 22, color: '#333', lineHeight: 33, gapBefore: 7, gapAfter: 7 },
+            paragraph: { weight: '700', size: 25, color: '#1f2c2a', lineHeight: 37, gapBefore: 7, gapAfter: 8 }
+        };
+
         const introStyleFor = (kind, scale) => {
-            const base = introBase[kind] || introBase.paragraph;
+            const baseMap = payload.type === 'competition' ? introBaseCompetition : introBase;
+            const base = baseMap[kind] || baseMap.paragraph;
             const px = Math.max(14, Math.round(base.size * scale));
             const lineHeight = Math.max(22, Math.round(base.lineHeight * scale));
             const gapBefore = Math.max(2, Math.round(base.gapBefore * scale));
@@ -1086,7 +1094,7 @@
         const renderIntroAsSinglePage = (sectionBlocks) => {
             if (!sectionBlocks.length) return false;
 
-            const sectionMaxWidth = Math.min(maxWidth, 900);
+            const sectionMaxWidth = payload.type === 'competition' ? Math.min(maxWidth, 820) : Math.min(maxWidth, 900);
             const availableHeight = contentBottom - contentTop;
             const targetHeight = availableHeight * 0.985;
 
@@ -1230,6 +1238,7 @@
                 return canvases;
             }
 
+            let competitionQuestionCount = 0;
             for (let index = 0; index < blocks.length; index += 1) {
                 const block = blocks[index];
                 if (block.kind === 'heading' && isMajorHeading(block.text) && y > 1320) {
@@ -1243,18 +1252,102 @@
                     if (block.kind === 'heading') {
                         const categoryMatch = lineText.match(/^\s*([0-9٠-٩]+\))\s*(.+)$/);
                         if (categoryMatch) {
-                            renderText = `${categoryMatch[1]}  ◉  التصنيف: ${categoryMatch[2]}`;
-                            style = { font: '700 26px Cairo, Tahoma, Arial', color: '#6b4a0a', lineHeight: 40, gapBefore: 10, gapAfter: 8 };
+                            if (competitionQuestionCount > 0) {
+                                if (y > contentBottom - 80) {
+                                    newPage();
+                                }
+                                y += 12;
+                                page.ctx.strokeStyle = 'rgba(26, 95, 74, 0.55)';
+                                page.ctx.lineWidth = 2;
+                                page.ctx.beginPath();
+                                page.ctx.moveTo(marginX + 12, y);
+                                page.ctx.lineTo(page.canvas.width - marginX - 12, y);
+                                page.ctx.stroke();
+                                y += 16;
+                            }
+
+                            const badgeText = `${categoryMatch[1]}  ◉  ${categoryMatch[2]}`;
+                            page.ctx.font = '700 24px Cairo, Tahoma, Arial';
+                            page.ctx.direction = 'rtl';
+                            page.ctx.textAlign = 'right';
+                            const badgeLines = wrapTextLines(page.ctx, badgeText, maxWidth - 56);
+                            const badgeLineHeight = 35;
+                            const badgeHeight = Math.max(52, (badgeLines.length * badgeLineHeight) + 16);
+                            const badgeX = marginX;
+                            const badgeY = y + 4;
+                            const badgeW = maxWidth;
+
+                            if (badgeY + badgeHeight > contentBottom) {
+                                newPage();
+                            }
+
+                            page.ctx.fillStyle = 'rgba(26, 95, 74, 0.10)';
+                            page.ctx.strokeStyle = 'rgba(26, 95, 74, 0.42)';
+                            page.ctx.lineWidth = 1.8;
+                            page.ctx.beginPath();
+                            page.ctx.roundRect(badgeX, y + 4, badgeW, badgeHeight, 14);
+                            page.ctx.fill();
+                            page.ctx.stroke();
+
+                            page.ctx.fillStyle = '#145341';
+                            page.ctx.font = '700 24px Cairo, Tahoma, Arial';
+                            page.ctx.direction = 'rtl';
+                            page.ctx.textAlign = 'right';
+                            let badgeTextY = y + 34;
+                            for (const badgeLine of badgeLines) {
+                                page.ctx.fillText(badgeLine, page.canvas.width - marginX - 16, badgeTextY);
+                                badgeTextY += badgeLineHeight;
+                            }
+
+                            y += badgeHeight + 14;
+                            competitionQuestionCount += 1;
+                            continue;
                         }
                     }
                     if (block.kind === 'paragraph' && /^(الاسم|السن|العنوان|الهاتف)\s*[:：]/.test(lineText)) {
-                        style = { font: '700 23px Cairo, Tahoma, Arial', color: '#11463a', lineHeight: 36, gapBefore: 5, gapAfter: 6 };
+                        style = { font: '700 21px Cairo, Tahoma, Arial', color: '#11463a', lineHeight: 33, gapBefore: 4, gapAfter: 5 };
                     }
                     if (block.kind === 'paragraph' && /^السؤال\s*[:：]/.test(lineText)) {
                         style = { font: '700 23px Cairo, Tahoma, Arial', color: '#1f6f58', lineHeight: 36, gapBefore: 6, gapAfter: 7 };
                     }
-                    if (block.kind === 'quote' || (block.kind === 'paragraph' && /^الإجابة\s*[:：]/.test(lineText))) {
-                        style = { font: '23px Cairo, Tahoma, Arial', color: '#7a4f0a', lineHeight: 36, gapBefore: 6, gapAfter: 8 };
+                    if (block.kind === 'quote' || (block.kind === 'paragraph' && /^الإجابة\s*[:：]/.test(lineText)) || /^❝\s*الإجابة\s*[:：]/.test(lineText)) {
+                        const cleanedAnswerLine = lineText
+                            .replace(/^❝\s*/, '')
+                            .replace(/\s*❞$/, '')
+                            .trim();
+                        const answerMatch = cleanedAnswerLine.match(/^الإجابة\s*[:：]\s*(.*)$/);
+                        if (answerMatch) {
+                            const answerText = (answerMatch[1] || '').trim() || 'بدون إجابة';
+
+                            y += 6;
+                            if (y > contentBottom - 80) {
+                                newPage();
+                            }
+
+                            page.ctx.direction = 'rtl';
+                            page.ctx.textAlign = 'right';
+                            page.ctx.font = '700 23px Cairo, Tahoma, Arial';
+                            page.ctx.fillStyle = '#1f6f58';
+                            page.ctx.fillText('الإجابة:', page.canvas.width - marginX, y);
+                            y += 36;
+
+                            page.ctx.font = '23px Cairo, Tahoma, Arial';
+                            page.ctx.fillStyle = '#7a4f0a';
+                            const answerLines = wrapTextLines(page.ctx, answerText, maxWidth);
+                            for (const answerLine of answerLines) {
+                                if (y > contentBottom) {
+                                    newPage();
+                                    page.ctx.direction = 'rtl';
+                                    page.ctx.textAlign = 'right';
+                                    page.ctx.font = '23px Cairo, Tahoma, Arial';
+                                    page.ctx.fillStyle = '#7a4f0a';
+                                }
+                                page.ctx.fillText(answerLine, page.canvas.width - marginX, y);
+                                y += 35;
+                            }
+                            y += 6;
+                            continue;
+                        }
                     }
                 }
                 y += style.gapBefore;
