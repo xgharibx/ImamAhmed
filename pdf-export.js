@@ -1325,7 +1325,7 @@
                                 axisTextY += chipLineHeight;
                             }
 
-                            y += rowHeight + 23;
+                            y += rowHeight + 28;
                             competitionQuestionCount += 1;
                             continue;
                         }
