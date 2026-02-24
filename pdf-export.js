@@ -1266,40 +1266,66 @@
                                 y += 16;
                             }
 
-                            const badgeText = `${categoryMatch[1]}  ◉  ${categoryMatch[2]}`;
-                            page.ctx.font = '700 24px Cairo, Tahoma, Arial';
-                            page.ctx.direction = 'rtl';
-                            page.ctx.textAlign = 'right';
-                            const badgeLines = wrapTextLines(page.ctx, badgeText, maxWidth - 56);
-                            const badgeLineHeight = 35;
-                            const badgeHeight = Math.max(52, (badgeLines.length * badgeLineHeight) + 16);
-                            const badgeX = marginX;
-                            const badgeY = y + 4;
-                            const badgeW = maxWidth;
+                            const questionNumber = String(categoryMatch[1] || '').replace(/\)/g, '').trim();
+                            const questionAxis = String(categoryMatch[2] || '').trim();
 
-                            if (badgeY + badgeHeight > contentBottom) {
+                            const circleSize = 40;
+                            const circleRadius = circleSize / 2;
+                            const chipGap = 12;
+                            const chipPadX = 16;
+                            const chipLineHeight = 30;
+                            const chipMinHeight = 36;
+                            const rowTop = y + 6;
+
+                            page.ctx.font = '700 22px Cairo, Tahoma, Arial';
+                            const axisMaxWidth = Math.max(180, maxWidth - circleSize - chipGap - 24);
+                            const axisLines = wrapTextLines(page.ctx, questionAxis, axisMaxWidth - (chipPadX * 2));
+                            const axisTextWidths = axisLines.map((line) => page.ctx.measureText(line).width);
+                            const axisTextWidth = axisTextWidths.length ? Math.max(...axisTextWidths) : 0;
+                            const chipWidth = Math.min(axisMaxWidth, Math.max(96, axisTextWidth + (chipPadX * 2)));
+                            const chipHeight = Math.max(chipMinHeight, (axisLines.length * chipLineHeight) + 8);
+                            const rowHeight = Math.max(circleSize, chipHeight);
+
+                            if ((rowTop + rowHeight) > contentBottom) {
                                 newPage();
                             }
 
-                            page.ctx.fillStyle = 'rgba(26, 95, 74, 0.10)';
-                            page.ctx.strokeStyle = 'rgba(26, 95, 74, 0.42)';
-                            page.ctx.lineWidth = 1.8;
+                            const circleCenterX = page.canvas.width - marginX - circleRadius;
+                            const circleCenterY = y + 6 + (rowHeight / 2);
+
+                            page.ctx.fillStyle = '#1a5f4a';
                             page.ctx.beginPath();
-                            page.ctx.roundRect(badgeX, y + 4, badgeW, badgeHeight, 14);
+                            page.ctx.arc(circleCenterX, circleCenterY, circleRadius, 0, Math.PI * 2);
+                            page.ctx.fill();
+
+                            page.ctx.fillStyle = '#ffffff';
+                            page.ctx.font = '700 21px Cairo, Tahoma, Arial';
+                            page.ctx.direction = 'rtl';
+                            page.ctx.textAlign = 'center';
+                            page.ctx.fillText(questionNumber, circleCenterX, circleCenterY + 8);
+
+                            const chipX = circleCenterX - circleRadius - chipGap - chipWidth;
+                            const chipY = y + 6 + ((rowHeight - chipHeight) / 2);
+
+                            page.ctx.fillStyle = 'rgba(201, 162, 39, 0.18)';
+                            page.ctx.strokeStyle = 'rgba(106, 77, 8, 0.35)';
+                            page.ctx.lineWidth = 1.5;
+                            page.ctx.beginPath();
+                            page.ctx.roundRect(chipX, chipY, chipWidth, chipHeight, 18);
                             page.ctx.fill();
                             page.ctx.stroke();
 
-                            page.ctx.fillStyle = '#145341';
-                            page.ctx.font = '700 24px Cairo, Tahoma, Arial';
+                            page.ctx.fillStyle = '#6a4d08';
+                            page.ctx.font = '700 22px Cairo, Tahoma, Arial';
                             page.ctx.direction = 'rtl';
-                            page.ctx.textAlign = 'right';
-                            let badgeTextY = y + 34;
-                            for (const badgeLine of badgeLines) {
-                                page.ctx.fillText(badgeLine, page.canvas.width - marginX - 16, badgeTextY);
-                                badgeTextY += badgeLineHeight;
+                            page.ctx.textAlign = 'center';
+                            let axisTextY = chipY + 24;
+                            for (const axisLine of axisLines) {
+                                page.ctx.fillText(axisLine, chipX + (chipWidth / 2), axisTextY);
+                                axisTextY += chipLineHeight;
                             }
 
-                            y += badgeHeight + 14;
+                            y += rowHeight + 18;
                             competitionQuestionCount += 1;
                             continue;
                         }
