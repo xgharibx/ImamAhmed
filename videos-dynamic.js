@@ -15,20 +15,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalTitle = document.getElementById('modal-title');
     const closeModal = document.querySelector('.close-modal');
 
-    const knownCategories = new Set(['khutbah', 'lessons', 'tv', 'tafseer', 'quran', 'shorts', 'ali-wusul']);
+    const knownCategories = new Set(['khutbah', 'lessons', 'tv', 'tafseer', 'quran', 'shorts', 'ali-wusul', 'fi-nur-allah', 'qisas-ibra']);
 
     // Fetch Data
     fetch('data/videos.json')
         .then(response => response.json())
         .then(data => {
             allVideos = (Array.isArray(data) ? data : [])
-                .map((video, index) => ({
-                    ...video,
-                    normalizedCategory: classifyVideo(video),
-                    supplementalCategories: getSupplementalCategories(video),
-                    _sourceIndex: index,
-                    _sortTimestamp: extractVideoTimestamp(video)
-                }))
+                .map((video, index) => {
+                    const normalizedCategory = classifyVideo(video);
+                    return {
+                        ...video,
+                        normalizedCategory,
+                        supplementalCategories: getSupplementalCategories(video, normalizedCategory),
+                        _sourceIndex: index,
+                        _sortTimestamp: extractVideoTimestamp(video)
+                    };
+                })
                 .filter(video => video.normalizedCategory !== 'khutbah')
                 .sort(sortByNewest);
             // Initial filter
@@ -104,6 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (video.normalizedCategory === 'tafseer') { icon = 'fa-book-open'; catText = 'تفسير'; }
         else if (video.normalizedCategory === 'tv') { icon = 'fa-tv'; catText = 'لقاء تلفزيوني'; }
         else if (video.normalizedCategory === 'ali-wusul') { icon = 'fa-route'; catText = 'برنامج علي وصول'; }
+        else if (video.normalizedCategory === 'fi-nur-allah') { icon = 'fa-sun'; catText = 'برنامج في نور الله'; }
+        else if (video.normalizedCategory === 'qisas-ibra') { icon = 'fa-scroll'; catText = 'برنامج في قصصهم عبرة'; }
         else { icon = 'fa-chalkboard-teacher'; catText = 'درس'; }
 
         div.innerHTML = `
@@ -236,6 +241,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const mihrabHintKeywords = ['صلاه', 'صلاة', 'فجر', 'عشاء', 'محراب', 'تراويح', 'تهجد'];
         const shortKeywords = ['short', 'شورت', '#shorts', 'ريل'];
         const aliWusulKeywords = ['برنامج علي وصول', 'برنامج على وصول', 'علي وصول', 'على وصول'];
+        const fiNurAllahKeywords = ['في نور الله', 'في نور القران الكريم', 'في نور القرآن الكريم'];
+        const qisasIbraKeywords = ['في قصصهم عبره', 'قصصهم عبره', 'قصه وعبره'];
 
         const isKhutbah = hasAnyKeyword(title, khutbahKeywords);
         const isTafseer = hasAnyKeyword(title, tafseerKeywords);
@@ -243,8 +250,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const looksLikeDirectQuran = hasAnyKeyword(title, directQuranKeywords) || hasAnyKeyword(title, mihrabHintKeywords);
         const isShort = hasAnyKeyword(title, shortKeywords) || (durationSeconds > 0 && durationSeconds <= 180);
         const isAliWusul = hasAnyKeyword(title, aliWusulKeywords);
+        const isFiNurAllah = hasAnyKeyword(title, fiNurAllahKeywords);
+        const isQisasIbra = hasAnyKeyword(title, qisasIbraKeywords);
 
         if (isAliWusul) return 'ali-wusul';
+        if (isFiNurAllah) return 'fi-nur-allah';
+        if (isQisasIbra) return 'qisas-ibra';
         if (isTv) return 'tv';
         if (isKhutbah) return 'khutbah';
         if (isTafseer) return 'tafseer';
@@ -254,19 +265,34 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'lessons';
     }
 
-    function getSupplementalCategories(video) {
+    function getSupplementalCategories(video, normalizedCategory) {
         const title = normalizeArabic(video?.title || '');
+        const originalCategory = (video?.category || '').toString().trim().toLowerCase();
         const tafseerKeywords = ['تفسير', 'في نور القران', 'في نور القرآن'];
         const tvKeywords = ['برنامج', 'تلفزيون', 'التلفزيون', 'شاشه', 'شاشة', 'النيل الثقافيه', 'النيل الثقافية', 'قناه', 'قناة', 'اذيع', 'يذاع', 'لقاء', 'مناره الازهر', 'منارة الازهر', 'منارة الأزهر'];
+        const programCollections = new Set(['ali-wusul', 'fi-nur-allah', 'qisas-ibra']);
+        const supplemental = new Set();
 
         const isTafseer = hasAnyKeyword(title, tafseerKeywords);
         const isTv = hasAnyKeyword(title, tvKeywords);
 
         if (isTv && isTafseer) {
-            return ['tafseer'];
+            supplemental.add('tafseer');
         }
 
-        return [];
+        if (knownCategories.has(originalCategory) && originalCategory !== normalizedCategory) {
+            supplemental.add(originalCategory);
+        }
+
+        if (programCollections.has(normalizedCategory)) {
+            supplemental.add('lessons');
+        }
+
+        if (normalizedCategory === 'fi-nur-allah') {
+            supplemental.add('tv');
+        }
+
+        return [...supplemental];
     }
 
     // Event Listeners
