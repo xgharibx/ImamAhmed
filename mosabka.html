@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="مسابقة شهر رمضان الكبرى ١٤٤٧ هـ / ٢٠٢٦ م">
+    <title>مسابقة شهر رمضان الكبرى | الشيخ أحمد إسماعيل الفشني</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="mosabka.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+                                                                                            <meta property="og:type" content="article">
+    <meta property="og:locale" content="ar_AR">
+    <meta property="og:site_name" content="Sheikh Ahmed Ismail Al-Fashni">
+    <meta property="og:title" content="مسابقة شهر رمضان الكبرى">
+    <meta property="og:description" content="مسابقة شهر رمضان الكبرى ١٤٤٧ هـ / ٢٠٢٦ م">
+    <meta property="og:image" content="https://ahmedelfashny.com/assets/og/sheikh-ahmed-share.jpg">
+    <meta property="og:image:url" content="https://ahmedelfashny.com/assets/og/sheikh-ahmed-share.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:secure_url" content="https://ahmedelfashny.com/assets/og/sheikh-ahmed-share.jpg">
+    <meta property="og:url" content="https://ahmedelfashny.com/mosabka.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="مسابقة شهر رمضان الكبرى">
+    <meta name="twitter:description" content="مسابقة شهر رمضان الكبرى ١٤٤٧ هـ / ٢٠٢٦ م">
+    <meta name="twitter:image" content="https://ahmedelfashny.com/assets/og/sheikh-ahmed-share.jpg">
+</head>
+<body>
+    <header id="header" class="scrolled">
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon"><span class="moon-icon">☾</span></div>
+                    <div class="logo-text">
+                        <span class="logo-title">الشيخ أحمد الفشني</span>
+                        <span class="logo-subtitle">الْبَاحِثُ الْأَزْهَرِيُّ وَخَادِمُ الْوَحْيَيْنِ</span>
+                    </div>
+                </a>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="index.html" class="nav-link">الرئيسية</a></li>
+                    <li class="nav-item"><a href="books.html" class="nav-link">المؤلفات</a></li>
+                    <li class="nav-item"><a href="articles.html" class="nav-link">المقالات</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link">تواصل</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="competition-page">
+        <section class="competition-hero">
+            <div class="container">
+                <div class="competition-hero-card" data-aos="fade-up">
+                    <span class="competition-badge"><i class="fas fa-moon"></i> مسابقة شهر رمضان الكبرى (محدودة المدة)</span>
+                    <h1 id="competition-title">مسابقة شهر رمضان الكبرى</h1>
+                    <p id="competition-intro"></p>
+                    <div class="competition-meta">
+                        <span id="competition-deadline"></span>
+                        <span><i class="fab fa-whatsapp"></i> واتساب: <strong id="competition-whatsapp"></strong></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="competition-form-section">
+            <div class="container">
+                <form id="competition-form" class="competition-form">
+                    <div class="participant-grid">
+                        <label>الاسم الكامل <input type="text" id="fullName" required></label>
+                        <label>السن <input type="number" id="age" min="5" max="120" required></label>
+                        <label>العنوان <input type="text" id="address" required></label>
+                        <label>رقم الهاتف <input type="tel" id="phone" required></label>
+                    </div>
+
+                    <div class="questions-wrap" id="questions-wrap"></div>
+
+                    <div class="competition-actions">
+                        <button type="button" id="send-whatsapp" class="btn btn-primary">
+                            <i class="fab fa-whatsapp"></i>
+                            إرسال الإجابات عبر واتساب
+                        </button>
+                        <button type="button" id="download-pdf" class="btn btn-secondary">
+                            <i class="fas fa-file-pdf"></i>
+                            تحميل الإجابات PDF
+                        </button>
+                    </div>
+
+                    <div id="footer-notes" class="footer-notes"></div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="main.js"></script>
+    <script src="pdf-export.js"></script>
+    <script src="mosabka.js"></script>
+</body>
+</html>
+
