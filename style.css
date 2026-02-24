@@ -1077,6 +1077,24 @@ input, textarea, select {
     transform: translateY(-3px);
 }
 
+.btn-ramadan-challenge {
+    border-color: #f3c843;
+    box-shadow: 0 0 0 1px rgba(243, 200, 67, 0.28) inset;
+}
+
+.btn-ramadan-challenge .btn-text-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.2;
+}
+
+.btn-ramadan-challenge small {
+    font-size: 0.76rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin-top: 0.15rem;
+}
+
 .btn-light {
     background: var(--text-light);
     color: var(--primary-green-dark);

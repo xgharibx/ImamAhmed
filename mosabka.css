@@ -1,0 +1,168 @@
+.competition-page {
+    padding-top: 95px;
+    background: var(--gradient-hero);
+    min-height: 100vh;
+}
+
+.competition-hero {
+    padding: 2.2rem 0 1rem;
+}
+
+.competition-hero-card {
+    background: rgba(5, 24, 45, 0.76);
+    border: 1px solid rgba(201, 162, 39, 0.45);
+    border-radius: 20px;
+    padding: 1.4rem;
+    color: #fff;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+}
+
+.competition-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(201, 162, 39, 0.15);
+    color: var(--primary-gold);
+    border: 1px solid rgba(201, 162, 39, 0.5);
+    border-radius: 999px;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.9rem;
+}
+
+#competition-title {
+    font-family: var(--font-decorative);
+    margin: 0.8rem 0;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+}
+
+#competition-intro {
+    color: rgba(255,255,255,0.92);
+    line-height: 1.9;
+}
+
+.competition-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    color: rgba(255,255,255,0.9);
+}
+
+.competition-form-section {
+    padding: 0.5rem 0 2.5rem;
+}
+
+.competition-form {
+    background: rgba(255, 255, 255, 0.96);
+    border-radius: 20px;
+    padding: 1.2rem;
+    border: 1px solid rgba(201, 162, 39, 0.4);
+}
+
+.participant-grid {
+    display: grid;
+    gap: 0.9rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-bottom: 1rem;
+}
+
+.participant-grid label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 700;
+    color: #113b35;
+    gap: 0.35rem;
+}
+
+.participant-grid input,
+.question-item textarea {
+    border: 1px solid rgba(17, 59, 53, 0.2);
+    border-radius: 12px;
+    padding: 0.75rem;
+    font-family: var(--font-primary);
+    font-size: 1rem;
+}
+
+.questions-wrap {
+    display: grid;
+    gap: 0.9rem;
+}
+
+.question-item {
+    background: #fff;
+    border: 1px solid rgba(17, 59, 53, 0.12);
+    border-radius: 14px;
+    padding: 0.9rem;
+}
+
+.question-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.question-num {
+    background: #1a5f4a;
+    color: #fff;
+    border-radius: 999px;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.question-axis {
+    background: rgba(201, 162, 39, 0.18);
+    color: #6a4d08;
+    border-radius: 999px;
+    padding: 0.2rem 0.7rem;
+    font-size: 0.88rem;
+}
+
+.question-text {
+    margin: 0;
+    color: #1a1a1a;
+    line-height: 1.85;
+}
+
+.question-item textarea {
+    margin-top: 0.65rem;
+    min-height: 100px;
+    resize: vertical;
+}
+
+.competition-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+#download-pdf {
+    background: #1a5f4a;
+    color: #ffffff;
+    border: 2px solid #1a5f4a;
+}
+
+#download-pdf:hover {
+    background: #154d3d;
+    color: #ffffff;
+    border-color: #154d3d;
+}
+
+.footer-notes {
+    margin-top: 1rem;
+    color: #26443f;
+    line-height: 1.9;
+    background: #f5fbf8;
+    border: 1px solid rgba(26, 95, 74, 0.2);
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+}
+
+@media (max-width: 800px) {
+    .participant-grid { grid-template-columns: 1fr; }
+}
