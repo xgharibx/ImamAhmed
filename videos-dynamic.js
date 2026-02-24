@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalTitle = document.getElementById('modal-title');
     const closeModal = document.querySelector('.close-modal');
 
-    const knownCategories = new Set(['khutbah', 'lessons', 'tv', 'tafseer', 'quran', 'shorts']);
+    const knownCategories = new Set(['khutbah', 'lessons', 'tv', 'tafseer', 'quran', 'shorts', 'ali-wusul']);
 
     // Fetch Data
     fetch('data/videos.json')
@@ -103,6 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (video.normalizedCategory === 'shorts') { icon = 'fa-mobile-alt'; catText = 'شورت'; }
         else if (video.normalizedCategory === 'tafseer') { icon = 'fa-book-open'; catText = 'تفسير'; }
         else if (video.normalizedCategory === 'tv') { icon = 'fa-tv'; catText = 'لقاء تلفزيوني'; }
+        else if (video.normalizedCategory === 'ali-wusul') { icon = 'fa-route'; catText = 'برنامج علي وصول'; }
         else { icon = 'fa-chalkboard-teacher'; catText = 'درس'; }
 
         div.innerHTML = `
@@ -234,13 +235,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const directQuranKeywords = ['تلاوه', 'تلاوة', 'ما تيسر', 'سوره', 'سورة', 'المصحف', 'القران الكريم', 'القرآن الكريم', 'المجود', 'المرتل'];
         const mihrabHintKeywords = ['صلاه', 'صلاة', 'فجر', 'عشاء', 'محراب', 'تراويح', 'تهجد'];
         const shortKeywords = ['short', 'شورت', '#shorts', 'ريل'];
+        const aliWusulKeywords = ['برنامج علي وصول', 'برنامج على وصول', 'علي وصول', 'على وصول'];
 
         const isKhutbah = hasAnyKeyword(title, khutbahKeywords);
         const isTafseer = hasAnyKeyword(title, tafseerKeywords);
         const isTv = hasAnyKeyword(title, tvKeywords);
         const looksLikeDirectQuran = hasAnyKeyword(title, directQuranKeywords) || hasAnyKeyword(title, mihrabHintKeywords);
         const isShort = hasAnyKeyword(title, shortKeywords) || (durationSeconds > 0 && durationSeconds <= 180);
+        const isAliWusul = hasAnyKeyword(title, aliWusulKeywords);
 
+        if (isAliWusul) return 'ali-wusul';
         if (isTv) return 'tv';
         if (isKhutbah) return 'khutbah';
         if (isTafseer) return 'tafseer';

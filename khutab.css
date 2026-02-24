@@ -408,13 +408,15 @@
 }
 
 .khutba-subheading {
-    font-family: var(--font-decorative);
-    color: var(--primary-green-dark);
+    font-family: var(--font-calligraphy);
+    color: var(--primary-gold-dark);
     font-size: 1.25rem;
     margin: 1.2rem 0 0.45rem;
     line-height: 1.9;
     border-right: 3px solid rgba(22, 89, 70, 0.35);
-    padding-right: 0.55rem;
+    padding: 0.3rem 0.55rem;
+    background: linear-gradient(90deg, rgba(22, 89, 70, 0.08), rgba(22, 89, 70, 0));
+    border-radius: 8px;
 }
 
 .khutba-list {
