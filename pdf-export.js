@@ -1225,8 +1225,7 @@
                 };
 
                 for (const section of sectionsToRender) {
-                    const shouldStartOnNewPage = section.key === 'first' || section.key === 'second';
-                    drawKhutbaSection(section, shouldStartOnNewPage);
+                    drawKhutbaSection(section, false);
                 }
 
                 drawPageFooter(page.ctx, pageNumber, payload);
@@ -1793,7 +1792,7 @@
             meta,
             contentHtml: normalizedContent,
             type: 'khutba',
-            skipIntroPage: !!item?.pdf_options?.skip_intro_page,
+            skipIntroPage: item?.pdf_options?.skip_intro_page !== false,
             contactLines: [
                 'الموقع الرسمي: ahmedelfashny.com',
                 'فيسبوك: facebook.com/share/1AcZYBDpD5',
