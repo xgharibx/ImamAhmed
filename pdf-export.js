@@ -1224,7 +1224,54 @@
                     }
                 };
 
-                for (const section of sectionsToRender) {
+                const drawCenteredKhutbaSectionPage = (section) => {
+                    if (!section?.blocks?.length) return;
+                    if (y > contentTop + 2) {
+                        newPage();
+                    }
+
+                    const renderItems = section.blocks.map((block) => {
+                        const rawText = String(block.text || '').trim();
+                        const isHeading = block.kind === 'heading';
+                        const style = isHeading
+                            ? { font: 'bold 44px Cairo, Tahoma, Arial', color: '#145341', lineHeight: 60, gapBefore: 14, gapAfter: 18 }
+                            : { font: '700 30px Cairo, Tahoma, Arial', color: '#1f7a5f', lineHeight: 46, gapBefore: 8, gapAfter: 10 };
+
+                        page.ctx.font = style.font;
+                        const lines = wrapTextLines(page.ctx, rawText, maxWidth - 160);
+                        const height = style.gapBefore + (lines.length * style.lineHeight) + style.gapAfter;
+                        return { style, lines, height };
+                    });
+
+                    const totalHeight = renderItems.reduce((sum, item) => sum + item.height, 0);
+                    y = contentTop + Math.max(0, ((contentBottom - contentTop - totalHeight) / 2));
+
+                    for (const item of renderItems) {
+                        y += item.style.gapBefore;
+                        page.ctx.direction = 'rtl';
+                        page.ctx.textAlign = 'center';
+                        page.ctx.font = item.style.font;
+                        page.ctx.fillStyle = item.style.color;
+
+                        for (const line of item.lines) {
+                            page.ctx.fillText(line, page.canvas.width / 2, y);
+                            y += item.style.lineHeight;
+                        }
+
+                        y += item.style.gapAfter;
+                    }
+                };
+
+                for (let index = 0; index < sectionsToRender.length; index += 1) {
+                    const section = sectionsToRender[index];
+                    if (section.key === 'anasir') {
+                        drawCenteredKhutbaSectionPage(section);
+                        if (index < sectionsToRender.length - 1) {
+                            newPage();
+                        }
+                        continue;
+                    }
+
                     drawKhutbaSection(section, false);
                 }
 
