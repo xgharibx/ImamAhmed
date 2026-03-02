@@ -963,6 +963,13 @@
         const contentBottom = 1585;
         let y = contentTop;
 
+        const shouldDropSparseTrailingPage = () => {
+            if (payload.type !== 'khutba') return false;
+            if (pageNumber <= 1) return false;
+            const renderedHeight = y - contentTop;
+            return renderedHeight < 180;
+        };
+
         const newPage = ({ centerContinuation = false } = {}) => {
             drawPageFooter(page.ctx, pageNumber, payload);
             canvases.push(page.canvas);
@@ -1473,8 +1480,10 @@
                 y += style.gapAfter;
             }
 
-            drawPageFooter(page.ctx, pageNumber, payload);
-            canvases.push(page.canvas);
+            if (!shouldDropSparseTrailingPage()) {
+                drawPageFooter(page.ctx, pageNumber, payload);
+                canvases.push(page.canvas);
+            }
             if (shouldRenderOutro) {
                 const contactLines = payload.type === 'khutba' ? (payload.contactLines || []) : [];
                 canvases.push(createPdfOutroCanvas(payload, outroLine, contactLines));
@@ -1645,8 +1654,10 @@
             renderSection(introBlocks, { centered: false, forceNewPage: false });
         }
 
-        drawPageFooter(page.ctx, pageNumber, payload);
-        canvases.push(page.canvas);
+        if (!shouldDropSparseTrailingPage()) {
+            drawPageFooter(page.ctx, pageNumber, payload);
+            canvases.push(page.canvas);
+        }
         if (shouldRenderOutro) {
             const contactLines = payload.type === 'khutba' ? (payload.contactLines || []) : [];
             canvases.push(createPdfOutroCanvas(payload, outroLine, contactLines));
