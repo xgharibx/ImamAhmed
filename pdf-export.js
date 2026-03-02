@@ -1224,8 +1224,8 @@
                             : null;
                         const keywordLeadNorm = keywordLead ? normalizeArabic(keywordLead[1]) : '';
                         const fullLineNorm = normalizeArabic(rawText.replace(/^•\s+/, '').trim());
-                        const isKeyPhraseLine = (Boolean(keywordLeadNorm) && /^(العنصر|اولا|ثانيا|ثالثا|رابعا|خامسا|سادسا|سابعا|ثامنا|تاسعا|عاشرا|فلسفه|جهاد|الكرم|موسوعه|البخل|المسؤوليه|خطه|النصيحه|الجانب|مشاهد|جدول|الرساله\s+العمليه|الخلاصه|النتيجه)\b/.test(keywordLeadNorm))
-                            || /^(العنصر|الرساله\s+العمليه|الخلاصه|النتيجه|الدروس\s+والعبر|الوصيه)\b/.test(fullLineNorm);
+                        const isKeyPhraseLine = (Boolean(keywordLeadNorm) && /^(العنصر|اولا|ثانيا|ثالثا|رابعا|خامسا|سادسا|سابعا|ثامنا|تاسعا|عاشرا|فلسفه|جهاد|الكرم|موسوعه|البخل|المسؤوليه|خطه|النصيحه|الجانب|مشاهد|جدول|الرساله\s+العمليه|الخلاصه|النتيجه|عنوان\s+الخطبه|الخطبه\s+الاولي|الخطبه\s+الثانيه)\b/.test(keywordLeadNorm))
+                            || /^(العنصر|الرساله\s+العمليه|الخلاصه|النتيجه|الدروس\s+والعبر|الوصيه|عنوان\s+الخطبه|الخطبه\s+الاولي|الخطبه\s+الثانيه)\b/.test(fullLineNorm);
                         const isAddressLine = !isHeading && /^(ايها\s+الساده\s+الكرام|عباد\s+الله|اما\s+بعد)\b/.test(fullLineNorm);
 
                         const style = isHeading
@@ -1246,6 +1246,7 @@
 
                         const maxSectionWidth = isHeading ? (maxWidth - 120) : maxWidth;
                         const lines = wrapTextLines(page.ctx, rawText, maxSectionWidth);
+                        const shouldEmphasizeLine = isHeading || isKeyPhraseLine || isAddressLine;
 
                         for (const line of lines) {
                             if (y > contentBottom) {
@@ -1258,6 +1259,30 @@
                             }
 
                             const x = style.align === 'center' ? (page.canvas.width / 2) : (page.canvas.width - marginX);
+                            if (shouldEmphasizeLine) {
+                                const textWidth = page.ctx.measureText(line).width;
+                                const boxWidth = Math.min(maxSectionWidth + 80, textWidth + (isHeading ? 56 : 40));
+                                const boxX = style.align === 'center'
+                                    ? (page.canvas.width / 2) - (boxWidth / 2)
+                                    : x - textWidth - 28;
+                                const boxY = y - style.lineHeight + 10;
+                                const boxHeight = Math.max(style.lineHeight - 4, isHeading ? 60 : 46);
+
+                                page.ctx.fillStyle = isHeading
+                                    ? 'rgba(20, 83, 65, 0.13)'
+                                    : isAddressLine
+                                        ? 'rgba(212, 175, 55, 0.24)'
+                                        : 'rgba(31, 122, 95, 0.16)';
+                                page.ctx.strokeStyle = isHeading
+                                    ? 'rgba(20, 83, 65, 0.26)'
+                                    : 'rgba(212, 175, 55, 0.50)';
+                                page.ctx.lineWidth = isHeading ? 1.8 : 1.4;
+                                page.ctx.beginPath();
+                                page.ctx.roundRect(boxX, boxY, boxWidth, boxHeight, isHeading ? 16 : 12);
+                                page.ctx.fill();
+                                page.ctx.stroke();
+                                page.ctx.fillStyle = style.color;
+                            }
                             page.ctx.fillText(line, x, y);
                             y += style.lineHeight;
                         }
