@@ -1071,8 +1071,11 @@
             const lineHeight = Math.max(22, Math.round(base.lineHeight * scale));
             const gapBefore = Math.max(2, Math.round(base.gapBefore * scale));
             const gapAfter = Math.max(3, Math.round(base.gapAfter * scale));
+            const introFontFamily = payload.type === 'khutba'
+                ? (kind === 'heading' ? "'Aref Ruqaa', 'Amiri', serif" : "'Amiri', 'Aref Ruqaa', serif")
+                : 'Cairo, Tahoma, Arial';
             return {
-                font: `${base.weight ? `${base.weight} ` : ''}${px}px Cairo, Tahoma, Arial`,
+                font: `${base.weight ? `${base.weight} ` : ''}${px}px ${introFontFamily}`,
                 color: base.color,
                 lineHeight,
                 gapBefore,
@@ -1189,12 +1192,12 @@
                         const isKeyPhraseLine = Boolean(keywordLeadNorm) && /^(العنصر|اولا|ثانيا|ثالثا|رابعا|خامسا|سادسا|سابعا|ثامنا|تاسعا|عاشرا|فلسفه|جهاد|الكرم|موسوعه|البخل|المسؤوليه|خطه|النصيحه|الجانب|مشاهد|جدول)\b/.test(keywordLeadNorm);
 
                         const style = isHeading
-                            ? { font: 'bold 42px Cairo, Tahoma, Arial', color: '#145341', lineHeight: 58, gapBefore: 12, gapAfter: 14, align: 'center' }
+                            ? { font: "bold 42px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 58, gapBefore: 12, gapAfter: 14, align: 'center' }
                             : isKeyPhraseLine
-                                ? { font: '700 30px Cairo, Tahoma, Arial', color: '#1f7a5f', lineHeight: 46, gapBefore: 8, gapAfter: 10, align: 'right' }
+                                ? { font: "700 30px 'Amiri', 'Aref Ruqaa', serif", color: '#1f7a5f', lineHeight: 46, gapBefore: 8, gapAfter: 10, align: 'right' }
                             : isBulletLike
-                                ? { font: '700 28px Cairo, Tahoma, Arial', color: '#2f765a', lineHeight: 44, gapBefore: 8, gapAfter: 8, align: 'right' }
-                                : { font: '26px Cairo, Tahoma, Arial', color: '#222', lineHeight: 41, gapBefore: 6, gapAfter: 8, align: 'right' };
+                                ? { font: "700 28px 'Amiri', 'Aref Ruqaa', serif", color: '#2f765a', lineHeight: 44, gapBefore: 8, gapAfter: 8, align: 'right' }
+                                : { font: "26px 'Amiri', 'Aref Ruqaa', serif", color: '#222', lineHeight: 41, gapBefore: 6, gapAfter: 8, align: 'right' };
 
                         y += style.gapBefore;
                         page.ctx.direction = 'rtl';
@@ -1234,8 +1237,8 @@
                         const rawText = String(block.text || '').trim();
                         const isHeading = block.kind === 'heading';
                         const style = isHeading
-                            ? { font: 'bold 44px Cairo, Tahoma, Arial', color: '#145341', lineHeight: 60, gapBefore: 14, gapAfter: 18 }
-                            : { font: '700 30px Cairo, Tahoma, Arial', color: '#1f7a5f', lineHeight: 46, gapBefore: 8, gapAfter: 10 };
+                            ? { font: "bold 44px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 60, gapBefore: 14, gapAfter: 18 }
+                            : { font: "700 30px 'Amiri', 'Aref Ruqaa', serif", color: '#1f7a5f', lineHeight: 46, gapBefore: 8, gapAfter: 10 };
 
                         page.ctx.font = style.font;
                         const lines = wrapTextLines(page.ctx, rawText, maxWidth - 160);
