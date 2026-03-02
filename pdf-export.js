@@ -1223,10 +1223,15 @@
                             ? rawText.match(/^([^:：]{3,64})\s*[:：]\s+/)
                             : null;
                         const keywordLeadNorm = keywordLead ? normalizeArabic(keywordLead[1]) : '';
-                        const isKeyPhraseLine = Boolean(keywordLeadNorm) && /^(العنصر|اولا|ثانيا|ثالثا|رابعا|خامسا|سادسا|سابعا|ثامنا|تاسعا|عاشرا|فلسفه|جهاد|الكرم|موسوعه|البخل|المسؤوليه|خطه|النصيحه|الجانب|مشاهد|جدول)\b/.test(keywordLeadNorm);
+                        const fullLineNorm = normalizeArabic(rawText.replace(/^•\s+/, '').trim());
+                        const isKeyPhraseLine = (Boolean(keywordLeadNorm) && /^(العنصر|اولا|ثانيا|ثالثا|رابعا|خامسا|سادسا|سابعا|ثامنا|تاسعا|عاشرا|فلسفه|جهاد|الكرم|موسوعه|البخل|المسؤوليه|خطه|النصيحه|الجانب|مشاهد|جدول|الرساله\s+العمليه|الخلاصه|النتيجه)\b/.test(keywordLeadNorm))
+                            || /^(العنصر|الرساله\s+العمليه|الخلاصه|النتيجه|الدروس\s+والعبر|الوصيه)\b/.test(fullLineNorm);
+                        const isAddressLine = !isHeading && /^(ايها\s+الساده\s+الكرام|عباد\s+الله|اما\s+بعد)\b/.test(fullLineNorm);
 
                         const style = isHeading
                             ? { font: "bold 46px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 64, gapBefore: 14, gapAfter: 16, align: 'center' }
+                            : isAddressLine
+                                ? { font: "700 33px 'Amiri', 'Aref Ruqaa', serif", color: '#6a4d08', lineHeight: 50, gapBefore: 10, gapAfter: 12, align: 'right' }
                             : isKeyPhraseLine
                                 ? { font: "700 34px 'Amiri', 'Aref Ruqaa', serif", color: '#1f7a5f', lineHeight: 52, gapBefore: 10, gapAfter: 12, align: 'right' }
                             : isBulletLike
