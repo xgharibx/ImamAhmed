@@ -395,7 +395,7 @@
                 .pdf-title { margin:0; font-size: 28px; line-height: 1.6; font-weight: 800; }
                 .pdf-subtitle { margin: 8px 0 0; font-size: 16px; opacity: .95; }
                 .pdf-meta { margin-top: 10px; font-size: 13px; opacity: .92; }
-                .pdf-body { padding: 22px; font-size: 17px; line-height: 2.0; }
+                .pdf-body { padding: 22px; font-size: 19px; line-height: 2.2; }
                 .pdf-body, .pdf-body * { max-width: 100%; box-sizing: border-box; overflow-wrap: anywhere; }
                 .pdf-body h1,.pdf-body h2,.pdf-body h3,.pdf-body h4 { color: #1a5f4a; line-height: 1.7; page-break-after: avoid; margin: 1.1rem 0 .7rem; }
                 .pdf-body p,.pdf-body li,.pdf-body blockquote,.pdf-body pre { page-break-inside: avoid; margin: 0 0 .9rem; }
@@ -1226,12 +1226,12 @@
                         const isKeyPhraseLine = Boolean(keywordLeadNorm) && /^(العنصر|اولا|ثانيا|ثالثا|رابعا|خامسا|سادسا|سابعا|ثامنا|تاسعا|عاشرا|فلسفه|جهاد|الكرم|موسوعه|البخل|المسؤوليه|خطه|النصيحه|الجانب|مشاهد|جدول)\b/.test(keywordLeadNorm);
 
                         const style = isHeading
-                            ? { font: "bold 42px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 58, gapBefore: 12, gapAfter: 14, align: 'center' }
+                            ? { font: "bold 46px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 64, gapBefore: 14, gapAfter: 16, align: 'center' }
                             : isKeyPhraseLine
-                                ? { font: "700 30px 'Amiri', 'Aref Ruqaa', serif", color: '#1f7a5f', lineHeight: 46, gapBefore: 8, gapAfter: 10, align: 'right' }
+                                ? { font: "700 34px 'Amiri', 'Aref Ruqaa', serif", color: '#1f7a5f', lineHeight: 52, gapBefore: 10, gapAfter: 12, align: 'right' }
                             : isBulletLike
-                                ? { font: "700 28px 'Amiri', 'Aref Ruqaa', serif", color: '#2f765a', lineHeight: 44, gapBefore: 8, gapAfter: 8, align: 'right' }
-                                : { font: "26px 'Amiri', 'Aref Ruqaa', serif", color: '#222', lineHeight: 41, gapBefore: 6, gapAfter: 8, align: 'right' };
+                                ? { font: "700 31px 'Amiri', 'Aref Ruqaa', serif", color: '#2f765a', lineHeight: 49, gapBefore: 9, gapAfter: 10, align: 'right' }
+                                : { font: "29px 'Amiri', 'Aref Ruqaa', serif", color: '#222', lineHeight: 46, gapBefore: 8, gapAfter: 10, align: 'right' };
 
                         y += style.gapBefore;
                         page.ctx.direction = 'rtl';
@@ -1271,8 +1271,8 @@
                         const rawText = String(block.text || '').trim();
                         const isHeading = block.kind === 'heading';
                         const style = isHeading
-                            ? { font: "bold 44px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 60, gapBefore: 14, gapAfter: 18 }
-                            : { font: "700 30px 'Amiri', 'Aref Ruqaa', serif", color: '#1f7a5f', lineHeight: 46, gapBefore: 8, gapAfter: 10 };
+                            ? { font: "bold 48px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 66, gapBefore: 16, gapAfter: 20 }
+                            : { font: "700 34px 'Amiri', 'Aref Ruqaa', serif", color: '#1f7a5f', lineHeight: 52, gapBefore: 10, gapAfter: 12 };
 
                         page.ctx.font = style.font;
                         const lines = wrapTextLines(page.ctx, rawText, maxWidth - 160);
