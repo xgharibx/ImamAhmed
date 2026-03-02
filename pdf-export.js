@@ -1135,7 +1135,9 @@
         };
 
         if (!chapterPerPage && !storyPerPage) {
-            const renderedIntroPage = renderIntroAsSinglePage(introSectionBlocks);
+            const renderedIntroPage = payload.type === 'khutba'
+                ? false
+                : renderIntroAsSinglePage(introSectionBlocks);
             if (renderedIntroPage && blocks.length) {
                 newPage();
             }
@@ -1167,7 +1169,6 @@
                 const sectionPriority = ['preface', 'anasir', 'first', 'second', 'dua'];
                 const sectionsToRender = orderedSections
                     .filter((section) => section.blocks.length)
-                    .filter((section) => section.key !== 'anasir')
                     .sort((a, b) => {
                         const ai = sectionPriority.indexOf(a.key);
                         const bi = sectionPriority.indexOf(b.key);
@@ -1266,7 +1267,16 @@
                     }
                 };
 
-                for (const section of sectionsToRender) {
+                const anasirSection = sectionsToRender.find((section) => section.key === 'anasir');
+                const hasRemainingSections = sectionsToRender.some((section) => section.key !== 'anasir');
+                if (anasirSection) {
+                    drawCenteredKhutbaSectionPage(anasirSection);
+                    if (hasRemainingSections) {
+                        newPage();
+                    }
+                }
+
+                for (const section of sectionsToRender.filter((section) => section.key !== 'anasir')) {
                     drawKhutbaSection(section, false);
                 }
 

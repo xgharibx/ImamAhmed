@@ -61,7 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function toDetailUrl(item) {
         const shortSlug = buildShortKhutbaSlug(item);
-        return `khutab/${encodeURIComponent(shortSlug)}.html`;
+        const itemId = encodeURIComponent(getItemId(item));
+        return `khutab/${encodeURIComponent(shortSlug)}.html?id=${itemId}`;
     }
 
     function buildShortKhutbaSlug(item) {
