@@ -1167,6 +1167,7 @@
                 const sectionPriority = ['preface', 'anasir', 'first', 'second', 'dua'];
                 const sectionsToRender = orderedSections
                     .filter((section) => section.blocks.length)
+                    .filter((section) => section.key !== 'anasir')
                     .sort((a, b) => {
                         const ai = sectionPriority.indexOf(a.key);
                         const bi = sectionPriority.indexOf(b.key);
@@ -1265,16 +1266,7 @@
                     }
                 };
 
-                for (let index = 0; index < sectionsToRender.length; index += 1) {
-                    const section = sectionsToRender[index];
-                    if (section.key === 'anasir') {
-                        drawCenteredKhutbaSectionPage(section);
-                        if (index < sectionsToRender.length - 1) {
-                            newPage();
-                        }
-                        continue;
-                    }
-
+                for (const section of sectionsToRender) {
                     drawKhutbaSection(section, false);
                 }
 
