@@ -1242,6 +1242,12 @@
                         const maxSectionWidth = isHeading ? (maxWidth - 120) : maxWidth;
                         const lines = wrapTextLines(page.ctx, rawText, maxSectionWidth);
 
+                        const hasForcedHighlight = isHeading || isKeyPhraseLine || isBulletLike;
+                        const highlightPadX = isHeading ? 34 : 20;
+                        const highlightPadY = isHeading ? 14 : 10;
+                        const highlightRadius = isHeading ? 20 : 14;
+                        const lineVisualHeight = Math.max(style.lineHeight, isHeading ? 70 : 54);
+
                         for (const line of lines) {
                             if (y > contentBottom) {
                                 newPage();
@@ -1253,6 +1259,32 @@
                             }
 
                             const x = style.align === 'center' ? (page.canvas.width / 2) : (page.canvas.width - marginX);
+
+                            if (hasForcedHighlight) {
+                                const textWidth = page.ctx.measureText(line).width;
+                                const boxWidth = Math.min(maxWidth + 80, textWidth + (highlightPadX * 2));
+                                const boxX = style.align === 'center'
+                                    ? (page.canvas.width / 2) - (boxWidth / 2)
+                                    : x - textWidth - (highlightPadX * 2);
+                                const boxY = y - lineVisualHeight + 8;
+
+                                page.ctx.fillStyle = isHeading
+                                    ? 'rgba(20, 83, 65, 0.14)'
+                                    : isKeyPhraseLine
+                                        ? 'rgba(31, 122, 95, 0.16)'
+                                        : 'rgba(47, 118, 90, 0.12)';
+                                page.ctx.strokeStyle = isHeading
+                                    ? 'rgba(212, 175, 55, 0.62)'
+                                    : 'rgba(20, 83, 65, 0.32)';
+                                page.ctx.lineWidth = isHeading ? 2 : 1.4;
+                                page.ctx.beginPath();
+                                page.ctx.roundRect(boxX, boxY, boxWidth, lineVisualHeight, highlightRadius);
+                                page.ctx.fill();
+                                page.ctx.stroke();
+
+                                page.ctx.fillStyle = style.color;
+                            }
+
                             page.ctx.fillText(line, x, y);
                             y += style.lineHeight;
                         }
@@ -1290,7 +1322,27 @@
                         page.ctx.font = item.style.font;
                         page.ctx.fillStyle = item.style.color;
 
+                        const isHeading = /عناصر/.test(String(item.lines?.[0] || ''));
+                        const fillColor = isHeading ? 'rgba(20, 83, 65, 0.15)' : 'rgba(31, 122, 95, 0.14)';
+                        const borderColor = isHeading ? 'rgba(212, 175, 55, 0.66)' : 'rgba(20, 83, 65, 0.3)';
+
                         for (const line of item.lines) {
+                            const textWidth = page.ctx.measureText(line).width;
+                            const padX = isHeading ? 34 : 22;
+                            const lineHeight = Math.max(item.style.lineHeight, isHeading ? 70 : 54);
+                            const boxWidth = Math.min(maxWidth + 110, textWidth + (padX * 2));
+                            const boxX = (page.canvas.width / 2) - (boxWidth / 2);
+                            const boxY = y - lineHeight + 8;
+
+                            page.ctx.fillStyle = fillColor;
+                            page.ctx.strokeStyle = borderColor;
+                            page.ctx.lineWidth = isHeading ? 2 : 1.4;
+                            page.ctx.beginPath();
+                            page.ctx.roundRect(boxX, boxY, boxWidth, lineHeight, isHeading ? 20 : 14);
+                            page.ctx.fill();
+                            page.ctx.stroke();
+
+                            page.ctx.fillStyle = item.style.color;
                             page.ctx.fillText(line, page.canvas.width / 2, y);
                             y += item.style.lineHeight;
                         }
