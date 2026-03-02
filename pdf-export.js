@@ -1027,6 +1027,31 @@
                 }
             }
             blocks = normalizedBlocks;
+
+            const isTrailingKhutbaClosingLine = (text) => {
+                const normalized = normalizeArabic(text);
+                if (!normalized) return false;
+                return (
+                    /^(عباد\s+الله\b)/.test(normalized) ||
+                    /اذكروا\s+الله\s+العظيم/.test(normalized) ||
+                    /واقم\s+الصلاه$/.test(normalized)
+                );
+            };
+
+            while (blocks.length) {
+                const tail = blocks[blocks.length - 1];
+                if (tail.kind !== 'paragraph') break;
+                const tailText = String(tail.text || '').replace(/\s+/g, ' ').trim();
+                if (!tailText) {
+                    blocks.pop();
+                    continue;
+                }
+                if (tailText.length <= 180 && isTrailingKhutbaClosingLine(tailText)) {
+                    blocks.pop();
+                    continue;
+                }
+                break;
+            }
         }
 
         const refinedStyle = payload.type === 'competition'
