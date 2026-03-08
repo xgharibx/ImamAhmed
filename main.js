@@ -52,7 +52,7 @@ function initRamadanChallengeCountdown() {
         const now = new Date();
         const diff = endDate.getTime() - now.getTime();
         if (diff <= 0) {
-            countdown.textContent = 'انتهى وقت التحدي';
+            countdown.textContent = 'الإجابات قيد المراجعة - النتائج قريبًا';
             return;
         }
 
