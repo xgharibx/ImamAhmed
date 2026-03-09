@@ -103,12 +103,48 @@
     max-height: none;
 }
 
+.fatwa-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.fatwa-card-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .35rem .85rem;
+    border-radius: 999px;
+    background: rgba(26, 95, 74, 0.09);
+    color: var(--primary-green);
+    font-size: .9rem;
+    font-weight: 700;
+}
+
+.fatwa-card-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+}
+
 .fatwa-toggle {
-    margin-top: .75rem;
     border: 0;
     background: transparent;
     color: var(--primary-green);
     font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+}
+
+.fatwa-toggle[hidden] {
+    display: none;
+}
+
+.fatwa-card .share-btn {
     cursor: pointer;
 }
 
@@ -128,5 +164,15 @@
 
     .fatwa-question {
         font-size: 1.02rem;
+    }
+
+    .fatwa-card-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .fatwa-card-actions {
+        width: 100%;
+        justify-content: space-between;
     }
 }
