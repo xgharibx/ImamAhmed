@@ -195,7 +195,7 @@
         ctx.textAlign = 'center';
         ctx.fillStyle = '#d4af37';
         ctx.font = '700 35px Cairo, Tahoma, Arial';
-        ctx.fillText('فتوى شرعية', canvas.width / 2, 95);
+        ctx.fillText('أحكام فقهية', canvas.width / 2, 95);
 
         const safeNumber = normalizeInlineTextLocal(number || '');
         if (safeNumber) {
@@ -325,7 +325,7 @@
 
                 if (navigator.share && canShareImage) {
                     await navigator.share({ files: [imageFile] });
-                    showShareToastLocal('تمت مشاركة الفتوى كصورة');
+                    showShareToastLocal('تمت مشاركة الحكم كصورة');
                     return;
                 }
 
@@ -333,12 +333,12 @@
                     await navigator.clipboard.write([
                         new ClipboardItem({ 'image/png': imageBlob })
                     ]);
-                    showShareToastLocal('تم نسخ صورة الفتوى للحافظة');
+                    showShareToastLocal('تم نسخ صورة الحكم للحافظة');
                     return;
                 }
 
                 triggerBlobDownloadLocal(imageBlob, imageFileName);
-                showShareToastLocal('تم تنزيل صورة الفتوى');
+                showShareToastLocal('تم تنزيل صورة الحكم');
             } catch {
                 try {
                     const fallbackBlob = await createFatwaShareImageBlob({
@@ -348,7 +348,7 @@
                         signature: '— الشيخ أحمد إسماعيل الفشني'
                     });
                     triggerBlobDownloadLocal(fallbackBlob, imageFileName);
-                    showShareToastLocal('تم تنزيل صورة الفتوى');
+                    showShareToastLocal('تم تنزيل صورة الحكم');
                 } catch {
                     showShareToastLocal('تعذر مشاركة الصورة حالياً');
                 }
@@ -385,10 +385,10 @@
             <h3 class="fatwa-question">${item.question || ''}</h3>
             <div class="fatwa-answer">${answerText}</div>
             <div class="fatwa-card-footer">
-                <span class="fatwa-card-meta"><i class="fas fa-circle-question"></i> فتوى شرعية</span>
+                <span class="fatwa-card-meta"><i class="fas fa-circle-question"></i> أحكام فقهية</span>
                 <div class="fatwa-card-actions">
                     <button class="fatwa-toggle" type="button">عرض المزيد</button>
-                    <button class="share-btn" type="button" title="مشاركة الفتوى كصورة" aria-label="مشاركة الفتوى كصورة">
+                    <button class="share-btn" type="button" title="مشاركة الحكم كصورة" aria-label="مشاركة الحكم كصورة">
                         <i class="fas fa-share-alt"></i>
                     </button>
                 </div>
@@ -463,7 +463,7 @@
         } catch (error) {
             console.error(error);
             empty.hidden = false;
-            empty.textContent = 'تعذر تحميل الفتاوى حالياً. حاول لاحقاً.';
+            empty.textContent = 'تعذر تحميل الأحكام الفقهية حالياً. حاول لاحقاً.';
         }
     }
 

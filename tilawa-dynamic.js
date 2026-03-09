@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="video-embed placeholder">
                     <div class="play-overlay">
                         <i class="fas fa-play-circle"></i>
-                        <span>تشغيل</span>
+                        <span>فتح على يوتيوب</span>
                     </div>
                 </div>
                 <div class="duration-badge">${duration}</div>
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h3 class="video-title" title="${title}">${title}</h3>
                 <div class="video-actions">
                     <button class="btn btn-outline btn-sm" onclick="openTilawaVideo('${videoId}', '${title}')">
-                        <i class="fas fa-play"></i> مشاهدة
+                        <i class="fas fa-play"></i> مشاهدة على يوتيوب
                     </button>
                     <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" class="btn-yt-icon" title="فتح في يوتيوب" rel="noopener">
                         <i class="fab fa-youtube"></i>
@@ -236,12 +236,18 @@ document.addEventListener('DOMContentLoaded', () => {
         renderNextBatch();
     });
 
+    function openYouTubeWatchPage(videoId) {
+        const watchUrl = `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
+        const opened = window.open(watchUrl, '_blank', 'noopener,noreferrer');
+        if (!opened) {
+            window.location.href = watchUrl;
+        }
+    }
+
     window.openTilawaVideo = (id, title) => {
         const cleanId = (id || '').toString().trim();
-        modalTitle.textContent = title;
-        modalIframe.src = `https://www.youtube.com/embed/${cleanId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
+        if (!cleanId) return;
+        openYouTubeWatchPage(cleanId);
     };
 
     closeModal?.addEventListener('click', closeVideoModal);

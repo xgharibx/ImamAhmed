@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="video-embed placeholder">
                     <div class="play-overlay">
                         <i class="fas fa-play-circle"></i>
-                        <span>تشغيل</span>
+                        <span>فتح على يوتيوب</span>
                     </div>
                 </div>
                 <div class="duration-badge">${video.duration}</div>
@@ -127,15 +127,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h3 class="video-title" title="${video.title}">${video.title}</h3>
                 <div class="video-actions">
                     <button class="btn btn-outline btn-sm" onclick="openVideo('${video.id}', '${escapeHtml(video.title)}')">
-                        <i class="fas fa-play"></i> مشاهدة
+                        <i class="fas fa-play"></i> مشاهدة على يوتيوب
                     </button>
-                    <a href="https://www.youtube.com/watch?v=${video.id}" target="_blank" class="btn-yt-icon" title="فتح في يوتيوب">
+                    <a href="https://www.youtube.com/watch?v=${video.id}" target="_blank" class="btn-yt-icon" title="فتح في يوتيوب" rel="noopener noreferrer">
                         <i class="fab fa-youtube"></i>
                     </a>
                 </div>
             </div>
         `;
         return div;
+    }
+
+    function openYouTubeWatchPage(videoId) {
+        const watchUrl = `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
+        const opened = window.open(watchUrl, '_blank', 'noopener,noreferrer');
+        if (!opened) {
+            window.location.href = watchUrl;
+        }
     }
 
     // Escape Helper
@@ -309,13 +317,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Modal Global Functions
     window.openVideo = (id, title) => {
-        // Clean ID just in case
         const cleanId = id.trim();
-        modalTitle.textContent = title;
-        // Switches back to standard youtube.com and removes 'origin' which causes 153 errors on local files/some browsers
-        modalIframe.src = `https://www.youtube.com/embed/${cleanId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
+        if (!cleanId) return;
+        openYouTubeWatchPage(cleanId);
     };
 
     closeModal.addEventListener('click', () => {

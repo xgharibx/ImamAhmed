@@ -129,6 +129,8 @@
     display: inline-flex;
     align-items: center;
     gap: .6rem;
+    margin-inline-start: auto;
+    flex-wrap: nowrap;
 }
 
 .fatwa-toggle {
@@ -145,7 +147,23 @@
 }
 
 .fatwa-card .share-btn {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-green-dark);
+    background: rgba(201, 162, 39, 0.18);
+    border: 1px solid rgba(201, 162, 39, 0.45);
+    border-radius: var(--radius-full);
     cursor: pointer;
+    flex-shrink: 0;
+    transition: var(--transition-normal);
+}
+
+.fatwa-card .share-btn:hover {
+    background: var(--primary-gold);
+    color: var(--primary-green-dark);
 }
 
 .fatawa-empty {
