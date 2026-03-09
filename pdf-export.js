@@ -1760,7 +1760,7 @@
                 }
 
                 for (const section of remainingSections) {
-                    drawKhutbaSection(section, ['first', 'second', 'dua'].includes(section.key));
+                    drawKhutbaSection(section, false);
                 }
 
                 drawPageFooter(page.ctx, pageNumber, payload);
