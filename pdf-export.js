@@ -760,14 +760,14 @@
 
         const title = String(payload.title || 'محتوى').replace(/\s+/g, ' ').trim();
         const subtitle = String(payload.subtitle || '').replace(/\s+/g, ' ').trim();
-        const maxTitleWidth = 920;
-        const baseTitleSize = title.length > 92 ? 58 : title.length > 64 ? 66 : 74;
+        const maxTitleWidth = 860;
+        const baseTitleSize = title.length > 92 ? 52 : title.length > 64 ? 58 : 66;
 
         ctx.fillStyle = '#ffffff';
         ctx.font = `bold ${baseTitleSize}px Cairo, Tahoma, Arial`;
         const titleLines = wrapTextLines(ctx, title, maxTitleWidth).slice(0, 3);
-        let titleY = 470;
-        const titleLineHeight = Math.round(baseTitleSize * 1.22);
+        let titleY = 446;
+        const titleLineHeight = Math.round(baseTitleSize * 1.18);
         for (const line of titleLines) {
             ctx.fillText(line, canvas.width / 2, titleY);
             titleY += titleLineHeight;
@@ -775,49 +775,49 @@
 
         if (subtitle) {
             ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
-            ctx.font = '42px Cairo, Tahoma, Arial';
-            const subtitleLines = wrapTextLines(ctx, subtitle, 980).slice(0, 2);
-            titleY += 42;
+            ctx.font = '36px Cairo, Tahoma, Arial';
+            const subtitleLines = wrapTextLines(ctx, subtitle, 900).slice(0, 2);
+            titleY += 34;
             for (const line of subtitleLines) {
                 ctx.fillText(line, canvas.width / 2, titleY);
-                titleY += 64;
+                titleY += 56;
             }
         }
 
         if (payload.meta) {
             ctx.fillStyle = 'rgba(212, 175, 55, 0.95)';
-            ctx.font = '36px Cairo, Tahoma, Arial';
-            const metaLines = wrapTextLines(ctx, String(payload.meta), 1000).slice(0, 2);
-            let metaY = Math.min(1260, titleY + 136);
+            ctx.font = '30px Cairo, Tahoma, Arial';
+            const metaLines = wrapTextLines(ctx, String(payload.meta), 900).slice(0, 2);
+            let metaY = Math.min(1225, titleY + 118);
             for (const line of metaLines) {
                 ctx.fillText(line, canvas.width / 2, metaY);
-                metaY += 54;
+                metaY += 46;
             }
         }
 
         if (coverCenterLines.length) {
             ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
-            ctx.font = '38px Cairo, Tahoma, Arial';
+            ctx.font = '34px Cairo, Tahoma, Arial';
             const centerLines = coverCenterLines
                 .map(line => String(line || '').replace(/\s+/g, ' ').trim())
                 .filter(Boolean)
                 .slice(0, 2);
-            let centerY = 1030;
+            let centerY = 1010;
             for (const line of centerLines) {
-                const wrapped = wrapTextLines(ctx, line, 960).slice(0, 2);
+                const wrapped = wrapTextLines(ctx, line, 900).slice(0, 2);
                 for (const chunk of wrapped) {
                     ctx.fillText(chunk, canvas.width / 2, centerY);
-                    centerY += 62;
+                    centerY += 54;
                 }
-                centerY += 20;
+                centerY += 16;
             }
         }
 
         const hasAuthorInMeta = /أحمد\s+إسماعيل\s+الفشني/.test(String(payload.meta || ''));
         if (!hasAuthorInMeta) {
             ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-            ctx.font = '700 42px Cairo, Tahoma, Arial';
-            ctx.fillText('الشيخ أحمد إسماعيل الفشني', canvas.width / 2, 1530);
+            ctx.font = '700 36px Cairo, Tahoma, Arial';
+            ctx.fillText('الشيخ أحمد إسماعيل الفشني', canvas.width / 2, 1500);
         }
 
         return canvas;
