@@ -369,11 +369,12 @@
         const wrapper = document.createElement('div');
         wrapper.setAttribute('dir', 'rtl');
         wrapper.lang = 'ar';
-        wrapper.style.width = '794px';
+        const isKhutba = type === 'khutba';
+        wrapper.style.width = isKhutba ? '830px' : '794px';
         wrapper.style.background = '#ffffff';
         wrapper.style.color = '#1b1b1b';
         wrapper.style.fontFamily = '"Cairo", "Tajawal", sans-serif';
-        wrapper.style.padding = '26px';
+        wrapper.style.padding = isKhutba ? '22px' : '26px';
         wrapper.style.boxSizing = 'border-box';
         wrapper.style.position = 'fixed';
         wrapper.style.left = '0';
@@ -392,21 +393,21 @@
                 .pdf-card { border: 1px solid #e6e6e6; border-radius: 14px; overflow: hidden; background: #fff; }
                 .pdf-head { background: linear-gradient(135deg, #1a5f4a, #1f7a5a); color: #fff; padding: 18px 20px; }
                 .pdf-tag { display:inline-block; background:#d4af37; color:#1a5f4a; border-radius:999px; padding: 4px 12px; font-size: 12px; font-weight:700; margin-bottom: 10px; }
-                .pdf-title { margin:0; font-size: 28px; line-height: 1.6; font-weight: 800; }
-                .pdf-subtitle { margin: 8px 0 0; font-size: 16px; opacity: .95; }
-                .pdf-meta { margin-top: 10px; font-size: 13px; opacity: .92; }
-                .pdf-body { padding: 22px; font-size: 19px; line-height: 2.2; }
+                .pdf-title { margin:0; font-size: 30px; line-height: 1.6; font-weight: 800; }
+                .pdf-subtitle { margin: 8px 0 0; font-size: 17px; opacity: .95; }
+                .pdf-meta { margin-top: 10px; font-size: 14px; opacity: .92; }
+                .pdf-body { padding: ${isKhutba ? '20px 18px 22px' : '22px'}; font-size: ${isKhutba ? '24px' : '21px'}; line-height: ${isKhutba ? '2.35' : '2.2'}; }
                 .pdf-body, .pdf-body * { max-width: 100%; box-sizing: border-box; overflow-wrap: anywhere; }
-                .pdf-body h1,.pdf-body h2,.pdf-body h3,.pdf-body h4 { color: #1a5f4a; line-height: 1.7; page-break-after: avoid; margin: 1.1rem 0 .7rem; }
-                .pdf-body p,.pdf-body li,.pdf-body blockquote,.pdf-body pre { page-break-inside: avoid; margin: 0 0 .9rem; }
+                .pdf-body h1,.pdf-body h2,.pdf-body h3,.pdf-body h4 { color: #1a5f4a; line-height: ${isKhutba ? '1.85' : '1.7'}; page-break-after: avoid; margin: ${isKhutba ? '1.2rem 0 .8rem' : '1.1rem 0 .7rem'}; }
+                .pdf-body p,.pdf-body li,.pdf-body blockquote,.pdf-body pre { page-break-inside: avoid; margin: 0 0 ${isKhutba ? '1rem' : '.9rem'}; }
                 .pdf-body .pdf-bullet { padding-inline-start: .2rem; }
-                .pdf-body blockquote { border-right: 4px solid #d4af37; margin: 1rem 0; padding: .6rem 1rem; background: #faf8f0; border-radius: 8px; }
+                .pdf-body blockquote { border-right: 4px solid #d4af37; margin: ${isKhutba ? '1.1rem 0' : '1rem 0'}; padding: ${isKhutba ? '.75rem 1rem' : '.6rem 1rem'}; background: #faf8f0; border-radius: 8px; }
                 .pdf-body pre { background: #f6f7f8; border: 1px solid #e8ebee; border-radius: 8px; padding: .8rem; white-space: pre-wrap; }
                 .pdf-body img { display: block; height: auto; border-radius: 10px; margin: .8rem auto; }
                 .pdf-body *[hidden] { display: none !important; }
                 .pdf-body table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
                 .pdf-body th, .pdf-body td { border: 1px solid #e5e7eb; padding: .45rem; text-align: right; }
-                .pdf-foot { margin-top: 20px; text-align:center; color:#4d4d4d; font-size:12px; border-top:1px solid #efefef; padding-top:12px; }
+                .pdf-foot { margin-top: 20px; text-align:center; color:#4d4d4d; font-size:13px; border-top:1px solid #efefef; padding-top:12px; }
             </style>
             <div class="pdf-card">
                 <div class="pdf-head">
@@ -957,10 +958,10 @@
         let page = createPdfPageCanvas({ premiumBook: isBook });
         drawPageHeader(page.ctx, payload, pageNumber);
 
-        const marginX = 100;
+        const marginX = payload.type === 'khutba' ? 72 : 100;
         const maxWidth = page.canvas.width - (marginX * 2);
-        const contentTop = 320;
-        const contentBottom = 1585;
+        const contentTop = payload.type === 'khutba' ? 300 : 320;
+        const contentBottom = payload.type === 'khutba' ? 1602 : 1585;
         let y = contentTop;
 
         const shouldDropSparseTrailingPage = () => {
@@ -1075,6 +1076,13 @@
                 pre: { font: '21px Cairo, Tahoma, Arial', color: '#333', lineHeight: 32, gapBefore: 6, gapAfter: 6 },
                 paragraph: { font: '23px Cairo, Tahoma, Arial', color: '#1f2c2a', lineHeight: 35, gapBefore: 5, gapAfter: 7 }
             }
+            : payload.type === 'khutba'
+            ? {
+                heading: { font: 'bold 38px Cairo, Tahoma, Arial', color: '#1a5f4a', lineHeight: 56, gapBefore: 16, gapAfter: 14 },
+                quote: { font: '29px Cairo, Tahoma, Arial', color: '#2e7d32', lineHeight: 47, gapBefore: 11, gapAfter: 11 },
+                pre: { font: '27px Cairo, Tahoma, Arial', color: '#333', lineHeight: 43, gapBefore: 9, gapAfter: 9 },
+                paragraph: { font: '29px Cairo, Tahoma, Arial', color: '#222', lineHeight: 47, gapBefore: 7, gapAfter: 10 }
+            }
             : {
                 heading: { font: 'bold 34px Cairo, Tahoma, Arial', color: '#1a5f4a', lineHeight: 48, gapBefore: 14, gapAfter: 12 },
                 quote: { font: '26px Cairo, Tahoma, Arial', color: '#2e7d32', lineHeight: 40, gapBefore: 10, gapAfter: 10 },
@@ -1129,7 +1137,11 @@
         const renderIntroAsSinglePage = (sectionBlocks) => {
             if (!sectionBlocks.length) return false;
 
-            const sectionMaxWidth = payload.type === 'competition' ? Math.min(maxWidth, 820) : Math.min(maxWidth, 900);
+            const sectionMaxWidth = payload.type === 'competition'
+                ? Math.min(maxWidth, 820)
+                : payload.type === 'khutba'
+                ? Math.min(maxWidth, 980)
+                : Math.min(maxWidth, 900);
             const availableHeight = contentBottom - contentTop;
             const targetHeight = availableHeight * 0.985;
 
@@ -1229,14 +1241,14 @@
                         const isAddressLine = !isHeading && /^(ايها\s+الساده\s+الكرام|عباد\s+الله|اما\s+بعد)\b/.test(fullLineNorm);
 
                         const style = isHeading
-                            ? { font: "bold 46px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 64, gapBefore: 14, gapAfter: 16, align: 'center' }
+                            ? { font: "bold 48px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 66, gapBefore: 14, gapAfter: 16, align: 'center' }
                             : isAddressLine
-                                ? { font: "700 33px 'Amiri', 'Aref Ruqaa', serif", color: '#6a4d08', lineHeight: 50, gapBefore: 10, gapAfter: 12, align: 'right' }
+                                ? { font: "700 35px 'Amiri', 'Aref Ruqaa', serif", color: '#6a4d08', lineHeight: 54, gapBefore: 10, gapAfter: 12, align: 'right' }
                             : isKeyPhraseLine
-                                ? { font: "700 34px 'Amiri', 'Aref Ruqaa', serif", color: '#1f7a5f', lineHeight: 52, gapBefore: 10, gapAfter: 12, align: 'right' }
+                                ? { font: "700 36px 'Amiri', 'Aref Ruqaa', serif", color: '#1f7a5f', lineHeight: 56, gapBefore: 10, gapAfter: 12, align: 'right' }
                             : isBulletLike
-                                ? { font: "700 31px 'Amiri', 'Aref Ruqaa', serif", color: '#2f765a', lineHeight: 49, gapBefore: 9, gapAfter: 10, align: 'right' }
-                                : { font: "29px 'Amiri', 'Aref Ruqaa', serif", color: '#222', lineHeight: 46, gapBefore: 8, gapAfter: 10, align: 'right' };
+                                ? { font: "700 33px 'Amiri', 'Aref Ruqaa', serif", color: '#2f765a', lineHeight: 52, gapBefore: 9, gapAfter: 10, align: 'right' }
+                                : { font: "31px 'Amiri', 'Aref Ruqaa', serif", color: '#222', lineHeight: 50, gapBefore: 8, gapAfter: 10, align: 'right' };
 
                         y += style.gapBefore;
                         page.ctx.direction = 'rtl';
@@ -1276,8 +1288,8 @@
                         const rawText = String(block.text || '').trim();
                         const isHeading = block.kind === 'heading';
                         const style = isHeading
-                            ? { font: "bold 48px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 66, gapBefore: 16, gapAfter: 20 }
-                            : { font: "700 34px 'Amiri', 'Aref Ruqaa', serif", color: '#1f7a5f', lineHeight: 52, gapBefore: 10, gapAfter: 12 };
+                            ? { font: "bold 50px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 70, gapBefore: 16, gapAfter: 20 }
+                            : { font: "700 36px 'Amiri', 'Aref Ruqaa', serif", color: '#1f7a5f', lineHeight: 56, gapBefore: 10, gapAfter: 12 };
 
                         page.ctx.font = style.font;
                         const lines = wrapTextLines(page.ctx, rawText, maxWidth - 160);

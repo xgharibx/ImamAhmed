@@ -331,14 +331,14 @@
     border: 1px solid var(--border-light);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
-    padding: clamp(1rem, 2.2vw, 1.5rem);
+    padding: clamp(1rem, 2.2vw, 1.35rem);
 }
 
 .khutba-article-premium {
     background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(249,247,241,0.96));
     border: 1px solid rgba(201, 162, 39, 0.22);
     border-radius: 18px;
-    padding: clamp(1rem, 2vw, 1.5rem);
+    padding: clamp(1rem, 2vw, 1.4rem);
 }
 
 .khutba-article {
@@ -363,7 +363,7 @@
     color: var(--text-primary);
     font-size: 1.125rem;
     font-family: var(--font-decorative);
-    max-width: 900px;
+    max-width: 1040px;
     margin: 0 auto;
 }
 
@@ -597,5 +597,69 @@
     .khutab-item-card[data-aos] {
         opacity: 1 !important;
         transform: none !important;
+    }
+
+    .khutba-actions {
+        gap: 0.55rem;
+    }
+
+    .khutba-content {
+        padding: 0.7rem;
+        border-radius: 18px;
+    }
+
+    .khutba-article-premium {
+        padding: 0.8rem 0.75rem;
+        border-radius: 16px;
+    }
+
+    .khutba-body {
+        max-width: none;
+        text-align: right;
+        font-size: 1.18rem;
+        line-height: 2.3;
+    }
+
+    .khutba-paragraph {
+        margin: 1rem 0;
+        text-indent: 1em;
+        line-height: 2.3;
+    }
+
+    .khutba-section-card {
+        padding: 0.7rem 0.75rem 0.5rem;
+        margin: 1rem 0;
+    }
+
+    .khutba-heading {
+        font-size: 1.38rem;
+        padding: 0.5rem 0.7rem;
+    }
+
+    .khutba-subheading {
+        font-size: 1.15rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .khutba-content {
+        padding: 0.55rem;
+    }
+
+    .khutba-article-premium {
+        padding: 0.7rem 0.6rem;
+    }
+
+    .khutba-body {
+        font-size: 1.14rem;
+        line-height: 2.22;
+    }
+
+    .khutba-paragraph {
+        text-indent: 0.8em;
+    }
+
+    .khutba-list {
+        padding-right: 1rem;
     }
 }
