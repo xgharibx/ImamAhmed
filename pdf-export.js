@@ -396,7 +396,7 @@
                 .pdf-title { margin:0; font-size: 30px; line-height: 1.6; font-weight: 800; }
                 .pdf-subtitle { margin: 8px 0 0; font-size: 17px; opacity: .95; }
                 .pdf-meta { margin-top: 10px; font-size: 14px; opacity: .92; }
-                .pdf-body { padding: ${isKhutba ? '20px 18px 22px' : '22px'}; font-size: ${isKhutba ? '26px' : '21px'}; line-height: ${isKhutba ? '2.4' : '2.2'}; }
+                .pdf-body { padding: ${isKhutba ? '22px 20px 26px' : '22px'}; font-size: ${isKhutba ? '28px' : '21px'}; line-height: ${isKhutba ? '2.55' : '2.2'}; }
                 .pdf-body, .pdf-body * { max-width: 100%; box-sizing: border-box; overflow-wrap: anywhere; }
                 .pdf-body h1,.pdf-body h2,.pdf-body h3,.pdf-body h4 { color: #1a5f4a; line-height: ${isKhutba ? '1.85' : '1.7'}; page-break-after: avoid; margin: ${isKhutba ? '1.2rem 0 .8rem' : '1.1rem 0 .7rem'}; }
                 .pdf-body p,.pdf-body li,.pdf-body blockquote,.pdf-body pre { page-break-inside: avoid; margin: 0 0 ${isKhutba ? '1rem' : '.9rem'}; }
@@ -725,36 +725,36 @@
         ctx.direction = 'rtl';
         ctx.textAlign = 'center';
 
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
         ctx.beginPath();
-        ctx.roundRect(250, 262, 740, 760, 34);
+        ctx.roundRect(180, 246, 880, 820, 36);
         ctx.fill();
 
         ctx.strokeStyle = 'rgba(212, 175, 55, 0.5)';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.roundRect(266, 278, 708, 728, 28);
+        ctx.roundRect(198, 264, 844, 784, 30);
         ctx.stroke();
 
         ctx.fillStyle = '#d4af37';
         ctx.beginPath();
-        ctx.roundRect(470, 300, 300, 60, 30);
+        ctx.roundRect(430, 286, 380, 68, 34);
         ctx.fill();
 
         ctx.fillStyle = '#114534';
-        ctx.font = 'bold 28px Cairo, Tahoma, Arial';
-        ctx.fillText(typeLabel(payload.type), canvas.width / 2, 339);
+        ctx.font = 'bold 30px Cairo, Tahoma, Arial';
+        ctx.fillText(typeLabel(payload.type), canvas.width / 2, 332);
 
         const title = String(payload.title || 'محتوى').replace(/\s+/g, ' ').trim();
         const subtitle = String(payload.subtitle || '').replace(/\s+/g, ' ').trim();
-        const maxTitleWidth = 900;
-        const baseTitleSize = title.length > 80 ? 62 : title.length > 52 ? 68 : 76;
+        const maxTitleWidth = 980;
+        const baseTitleSize = title.length > 92 ? 66 : title.length > 64 ? 74 : 84;
 
         ctx.fillStyle = '#ffffff';
         ctx.font = `bold ${baseTitleSize}px Cairo, Tahoma, Arial`;
         const titleLines = wrapTextLines(ctx, title, maxTitleWidth).slice(0, 3);
-        let titleY = 480;
-        const titleLineHeight = Math.round(baseTitleSize * 1.23);
+        let titleY = 470;
+        const titleLineHeight = Math.round(baseTitleSize * 1.26);
         for (const line of titleLines) {
             ctx.fillText(line, canvas.width / 2, titleY);
             titleY += titleLineHeight;
@@ -762,48 +762,48 @@
 
         if (subtitle) {
             ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
-            ctx.font = '38px Cairo, Tahoma, Arial';
-            const subtitleLines = wrapTextLines(ctx, subtitle, 940).slice(0, 2);
-            titleY += 34;
+            ctx.font = '42px Cairo, Tahoma, Arial';
+            const subtitleLines = wrapTextLines(ctx, subtitle, 980).slice(0, 2);
+            titleY += 42;
             for (const line of subtitleLines) {
                 ctx.fillText(line, canvas.width / 2, titleY);
-                titleY += 58;
+                titleY += 64;
             }
         }
 
         if (payload.meta) {
             ctx.fillStyle = 'rgba(212, 175, 55, 0.95)';
-            ctx.font = '32px Cairo, Tahoma, Arial';
-            const metaLines = wrapTextLines(ctx, String(payload.meta), 960).slice(0, 2);
-            let metaY = Math.min(1230, titleY + 126);
+            ctx.font = '36px Cairo, Tahoma, Arial';
+            const metaLines = wrapTextLines(ctx, String(payload.meta), 1000).slice(0, 2);
+            let metaY = Math.min(1260, titleY + 136);
             for (const line of metaLines) {
                 ctx.fillText(line, canvas.width / 2, metaY);
-                metaY += 48;
+                metaY += 54;
             }
         }
 
         if (coverCenterLines.length) {
             ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
-            ctx.font = '35px Cairo, Tahoma, Arial';
+            ctx.font = '38px Cairo, Tahoma, Arial';
             const centerLines = coverCenterLines
                 .map(line => String(line || '').replace(/\s+/g, ' ').trim())
                 .filter(Boolean)
                 .slice(0, 2);
-            let centerY = 1000;
+            let centerY = 1030;
             for (const line of centerLines) {
-                const wrapped = wrapTextLines(ctx, line, 900).slice(0, 2);
+                const wrapped = wrapTextLines(ctx, line, 960).slice(0, 2);
                 for (const chunk of wrapped) {
                     ctx.fillText(chunk, canvas.width / 2, centerY);
-                    centerY += 56;
+                    centerY += 62;
                 }
-                centerY += 18;
+                centerY += 20;
             }
         }
 
         const hasAuthorInMeta = /أحمد\s+إسماعيل\s+الفشني/.test(String(payload.meta || ''));
         if (!hasAuthorInMeta) {
             ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-            ctx.font = '700 38px Cairo, Tahoma, Arial';
+            ctx.font = '700 42px Cairo, Tahoma, Arial';
             ctx.fillText('الشيخ أحمد إسماعيل الفشني', canvas.width / 2, 1530);
         }
 
@@ -1129,10 +1129,10 @@
             }
             : payload.type === 'khutba'
             ? {
-                heading: { font: 'bold 40px Cairo, Tahoma, Arial', color: '#1a5f4a', lineHeight: 58, gapBefore: 16, gapAfter: 14 },
-                quote: { font: '30px Cairo, Tahoma, Arial', color: '#2e7d32', lineHeight: 49, gapBefore: 11, gapAfter: 11 },
-                pre: { font: '28px Cairo, Tahoma, Arial', color: '#333', lineHeight: 45, gapBefore: 9, gapAfter: 9 },
-                paragraph: { font: '30px Cairo, Tahoma, Arial', color: '#222', lineHeight: 49, gapBefore: 7, gapAfter: 10 }
+                heading: { font: 'bold 42px Cairo, Tahoma, Arial', color: '#1a5f4a', lineHeight: 62, gapBefore: 18, gapAfter: 16 },
+                quote: { font: '32px Cairo, Tahoma, Arial', color: '#2e7d32', lineHeight: 53, gapBefore: 12, gapAfter: 12 },
+                pre: { font: '30px Cairo, Tahoma, Arial', color: '#333', lineHeight: 49, gapBefore: 10, gapAfter: 10 },
+                paragraph: { font: '32px Cairo, Tahoma, Arial', color: '#222', lineHeight: 53, gapBefore: 8, gapAfter: 12 }
             }
             : {
                 heading: { font: 'bold 34px Cairo, Tahoma, Arial', color: '#1a5f4a', lineHeight: 48, gapBefore: 14, gapAfter: 12 },
@@ -1272,6 +1272,21 @@
                         return safeAi - safeBi;
                     });
 
+                const toArabicIndicNumber = (value) => String(value).replace(/\d/g, (digit) => '٠١٢٣٤٥٦٧٨٩'[Number(digit)]);
+
+                const extractAnasirEntries = (section) => {
+                    const entries = [];
+                    for (const block of section?.blocks || []) {
+                        if (block.kind === 'heading') continue;
+                        const rawText = String(block.text || '').replace(/\s+/g, ' ').trim();
+                        if (!rawText) continue;
+                        const cleanText = rawText.replace(/^([0-9٠-٩]+)\s*[\)\-\.:،]?\s*/, '').replace(/^•\s+/, '').trim();
+                        if (!cleanText) continue;
+                        entries.push(cleanText);
+                    }
+                    return entries;
+                };
+
                 const drawKhutbaSection = (section, forceNewPage) => {
                     if (!section?.blocks?.length) return;
                     if (forceNewPage && y > contentTop + 2) {
@@ -1292,14 +1307,14 @@
                         const isAddressLine = !isHeading && /^(ايها\s+الساده\s+الكرام|عباد\s+الله|اما\s+بعد)\b/.test(fullLineNorm);
 
                         const style = isHeading
-                            ? { font: "bold 52px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 72, gapBefore: 16, gapAfter: 18, align: 'center' }
+                            ? { font: "bold 56px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 78, gapBefore: 18, gapAfter: 20, align: 'center' }
                             : isAddressLine
-                                ? { font: "700 38px 'Amiri', 'Aref Ruqaa', serif", color: '#6a4d08', lineHeight: 58, gapBefore: 11, gapAfter: 13, align: 'right' }
+                                ? { font: "700 40px 'Amiri', 'Aref Ruqaa', serif", color: '#6a4d08', lineHeight: 62, gapBefore: 12, gapAfter: 14, align: 'right' }
                             : isKeyPhraseLine
-                                ? { font: "700 39px 'Amiri', 'Aref Ruqaa', serif", color: '#1f7a5f', lineHeight: 60, gapBefore: 11, gapAfter: 13, align: 'right' }
+                                ? { font: "700 41px 'Amiri', 'Aref Ruqaa', serif", color: '#1f7a5f', lineHeight: 64, gapBefore: 12, gapAfter: 14, align: 'right' }
                             : isBulletLike
-                                ? { font: "700 36px 'Amiri', 'Aref Ruqaa', serif", color: '#2f765a', lineHeight: 56, gapBefore: 10, gapAfter: 11, align: 'right' }
-                                : { font: "34px 'Amiri', 'Aref Ruqaa', serif", color: '#222', lineHeight: 54, gapBefore: 9, gapAfter: 11, align: 'right' };
+                                ? { font: "700 38px 'Amiri', 'Aref Ruqaa', serif", color: '#2f765a', lineHeight: 60, gapBefore: 11, gapAfter: 12, align: 'right' }
+                                : { font: "36px 'Amiri', 'Aref Ruqaa', serif", color: '#222', lineHeight: 58, gapBefore: 10, gapAfter: 12, align: 'right' };
 
                         y += style.gapBefore;
                         page.ctx.direction = 'rtl';
@@ -1335,12 +1350,71 @@
                         newPage();
                     }
 
+                    if (section.key === 'anasir') {
+                        const entries = extractAnasirEntries(section);
+                        const headingBlock = section.blocks.find((block) => block.kind === 'heading');
+                        const headingText = String(headingBlock?.text || khutbaHeadingLabelByKey('anasir')).trim();
+
+                        page.ctx.direction = 'rtl';
+                        page.ctx.textAlign = 'center';
+                        page.ctx.font = "bold 58px 'Aref Ruqaa', 'Amiri', serif";
+                        const headingLines = wrapTextLines(page.ctx, headingText, 920).slice(0, 2);
+                        const headingHeight = headingLines.length * 82;
+
+                        const itemFont = "700 42px 'Amiri', 'Aref Ruqaa', serif";
+                        const itemLineHeight = 68;
+                        const itemGap = 20;
+                        const numberX = page.canvas.width - 170;
+                        const textX = page.canvas.width - 245;
+                        const itemWidth = 760;
+
+                        let totalHeight = headingHeight + 34;
+                        const measuredEntries = entries.map((entry, index) => {
+                            page.ctx.font = itemFont;
+                            const lines = wrapTextLines(page.ctx, entry, itemWidth);
+                            const height = Math.max(1, lines.length) * itemLineHeight;
+                            totalHeight += height + itemGap;
+                            return {
+                                label: `${toArabicIndicNumber(index + 1)}.`,
+                                lines,
+                                height
+                            };
+                        });
+
+                        y = contentTop + Math.max(0, ((contentBottom - contentTop - totalHeight) / 2));
+
+                        page.ctx.fillStyle = '#145341';
+                        page.ctx.font = "bold 58px 'Aref Ruqaa', 'Amiri', serif";
+                        for (const line of headingLines) {
+                            page.ctx.fillText(line, page.canvas.width / 2, y);
+                            y += 82;
+                        }
+
+                        y += 20;
+                        for (const entry of measuredEntries) {
+                            page.ctx.fillStyle = '#d4af37';
+                            page.ctx.textAlign = 'right';
+                            page.ctx.font = "700 40px Cairo, Tahoma, Arial";
+                            page.ctx.fillText(entry.label, numberX, y);
+
+                            page.ctx.fillStyle = '#1f7a5f';
+                            page.ctx.font = itemFont;
+                            for (const line of entry.lines) {
+                                page.ctx.fillText(line, textX, y);
+                                y += itemLineHeight;
+                            }
+
+                            y += itemGap;
+                        }
+                        return;
+                    }
+
                     const renderItems = section.blocks.map((block) => {
                         const rawText = String(block.text || '').trim();
                         const isHeading = block.kind === 'heading';
                         const style = isHeading
-                            ? { font: "bold 54px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 76, gapBefore: 18, gapAfter: 22 }
-                            : { font: "700 40px 'Amiri', 'Aref Ruqaa', serif", color: '#1f7a5f', lineHeight: 62, gapBefore: 11, gapAfter: 13 };
+                            ? { font: "bold 58px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 82, gapBefore: 20, gapAfter: 24 }
+                            : { font: "700 42px 'Amiri', 'Aref Ruqaa', serif", color: '#1f7a5f', lineHeight: 66, gapBefore: 12, gapAfter: 14 };
 
                         page.ctx.font = style.font;
                         const lines = wrapTextLines(page.ctx, rawText, maxWidth - 160);
