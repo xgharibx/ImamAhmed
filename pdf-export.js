@@ -1461,6 +1461,54 @@
                     }
                 };
 
+                const classifyKhutbaFrontMatterBlock = (block) => {
+                    const rawText = String(block?.text || '').replace(/\s+/g, ' ').trim();
+                    const normalized = normalizeArabic(rawText);
+                    const isHeading = block?.kind === 'heading';
+
+                    if (isHeading) {
+                        return {
+                            rawText,
+                            style: { font: "bold 56px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 80, gapBefore: 8, gapAfter: 16, align: 'center', maxWidth: 940, panel: null }
+                        };
+                    }
+
+                    if (/^خطبه\s+الجمعه\s+القادمه|^بتاريخ/.test(normalized)) {
+                        return {
+                            rawText,
+                            style: { font: "700 31px Cairo, Tahoma, Arial", color: '#145341', lineHeight: 48, gapBefore: 4, gapAfter: 8, align: 'center', maxWidth: 980, panel: null }
+                        };
+                    }
+
+                    if (/^(لفضيله\s+الشيخ|فضيله\s+الشيخ|الشيخ\s*\/)/.test(normalized)) {
+                        return {
+                            rawText,
+                            style: { font: "700 40px 'Amiri', 'Aref Ruqaa', serif", color: '#6a4d08', lineHeight: 58, gapBefore: 10, gapAfter: 10, align: 'center', maxWidth: 920, panel: null }
+                        };
+                    }
+
+                    if (/^(بعنوان|عنوان\s+الخطبه)/.test(normalized)) {
+                        return {
+                            rawText,
+                            style: {
+                                font: "700 39px 'Amiri', 'Aref Ruqaa', serif",
+                                color: '#1f2b28',
+                                lineHeight: 62,
+                                gapBefore: 14,
+                                gapAfter: 16,
+                                align: 'center',
+                                maxWidth: 950,
+                                panel: { fill: 'rgba(212, 175, 55, 0.12)', stroke: 'rgba(212, 175, 55, 0.4)', widthPad: 36, heightPad: 24 }
+                            }
+                        };
+                    }
+
+                    return {
+                        rawText,
+                        style: { font: "36px 'Amiri', 'Aref Ruqaa', serif", color: '#2c2c2c', lineHeight: 56, gapBefore: 8, gapAfter: 10, align: 'center', maxWidth: 940, panel: null }
+                    };
+                };
+
                 const drawCenteredKhutbaSectionPage = (section) => {
                     if (!section?.blocks?.length) return;
                     if (y > contentTop + 2) {
@@ -1558,17 +1606,161 @@
                     }
                 };
 
-                const anasirSection = sectionsToRender.find((section) => section.key === 'anasir');
-                const hasRemainingSections = sectionsToRender.some((section) => section.key !== 'anasir');
-                if (anasirSection) {
-                    drawCenteredKhutbaSectionPage(anasirSection);
-                    if (hasRemainingSections) {
+                const drawKhutbaFrontMatterPage = (prefaceSection, anasirSection) => {
+                    const prefaceItems = (prefaceSection?.blocks || [])
+                        .filter((block) => String(block?.text || '').trim())
+                        .map((block) => classifyKhutbaFrontMatterBlock(block));
+
+                    const entries = anasirSection ? extractAnasirEntries(anasirSection) : [];
+                    const headingText = anasirSection
+                        ? String((anasirSection.blocks.find((block) => block.kind === 'heading')?.text) || khutbaHeadingLabelByKey('anasir')).trim()
+                        : '';
+
+                    if (!prefaceItems.length && !entries.length) {
+                        return false;
+                    }
+
+                    if (y > contentTop + 2) {
                         newPage();
                     }
+
+                    const measuredPrefaceItems = prefaceItems.map((item) => {
+                        page.ctx.font = item.style.font;
+                        const lines = wrapTextLines(page.ctx, item.rawText, item.style.maxWidth);
+                        const panelHeight = item.style.panel ? item.style.panel.heightPad : 0;
+                        const height = item.style.gapBefore + (lines.length * item.style.lineHeight) + item.style.gapAfter + panelHeight;
+                        return { ...item, lines, height };
+                    });
+
+                    let headingLines = [];
+                    let headingHeight = 0;
+                    if (headingText) {
+                        page.ctx.font = "bold 54px 'Aref Ruqaa', 'Amiri', serif";
+                        headingLines = wrapTextLines(page.ctx, headingText, 920).slice(0, 2);
+                        headingHeight = (headingLines.length * 78) + 18;
+                    }
+
+                    const entryLineHeight = 62;
+                    const entryGap = 18;
+                    const entryWidth = 780;
+                    const entryPanelX = 170;
+                    const entryPanelW = page.canvas.width - 340;
+                    const numberX = page.canvas.width - 190;
+                    const textX = page.canvas.width - 255;
+                    const measuredEntries = entries.map((entry, index) => {
+                        page.ctx.font = "700 40px 'Amiri', 'Aref Ruqaa', serif";
+                        const lines = wrapTextLines(page.ctx, entry, entryWidth);
+                        const panelHeight = (Math.max(1, lines.length) * entryLineHeight) + 30;
+                        return {
+                            label: `${toArabicIndicNumber(index + 1)}.`,
+                            lines,
+                            panelHeight,
+                            totalHeight: panelHeight + entryGap,
+                            index
+                        };
+                    });
+
+                    const totalPrefaceHeight = measuredPrefaceItems.reduce((sum, item) => sum + item.height, 0);
+                    const totalEntriesHeight = measuredEntries.reduce((sum, entry) => sum + entry.totalHeight, 0);
+                    const totalHeight = totalPrefaceHeight + (headingText ? (headingHeight + 18) : 0) + totalEntriesHeight;
+
+                    y = contentTop + Math.max(0, ((contentBottom - contentTop - totalHeight) / 2) - 12);
+
+                    for (const item of measuredPrefaceItems) {
+                        y += item.style.gapBefore;
+                        page.ctx.direction = 'rtl';
+                        page.ctx.textAlign = item.style.align;
+                        page.ctx.font = item.style.font;
+
+                        if (item.style.panel && item.lines.length) {
+                            const measuredWidth = Math.max(...item.lines.map((line) => page.ctx.measureText(line).width));
+                            const panelWidth = Math.min(item.style.maxWidth + 60, measuredWidth + item.style.panel.widthPad);
+                            const panelX = (page.canvas.width - panelWidth) / 2;
+                            const panelY = y - 40;
+                            const panelH = (item.lines.length * item.style.lineHeight) + item.style.panel.heightPad;
+                            page.ctx.fillStyle = item.style.panel.fill;
+                            page.ctx.beginPath();
+                            page.ctx.roundRect(panelX, panelY, panelWidth, panelH, 26);
+                            page.ctx.fill();
+                            page.ctx.strokeStyle = item.style.panel.stroke;
+                            page.ctx.lineWidth = 1.6;
+                            page.ctx.beginPath();
+                            page.ctx.roundRect(panelX, panelY, panelWidth, panelH, 26);
+                            page.ctx.stroke();
+                        }
+
+                        page.ctx.fillStyle = item.style.color;
+                        for (const line of item.lines) {
+                            page.ctx.fillText(line, page.canvas.width / 2, y);
+                            y += item.style.lineHeight;
+                        }
+                        y += item.style.gapAfter;
+                    }
+
+                    if (headingLines.length) {
+                        y += 8;
+                        page.ctx.direction = 'rtl';
+                        page.ctx.textAlign = 'center';
+                        page.ctx.fillStyle = '#145341';
+                        page.ctx.font = "bold 54px 'Aref Ruqaa', 'Amiri', serif";
+                        for (const line of headingLines) {
+                            page.ctx.fillText(line, page.canvas.width / 2, y);
+                            y += 78;
+                        }
+                        y += 10;
+                    }
+
+                    for (const entry of measuredEntries) {
+                        page.ctx.fillStyle = 'rgba(31, 122, 95, 0.08)';
+                        page.ctx.beginPath();
+                        page.ctx.roundRect(entryPanelX, y - 34, entryPanelW, entry.panelHeight, 24);
+                        page.ctx.fill();
+
+                        page.ctx.strokeStyle = 'rgba(31, 122, 95, 0.22)';
+                        page.ctx.lineWidth = 1.4;
+                        page.ctx.beginPath();
+                        page.ctx.roundRect(entryPanelX, y - 34, entryPanelW, entry.panelHeight, 24);
+                        page.ctx.stroke();
+
+                        page.ctx.fillStyle = '#d4af37';
+                        page.ctx.textAlign = 'right';
+                        page.ctx.font = "700 38px Cairo, Tahoma, Arial";
+                        page.ctx.fillText(entry.label, numberX, y + 4);
+
+                        page.ctx.fillStyle = '#145341';
+                        page.ctx.font = "700 40px 'Amiri', 'Aref Ruqaa', serif";
+                        for (const line of entry.lines) {
+                            page.ctx.fillText(line, textX, y + 4);
+                            y += entryLineHeight;
+                        }
+
+                        y += entryGap;
+                    }
+
+                    return true;
+                };
+
+                const prefaceSection = sectionsToRender.find((section) => section.key === 'preface');
+                const anasirSection = sectionsToRender.find((section) => section.key === 'anasir');
+                const renderedFrontMatter = drawKhutbaFrontMatterPage(prefaceSection, anasirSection);
+                const remainingSections = sectionsToRender.filter((section) => {
+                    if (renderedFrontMatter) {
+                        return section.key !== 'preface' && section.key !== 'anasir';
+                    }
+                    return section.key !== 'anasir';
+                });
+
+                if (!renderedFrontMatter && anasirSection) {
+                    drawCenteredKhutbaSectionPage(anasirSection);
+                    if (remainingSections.length) {
+                        newPage();
+                    }
+                } else if (renderedFrontMatter && remainingSections.length) {
+                    newPage();
                 }
 
-                for (const section of sectionsToRender.filter((section) => section.key !== 'anasir')) {
-                    drawKhutbaSection(section, false);
+                for (const section of remainingSections) {
+                    drawKhutbaSection(section, ['first', 'second', 'dua'].includes(section.key));
                 }
 
                 drawPageFooter(page.ctx, pageNumber, payload);
