@@ -64,6 +64,10 @@
         return div.innerHTML;
     }
 
+    function toArabicIndicNumber(value) {
+        return String(value).replace(/\d/g, (digit) => '٠١٢٣٤٥٦٧٨٩'[Number(digit)]);
+    }
+
     function sanitizeHtml(rawHtml) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(rawHtml || '', 'text/html');
@@ -114,6 +118,15 @@
             }
 
             if (tag === 'li') {
+                const listParentTag = node.parentElement?.tagName?.toLowerCase() || '';
+                if (listParentTag === 'ol') {
+                    const siblingItems = Array.from(node.parentElement.children).filter((child) => child.tagName?.toLowerCase() === 'li');
+                    const itemIndex = Math.max(0, siblingItems.indexOf(node)) + 1;
+                    const cleanText = text.replace(/^\s*[0-9٠-٩]+\s*[\)\-\.:،]?\s*/, '').trim();
+                    blocks.push(`<p>${escapeHtml(`${toArabicIndicNumber(itemIndex)}. ${cleanText || text}`)}</p>`);
+                    return;
+                }
+
                 blocks.push(`<p class="pdf-bullet">• ${escapeHtml(text)}</p>`);
                 return;
             }
@@ -747,14 +760,14 @@
 
         const title = String(payload.title || 'محتوى').replace(/\s+/g, ' ').trim();
         const subtitle = String(payload.subtitle || '').replace(/\s+/g, ' ').trim();
-        const maxTitleWidth = 980;
-        const baseTitleSize = title.length > 92 ? 66 : title.length > 64 ? 74 : 84;
+        const maxTitleWidth = 920;
+        const baseTitleSize = title.length > 92 ? 58 : title.length > 64 ? 66 : 74;
 
         ctx.fillStyle = '#ffffff';
         ctx.font = `bold ${baseTitleSize}px Cairo, Tahoma, Arial`;
         const titleLines = wrapTextLines(ctx, title, maxTitleWidth).slice(0, 3);
         let titleY = 470;
-        const titleLineHeight = Math.round(baseTitleSize * 1.26);
+        const titleLineHeight = Math.round(baseTitleSize * 1.22);
         for (const line of titleLines) {
             ctx.fillText(line, canvas.width / 2, titleY);
             titleY += titleLineHeight;
@@ -1272,19 +1285,36 @@
                         return safeAi - safeBi;
                     });
 
-                const toArabicIndicNumber = (value) => String(value).replace(/\d/g, (digit) => '٠١٢٣٤٥٦٧٨٩'[Number(digit)]);
-
                 const extractAnasirEntries = (section) => {
                     const entries = [];
                     for (const block of section?.blocks || []) {
                         if (block.kind === 'heading') continue;
-                        const rawText = String(block.text || '').replace(/\s+/g, ' ').trim();
+                        const rawText = String(block.text || '')
+                            .replace(/\u200b/g, ' ')
+                            .replace(/\s+/g, ' ')
+                            .trim();
                         if (!rawText) continue;
-                        const cleanText = rawText.replace(/^([0-9٠-٩]+)\s*[\)\-\.:،]?\s*/, '').replace(/^•\s+/, '').trim();
-                        if (!cleanText) continue;
-                        entries.push(cleanText);
+
+                        const candidateSegments = rawText
+                            .split(/(?=(?:^|\s)(?:[0-9٠-٩]+\s*[\)\-\.:،]|•)\s+)/)
+                            .map((segment) => segment.trim())
+                            .filter(Boolean);
+
+                        const normalizedSegments = candidateSegments.length > 1
+                            ? candidateSegments
+                            : [rawText];
+
+                        for (const segment of normalizedSegments) {
+                            const cleanText = segment
+                                .replace(/^([0-9٠-٩]+)\s*[\)\-\.:،]?\s*/, '')
+                                .replace(/^•\s+/, '')
+                                .trim();
+                            if (!cleanText) continue;
+                            if (/^عناصر\s+الخطب/.test(normalizeArabic(cleanText))) continue;
+                            entries.push(cleanText);
+                        }
                     }
-                    return entries;
+                    return entries.filter((entry, index, arr) => arr.indexOf(entry) === index);
                 };
 
                 const drawKhutbaSection = (section, forceNewPage) => {
