@@ -211,19 +211,6 @@
             ctx.fillText(safeNumber, numberX, numberY + 12);
         }
 
-        const tagText = 'الشيخ أحمد إسماعيل الفشني';
-        ctx.font = '700 28px Cairo, Tahoma, Arial';
-        const tagWidth = Math.min(500, Math.max(240, ctx.measureText(tagText).width + 80));
-        const tagX = card.x + card.width - tagWidth - 42;
-        const tagY = card.y + 58;
-        ctx.fillStyle = 'rgba(26, 95, 74, 0.12)';
-        ctx.beginPath();
-        ctx.roundRect(tagX, tagY, tagWidth, 56, 28);
-        ctx.fill();
-        ctx.textAlign = 'right';
-        ctx.fillStyle = '#1a5f4a';
-        ctx.fillText(tagText, tagX + tagWidth - 28, tagY + 39);
-
         ctx.textAlign = 'right';
         ctx.fillStyle = 'rgba(212, 175, 55, 0.35)';
         ctx.font = '700 132px Cairo, Tahoma, Arial';
