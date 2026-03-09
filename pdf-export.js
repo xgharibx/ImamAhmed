@@ -760,14 +760,14 @@
 
         const title = String(payload.title || 'محتوى').replace(/\s+/g, ' ').trim();
         const subtitle = String(payload.subtitle || '').replace(/\s+/g, ' ').trim();
-        const maxTitleWidth = 860;
-        const baseTitleSize = title.length > 92 ? 52 : title.length > 64 ? 58 : 66;
+        const maxTitleWidth = 820;
+        const baseTitleSize = title.length > 92 ? 48 : title.length > 64 ? 54 : 61;
 
         ctx.fillStyle = '#ffffff';
         ctx.font = `bold ${baseTitleSize}px Cairo, Tahoma, Arial`;
         const titleLines = wrapTextLines(ctx, title, maxTitleWidth).slice(0, 3);
-        let titleY = 446;
-        const titleLineHeight = Math.round(baseTitleSize * 1.18);
+        let titleY = 432;
+        const titleLineHeight = Math.round(baseTitleSize * 1.22);
         for (const line of titleLines) {
             ctx.fillText(line, canvas.width / 2, titleY);
             titleY += titleLineHeight;
@@ -775,23 +775,23 @@
 
         if (subtitle) {
             ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
-            ctx.font = '36px Cairo, Tahoma, Arial';
+            ctx.font = '32px Cairo, Tahoma, Arial';
             const subtitleLines = wrapTextLines(ctx, subtitle, 900).slice(0, 2);
-            titleY += 34;
+            titleY += 28;
             for (const line of subtitleLines) {
                 ctx.fillText(line, canvas.width / 2, titleY);
-                titleY += 56;
+                titleY += 50;
             }
         }
 
         if (payload.meta) {
             ctx.fillStyle = 'rgba(212, 175, 55, 0.95)';
-            ctx.font = '30px Cairo, Tahoma, Arial';
+            ctx.font = '27px Cairo, Tahoma, Arial';
             const metaLines = wrapTextLines(ctx, String(payload.meta), 900).slice(0, 2);
-            let metaY = Math.min(1225, titleY + 118);
+            let metaY = Math.min(1200, titleY + 96);
             for (const line of metaLines) {
                 ctx.fillText(line, canvas.width / 2, metaY);
-                metaY += 46;
+                metaY += 42;
             }
         }
 
@@ -1285,6 +1285,8 @@
                         return safeAi - safeBi;
                     });
 
+                const khutbaKeywordPattern = /^(العنصر(?:\s+(?:الاول|الثاني|الثالث|الرابع|الخامس|السادس|السابع|الثامن|التاسع|العاشر|[0-9٠-٩]+))?|اولا|ثانيا|ثالثا|رابعا|خامسا|سادسا|سابعا|ثامنا|تاسعا|عاشرا|الرساله\s+العمليه|الخلاصه|النتيجه|الدروس\s+والعبر|الوصيه|عنوان\s+الخطبه|الخطبه\s+الاولي|الخطبه\s+الثانيه|ايها\s+الساده\s+الكرام|عباد\s+الله|اما\s+بعد)\b/;
+
                 const extractAnasirEntries = (section) => {
                     const entries = [];
                     for (const block of section?.blocks || []) {
@@ -1317,6 +1319,31 @@
                     return entries.filter((entry, index, arr) => arr.indexOf(entry) === index);
                 };
 
+                const analyzeKhutbaBlock = (rawText, isHeading) => {
+                    const cleanText = String(rawText || '').replace(/^•\s+/, '').trim();
+                    const fullLineNorm = normalizeArabic(cleanText);
+                    const keywordLead = !isHeading
+                        ? cleanText.match(/^([^:：]{2,72})\s*[:：]\s+/)
+                        : null;
+                    const keywordLeadNorm = keywordLead ? normalizeArabic(keywordLead[1]) : '';
+                    const keywordPrefixNorm = fullLineNorm.match(khutbaKeywordPattern)?.[0] || '';
+
+                    const isAddressLine = !isHeading && /^(ايها\s+الساده\s+الكرام|عباد\s+الله|اما\s+بعد)\b/.test(fullLineNorm);
+                    const isKeyPhraseLine = !isHeading && (
+                        (Boolean(keywordLeadNorm) && khutbaKeywordPattern.test(keywordLeadNorm))
+                        || Boolean(keywordPrefixNorm)
+                    );
+                    const isBulletLike = !isHeading && /^•\s+/.test(rawText);
+
+                    return {
+                        cleanText,
+                        isAddressLine,
+                        isKeyPhraseLine,
+                        isBulletLike,
+                        hasPanel: !isHeading && (isAddressLine || isKeyPhraseLine || isBulletLike)
+                    };
+                };
+
                 const drawKhutbaSection = (section, forceNewPage) => {
                     if (!section?.blocks?.length) return;
                     if (forceNewPage && y > contentTop + 2) {
@@ -1326,34 +1353,90 @@
                     for (const block of section.blocks) {
                         const rawText = String(block.text || '').trim();
                         const isHeading = block.kind === 'heading';
-                        const isBulletLike = !isHeading && /^•\s+/.test(rawText);
-                        const keywordLead = !isHeading
-                            ? rawText.match(/^([^:：]{3,64})\s*[:：]\s+/)
-                            : null;
-                        const keywordLeadNorm = keywordLead ? normalizeArabic(keywordLead[1]) : '';
-                        const fullLineNorm = normalizeArabic(rawText.replace(/^•\s+/, '').trim());
-                        const isKeyPhraseLine = (Boolean(keywordLeadNorm) && /^(العنصر|اولا|ثانيا|ثالثا|رابعا|خامسا|سادسا|سابعا|ثامنا|تاسعا|عاشرا|فلسفه|جهاد|الكرم|موسوعه|البخل|المسؤوليه|خطه|النصيحه|الجانب|مشاهد|جدول|الرساله\s+العمليه|الخلاصه|النتيجه|عنوان\s+الخطبه|الخطبه\s+الاولي|الخطبه\s+الثانيه)\b/.test(keywordLeadNorm))
-                            || /^(العنصر|الرساله\s+العمليه|الخلاصه|النتيجه|الدروس\s+والعبر|الوصيه|عنوان\s+الخطبه|الخطبه\s+الاولي|الخطبه\s+الثانيه)\b/.test(fullLineNorm);
-                        const isAddressLine = !isHeading && /^(ايها\s+الساده\s+الكرام|عباد\s+الله|اما\s+بعد)\b/.test(fullLineNorm);
+                        const analysis = analyzeKhutbaBlock(rawText, isHeading);
 
                         const style = isHeading
-                            ? { font: "bold 56px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 78, gapBefore: 18, gapAfter: 20, align: 'center' }
-                            : isAddressLine
-                                ? { font: "700 40px 'Amiri', 'Aref Ruqaa', serif", color: '#6a4d08', lineHeight: 62, gapBefore: 12, gapAfter: 14, align: 'right' }
-                            : isKeyPhraseLine
-                                ? { font: "700 41px 'Amiri', 'Aref Ruqaa', serif", color: '#1f7a5f', lineHeight: 64, gapBefore: 12, gapAfter: 14, align: 'right' }
-                            : isBulletLike
-                                ? { font: "700 38px 'Amiri', 'Aref Ruqaa', serif", color: '#2f765a', lineHeight: 60, gapBefore: 11, gapAfter: 12, align: 'right' }
-                                : { font: "36px 'Amiri', 'Aref Ruqaa', serif", color: '#222', lineHeight: 58, gapBefore: 10, gapAfter: 12, align: 'right' };
+                            ? { font: "bold 56px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 78, gapBefore: 18, gapAfter: 22, align: 'center', panel: null }
+                            : analysis.isAddressLine
+                                ? {
+                                    font: "700 39px 'Amiri', 'Aref Ruqaa', serif",
+                                    color: '#5e4300',
+                                    lineHeight: 68,
+                                    gapBefore: 14,
+                                    gapAfter: 18,
+                                    align: 'right',
+                                    panel: { fill: 'rgba(212, 175, 55, 0.14)', stroke: 'rgba(212, 175, 55, 0.54)', accent: '#d4af37', insetX: 34, insetY: 26 }
+                                }
+                            : analysis.isKeyPhraseLine
+                                ? {
+                                    font: "700 40px 'Amiri', 'Aref Ruqaa', serif",
+                                    color: '#145341',
+                                    lineHeight: 70,
+                                    gapBefore: 16,
+                                    gapAfter: 20,
+                                    align: 'right',
+                                    panel: { fill: 'rgba(31, 122, 95, 0.1)', stroke: 'rgba(31, 122, 95, 0.5)', accent: '#1f7a5f', insetX: 36, insetY: 28 }
+                                }
+                            : analysis.isBulletLike
+                                ? {
+                                    font: "700 38px 'Amiri', 'Aref Ruqaa', serif",
+                                    color: '#215f49',
+                                    lineHeight: 66,
+                                    gapBefore: 14,
+                                    gapAfter: 18,
+                                    align: 'right',
+                                    panel: { fill: 'rgba(20, 83, 65, 0.08)', stroke: 'rgba(20, 83, 65, 0.28)', accent: '#d4af37', insetX: 34, insetY: 24 }
+                                }
+                                : { font: "36px 'Amiri', 'Aref Ruqaa', serif", color: '#222', lineHeight: 64, gapBefore: 14, gapAfter: 18, align: 'right', panel: null };
 
-                        y += style.gapBefore;
+                        const maxSectionWidth = isHeading
+                            ? (maxWidth - 120)
+                            : style.panel
+                                ? (maxWidth - (style.panel.insetX * 2) - 20)
+                                : (maxWidth - 8);
+
                         page.ctx.direction = 'rtl';
                         page.ctx.textAlign = style.align;
                         page.ctx.font = style.font;
                         page.ctx.fillStyle = style.color;
 
-                        const maxSectionWidth = isHeading ? (maxWidth - 120) : maxWidth;
                         const lines = wrapTextLines(page.ctx, rawText, maxSectionWidth);
+                        const blockHeight = (lines.length * style.lineHeight) + (style.panel ? (style.panel.insetY * 2) : 0);
+
+                        if ((y + style.gapBefore + blockHeight + style.gapAfter) > contentBottom) {
+                            newPage();
+                            y = contentTop;
+                            page.ctx.direction = 'rtl';
+                            page.ctx.textAlign = style.align;
+                            page.ctx.font = style.font;
+                            page.ctx.fillStyle = style.color;
+                        }
+
+                        y += style.gapBefore;
+
+                        if (style.panel) {
+                            const panelX = marginX - 8;
+                            const panelY = y - (style.panel.insetY - 8);
+                            const panelW = maxWidth + 16;
+                            const panelH = (lines.length * style.lineHeight) + (style.panel.insetY * 2) - 8;
+
+                            page.ctx.fillStyle = style.panel.fill;
+                            page.ctx.beginPath();
+                            page.ctx.roundRect(panelX, panelY, panelW, panelH, 26);
+                            page.ctx.fill();
+
+                            page.ctx.strokeStyle = style.panel.stroke;
+                            page.ctx.lineWidth = 1.8;
+                            page.ctx.beginPath();
+                            page.ctx.roundRect(panelX, panelY, panelW, panelH, 26);
+                            page.ctx.stroke();
+
+                            page.ctx.fillStyle = style.panel.accent;
+                            page.ctx.fillRect(panelX + panelW - 12, panelY + 18, 6, Math.max(42, panelH - 36));
+
+                            y += style.panel.insetY;
+                            page.ctx.fillStyle = style.color;
+                        }
 
                         for (const line of lines) {
                             if (y > contentBottom) {
@@ -1368,6 +1451,10 @@
                             const x = style.align === 'center' ? (page.canvas.width / 2) : (page.canvas.width - marginX);
                             page.ctx.fillText(line, x, y);
                             y += style.lineHeight;
+                        }
+
+                        if (style.panel) {
+                            y += style.panel.insetY - 8;
                         }
 
                         y += style.gapAfter;
