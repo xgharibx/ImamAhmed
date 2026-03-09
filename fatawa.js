@@ -388,8 +388,9 @@
                 <span class="fatwa-card-meta"><i class="fas fa-circle-question"></i> أحكام فقهية</span>
                 <div class="fatwa-card-actions">
                     <button class="fatwa-toggle" type="button">عرض المزيد</button>
-                    <button class="share-btn" type="button" title="مشاركة الحكم كصورة" aria-label="مشاركة الحكم كصورة">
-                        <i class="fas fa-share-alt"></i>
+                    <button class="fatwa-share-btn" type="button" title="مشاركة الحكم كصورة" aria-label="مشاركة الحكم كصورة">
+                        <i class="fas fa-share-alt" aria-hidden="true"></i>
+                        <span>مشاركة</span>
                     </button>
                 </div>
             </div>
@@ -404,7 +405,7 @@
             });
         }
 
-        bindShareButton(card, card.querySelector('.share-btn'), item, answerText);
+        bindShareButton(card, card.querySelector('.fatwa-share-btn'), item, answerText);
 
         return card;
     }
