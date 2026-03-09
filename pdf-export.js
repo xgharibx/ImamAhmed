@@ -396,7 +396,7 @@
                 .pdf-title { margin:0; font-size: 30px; line-height: 1.6; font-weight: 800; }
                 .pdf-subtitle { margin: 8px 0 0; font-size: 17px; opacity: .95; }
                 .pdf-meta { margin-top: 10px; font-size: 14px; opacity: .92; }
-                .pdf-body { padding: ${isKhutba ? '20px 18px 22px' : '22px'}; font-size: ${isKhutba ? '24px' : '21px'}; line-height: ${isKhutba ? '2.35' : '2.2'}; }
+                .pdf-body { padding: ${isKhutba ? '20px 18px 22px' : '22px'}; font-size: ${isKhutba ? '26px' : '21px'}; line-height: ${isKhutba ? '2.4' : '2.2'}; }
                 .pdf-body, .pdf-body * { max-width: 100%; box-sizing: border-box; overflow-wrap: anywhere; }
                 .pdf-body h1,.pdf-body h2,.pdf-body h3,.pdf-body h4 { color: #1a5f4a; line-height: ${isKhutba ? '1.85' : '1.7'}; page-break-after: avoid; margin: ${isKhutba ? '1.2rem 0 .8rem' : '1.1rem 0 .7rem'}; }
                 .pdf-body p,.pdf-body li,.pdf-body blockquote,.pdf-body pre { page-break-inside: avoid; margin: 0 0 ${isKhutba ? '1rem' : '.9rem'}; }
@@ -575,28 +575,56 @@
         ctx.fillStyle = outroGradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+        const glow = ctx.createRadialGradient(canvas.width / 2, 220, 80, canvas.width / 2, 220, 620);
+        glow.addColorStop(0, 'rgba(212, 175, 55, 0.22)');
+        glow.addColorStop(1, 'rgba(212, 175, 55, 0)');
+        ctx.fillStyle = glow;
+        ctx.fillRect(0, 0, canvas.width, 760);
+
         ctx.strokeStyle = 'rgba(212, 175, 55, 0.85)';
         ctx.lineWidth = 4;
         ctx.beginPath();
         ctx.roundRect(86, 94, canvas.width - 172, canvas.height - 188, 28);
         ctx.stroke();
 
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+        ctx.beginPath();
+        ctx.roundRect(132, 156, canvas.width - 264, 580, 34);
+        ctx.fill();
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(146, 170, canvas.width - 292, 552, 28);
+        ctx.stroke();
+
         ctx.direction = 'rtl';
         ctx.textAlign = 'center';
 
         ctx.fillStyle = '#d4af37';
-        ctx.font = 'bold 54px Cairo, Tahoma, Arial';
-        ctx.fillText('تم بحمد الله', canvas.width / 2, 500);
+        ctx.font = 'bold 30px Cairo, Tahoma, Arial';
+        ctx.fillText(typeLabel(payload.type), canvas.width / 2, 292);
+
+        ctx.strokeStyle = 'rgba(212, 175, 55, 0.5)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(330, 328);
+        ctx.lineTo(910, 328);
+        ctx.stroke();
+
+        ctx.fillStyle = '#f1d87a';
+        ctx.font = 'bold 66px Cairo, Tahoma, Arial';
+        ctx.fillText('تم بحمد الله', canvas.width / 2, 450);
 
         const safeOutro = String(outroLine || '').replace(/\s+/g, ' ').trim();
         if (safeOutro) {
             ctx.fillStyle = 'rgba(255, 255, 255, 0.93)';
-            ctx.font = '32px Cairo, Tahoma, Arial';
-            const lines = wrapTextLines(ctx, safeOutro, 860).slice(0, 3);
-            let y = 650;
+            ctx.font = '36px Cairo, Tahoma, Arial';
+            const lines = wrapTextLines(ctx, safeOutro, 900).slice(0, 3);
+            let y = 570;
             for (const line of lines) {
                 ctx.fillText(line, canvas.width / 2, y);
-                y += 56;
+                y += 62;
             }
         }
 
@@ -606,43 +634,44 @@
 
         if (safeContactLines.length) {
             const boxX = 170;
-            const boxY = 840;
+            const boxY = 860;
             const boxW = canvas.width - 340;
-            const boxH = 310;
+            const boxH = 330;
 
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.14)';
             ctx.beginPath();
-            ctx.roundRect(boxX, boxY, boxW, boxH, 18);
+            ctx.roundRect(boxX, boxY, boxW, boxH, 24);
             ctx.fill();
 
             ctx.strokeStyle = 'rgba(212, 175, 55, 0.75)';
             ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.roundRect(boxX, boxY, boxW, boxH, 18);
+            ctx.roundRect(boxX, boxY, boxW, boxH, 24);
             ctx.stroke();
 
             ctx.fillStyle = '#d4af37';
-            ctx.font = '700 30px Cairo, Tahoma, Arial';
-            ctx.fillText('للتواصل', canvas.width / 2, boxY + 56);
+            ctx.font = '700 34px Cairo, Tahoma, Arial';
+            ctx.fillText('للتواصل', canvas.width / 2, boxY + 64);
 
             ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
-            ctx.font = '28px Cairo, Tahoma, Arial';
-            let contactY = boxY + 118;
+            ctx.font = '31px Cairo, Tahoma, Arial';
+            let contactY = boxY + 134;
             for (const line of safeContactLines) {
-                const chunks = wrapTextLines(ctx, line, boxW - 80).slice(0, 2);
+                const chunks = wrapTextLines(ctx, line, boxW - 90).slice(0, 2);
                 for (const chunk of chunks) {
                     ctx.fillText(chunk, canvas.width / 2, contactY);
-                    contactY += 42;
+                    contactY += 46;
                 }
+                contactY += 8;
             }
         }
 
         ctx.fillStyle = 'rgba(212, 175, 55, 0.98)';
-        ctx.font = '700 30px Cairo, Tahoma, Arial';
-        ctx.fillText(typeLabel(payload.type), canvas.width / 2, 1320);
+        ctx.font = '700 28px Cairo, Tahoma, Arial';
+        ctx.fillText('نسخة معدة للنشر والطباعة', canvas.width / 2, 1350);
 
         ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-        ctx.font = '700 36px Cairo, Tahoma, Arial';
+        ctx.font = '700 40px Cairo, Tahoma, Arial';
         ctx.fillText('الشيخ أحمد إسماعيل الفشني', canvas.width / 2, 1480);
 
         return canvas;
@@ -660,6 +689,12 @@
         coverGradient.addColorStop(1, '#2b7b62');
         ctx.fillStyle = coverGradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const topGlow = ctx.createRadialGradient(canvas.width / 2, 120, 40, canvas.width / 2, 120, 540);
+        topGlow.addColorStop(0, 'rgba(212, 175, 55, 0.24)');
+        topGlow.addColorStop(1, 'rgba(212, 175, 55, 0)');
+        ctx.fillStyle = topGlow;
+        ctx.fillRect(0, 0, canvas.width, 700);
 
         ctx.fillStyle = 'rgba(212, 175, 55, 0.1)';
         for (let y = 44; y < canvas.height; y += 90) {
@@ -690,20 +725,36 @@
         ctx.direction = 'rtl';
         ctx.textAlign = 'center';
 
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+        ctx.beginPath();
+        ctx.roundRect(250, 262, 740, 760, 34);
+        ctx.fill();
+
+        ctx.strokeStyle = 'rgba(212, 175, 55, 0.5)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(266, 278, 708, 728, 28);
+        ctx.stroke();
+
         ctx.fillStyle = '#d4af37';
-        ctx.font = 'bold 30px Cairo, Tahoma, Arial';
-        ctx.fillText(typeLabel(payload.type), canvas.width / 2, 370);
+        ctx.beginPath();
+        ctx.roundRect(470, 300, 300, 60, 30);
+        ctx.fill();
+
+        ctx.fillStyle = '#114534';
+        ctx.font = 'bold 28px Cairo, Tahoma, Arial';
+        ctx.fillText(typeLabel(payload.type), canvas.width / 2, 339);
 
         const title = String(payload.title || 'محتوى').replace(/\s+/g, ' ').trim();
         const subtitle = String(payload.subtitle || '').replace(/\s+/g, ' ').trim();
-        const maxTitleWidth = 860;
-        const baseTitleSize = title.length > 80 ? 58 : title.length > 52 ? 64 : 72;
+        const maxTitleWidth = 900;
+        const baseTitleSize = title.length > 80 ? 62 : title.length > 52 ? 68 : 76;
 
         ctx.fillStyle = '#ffffff';
         ctx.font = `bold ${baseTitleSize}px Cairo, Tahoma, Arial`;
         const titleLines = wrapTextLines(ctx, title, maxTitleWidth).slice(0, 3);
-        let titleY = 500;
-        const titleLineHeight = Math.round(baseTitleSize * 1.25);
+        let titleY = 480;
+        const titleLineHeight = Math.round(baseTitleSize * 1.23);
         for (const line of titleLines) {
             ctx.fillText(line, canvas.width / 2, titleY);
             titleY += titleLineHeight;
@@ -711,39 +762,39 @@
 
         if (subtitle) {
             ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
-            ctx.font = '34px Cairo, Tahoma, Arial';
-            const subtitleLines = wrapTextLines(ctx, subtitle, 920).slice(0, 2);
-            titleY += 28;
+            ctx.font = '38px Cairo, Tahoma, Arial';
+            const subtitleLines = wrapTextLines(ctx, subtitle, 940).slice(0, 2);
+            titleY += 34;
             for (const line of subtitleLines) {
                 ctx.fillText(line, canvas.width / 2, titleY);
-                titleY += 52;
+                titleY += 58;
             }
         }
 
         if (payload.meta) {
             ctx.fillStyle = 'rgba(212, 175, 55, 0.95)';
-            ctx.font = '28px Cairo, Tahoma, Arial';
-            const metaLines = wrapTextLines(ctx, String(payload.meta), 930).slice(0, 2);
-            let metaY = Math.min(1220, titleY + 120);
+            ctx.font = '32px Cairo, Tahoma, Arial';
+            const metaLines = wrapTextLines(ctx, String(payload.meta), 960).slice(0, 2);
+            let metaY = Math.min(1230, titleY + 126);
             for (const line of metaLines) {
                 ctx.fillText(line, canvas.width / 2, metaY);
-                metaY += 44;
+                metaY += 48;
             }
         }
 
         if (coverCenterLines.length) {
             ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
-            ctx.font = '32px Cairo, Tahoma, Arial';
+            ctx.font = '35px Cairo, Tahoma, Arial';
             const centerLines = coverCenterLines
                 .map(line => String(line || '').replace(/\s+/g, ' ').trim())
                 .filter(Boolean)
                 .slice(0, 2);
-            let centerY = 980;
+            let centerY = 1000;
             for (const line of centerLines) {
-                const wrapped = wrapTextLines(ctx, line, 860).slice(0, 2);
+                const wrapped = wrapTextLines(ctx, line, 900).slice(0, 2);
                 for (const chunk of wrapped) {
                     ctx.fillText(chunk, canvas.width / 2, centerY);
-                    centerY += 52;
+                    centerY += 56;
                 }
                 centerY += 18;
             }
@@ -752,7 +803,7 @@
         const hasAuthorInMeta = /أحمد\s+إسماعيل\s+الفشني/.test(String(payload.meta || ''));
         if (!hasAuthorInMeta) {
             ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-            ctx.font = '700 34px Cairo, Tahoma, Arial';
+            ctx.font = '700 38px Cairo, Tahoma, Arial';
             ctx.fillText('الشيخ أحمد إسماعيل الفشني', canvas.width / 2, 1530);
         }
 
@@ -1078,10 +1129,10 @@
             }
             : payload.type === 'khutba'
             ? {
-                heading: { font: 'bold 38px Cairo, Tahoma, Arial', color: '#1a5f4a', lineHeight: 56, gapBefore: 16, gapAfter: 14 },
-                quote: { font: '29px Cairo, Tahoma, Arial', color: '#2e7d32', lineHeight: 47, gapBefore: 11, gapAfter: 11 },
-                pre: { font: '27px Cairo, Tahoma, Arial', color: '#333', lineHeight: 43, gapBefore: 9, gapAfter: 9 },
-                paragraph: { font: '29px Cairo, Tahoma, Arial', color: '#222', lineHeight: 47, gapBefore: 7, gapAfter: 10 }
+                heading: { font: 'bold 40px Cairo, Tahoma, Arial', color: '#1a5f4a', lineHeight: 58, gapBefore: 16, gapAfter: 14 },
+                quote: { font: '30px Cairo, Tahoma, Arial', color: '#2e7d32', lineHeight: 49, gapBefore: 11, gapAfter: 11 },
+                pre: { font: '28px Cairo, Tahoma, Arial', color: '#333', lineHeight: 45, gapBefore: 9, gapAfter: 9 },
+                paragraph: { font: '30px Cairo, Tahoma, Arial', color: '#222', lineHeight: 49, gapBefore: 7, gapAfter: 10 }
             }
             : {
                 heading: { font: 'bold 34px Cairo, Tahoma, Arial', color: '#1a5f4a', lineHeight: 48, gapBefore: 14, gapAfter: 12 },
@@ -1241,14 +1292,14 @@
                         const isAddressLine = !isHeading && /^(ايها\s+الساده\s+الكرام|عباد\s+الله|اما\s+بعد)\b/.test(fullLineNorm);
 
                         const style = isHeading
-                            ? { font: "bold 48px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 66, gapBefore: 14, gapAfter: 16, align: 'center' }
+                            ? { font: "bold 52px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 72, gapBefore: 16, gapAfter: 18, align: 'center' }
                             : isAddressLine
-                                ? { font: "700 35px 'Amiri', 'Aref Ruqaa', serif", color: '#6a4d08', lineHeight: 54, gapBefore: 10, gapAfter: 12, align: 'right' }
+                                ? { font: "700 38px 'Amiri', 'Aref Ruqaa', serif", color: '#6a4d08', lineHeight: 58, gapBefore: 11, gapAfter: 13, align: 'right' }
                             : isKeyPhraseLine
-                                ? { font: "700 36px 'Amiri', 'Aref Ruqaa', serif", color: '#1f7a5f', lineHeight: 56, gapBefore: 10, gapAfter: 12, align: 'right' }
+                                ? { font: "700 39px 'Amiri', 'Aref Ruqaa', serif", color: '#1f7a5f', lineHeight: 60, gapBefore: 11, gapAfter: 13, align: 'right' }
                             : isBulletLike
-                                ? { font: "700 33px 'Amiri', 'Aref Ruqaa', serif", color: '#2f765a', lineHeight: 52, gapBefore: 9, gapAfter: 10, align: 'right' }
-                                : { font: "31px 'Amiri', 'Aref Ruqaa', serif", color: '#222', lineHeight: 50, gapBefore: 8, gapAfter: 10, align: 'right' };
+                                ? { font: "700 36px 'Amiri', 'Aref Ruqaa', serif", color: '#2f765a', lineHeight: 56, gapBefore: 10, gapAfter: 11, align: 'right' }
+                                : { font: "34px 'Amiri', 'Aref Ruqaa', serif", color: '#222', lineHeight: 54, gapBefore: 9, gapAfter: 11, align: 'right' };
 
                         y += style.gapBefore;
                         page.ctx.direction = 'rtl';
@@ -1288,8 +1339,8 @@
                         const rawText = String(block.text || '').trim();
                         const isHeading = block.kind === 'heading';
                         const style = isHeading
-                            ? { font: "bold 50px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 70, gapBefore: 16, gapAfter: 20 }
-                            : { font: "700 36px 'Amiri', 'Aref Ruqaa', serif", color: '#1f7a5f', lineHeight: 56, gapBefore: 10, gapAfter: 12 };
+                            ? { font: "bold 54px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 76, gapBefore: 18, gapAfter: 22 }
+                            : { font: "700 40px 'Amiri', 'Aref Ruqaa', serif", color: '#1f7a5f', lineHeight: 62, gapBefore: 11, gapAfter: 13 };
 
                         page.ctx.font = style.font;
                         const lines = wrapTextLines(page.ctx, rawText, maxWidth - 160);
