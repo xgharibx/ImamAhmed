@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="video-embed placeholder">
                     <div class="play-overlay">
                         <i class="fas fa-play-circle"></i>
-                        <span>فتح على يوتيوب</span>
+                        <span>مشاهدة داخل الموقع</span>
                     </div>
                 </div>
                 <div class="duration-badge">${duration}</div>
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h3 class="video-title" title="${title}">${title}</h3>
                 <div class="video-actions">
                     <button class="btn btn-outline btn-sm" onclick="openKhutabVideo('${videoId}', '${title}')">
-                        <i class="fas fa-play"></i> مشاهدة على يوتيوب
+                        <i class="fas fa-play"></i> مشاهدة الآن
                     </button>
                     <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" class="btn-yt-icon" title="فتح في يوتيوب" rel="noopener">
                         <i class="fab fa-youtube"></i>
@@ -199,18 +199,57 @@ document.addEventListener('DOMContentLoaded', () => {
         return hasAnyKeyword(title, khutbahKeywords) ? 'khutbah' : 'other';
     }
 
-    function openYouTubeWatchPage(videoId) {
-        const watchUrl = `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`;
-        const opened = window.open(watchUrl, '_blank', 'noopener,noreferrer');
-        if (!opened) {
-            window.location.href = watchUrl;
+    function buildEmbedUrl(videoId) {
+        const params = new URLSearchParams({
+            autoplay: '1',
+            rel: '0',
+            modestbranding: '1',
+            playsinline: '1'
+        });
+
+        if (window.location.protocol.startsWith('http')) {
+            params.set('origin', window.location.origin);
         }
+
+        return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?${params.toString()}`;
+    }
+
+    function ensureModalFallbackLink() {
+        if (!modal) return null;
+
+        let link = modal.querySelector('.modal-youtube-link');
+        if (link) return link;
+
+        const info = modal.querySelector('.modal-info');
+        if (!info) return null;
+
+        const hint = document.createElement('p');
+        hint.className = 'modal-hint';
+        hint.textContent = 'إذا تعذر تشغيل بعض الفيديوهات داخل الموقع بسبب قيود يوتيوب، يمكنك فتحها مباشرة من يوتيوب.';
+
+        link = document.createElement('a');
+        link.className = 'btn btn-outline modal-youtube-link';
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.innerHTML = '<i class="fab fa-youtube"></i> فتح في يوتيوب';
+
+        info.appendChild(hint);
+        info.appendChild(link);
+        return link;
     }
 
     window.openKhutabVideo = (id, title) => {
         const cleanId = (id || '').toString().trim();
         if (!cleanId) return;
-        openYouTubeWatchPage(cleanId);
+        modal.classList.add('active');
+        modalTitle.textContent = title || 'مشاهدة الخطبة';
+        modalIframe.src = buildEmbedUrl(cleanId);
+        document.body.style.overflow = 'hidden';
+
+        const fallbackLink = ensureModalFallbackLink();
+        if (fallbackLink) {
+            fallbackLink.href = `https://www.youtube.com/watch?v=${encodeURIComponent(cleanId)}`;
+        }
     };
 
     closeModal?.addEventListener('click', closeVideoModal);

@@ -769,6 +769,28 @@ a.category-card:hover h3 {
     text-align: center;
 }
 
+.modal-hint {
+    margin: 12px auto 0;
+    max-width: 720px;
+    color: rgba(255,255,255,0.78);
+    font-size: 0.95rem;
+    line-height: 1.8;
+}
+
+.modal-youtube-link {
+    margin-top: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    border-color: rgba(255,255,255,0.35);
+}
+
+.modal-youtube-link:hover {
+    color: #fff;
+    border-color: var(--primary-gold);
+}
+
 .grid-loader {
     grid-column: 1/-1;
     text-align: center;
