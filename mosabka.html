@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="مسابقة شهر رمضان الكبرى ١٤٤٧ هـ / ٢٠٢٦ م">
-    <title>مسابقة شهر رمضان الكبرى | الشيخ أحمد إسماعيل الفشني</title>
+    <meta name="description" content="إعلان النتائج النهائية لمسابقـة شهر رمضان الكبرى ١٤٤٧ هـ / ٢٠٢٦ م">
+    <title>النتائج النهائية لمسابقـة شهر رمضان الكبرى | الشيخ أحمد إسماعيل الفشني</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="animations.css">
     <link rel="stylesheet" href="mosabka.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@300;400;500;700;800;900&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
                                                                                             <meta property="og:type" content="article">
     <meta property="og:locale" content="ar_AR">
     <meta property="og:site_name" content="Sheikh Ahmed Ismail Al-Fashni">
-    <meta property="og:title" content="مسابقة شهر رمضان الكبرى">
-    <meta property="og:description" content="مسابقة شهر رمضان الكبرى ١٤٤٧ هـ / ٢٠٢٦ م">
+    <meta property="og:title" content="النتائج النهائية لمسابقـة شهر رمضان الكبرى">
+    <meta property="og:description" content="إعلان النتائج المعتمدة لمسابقـة شهر رمضان الكبرى ١٤٤٧ هـ / ٢٠٢٦ م">
     <meta property="og:image" content="https://ahmedelfashny.com/assets/og/sheikh-ahmed-share.jpg">
     <meta property="og:image:url" content="https://ahmedelfashny.com/assets/og/sheikh-ahmed-share.jpg">
     <meta property="og:image:width" content="1200">
@@ -52,52 +53,109 @@
     </header>
 
     <main class="competition-page">
-        <section class="competition-hero">
+        <section class="results-hero">
             <div class="container">
-                <div class="competition-hero-card" data-aos="fade-up">
-                    <span class="competition-badge"><i class="fas fa-moon"></i> مسابقة شهر رمضان الكبرى (محدودة المدة)</span>
-                    <h1 id="competition-title">مسابقة شهر رمضان الكبرى</h1>
-                    <p id="competition-intro"></p>
-                    <div class="competition-meta">
-                        <span id="competition-deadline"></span>
-                        <span><i class="fab fa-whatsapp"></i> واتساب: <strong id="competition-whatsapp"></strong></span>
+                <div class="results-hero-layout" data-aos="fade-up" data-aos-duration="900">
+                    <div class="results-copy">
+                        <span class="results-badge" id="announcementBadge"></span>
+                        <p class="results-season" id="resultsSeason"></p>
+                        <h1 id="resultsTitle">النتائج النهائية لمسابقـة شهر رمضان الكبرى</h1>
+                        <p class="results-hero-note" id="resultsHeroNote"></p>
+                        <div class="results-actions">
+                            <a href="#resultsBoard" class="btn btn-primary">
+                                <i class="fas fa-list-ol"></i>
+                                تصفح لوحة النتائج
+                            </a>
+                            <button type="button" class="btn btn-secondary" id="shareResultsBtn">
+                                <i class="fas fa-share-nodes"></i>
+                                نسخ رابط النتائج
+                            </button>
+                        </div>
+                    </div>
+
+                    <aside class="results-hero-panel" data-aos="zoom-in" data-aos-delay="150">
+                        <span class="panel-kicker">تكريم وتهنئة</span>
+                        <p class="results-announcement" id="resultsAnnouncement"></p>
+                        <div class="hero-stat-strip" id="heroStatStrip"></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="competition-form-section">
+        <section class="results-spotlight">
             <div class="container">
-                <form id="competition-form" class="competition-form">
-                    <div class="participant-grid">
-                        <label>الاسم الكامل <input type="text" id="fullName" required></label>
-                        <label>السن <input type="number" id="age" min="5" max="120" required></label>
-                        <label>العنوان <input type="text" id="address" required></label>
-                        <label>رقم الهاتف <input type="tel" id="phone" required></label>
+                <div class="section-heading" data-aos="fade-up">
+                    <span class="section-eyebrow">المكرمون</span>
+                    <h2>واجهة التكريم والنتائج</h2>
+                    <p>عرض بصري واضح لأعلى المراتب والدرجات الكاملة ثم الترتيب الكامل لجميع الأسماء الواردة في المستند النهائي.</p>
+                </div>
+
+                <div class="spotlight-layout">
+                    <article class="champion-card" id="championCard" data-aos="fade-left"></article>
+                    <div class="top-three-grid" id="topThreeCards" data-aos="fade-right"></div>
+                </div>
+
+                <div class="perfect-score-shell" data-aos="fade-up">
+                    <div class="perfect-score-header">
+                        <div>
+                            <span class="section-eyebrow">درجات كاملة</span>
+                            <h3>أصحاب العلامة النهائية</h3>
+                        </div>
+                        <strong class="perfect-score-count" id="perfectCount"></strong>
+                    </div>
+                    <div class="perfect-score-grid" id="perfectScoreGrid"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="results-social">
+            <div class="container">
+                <div class="section-heading" data-aos="fade-up">
+                    <span class="section-eyebrow">بطاقات الفائزين</span>
+                    <h2>بطاقات جاهزة للنشر والطباعة</h2>
+                    <p>نماذج تكريم مصممة خصيصاً للنشر على واتساب وفيسبوك أو للاحتفاظ بها كنسخة تذكارية عالية الجودة.</p>
+                </div>
+
+                <div class="social-cards-grid" id="socialCardsGrid" data-aos="fade-up" data-aos-delay="100"></div>
+            </div>
+        </section>
+
+        <section class="results-board" id="resultsBoard">
+            <div class="container">
+                <div class="section-heading" data-aos="fade-up">
+                    <span class="section-eyebrow">لوحة النتائج</span>
+                    <h2>الترتيب الكامل للمشاركين</h2>
+                    <p>يمكنك تصفية النتائج حسب الدرجة، أو البحث السريع باسم المتسابق للوصول إلى النتيجة مباشرة.</p>
+                </div>
+
+                <div class="results-board-shell" data-aos="fade-up" data-aos-delay="100">
+                    <div class="results-board-tools">
+                        <div class="results-filters" id="resultsFilters"></div>
+                        <label class="results-search">
+                            <i class="fas fa-magnifying-glass"></i>
+                            <input type="search" id="resultsSearch" placeholder="ابحث باسم المتسابق">
+                        </label>
                     </div>
 
-                    <div class="questions-wrap" id="questions-wrap"></div>
+                    <div class="results-grid" id="resultsGrid"></div>
+                </div>
+            </div>
+        </section>
 
-                    <div class="competition-actions">
-                        <button type="button" id="send-whatsapp" class="btn btn-primary">
-                            <i class="fab fa-whatsapp"></i>
-                            إرسال الإجابات عبر واتساب
-                        </button>
-                        <button type="button" id="download-pdf" class="btn btn-secondary">
-                            <i class="fas fa-file-pdf"></i>
-                            تحميل الإجابات PDF
-                        </button>
-                    </div>
-
-                    <div id="footer-notes" class="footer-notes"></div>
-                </form>
+        <section class="results-footer-note">
+            <div class="container">
+                <article class="results-note-card" data-aos="fade-up">
+                    <span class="section-eyebrow">ملاحظة</span>
+                    <h2>اعتماد البيانات</h2>
+                    <p id="resultsSourceNote"></p>
+                </article>
             </div>
         </section>
     </main>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="main.js"></script>
-    <script src="pdf-export.js"></script>
     <script src="mosabka.js"></script>
 </body>
 </html>
