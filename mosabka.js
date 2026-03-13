@@ -233,9 +233,8 @@ function renderSocialCards(container, data) {
                     </div>
                 </div>
                 <div class="social-card-actions">
-                    <button type="button" class="btn btn-primary" data-download-card="winner-card-first-place">
-                        <i class="fas fa-image"></i>
-                        تحميل PNG
+                    <button type="button" class="btn btn-primary icon-only-download" data-download-card="winner-card-first-place" aria-label="تحميل بطاقة المركز الأول" title="تحميل بطاقة المركز الأول">
+                        <i class="fas fa-download"></i>
                     </button>
                 </div>
             </article>
@@ -270,9 +269,8 @@ function renderSocialCards(container, data) {
                     </div>
                 </div>
                 <div class="social-card-actions">
-                    <button type="button" class="btn btn-primary" data-download-card="${fileName}">
-                        <i class="fas fa-image"></i>
-                        تحميل PNG
+                    <button type="button" class="btn btn-primary icon-only-download" data-download-card="${fileName}" aria-label="تحميل ${ordinal}" title="تحميل ${ordinal}">
+                        <i class="fas fa-download"></i>
                     </button>
                 </div>
             </article>
@@ -306,9 +304,8 @@ function renderSocialCards(container, data) {
                     </div>
                 </div>
                 <div class="social-card-actions">
-                    <button type="button" class="btn btn-primary" data-download-card="winner-card-perfect-scores">
-                        <i class="fas fa-image"></i>
-                        تحميل PNG
+                    <button type="button" class="btn btn-primary icon-only-download" data-download-card="winner-card-perfect-scores" aria-label="تحميل بطاقة أصحاب الدرجة الكاملة" title="تحميل بطاقة أصحاب الدرجة الكاملة">
+                        <i class="fas fa-download"></i>
                     </button>
                 </div>
             </article>

@@ -597,9 +597,16 @@
     flex-wrap: wrap;
 }
 
-.social-card-actions .btn {
-    flex: 1 1 180px;
+.social-card-actions .btn.icon-only-download {
+    flex: 0 0 auto;
+    width: 54px;
+    min-width: 54px;
+    height: 54px;
+    min-height: 54px;
+    padding: 0;
+    border-radius: 18px;
     justify-content: center;
+    font-size: 1.05rem;
 }
 
 .social-card-actions .btn-secondary {
@@ -612,6 +619,10 @@
 .social-card-actions .btn-secondary:focus-visible {
     background: var(--primary-gold);
     color: var(--primary-green-dark);
+}
+
+.social-card-actions {
+    justify-content: flex-start;
 }
 
 .perfect-score-header {
