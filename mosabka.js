@@ -34,46 +34,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             watchUrl: 'https://youtu.be/3gtIKePc7Fs'
         },
         gallery: [
-            {
-                src: 'assets/mosabka-gallery/moments-01.jpg',
-                title: 'لقطات من حفل التكريم',
-                caption: 'افتتاح التوثيق البصري للحفل في قالب موحد ومهيأ للنشر.'
-            },
-            {
-                src: 'assets/mosabka-gallery/moments-02.jpg',
-                title: 'تكريم الفائزين',
-                caption: 'مشاهد احتفاء مميزة بالفائزين وأصحاب المراكز المتقدمة.'
-            },
-            {
-                src: 'assets/mosabka-gallery/moments-03.jpg',
-                title: 'بهجة الفوز',
-                caption: 'توثيق للحظات إعلان النتائج وتسليم الجوائز في أجواء مبهجة.'
-            },
-            {
-                src: 'assets/mosabka-gallery/moments-04.jpg',
-                title: 'فرحة الحضور',
-                caption: 'لقطات إنسانية تعبّر عن الامتنان والوفاء للمشاركين.'
-            },
-            {
-                src: 'assets/mosabka-gallery/moments-05.jpg',
-                title: 'الذكرى الطيبة',
-                caption: 'نسخة مصقولة من الصور الخام لتبقى مناسبة للأرشفة والمشاركة.'
-            },
-            {
-                src: 'assets/mosabka-gallery/moments-06.jpg',
-                title: 'مشاركات مميزة',
-                caption: 'زوايا مختارة من اليوم الختامي للمسابقة المباركة.'
-            },
-            {
-                src: 'assets/mosabka-gallery/moments-07.jpg',
-                title: 'روح المسابقة',
-                caption: 'معالجة لونية وإخراج بصري موحد يمنح الصور هوية أوضح.'
-            },
-            {
-                src: 'assets/mosabka-gallery/moments-08.jpg',
-                title: 'ختام الموسم',
-                caption: 'الصورة الختامية لسجل النتائج والتكريم في موسم رمضان ١٤٤٧ هـ.'
-            }
+            { src: 'assets/mosabka-gallery/moments-01.jpg' },
+            { src: 'assets/mosabka-gallery/moments-02.jpg' },
+            { src: 'assets/mosabka-gallery/moments-03.jpg' },
+            { src: 'assets/mosabka-gallery/moments-04.jpg' },
+            { src: 'assets/mosabka-gallery/moments-05.jpg' },
+            { src: 'assets/mosabka-gallery/moments-06.jpg' },
+            { src: 'assets/mosabka-gallery/moments-07.jpg' },
+            { src: 'assets/mosabka-gallery/moments-08.jpg' }
         ]
     };
 
@@ -424,13 +392,9 @@ function renderResultsGallery(container, images) {
     if (!container || !Array.isArray(images)) return;
 
     container.innerHTML = images.map((image, index) => `
-        <a class="results-gallery-card" href="${escapeHtml(image.src)}" target="_blank" rel="noopener noreferrer" aria-label="عرض ${escapeHtml(image.title)} بالحجم الكامل">
+        <a class="results-gallery-card" href="${escapeHtml(image.src)}" target="_blank" rel="noopener noreferrer" aria-label="عرض الصورة ${toArabicNumber(index + 1)} بالحجم الكامل">
             <span class="gallery-seq">${toArabicNumber(index + 1)}</span>
-            <img src="${escapeHtml(image.src)}" alt="${escapeHtml(image.title)}" loading="lazy">
-            <span class="gallery-overlay">
-                <strong>${escapeHtml(image.title)}</strong>
-                <small>${escapeHtml(image.caption)}</small>
-            </span>
+            <img src="${escapeHtml(image.src)}" alt="صورة من حفل التكريم ${toArabicNumber(index + 1)}" loading="lazy">
         </a>
     `).join('');
 }
