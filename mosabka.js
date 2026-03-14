@@ -18,8 +18,63 @@ document.addEventListener('DOMContentLoaded', async () => {
         search: document.getElementById('resultsSearch'),
         grid: document.getElementById('resultsGrid'),
         socialCardsGrid: document.getElementById('socialCardsGrid'),
+        videoCard: document.getElementById('resultsVideoCard'),
+        galleryGrid: document.getElementById('resultsGalleryGrid'),
         sourceNote: document.getElementById('resultsSourceNote'),
         shareButton: document.getElementById('shareResultsBtn')
+    };
+
+    const relatedMedia = {
+        ceremonyVideo: {
+            id: '3gtIKePc7Fs',
+            title: 'حفل توزيع جوائز مسابقة شهر رمضان المبارك ١٤٤٧ هجري',
+            date: '14/03/2026',
+            duration: '10:33',
+            summary: 'التغطية الرسمية للحفل الذي شهد إعلان النتائج وتكريم الفائزين، ليرتبط سجل الأسماء بالصوت والصورة واللحظة كاملة.',
+            watchUrl: 'https://youtu.be/3gtIKePc7Fs'
+        },
+        gallery: [
+            {
+                src: 'assets/mosabka-gallery/moments-01.jpg',
+                title: 'لقطات من حفل التكريم',
+                caption: 'افتتاح التوثيق البصري للحفل في قالب موحد ومهيأ للنشر.'
+            },
+            {
+                src: 'assets/mosabka-gallery/moments-02.jpg',
+                title: 'تكريم الفائزين',
+                caption: 'مشاهد احتفاء مميزة بالفائزين وأصحاب المراكز المتقدمة.'
+            },
+            {
+                src: 'assets/mosabka-gallery/moments-03.jpg',
+                title: 'بهجة الفوز',
+                caption: 'توثيق للحظات إعلان النتائج وتسليم الجوائز في أجواء مبهجة.'
+            },
+            {
+                src: 'assets/mosabka-gallery/moments-04.jpg',
+                title: 'فرحة الحضور',
+                caption: 'لقطات إنسانية تعبّر عن الامتنان والوفاء للمشاركين.'
+            },
+            {
+                src: 'assets/mosabka-gallery/moments-05.jpg',
+                title: 'الذكرى الطيبة',
+                caption: 'نسخة مصقولة من الصور الخام لتبقى مناسبة للأرشفة والمشاركة.'
+            },
+            {
+                src: 'assets/mosabka-gallery/moments-06.jpg',
+                title: 'مشاركات مميزة',
+                caption: 'زوايا مختارة من اليوم الختامي للمسابقة المباركة.'
+            },
+            {
+                src: 'assets/mosabka-gallery/moments-07.jpg',
+                title: 'روح المسابقة',
+                caption: 'معالجة لونية وإخراج بصري موحد يمنح الصور هوية أوضح.'
+            },
+            {
+                src: 'assets/mosabka-gallery/moments-08.jpg',
+                title: 'ختام الموسم',
+                caption: 'الصورة الختامية لسجل النتائج والتكريم في موسم رمضان ١٤٤٧ هـ.'
+            }
+        ]
     };
 
     let config;
@@ -75,6 +130,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         perfectScoreEntries,
         topScore
     });
+    renderResultsVideo(elements.videoCard, relatedMedia.ceremonyVideo);
+    renderResultsGallery(elements.galleryGrid, relatedMedia.gallery);
     elements.perfectCount.textContent = `${toArabicNumber(perfectScoreCount)} متسابق`;
 
     const scoreFilters = ['all', ...new Set(participants.map((item) => String(item.score)))];
@@ -323,6 +380,59 @@ function renderFilters(container, filters, activeFilter) {
 
         return `<button type="button" class="${className}" data-filter="${escapeHtml(filterValue)}">${escapeHtml(label)}</button>`;
     }).join('');
+}
+
+function renderResultsVideo(container, video) {
+    if (!container || !video) return;
+
+    const embedUrl = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(video.id)}?rel=0`;
+
+    container.innerHTML = `
+        <div class="results-video-frame">
+            <iframe
+                src="${embedUrl}"
+                title="${escapeHtml(video.title)}"
+                loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen>
+            </iframe>
+        </div>
+        <div class="results-video-copy">
+            <span class="results-video-kicker"><i class="fas fa-circle-play"></i> فيديو الحفل الرسمي</span>
+            <h3>${escapeHtml(video.title)}</h3>
+            <div class="results-video-meta">
+                <span class="social-card-pill"><i class="fas fa-calendar-days"></i> ${escapeHtml(video.date)}</span>
+                <span class="social-card-pill"><i class="fas fa-clock"></i> ${escapeHtml(video.duration)}</span>
+            </div>
+            <p>${escapeHtml(video.summary)}</p>
+            <div class="results-video-actions">
+                <a href="${escapeHtml(video.watchUrl)}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-youtube"></i>
+                    مشاهدة على يوتيوب
+                </a>
+                <a href="videos.html" class="btn btn-secondary">
+                    <i class="fas fa-film"></i>
+                    تصفح بقية الفيديوهات
+                </a>
+            </div>
+        </div>
+    `;
+}
+
+function renderResultsGallery(container, images) {
+    if (!container || !Array.isArray(images)) return;
+
+    container.innerHTML = images.map((image, index) => `
+        <a class="results-gallery-card" href="${escapeHtml(image.src)}" target="_blank" rel="noopener noreferrer" aria-label="عرض ${escapeHtml(image.title)} بالحجم الكامل">
+            <span class="gallery-seq">${toArabicNumber(index + 1)}</span>
+            <img src="${escapeHtml(image.src)}" alt="${escapeHtml(image.title)}" loading="lazy">
+            <span class="gallery-overlay">
+                <strong>${escapeHtml(image.title)}</strong>
+                <small>${escapeHtml(image.caption)}</small>
+            </span>
+        </a>
+    `).join('');
 }
 
 function renderResultsGrid(container, participants, state) {
