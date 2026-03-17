@@ -51,37 +51,54 @@
     <script src="../pdf-export.js"></script>
     <script src="../khutba-view.js"></script>
     <script>
-        // Load khutbah content from JSON data
         document.addEventListener('DOMContentLoaded', function() {
             const khutbaId = document.body.getAttribute('data-khutba-id');
-            loadAndDisplayKhutbah(khutbaId);
-        });
-
-        function loadAndDisplayKhutbah(khutbaId) {
-            // Fetch the khutab data
+            const contentDiv = document.getElementById('khutba-content');
+            
+            // Fetch the khutab data from JSON
             fetch('../data/khutab_written.json')
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
+                    // Find the khutbah by ID
                     const khutba = data.find(item => item.id === khutbaId);
                     if (khutba) {
-                        document.getElementById('khutba-content').innerHTML = khutba.content_html;
+                        // Load the HTML content
+                        contentDiv.innerHTML = khutba.content_html;
                         // Store in window for PDF export
                         window.currentKhutba = khutba;
+                        // Hide preloader
+                        const preloader = document.querySelector('.preloader');
+                        if (preloader) preloader.style.display = 'none';
                     } else {
-                        document.getElementById('khutba-content').innerHTML = '<p class="error">لم يتم العثور على الخطبة المطلوبة.</p>';
+                        contentDiv.innerHTML = '<p class="error">عذراً، لم يتم العثور على الخطبة المطلوبة.</p>';
+                        const preloader = document.querySelector('.preloader');
+                        if (preloader) preloader.style.display = 'none';
                     }
                 })
-                .catch(err => {
-                    console.error('Error loading khutbah:', err);
-                    document.getElementById('khutba-content').innerHTML = '<p class="error">حدث خطأ في تحميل الخطبة.</p>';
+                .catch(error => {
+                    console.error('Error loading khutbah:', error);
+                    contentDiv.innerHTML = '<p class="error">حدث خطأ في تحميل الخطبة. الرجاء محاولة لاحقاً.</p>';
+                    const preloader = document.querySelector('.preloader');
+                    if (preloader) preloader.style.display = 'none';
                 });
-        }
-
-        function exportKhutbaAsPDF() {
-            if (window.currentKhutba && window.SheikhPdfExporter) {
-                window.SheikhPdfExporter.exportKhutbaItem(window.currentKhutba);
+            
+            // PDF Export button handler
+            const pdfBtn = document.getElementById('exportPdfBtn');
+            if (pdfBtn) {
+                pdfBtn.addEventListener('click', function() {
+                    if (window.currentKhutba && window.SheikhPdfExporter) {
+                        window.SheikhPdfExporter.exportKhutbaItem(window.currentKhutba);
+                    } else if (window.currentKhutba) {
+                        alert('خاصية تحميل PDF غير متاحة حالياً');
+                    }
+                });
             }
-        }
+        });
     </script>
 </body>
 </html>

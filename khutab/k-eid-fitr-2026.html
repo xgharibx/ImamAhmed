@@ -49,5 +49,50 @@
     <script src="../main.js"></script>
     <script src="../pdf-export.js"></script>
     <script src="../khutba-view.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const khutbaId = document.body.getAttribute('data-khutba-id');
+            const contentDiv = document.getElementById('khutba-content');
+            
+            // Fetch the khutab data from JSON
+            fetch('../data/khutab_written.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Find the khutbah by ID
+                    const khutba = data.find(item => item.id === khutbaId);
+                    if (khutba) {
+                        // Load the HTML content
+                        contentDiv.innerHTML = khutba.content_html;
+                        // Store in window for PDF export
+                        window.currentKhutba = khutba;
+                        // Hide preloader
+                        document.getElementById('preloader').style.display = 'none';
+                    } else {
+                        contentDiv.innerHTML = '<p class="error">عذراً، لم يتم العثور على الخطبة المطلوبة.</p>';
+                        document.getElementById('preloader').style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading khutbah:', error);
+                    contentDiv.innerHTML = '<p class="error">حدث خطأ في تحميل الخطبة. الرجاء محاولة لاحقاً.</p>';
+                    document.getElementById('preloader').style.display = 'none';
+                });
+            
+            // PDF Export button handler
+            document.getElementById('pdf-export-btn').addEventListener('click', function() {
+                if (window.currentKhutba && window.SheikhPdfExporter) {
+                    window.SheikhPdfExporter.exportKhutbaItem(window.currentKhutba);
+                } else if (window.currentKhutba) {
+                    // Fallback if SheikhPdfExporter not available
+                    alert('خاصية تحميل PDF غير متاحة حالياً');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
