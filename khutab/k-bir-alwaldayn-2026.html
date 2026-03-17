@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="بِرُّ الْوَالِدَيْنِ زِينَةُ الْأَعْيَادِ وَمِفْتَاحُ الْقَبُولِ - خطبة الشيخ أحمد إسماعيل الفشني">
+    <meta property="og:title" content="بِرُّ الْوَالِدَيْنِ زِينَةُ الْأَعْيَادِ وَمِفْتَاحُ الْقَبُولِ">
+    <meta property="og:description" content="خطبة من خطب فضيلة الشيخ / أحمد إسماعيل الفشني">
+    <meta property="og:type" content="website">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="بِرُّ الْوَالِدَيْنِ زِينَةُ الْأَعْيَادِ وَمِفْتَاحُ الْقَبُولِ">
+    <meta property="twitter:description" content="خطبة من خطب فضيلة الشيخ / أحمد إسماعيل الفشني">
+    <link rel="canonical" href="https://sheikhahmed.com/khutab/k-bir-alwaldayn-2026.html">
+    <title>بِرُّ الْوَالِدَيْنِ زِينَةُ الْأَعْيَادِ وَمِفْتَاحُ الْقَبُولِ</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../khutab.css">
+</head>
+<body data-khutba-id="local-2026-03-15-bir-alwaldayn">
+    <nav class="breadcrumb">
+        <a href="../index.html">الرئيسية</a>
+        <span>/</span>
+        <a href="../khutab-written.html">الخطب المكتوبة</a>
+        <span>/</span>
+        <span>بِرُّ الْوَالِدَيْنِ</span>
+    </nav>
+
+    <header class="khutba-header">
+        <h1>بِرُّ الْوَالِدَيْنِ زِينَةُ الْأَعْيَادِ وَمِفْتَاحُ الْقَبُولِ</h1>
+        <p class="subtitle">خطبة من خطب الشيخ</p>
+        <p class="khutba-date">٢٩ رَجَبَ ١٤٤٧ هـ - ١٥ مَارِس ٢٠٢٦ م</p>
+        <p class="khutba-author">فَضِيلَةُ الشَّيْخِ / أَحْمَدَ إِسْمَاعِيلَ الْفَشَنِيِّ</p>
+        
+        <div class="khutba-actions">
+            <button id="exportPdfBtn" class="btn btn-pdf" onclick="exportKhutbaAsPDF()">
+                <span>تحميل PDF</span>
+            </button>
+            <a href="../khutab-written.html" class="btn btn-back">العودة للقائمة</a>
+        </div>
+    </header>
+
+    <article id="khutba-content" class="khutba-content">
+        <!-- Content will be injected by JavaScript -->
+        <p class="khutba-paragraph">جاري تحميل الخطبة...</p>
+    </article>
+
+    <footer class="khutba-footer">
+        <p>&copy; 2024 فضيلة الشيخ / أحمد إسماعيل الفشني. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script src="../main.js"></script>
+    <script src="../pdf-export.js"></script>
+    <script src="../khutba-view.js"></script>
+    <script>
+        // Load khutbah content from JSON data
+        document.addEventListener('DOMContentLoaded', function() {
+            const khutbaId = document.body.getAttribute('data-khutba-id');
+            loadAndDisplayKhutbah(khutbaId);
+        });
+
+        function loadAndDisplayKhutbah(khutbaId) {
+            // Fetch the khutab data
+            fetch('../data/khutab_written.json')
+                .then(response => response.json())
+                .then(data => {
+                    const khutba = data.find(item => item.id === khutbaId);
+                    if (khutba) {
+                        document.getElementById('khutba-content').innerHTML = khutba.content_html;
+                        // Store in window for PDF export
+                        window.currentKhutba = khutba;
+                    } else {
+                        document.getElementById('khutba-content').innerHTML = '<p class="error">لم يتم العثور على الخطبة المطلوبة.</p>';
+                    }
+                })
+                .catch(err => {
+                    console.error('Error loading khutbah:', err);
+                    document.getElementById('khutba-content').innerHTML = '<p class="error">حدث خطأ في تحميل الخطبة.</p>';
+                });
+        }
+
+        function exportKhutbaAsPDF() {
+            if (window.currentKhutba && window.SheikhPdfExporter) {
+                window.SheikhPdfExporter.exportKhutbaItem(window.currentKhutba);
+            }
+        }
+    </script>
+</body>
+</html>
