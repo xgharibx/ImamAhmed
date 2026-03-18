@@ -337,12 +337,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const currentFileName = decodeURIComponent((window.location.pathname.split('/').pop() || '').trim());
-            const expectedShortFileName = `${buildShortKhutbaSlug(item)}.html`;
-            const isKhutabStandalonePage = /\/khutab\/[^/]+\.html?$/i.test(window.location.pathname);
-            if (isKhutabStandalonePage && currentFileName && currentFileName !== expectedShortFileName) {
-                window.location.replace(expectedShortFileName);
-                return;
-            }
+            // Do not force-redirect to a generated filename. Allow the current
+            // file to display even if its name doesn't match the computed slug.
+            // (Redirects caused 404s when filenames were generated earlier.)
 
             const title = item.title || 'خطبة';
             const dateDisplay = getDisplayDate(item);

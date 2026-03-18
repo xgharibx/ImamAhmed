@@ -26,15 +26,30 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ============== Preloader ============== */
 function initPreloader() {
     const preloader = document.getElementById('preloader');
+    if (!preloader) return;
+
+    let didHide = false;
+    const hidePreloader = () => {
+        if (didHide) return;
+        didHide = true;
+        preloader.classList.add('hidden');
+        document.body.style.overflow = 'visible';
+    };
+
+    const fallbackDelay = window.matchMedia('(max-width: 768px)').matches ? 900 : 1800;
+    window.setTimeout(hidePreloader, fallbackDelay);
     
     window.addEventListener('load', () => {
         const isMobile = window.matchMedia('(max-width: 768px)').matches;
         const delay = isMobile ? 600 : 1500;
         setTimeout(() => {
-            preloader.classList.add('hidden');
-            document.body.style.overflow = 'visible';
+            hidePreloader();
         }, delay);
     });
+
+    if (document.readyState === 'complete') {
+        hidePreloader();
+    }
 }
 
 function initRamadanChallengeCountdown() {
