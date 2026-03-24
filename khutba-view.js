@@ -348,17 +348,22 @@ document.addEventListener('DOMContentLoaded', () => {
             titleEl.innerHTML = `<span class="title-icon"><i class="fas fa-file-lines"></i></span> ${escapeHtml(title)}`;
             metaEl.textContent = [dateDisplay, author].filter(Boolean).join(' • ');
 
-            const sanitizedHtml = sanitizeKhutbaHtml(item.content_html);
-            const plainText = (typeof item.content_text === 'string' && item.content_text.trim())
-                ? item.content_text
-                : htmlToPlainText(sanitizedHtml);
-            const structuredHtml = buildStructuredKhutbaHtmlFromText(plainText);
+            let finalHtml = '';
+            if (item.content_html && item.content_html.trim()) {
+                finalHtml = sanitizeKhutbaHtml(item.content_html);
+            } else if (item.content_text && item.content_text.trim()) {
+                finalHtml = buildStructuredKhutbaHtmlFromText(item.content_text);
+            } else {
+                const sanitizedHtml = sanitizeKhutbaHtml(item.content_html || '');
+                const plainText = htmlToPlainText(sanitizedHtml);
+                finalHtml = buildStructuredKhutbaHtmlFromText(plainText);
+            }
 
-            if (structuredHtml) {
+            if (finalHtml) {
                 contentEl.innerHTML = `
                     <article class="khutba-article khutba-article-premium">
                         <div class="khutba-body">
-                            ${structuredHtml}
+                            ${finalHtml}
                         </div>
                     </article>
                 `;
