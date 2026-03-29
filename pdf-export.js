@@ -292,7 +292,6 @@
         if (type === 'book') return 'كتاب';
         if (type === 'article') return 'مقال';
         if (type === 'khutba') return 'خطبة';
-        if (type === 'competition') return 'مسابقة';
         return 'محتوى';
     }
 
@@ -2340,24 +2339,7 @@
         }, title);
     }
 
-    async function exportCompetitionItem(item) {
-        const title = item?.title || 'مسابقة';
-        const dateDisplay = item?.date?.display || item?.date_display || item?.date || '';
-        const author = item?.author || '';
-        const meta = [dateDisplay, author].filter(Boolean).join(' • ');
 
-        const fromHtml = sanitizeHtml(item?.content_html || '');
-        const normalizedContent = buildReadableContentHtml(fromHtml || '<p>لا يوجد نص متاح للتصدير.</p>') || '<p>لا يوجد نص متاح للتصدير.</p>';
-
-        return exportPayload({
-            title,
-            subtitle: item?.subtitle || '',
-            meta,
-            contentHtml: normalizedContent,
-            type: 'competition',
-            skipIntroPage: true
-        }, title);
-    }
 
     function makeButton(label, className) {
         const btn = document.createElement('a');
@@ -2507,8 +2489,7 @@
     const SheikhPdfExporter = {
         exportFromCurrentPage,
         exportFromUrl,
-        exportKhutbaItem,
-        exportCompetitionItem
+        exportKhutbaItem
     };
 
     window.SheikhPdfExporter = SheikhPdfExporter;

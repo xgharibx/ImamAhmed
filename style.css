@@ -782,16 +782,6 @@ input, textarea, select {
     50% { transform: scale(1.05) rotate(1deg); }
 }
 
-/* OLD STAR PATTERN - COMPLETELY DISABLED */
-.islamic-geometry-bg,
-#islamicPatternCanvas,
-.geometric-star-canvas {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-}
-
 /* Floating Crescent Moons Background */
 .floating-moons-bg {
     position: absolute;
@@ -1075,24 +1065,6 @@ input, textarea, select {
     background: var(--primary-gold);
     color: var(--primary-green-dark);
     transform: translateY(-3px);
-}
-
-.btn-ramadan-challenge {
-    border-color: #f3c843;
-    box-shadow: 0 0 0 1px rgba(243, 200, 67, 0.28) inset;
-}
-
-.btn-ramadan-challenge .btn-text-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    line-height: 1.2;
-}
-
-.btn-ramadan-challenge small {
-    font-size: 0.76rem;
-    color: rgba(255, 255, 255, 0.85);
-    margin-top: 0.15rem;
 }
 
 .btn-light {

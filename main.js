@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initPreloader();
     initNavigation();
     initComingSoonLinks();
-    initRamadanChallengeCountdown();
     initScrollEffects();
     initKhawaterSlider();
     initAnimations();
@@ -50,33 +49,6 @@ function initPreloader() {
     if (document.readyState === 'complete') {
         hidePreloader();
     }
-}
-
-function initRamadanChallengeCountdown() {
-    const button = document.getElementById('ramadanChallengeBtn');
-    const countdown = document.getElementById('ramadanCountdownText');
-    if (!button || !countdown) return;
-
-    const endDateRaw = button.getAttribute('data-end-date');
-    if (!endDateRaw) return;
-
-    const endDate = new Date(endDateRaw);
-    if (Number.isNaN(endDate.getTime())) return;
-
-    const updateCountdown = () => {
-        const now = new Date();
-        const diff = endDate.getTime() - now.getTime();
-        if (diff <= 0) {
-            countdown.textContent = 'الإجابات قيد المراجعة - النتائج قريبًا';
-            return;
-        }
-
-        const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-        countdown.textContent = `متبقٍ ${days} يوم`;
-    };
-
-    updateCountdown();
-    window.setInterval(updateCountdown, 60 * 60 * 1000);
 }
 
 /* ============== Navigation ============== */
