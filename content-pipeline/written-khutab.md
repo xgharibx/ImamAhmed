@@ -11,7 +11,7 @@ Written khutab are published as JSON entries rendered dynamically by `khutba-vie
 ### 1. Prepare the Content
 - Extract the full khutba text from the source (DOCX, PDF, or raw text)
 - Identify: **title** (with tashkeel), **Islamic date**, **Gregorian date**, **author**
-- Split into `content_text` (plain text) and `content_html` (formatted HTML)
+- Split into `content_text` (plain text) — leave `content_html` **empty** (the smart parser in `khutba-view.js` generates structured HTML automatically from `content_text`)
 - Write a short `excerpt` (first 50-100 words)
 
 ### 2. Add JSON Entry
@@ -27,7 +27,7 @@ Append to `data/khutab_written.json`:
     "iso": "2025-09-15"
   },
   "content_text": "Plain text of the khutba...",
-  "content_html": "<h2>الخطبة الأولى</h2><p>Content with HTML formatting...</p>",
+  "content_html": "",
   "excerpt": "First 50-100 words preview..."
 }
 ```
@@ -43,7 +43,7 @@ Create `khutab/k-YYYYMMDD-ID.html` using this template:
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="[TITLE] — [DATE] — by Sheikh Ahmed Ismail Al-Fashni">
+  <meta name="description" content="[TITLE] — بقلم أحمد إسماعيل الفشني • [DATE]">
   <title>[TITLE] | خطبة مكتوبة | الشيخ أحمد إسماعيل الفشني</title>
 
   <!-- Fonts & Icons -->
@@ -56,22 +56,22 @@ Create `khutab/k-YYYYMMDD-ID.html` using this template:
   <!-- Stylesheets -->
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="../animations.css">
-  <link rel="stylesheet" href="../khutab.css">
+    <link rel="stylesheet" href="../khutab.css?v=20260327-2">
 
   <!-- OpenGraph -->
-  <link rel="canonical" href="https://ahmedelfashny.com/khutab/k-YYYYMMDD-ID.html">
+  <link rel="canonical" href="https://ahmedelfashny.com/khutab/k-YYYYMMDD-ID.html?v=YYYYMMDD-1">
   <meta property="og:type" content="article">
   <meta property="og:locale" content="ar_AR">
   <meta property="og:site_name" content="Sheikh Ahmed Ismail Al-Fashni">
   <meta property="og:title" content="[TITLE]">
   <meta property="og:description" content="[TITLE] — بقلم أحمد إسماعيل الفشني • [DATE]">
-  <meta property="og:image" content="https://ahmedelfashny.com/assets/og/sheikh-ahmed-share.jpg">
-  <meta property="og:image:url" content="https://ahmedelfashny.com/assets/og/sheikh-ahmed-share.jpg">
+  <meta property="og:image" content="https://ahmedelfashny.com/assets/og/sheikh-ahmed-share.jpg?v=YYYYMMDD-1">
+  <meta property="og:image:url" content="https://ahmedelfashny.com/assets/og/sheikh-ahmed-share.jpg?v=YYYYMMDD-1">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:type" content="image/jpeg">
-  <meta property="og:image:secure_url" content="https://ahmedelfashny.com/assets/og/sheikh-ahmed-share.jpg">
-  <meta property="og:url" content="https://ahmedelfashny.com/khutab/k-YYYYMMDD-ID.html">
+  <meta property="og:image:secure_url" content="https://ahmedelfashny.com/assets/og/sheikh-ahmed-share.jpg?v=YYYYMMDD-1">
+  <meta property="og:url" content="https://ahmedelfashny.com/khutab/k-YYYYMMDD-ID.html?v=YYYYMMDD-1">
   <meta property="og:updated_time" content="YYYY-MM-DDT00:00:00+00:00">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="[TITLE]">
@@ -157,8 +157,8 @@ Create `khutab/k-YYYYMMDD-ID.html` using this template:
   <!-- Scripts -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
   <script src="../main.js" defer></script>
-  <script src="../pdf-export.js" defer></script>
-  <script src="../khutba-view.js" defer></script>
+  <script src="../pdf-export.js?v=20260309-1" defer></script>
+  <script src="../khutba-view.js?v=20260327-1" defer></script>
 </body>
 </html>
 ```
@@ -168,7 +168,7 @@ Create `khutab/k-YYYYMMDD-ID.html` using this template:
 - [ ] JSON entry ID matches `data-khutba-id` in HTML
 - [ ] HTML filename follows pattern: `k-YYYYMMDD-ID.html`
 - [ ] Title and dates match between JSON and HTML page header
-- [ ] `content_html` has proper `<h2>`, `<p>`, `<strong>` formatting OR is empty (smart parser generates structure from `content_text`)
+- [ ] `content_html` is **empty** (smart parser in `khutba-view.js` auto-generates structured HTML from `content_text`)
 - [ ] Excerpt is concise (50-100 words)
 - [ ] OG/Twitter meta tags have correct title and URL
 
@@ -197,6 +197,42 @@ Create `khutab/k-YYYYMMDD-ID.html` using this template:
 - Hadith references: wrap in `<em>`
 
 ## File Naming
+
+- HTML shell filename: `k-YYYYMMDD-bg9jywwtmjay.html` (the suffix is a constant ID)
+- `YYYYMMDD` = publication date (may differ from khutba's Islamic date)
+
+## Critical Standards (Non-Negotiable)
+
+These rules must be followed for EVERY new khutba:
+
+| Rule | Correct | Wrong |
+|------|---------|-------|
+| Bismillah text | الرَّحْمَنِ (no superscript alef) | الرَّحْمَٰنِ (with U+0670) |
+| Description format | `TITLE — بقلم أحمد إسماعيل الفشني • DATE` | `TITLE - DATE. إعداد فضيلة الشيخ/` |
+| `twitter:image` | No `?v=` parameter | Has `?v=` parameter |
+| `og:image:secure_url` | Must be present | Missing |
+| `og:updated_time` | Must be present | Missing |
+| `content_html` in JSON | Empty string `""` (smart parser) | Filled with HTML |
+| Date numerals in JSON | Arabic numerals ١٢٣ | Western numerals 123 |
+| khutba-view.js version | Common latest (currently `v=20260327-1`) | File-specific version |
+| khutab.css version | Common latest (currently `v=20260327-2`) | Old version |
+
+### Version Parameters
+
+- **File-specific `?v=YYYYMMDD-1`**: Used on `canonical`, `og:url`, `og:image`, `og:image:url`, `og:image:secure_url`
+- **Common `?v=20260327-1`**: Used on `khutba-view.js` (update when JS changes)
+- **Common `?v=20260327-2`**: Used on `khutab.css` (update when CSS changes)
+- **No `?v=`**: Used on `twitter:image`
+
+### Reference File
+
+**`khutab/k-20260327-bg9jywwtmjay.html`** is the gold standard. All new khutab must match its exact structure, differing ONLY in:
+1. Title text
+2. Date text
+3. `data-khutba-id` / `KHUTBA_ID`
+4. Filename in URLs
+5. File-specific version date in `?v=` params
+6. `og:updated_time` date
 
 **Pattern:** `k-[YYYYMMDD]-[ID].html`
 - `YYYYMMDD` = Gregorian date of delivery
