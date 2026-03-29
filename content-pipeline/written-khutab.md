@@ -66,12 +66,16 @@ Create `khutab/k-YYYYMMDD-ID.html` using this template:
   <meta property="og:title" content="[TITLE]">
   <meta property="og:description" content="[TITLE] — بقلم أحمد إسماعيل الفشني • [DATE]">
   <meta property="og:image" content="https://ahmedelfashny.com/assets/og/sheikh-ahmed-share.jpg">
+  <meta property="og:image:url" content="https://ahmedelfashny.com/assets/og/sheikh-ahmed-share.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:secure_url" content="https://ahmedelfashny.com/assets/og/sheikh-ahmed-share.jpg">
   <meta property="og:url" content="https://ahmedelfashny.com/khutab/k-YYYYMMDD-ID.html">
+  <meta property="og:updated_time" content="YYYY-MM-DDT00:00:00+00:00">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="[TITLE]">
-  <meta name="twitter:description" content="[TITLE]">
+  <meta name="twitter:description" content="[TITLE] — بقلم أحمد إسماعيل الفشني • [DATE]">
   <meta name="twitter:image" content="https://ahmedelfashny.com/assets/og/sheikh-ahmed-share.jpg">
 </head>
 
@@ -164,7 +168,7 @@ Create `khutab/k-YYYYMMDD-ID.html` using this template:
 - [ ] JSON entry ID matches `data-khutba-id` in HTML
 - [ ] HTML filename follows pattern: `k-YYYYMMDD-ID.html`
 - [ ] Title and dates match between JSON and HTML page header
-- [ ] `content_html` has proper `<h2>`, `<p>`, `<strong>` formatting
+- [ ] `content_html` has proper `<h2>`, `<p>`, `<strong>` formatting OR is empty (smart parser generates structure from `content_text`)
 - [ ] Excerpt is concise (50-100 words)
 - [ ] OG/Twitter meta tags have correct title and URL
 
