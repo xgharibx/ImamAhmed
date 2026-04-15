@@ -79,9 +79,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const text = String(rawText || '').replace(/\r/g, '').trim();
         if (!text) return '';
 
+        const INVISIBLE_CHARS_RE = /[\u200B-\u200F\u202A-\u202E\u2060-\u206F\uFEFF]/g;
         const lines = text
             .split(/\n+/)
-            .map((line) => line.replace(/\s+/g, ' ').trim())
+            .map((line) => line.replace(INVISIBLE_CHARS_RE, '').replace(/\s+/g, ' ').trim())
             .filter(Boolean);
 
         if (!lines.length) return '';
@@ -151,6 +152,16 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         lines.forEach((line, index) => {
+            // Check numbered list items FIRST — prevents e.g. "٤. الخطبة الثانية:" in
+            // the عناصر list from falsely triggering a new main-section opening.
+            if (isNumberedListItem(line)) {
+                const cleanItem = line.replace(/^\s*[0-9٠-٩]+\s*[\)\-\.:،]?\s+/, '').trim();
+                if (cleanItem) {
+                    listBuffer.push(cleanItem);
+                }
+                return;
+            }
+
             const split = splitAtColon(line);
             const mainKey = getMainHeadingKey(split.head) || getMainHeadingKey(line);
             if (mainKey) {
@@ -168,14 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isSubHeading(line)) {
                 flushList();
                 parts.push(`<h3 class="khutba-subheading">${escapeHtml(line)}</h3>`);
-                return;
-            }
-
-            if (isNumberedListItem(line)) {
-                const cleanItem = line.replace(/^\s*[0-9٠-٩]+\s*[\)\-\.:،]?\s+/, '').trim();
-                if (cleanItem) {
-                    listBuffer.push(cleanItem);
-                }
                 return;
             }
 
