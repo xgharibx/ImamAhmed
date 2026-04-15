@@ -168,9 +168,11 @@
         const text = String(rawText || '').replace(/\r/g, '').trim();
         if (!text) return '';
 
+        // Strip invisible Unicode chars (U+200B etc.) left by DOCX extraction
+        const INVISIBLE_CHARS_RE = /[\u200B-\u200F\u202A-\u202E\u2060-\u206F\uFEFF]/g;
         const lines = text
             .split(/\n+/)
-            .map((line) => line.replace(/\s+/g, ' ').trim())
+            .map((line) => line.replace(INVISIBLE_CHARS_RE, '').replace(/\s+/g, ' ').trim())
             .filter(Boolean);
 
         if (!lines.length) return '';
@@ -202,14 +204,16 @@
             return { head: (match[1] || '').trim(), tail: (match[2] || '').trim() };
         };
 
+        // NOTE: \b does not work with Arabic in JS (Arabic chars are \W).
+        // Strip leading non-Arabic chars then use .includes()/.startsWith().
         const getMainHeadingKey = (line) => {
-            const n = normalizeArabic(line);
+            const n = normalizeArabic(line).replace(/^[^\u0621-\u064A0-9]+/, '');
             if (!n) return '';
-            if (/^عناصر\s+الخطبه\b/.test(n)) return 'anasir';
-            if (/^الخطبه\s+الاولي\b/.test(n)) return 'first';
-            if (/^الخطبه\s+الثانيه\b/.test(n)) return 'second';
-            if (/^الدعاء\b/.test(n)) return 'dua';
-            if (/^الموضوع\b/.test(n)) return 'topic';
+            if (n.includes('عناصر الخطبه')) return 'anasir';
+            if (n.includes('الخطبه الاولي')) return 'first';
+            if (n.includes('الخطبه الثانيه')) return 'second';
+            if (n.startsWith('الدعاء')) return 'dua';
+            if (n.startsWith('الموضوع')) return 'topic';
             return '';
         };
 
@@ -226,8 +230,16 @@
         const isNumberedListItem = (line) => /^\s*[0-9٠-٩]+\s*[\)\-\.:،]?\s+/.test(line);
 
         for (const line of lines) {
+            // Check numbered list items FIRST — prevents numbered anasir items (e.g. ٤. الخطبة الثانية:)
+            // from falsely matching getMainHeadingKey (which uses .includes()).
+            if (isNumberedListItem(line)) {
+                const normalizedItem = line.replace(/^\s*[0-9٠-٩]+\s*[\)\-\.:،]?\s+/, '').trim();
+                if (normalizedItem) listBuffer.push(normalizedItem);
+                continue;
+            }
+
             const split = splitAtColon(line);
-            const headingKey = getMainHeadingKey(split.head);
+            const headingKey = getMainHeadingKey(split.head) || getMainHeadingKey(line);
             if (headingKey) {
                 flushList();
                 currentSectionKey = headingKey;
@@ -245,12 +257,6 @@
             if (isSubHeading(line)) {
                 flushList();
                 htmlParts.push(`<h3>${escapeHtml(line)}</h3>`);
-                continue;
-            }
-
-            if (isNumberedListItem(line)) {
-                const normalizedItem = line.replace(/^\s*[0-9٠-٩]+\s*[\)\-\.:،]?\s+/, '').trim();
-                if (normalizedItem) listBuffer.push(normalizedItem);
                 continue;
             }
 
