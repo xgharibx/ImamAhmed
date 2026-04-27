@@ -205,13 +205,14 @@
         };
 
         // NOTE: \b does not work with Arabic in JS (Arabic chars are \W).
-        // Strip leading non-Arabic chars then use .includes()/.startsWith().
+        // Use anchored regex for first/second to avoid false matches when the
+        // heading text appears inside a longer list-item (e.g. عناصر الخطبه item 6).
         const getMainHeadingKey = (line) => {
             const n = normalizeArabic(line).replace(/^[^\u0621-\u064A0-9]+/, '');
             if (!n) return '';
             if (n.includes('عناصر الخطبه')) return 'anasir';
-            if (n.includes('الخطبه الاولي')) return 'first';
-            if (n.includes('الخطبه الثانيه')) return 'second';
+            if (/^الخطبه الاولي[،:.!؟\s]*$/.test(n)) return 'first';
+            if (/^الخطبه الثانيه[،:.!؟\s]*$/.test(n)) return 'second';
             if (n.startsWith('الدعاء')) return 'dua';
             if (n.startsWith('الموضوع')) return 'topic';
             return '';
