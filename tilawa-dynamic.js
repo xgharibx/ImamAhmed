@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const title = normalizeArabic(video?.title || '');
 
         if (hasAnyKeyword(title, ['المجود', 'مجود', 'تجويد'])) return 'mujawwad';
-        if (hasAnyKeyword(title, ['المرتل', 'مرتل'])) return 'murattal';
+        if (hasAnyKeyword(title, ['المرتل', 'مرتل', 'للقاري', 'للقارئ'])) return 'murattal';
         if (hasAnyKeyword(title, ['صلاه', 'صلاة', 'فجر', 'عشاء', 'محراب', 'تراويح', 'تهجد', 'مسجد'])) return 'mihrab';
         return 'external';
     }
