@@ -128,8 +128,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const n = normalizeArabic(line).replace(/^[^\u0621-\u064A0-9]+/, '');
             if (!n) return '';
             if (n.includes('عناصر الخطبه')) return 'anasir';
-            if (n.includes('الخطبه الاولي')) return 'first';
-            if (n.includes('الخطبه الثانيه')) return 'second';
+            if (/^الخطبه الاولي[،:.!؟\s]*$/.test(n)) return 'first';
+            if (/^الخطبه الثانيه[،:.!؟\s]*$/.test(n)) return 'second';
             if (n.startsWith('الدعاء')) return 'dua';
             if (n.startsWith('الموضوع')) return 'topic';
             return '';
