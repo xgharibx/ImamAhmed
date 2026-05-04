@@ -2321,15 +2321,25 @@
         const author = item?.author || '';
         const meta = [dateDisplay, author].filter(Boolean).join(' • ');
 
+        const getRenderedKhutbaHtml = () => {
+            const itemId = String(item?.id || '').trim();
+            const pageId = String(window.KHUTBA_ID || document.body?.dataset?.khutbaId || '').trim();
+            if (itemId && pageId && itemId !== pageId) return '';
+
+            const renderedBody = document.querySelector('#khutba-content .khutba-body') || document.querySelector('#khutba-content');
+            return renderedBody?.innerHTML?.trim() || '';
+        };
+
         const fromText = typeof item?.content_text === 'string' ? item.content_text.trim() : '';
         const fromHtml = sanitizeHtml(item?.content_html || '');
+        const fromRenderedHtml = sanitizeHtml(getRenderedKhutbaHtml());
         const fallbackText = fromHtml
             ? (new DOMParser().parseFromString(fromHtml, 'text/html').body.textContent || '').trim()
             : '';
         const sourceText = fromText || fallbackText;
 
         const structuredKhutbaHtml = buildStructuredKhutbaHtmlFromText(sourceText);
-        const normalizedContent = buildReadableContentHtml(structuredKhutbaHtml || fromHtml || '<p>لا يوجد نص متاح للتصدير.</p>') || '<p>لا يوجد نص متاح للتصدير.</p>';
+        const normalizedContent = buildReadableContentHtml(fromRenderedHtml || structuredKhutbaHtml || fromHtml || '<p>لا يوجد نص متاح للتصدير.</p>') || '<p>لا يوجد نص متاح للتصدير.</p>';
 
         return exportPayload({
             title,
