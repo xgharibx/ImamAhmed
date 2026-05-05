@@ -1,246 +1,237 @@
-# خطب مكتوبة | Written Khutab Pipeline
+# خطب مكتوبة | Word to Site and PDF Pipeline
 
-## Overview
+هذا هو المرجع الذي نستخدمه كل مرة يرسل فيها المستخدم ملف Word لخطبة مكتوبة ويطلب نشرها في الموقع وتجهيز PDF. عند طلب المستخدم: "اشتغل عليها بالبايبلاين" ارجع إلى هذا الملف ونفذ الخطوات بالترتيب.
 
-Written khutab are published as JSON entries rendered dynamically by `khutba-view.js`. Each khutba also gets a lightweight HTML shell page in `khutab/` for direct linking and social sharing.
+## الهدف النهائي
 
----
+من ملف `.docx` واحد ننتج:
 
-## Step-by-Step: Publishing a New Written Khutba
+- إدخال جديد في `data/khutab_written.json`.
+- صفحة مباشرة داخل `khutab/` تحمل `data-khutba-id` الصحيح.
+- ظهور مضبوط في صفحة الخطب المكتوبة `khutab-written.html`.
+- PDF منظم بالترتيب الحالي:
+  1. كوفر أخضر.
+  2. صفحة واحدة فيها عناصر الخطبتين: اسم الخطبة الأولى ثم عناصرها، ثم اسم الخطبة الثانية ثم عناصرها.
+  3. صفحة جديدة تبدأ متن `الْخُطْبَةُ الْأُولَى`، ثم `الْخُطْبَةُ الثَّانِيَة`، ثم الدعاء والخاتمة.
+  4. صفحة نهاية فيها جملة التوقيع ومعلومات التواصل، ولا تتكرر جملة التوقيع داخل صفحات المتن.
 
-### 1. Prepare the Content
-- Extract the full khutba text from the source (DOCX, PDF, or raw text)
-- Identify: **title** (with tashkeel), **Islamic date**, **Gregorian date**, **author**
-- Split into `content_text` (plain text) — leave `content_html` **empty** (the smart parser in `khutba-view.js` generates structured HTML automatically from `content_text`)
-- Write a short `excerpt` (first 50-100 words)
+## الملفات الأساسية
 
-### 2. Add JSON Entry
-Append to `data/khutab_written.json`:
+| الملف | الدور |
+|---|---|
+| `data/khutab_written.json` | مصدر الحقيقة لكل الخطب المكتوبة. |
+| `khutba-view.js` | يحول `content_text` إلى عرض منظم في صفحة الخطبة. |
+| `khutab-written.js` | يعرض كروت الخطب في صفحة القائمة. |
+| `pdf-export.js` | ينشئ PDF من نفس محتوى الخطبة. |
+| `khutab.css` | تنسيق صفحة الخطبة والقائمة. |
+| `khutab/k-*.html` | صفحة shell مباشرة لكل خطبة. |
+| `khutba-view.html` | صفحة عرض عامة تعتمد على `KHUTBA_ID`. |
+
+## استقبال ملف Word
+
+1. ضع ملف Word المرسل في مكان مؤقت داخل الريبو، ويفضل `khutab/` إذا كان متعلقًا بخطبة.
+2. استخرج النص من `.docx` باستخدام Python و`python-docx` في البيئة الحالية.
+3. احذف العلامات غير المرغوبة مثل `**` أو زخارف Markdown، لكن لا تغير صياغة الشيخ إلا لتصحيح مشاكل تنسيق واضحة.
+4. حافظ على ترتيب النص كما في الخطبة:
+   - بيانات البداية.
+   - `عناصر الخطبة:`.
+   - عناصر مرقمة، وفيها سطر `الخطبة الأولى: ...` وسطر `الخطبة الثانية: ...`.
+   - `الخطبة الأولى` ثم متنها.
+   - `الخطبة الثانية` ثم متنها.
+   - الدعاء والخاتمة.
+
+## شكل `content_text` المطلوب
+
+اترك `content_html` دائمًا كقيمة فارغة `""`. الذكاء موجود في `khutba-view.js` و`pdf-export.js`.
+
+مثال لبداية `content_text`:
+
+```text
+خُطْبَةُ الْجُمْعَةِ بتاريخ : ٢١ ذو القعدة ١٤٤٧ هـ - ٨ مايو ٢٠٢٦ م
+تحت عنوان: تراحموا تُرحموا.. الرحمة المهداة وبناء مجتمع المودة
+و الخُطْبَةُ الثَّانِيَةُ: ضمن مبادرة صحح مفاهيمك: وآتوا حقَّهُ يومَ حصادِهِ
+بقلم فضيلة الشيخ أحمد إسماعيل الفشني
+
+عناصر الخطبة:
+١. الخطبة الأولى: تراحموا تُرحموا.. الرحمة المهداة وبناء مجتمع المودة
+٢. الرحمة صبغة إلهية وأساس الوجود.
+٣. سيدنا محمد ﷺ.. الرحمة المهداة للعالمين.
+٤. الخطبة الثانية: «وآتوا حقَّهُ يومَ حصادِهِ» (مبادرة صحح مفاهيمك)
+٥. حق الفقير في مال الغني.. رحمة لا تفضل.
+
+الخطبة الأولى
+الحمد لله رب العالمين...
+
+الخطبة الثانية
+الحمد لله وكفى...
+```
+
+مهم: داخل قسم `عناصر الخطبة`، لا تحول `الخطبة الأولى: ...` أو `الخطبة الثانية: ...` إلى headings مستقلة. اتركها كعناصر مرقمة في النص، والـ renderers ستجمعها تلقائيًا.
+
+## إدخال JSON
+
+أضف الإدخال الجديد في أول `data/khutab_written.json`، وليس آخره.
 
 ```json
 {
-  "id": "local-YYYY-MM-DD-slug",
-  "title": "عُنْوَانُ الْخُطْبَةِ",
-  "author": "أحمد إسماعيل الفشني",
+  "id": "local-YYYY-MM-DD-short-slug",
+  "title": "عنوان الخطبة",
+  "author": "فضيلة الشيخ احمد اسماعيل الفشني",
   "date": {
-    "display": "١٥ رَبِيع الأَوَّل ١٤٤٧ هـ - ١٥ سبتمبر ٢٠٢٥ م",
-    "iso": "2025-09-15"
+    "display": "٢١ ذو القعدة ١٤٤٧ هـ - ٨ مايو ٢٠٢٦ م",
+    "iso": "2026-05-08"
   },
-  "content_text": "Plain text of the khutba...",
+  "content_text": "النص الكامل...",
   "content_html": "",
-  "excerpt": "First 50-100 words preview..."
+  "excerpt": "ملخص قصير بأسلوب عناصر/محاور الخطبة، وليس افتتاحية طويلة فقط."
 }
 ```
 
-**ID format:** `local-YYYY-MM-DD-slug` where slug is a short Arabic-to-latin transliteration.
+قواعد مهمة:
 
-### 3. Create HTML Shell Page
-Create `khutab/k-YYYYMMDD-ID.html` using this template:
+- `id` يبدأ بـ `local-YYYY-MM-DD-` ويكون فريدًا.
+- `author` للخطبة الجديدة يكون: `فضيلة الشيخ احمد اسماعيل الفشني` ما لم يطلب المستخدم غير ذلك.
+- `date.iso` بصيغة `YYYY-MM-DD`.
+- `date.display` بالأرقام العربية كما في الموقع.
+- `excerpt` يظهر في كارت صفحة الخطب، فاجعله مختصرًا ومفيدًا مثل ملخص أو محاور.
+- `content_html` يبقى `""` دائمًا.
 
-```html
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="[TITLE] — بقلم أحمد إسماعيل الفشني • [DATE]">
-  <title>[TITLE] | خطبة مكتوبة | الشيخ أحمد إسماعيل الفشني</title>
+## صفحة shell داخل `khutab/`
 
-  <!-- Fonts & Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@300;400;500;700;800;900&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+أنشئ صفحة مثل:
 
-  <!-- Stylesheets -->
-  <link rel="stylesheet" href="../style.css">
-  <link rel="stylesheet" href="../animations.css">
-    <link rel="stylesheet" href="../khutab.css?v=20260327-2">
-
-  <!-- OpenGraph -->
-  <link rel="canonical" href="https://ahmedelfashny.com/khutab/k-YYYYMMDD-ID.html?v=YYYYMMDD-1">
-  <meta property="og:type" content="article">
-  <meta property="og:locale" content="ar_AR">
-  <meta property="og:site_name" content="Sheikh Ahmed Ismail Al-Fashni">
-  <meta property="og:title" content="[TITLE]">
-  <meta property="og:description" content="[TITLE] — بقلم أحمد إسماعيل الفشني • [DATE]">
-  <meta property="og:image" content="https://ahmedelfashny.com/assets/og/sheikh-ahmed-share.jpg?v=YYYYMMDD-1">
-  <meta property="og:image:url" content="https://ahmedelfashny.com/assets/og/sheikh-ahmed-share.jpg?v=YYYYMMDD-1">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:type" content="image/jpeg">
-  <meta property="og:image:secure_url" content="https://ahmedelfashny.com/assets/og/sheikh-ahmed-share.jpg?v=YYYYMMDD-1">
-  <meta property="og:url" content="https://ahmedelfashny.com/khutab/k-YYYYMMDD-ID.html?v=YYYYMMDD-1">
-  <meta property="og:updated_time" content="YYYY-MM-DDT00:00:00+00:00">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="[TITLE]">
-  <meta name="twitter:description" content="[TITLE] — بقلم أحمد إسماعيل الفشني • [DATE]">
-  <meta name="twitter:image" content="https://ahmedelfashny.com/assets/og/sheikh-ahmed-share.jpg">
-</head>
-
-<body data-khutba-id="local-YYYY-MM-DD-slug">
-  <script>window.KHUTBA_ID = 'local-YYYY-MM-DD-slug';</script>
-
-  <!-- Preloader -->
-  <div id="preloader">
-    <div class="loader">
-      <div class="islamic-pattern-loader"></div>
-      <div class="bismillah-loader">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
-    </div>
-  </div>
-
-  <!-- Header -->
-  <header id="header" class="scrolled">
-    <nav class="navbar">
-      <div class="nav-container">
-        <a href="../index.html" class="logo">
-          <div class="logo-icon"><span class="moon-icon">☾</span></div>
-          <div class="logo-text">
-            <span class="logo-title">الشيخ أحمد الفشني</span>
-            <span class="logo-subtitle">الْبَاحِثُ الْأَزْهَرِيُّ وَخَادِمُ الْوَحْيَيْنِ</span>
-          </div>
-        </a>
-        <ul class="nav-menu">
-          <li class="nav-item"><a href="../khutab-written.html" class="nav-link"><i class="fas fa-file-lines"></i> خطب مكتوبة</a></li>
-          <li class="nav-item"><a href="../articles.html" class="nav-link"><i class="fas fa-book-open"></i> المقالات</a></li>
-          <li class="nav-item"><a href="../contact.html" class="nav-link"><i class="fas fa-envelope"></i> تواصل</a></li>
-        </ul>
-        <div class="hamburger"><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
-      </div>
-    </nav>
-  </header>
-
-  <!-- Page Header -->
-  <section class="page-header">
-    <div class="page-header-bg"></div>
-    <div class="container">
-      <div class="page-header-content" data-aos="fade-up">
-        <div class="breadcrumb">
-          <a href="../index.html">الرئيسية</a>
-          <i class="fas fa-chevron-left"></i>
-          <a href="../khutab-written.html">خطب مكتوبة</a>
-          <i class="fas fa-chevron-left"></i>
-          <span>عرض خطبة</span>
-        </div>
-        <h1 class="page-title" id="khutba-title"><span class="title-icon"><i class="fas fa-file-lines"></i></span>[TITLE]</h1>
-        <p class="page-subtitle" id="khutba-meta">[ISLAMIC_DATE] - [GREGORIAN_DATE]</p>
-      </div>
-    </div>
-    <div class="page-header-wave">
-      <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
-        <path d="M0,64 C480,150 960,-20 1440,64 L1440,120 L0,120 Z" fill="var(--bg-primary)"/>
-      </svg>
-    </div>
-  </section>
-
-  <!-- Content -->
-  <section class="khutab-section">
-    <div class="container">
-      <div class="khutba-actions" data-aos="fade-up">
-        <a class="btn btn-outline" href="../khutab-written.html"><i class="fas fa-arrow-right"></i> الرجوع للقائمة</a>
-      </div>
-      <div class="khutba-content" id="khutba-content" data-aos="fade-up"></div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer id="footer" class="footer">
-    <div class="footer-pattern"></div>
-    <div class="container">
-      <div class="footer-bottom"><p>&copy; <span id="currentYear"></span> الشيخ أحمد الفشني. جميع الحقوق محفوظة.</p></div>
-    </div>
-  </footer>
-
-  <a href="#" class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></a>
-
-  <!-- Scripts -->
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
-  <script src="../main.js" defer></script>
-  <script src="../pdf-export.js?v=20260309-1" defer></script>
-  <script src="../khutba-view.js?v=20260327-1" defer></script>
-</body>
-</html>
+```text
+khutab/k-YYYYMMDD-bg9jywwtmjay.html
 ```
 
-### 4. Checklist Before Commit
+استخدم أحدث صفحة خطبة موجودة كقالب، ثم غيّر فقط:
 
-- [ ] JSON entry ID matches `data-khutba-id` in HTML
-- [ ] HTML filename follows pattern: `k-YYYYMMDD-ID.html`
-- [ ] Title and dates match between JSON and HTML page header
-- [ ] `content_html` is **empty** (smart parser in `khutba-view.js` auto-generates structured HTML from `content_text`)
-- [ ] Excerpt is concise (50-100 words)
-- [ ] OG/Twitter meta tags have correct title and URL
+- `<title>` وmeta description.
+- canonical وOG URLs.
+- `og:title`, `og:description`, `twitter:title`, `twitter:description`.
+- `data-khutba-id` و`window.KHUTBA_ID` ليطابقا `id` في JSON.
+- العنوان والتاريخ الظاهرين في header.
 
----
+آخر cache keys معتمدة وقت كتابة هذا الملف:
 
-## Architecture
+```html
+<link rel="stylesheet" href="../khutab.css?v=20260505-1">
+<script src="../pdf-export.js?v=20260505-4" defer></script>
+<script src="../khutba-view.js?v=20260505-1" defer></script>
+```
 
-| Component | File | Role |
-|-----------|------|------|
-| Data source | `data/khutab_written.json` | All khutab entries (source of truth) |
-| Listing page | `khutab-written.html` + `khutab-written.js` | Browse/search/filter khutab |
-| Detail viewer | `khutba-view.html` + `khutba-view.js` | Generic viewer page |
-| Shell pages | `khutab/k-*.html` | Direct-link pages (load from JSON) |
-| Styling | `khutab.css` | All khutab visual styles |
-| PDF export | `pdf-export.js` → `SheikhPdfExporter.exportKhutbaItem` | In-browser PDF generation |
+إذا عدلت `khutab.css` أو `pdf-export.js` أو `khutba-view.js` أثناء نشر خطبة، ارفع رقم cache key في:
 
-## HTML Formatting Guide for `content_html`
+- صفحة الخطبة الجديدة داخل `khutab/`.
+- `khutba-view.html`.
+- `khutab-written.html` عند تغيير `pdf-export.js` أو `khutab.css` المستخدمين في القائمة.
 
-- `<h2>` — Section headings (الخطبة الأولى، الخطبة الثانية، عناصر الخطبة)
-- `<h3>` — Sub-headings within sections
-- `<p>` — Body paragraphs
-- `<strong>` — Key phrases, Quranic references
-- `<em>` — Emphasis
-- `<br>` — Line breaks within paragraphs
-- Quranic verses: wrap in `<strong>` with proper tashkeel
-- Hadith references: wrap in `<em>`
+## قواعد عرض عناصر الخطبة
 
-## File Naming
+الموقع والـ PDF يعتمدان على نفس الفكرة:
 
-- HTML shell filename: `k-YYYYMMDD-bg9jywwtmjay.html` (the suffix is a constant ID)
-- `YYYYMMDD` = publication date (may differ from khutba's Islamic date)
+- قسم `عناصر الخطبة` يظهر كقسم واحد.
+- سطر `الخطبة الأولى: [اسمها]` يصبح عنوان مجموعة.
+- العناصر التالية تحته حتى سطر `الخطبة الثانية: [اسمها]`.
+- سطر `الخطبة الثانية: [اسمها]` يصبح عنوان المجموعة الثانية.
+- عناصرها تظهر تحتها.
+- بعدها يبدأ متن الخطبة الأولى والثانية طبيعي.
 
-## Critical Standards (Non-Negotiable)
+لا تضف HTML يدويًا لتحقيق ذلك؛ اترك `content_text` نظيفًا، والـ parsers تقوم بالباقي.
 
-These rules must be followed for EVERY new khutba:
+## قواعد PDF الحالية
 
-| Rule | Correct | Wrong |
-|------|---------|-------|
-| Bismillah text | الرَّحْمَنِ (no superscript alef) | الرَّحْمَٰنِ (with U+0670) |
-| Description format | `TITLE — بقلم أحمد إسماعيل الفشني • DATE` | `TITLE - DATE. إعداد فضيلة الشيخ/` |
-| `twitter:image` | No `?v=` parameter | Has `?v=` parameter |
-| `og:image:secure_url` | Must be present | Missing |
-| `og:updated_time` | Must be present | Missing |
-| `content_html` in JSON | Empty string `""` (smart parser) | Filled with HTML |
-| Date numerals in JSON | Arabic numerals ١٢٣ | Western numerals 123 |
-| khutba-view.js version | Common latest (currently `v=20260327-1`) | File-specific version |
-| khutab.css version | Common latest (currently `v=20260327-2`) | Old version |
+`pdf-export.js` هو المسؤول عن PDF عبر `window.SheikhPdfExporter.exportKhutbaItem(item)`.
 
-### Version Parameters
+يجب أن يكون PDF للخطبة بهذا الترتيب:
 
-- **File-specific `?v=YYYYMMDD-1`**: Used on `canonical`, `og:url`, `og:image`, `og:image:url`, `og:image:secure_url`
-- **Common `?v=20260327-1`**: Used on `khutba-view.js` (update when JS changes)
-- **Common `?v=20260327-2`**: Used on `khutab.css` (update when CSS changes)
-- **No `?v=`**: Used on `twitter:image`
+1. كوفر أخضر يحمل العنوان ونوع المحتوى والبيانات.
+2. صفحة overview بعد الكوفر مباشرة:
+   - `عَنَاصِرُ الْخُطْبَةِ`.
+   - `الخطبة الأولى: [اسمها]` ثم عناصرها.
+   - `الخطبة الثانية: [اسمها]` ثم عناصرها.
+3. صفحة جديدة يبدأ فيها متن `الْخُطْبَةُ الْأُولَى`.
+4. ثم متن `الْخُطْبَةُ الثَّانِيَة` والدعاء.
+5. صفحة نهاية فيها التوقيع ومعلومات التواصل.
 
-### Reference File
+مهم جدًا:
 
-**`khutab/k-20260327-bg9jywwtmjay.html`** is the gold standard. All new khutab must match its exact structure, differing ONLY in:
-1. Title text
-2. Date text
-3. `data-khutba-id` / `KHUTBA_ID`
-4. Filename in URLs
-5. File-specific version date in `?v=` params
-6. `og:updated_time` date
+- لا تجعل `الخطبة الأولى: [اسمها]` داخل عناصر الخطبة تبدأ متن الخطبة.
+- لا تكرر جملة التوقيع داخل صفحات المتن؛ تظهر فقط في صفحة النهاية.
+- بعد بداية المتن، الفقرات العادية يجب أن تتدفق على الصفحات بدون فراغات بيضاء كبيرة.
 
-**Pattern:** `k-[YYYYMMDD]-[ID].html`
-- `YYYYMMDD` = Gregorian date of delivery
-- `ID` = Unique 5-12 character identifier (lowercase)
+## أوامر التحقق
 
-## PDF Export
+بعد أي تعديل في JS:
 
-Users can download khutab as PDF via the built-in export button. The PDF is generated client-side by `pdf-export.js`:
-- Entry point: `SheikhPdfExporter.exportKhutbaItem(item)`
-- Intro page skipped by default for khutab
-- عناصر الخطبة rendered on dedicated centered page
+```powershell
+cd "m:\Sheikh Ahmed"
+node --check khutba-view.js
+node --check pdf-export.js
+git diff --check
+```
+
+بعد تعديل JSON، تحقق من parse:
+
+```powershell
+cd "m:\Sheikh Ahmed"
+& "m:\Sheikh Ahmed\.venv\Scripts\python.exe" -c "import json; json.load(open('data/khutab_written.json', encoding='utf-8')); print('JSON OK')"
+```
+
+لتجربة الصفحة محليًا:
+
+```powershell
+cd "m:\Sheikh Ahmed"
+& "m:\Sheikh Ahmed\.venv\Scripts\python.exe" -m http.server 8765
+```
+
+ثم افتح:
+
+```text
+http://localhost:8765/khutab/[NEW_FILE].html
+```
+
+## اختبار PDF قبل الدفع
+
+اختبر من المتصفح أن:
+
+- زر `تحميل PDF` يعمل.
+- أول صفحة كوفر.
+- ثاني صفحة عناصر الخطبتين مع أسمائهما.
+- ثالث صفحة تبدأ متن الخطبة الأولى.
+- جملة التوقيع لا تظهر إلا في آخر صفحة.
+
+عند استخدام Playwright، يمكن تعطيل حفظ jsPDF مؤقتًا أو التقاط `fillText` من canvas للتأكد من ترتيب الصفحات.
+
+## Git rules
+
+لا تستخدم `git add .` بسبب وجود ملفات DOCX وسكربتات غير متعقبة. أضف الملفات المقصودة فقط:
+
+```powershell
+git add data/khutab_written.json khutab/[NEW_FILE].html
+```
+
+وأضف فقط ملفات JS/CSS/HTML المشتركة إذا عدلتها فعلًا.
+
+رسالة commit مناسبة:
+
+```text
+Add written khutba: [short title]
+```
+
+ثم:
+
+```powershell
+git commit -m "Add written khutba: [short title]"
+git push origin main
+```
+
+## Prompt مختصر للمستقبل
+
+يمكن للمستخدم أن يقول:
+
+```text
+اشتغل على ملف الوورد ده ببايبلاين الخطب المكتوبة في content-pipeline/written-khutab.md، ثم add and push
+```
+
+عندها نفذ هذا الملف كخطة العمل الأساسية.
