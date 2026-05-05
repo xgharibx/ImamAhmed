@@ -1085,9 +1085,7 @@
         const shouldRenderOutro = ['book', 'article', 'khutba'].includes(payload.type);
         const outroLine = shouldRenderOutro ? extractOutroLine() : '';
 
-        if (payload.type !== 'khutba') {
-            canvases.push(createPdfCoverCanvas(payload, coverCenterLines));
-        }
+        canvases.push(createPdfCoverCanvas(payload, coverCenterLines));
 
         let pageNumber = 1;
         let page = createPdfPageCanvas({ premiumBook: isBook });
@@ -1141,7 +1139,15 @@
 
         if (payload.type === 'khutba' && blocks.length) {
             const normalizedBlocks = [];
+            let currentKhutbaBlockKey = '';
             for (const block of blocks) {
+                if (block.kind === 'heading') {
+                    const headingKey = getKhutbaSectionKey(block.text);
+                    if (headingKey) currentKhutbaBlockKey = headingKey;
+                    normalizedBlocks.push(block);
+                    continue;
+                }
+
                 if (block.kind !== 'paragraph') {
                     normalizedBlocks.push(block);
                     continue;
@@ -1159,12 +1165,13 @@
                 const head = (split[1] || '').trim();
                 const tail = (split[2] || '').trim();
                 const sectionKey = getKhutbaSectionKey(head);
-                if (!sectionKey) {
+                if (!sectionKey || (currentKhutbaBlockKey === 'anasir' && sectionKey !== 'anasir')) {
                     normalizedBlocks.push(block);
                     continue;
                 }
 
                 normalizedBlocks.push({ kind: 'heading', text: khutbaHeadingLabelByKey(sectionKey), level: 2 });
+                currentKhutbaBlockKey = sectionKey;
                 if (tail) {
                     normalizedBlocks.push({ kind: 'paragraph', text: tail });
                 }
@@ -1756,9 +1763,7 @@
                 };
 
                 const drawKhutbaFrontMatterPage = (prefaceSection, anasirSection) => {
-                    const prefaceItems = (prefaceSection?.blocks || [])
-                        .filter((block) => String(block?.text || '').trim())
-                        .map((block) => classifyKhutbaFrontMatterBlock(block));
+                    const prefaceItems = [];
 
                     const entries = anasirSection ? extractAnasirEntries(anasirSection) : [];
                     const headingText = anasirSection
