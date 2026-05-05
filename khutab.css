@@ -446,6 +446,24 @@
     line-height: 1.8;
 }
 
+.khutba-elements-groups {
+    display: grid;
+    gap: 1rem;
+}
+
+.khutba-elements-group-title {
+    margin: 0.2rem 0 0.45rem;
+    color: var(--primary-gold-dark);
+    font-family: var(--font-decorative);
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1.9;
+}
+
+.khutba-elements-sublist {
+    margin-top: 0;
+}
+
 .khutba-list-ordered {
     list-style: decimal;
 }

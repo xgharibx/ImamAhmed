@@ -92,15 +92,76 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentSectionOpen = false;
         let currentSectionKey = '';
 
+        const getAnasirHeading = (item) => {
+            const split = splitAtColon(item);
+            const normalizedHead = normalizeArabic(split.head).replace(/^[^\u0621-\u064A0-9]+/, '');
+            if (/^الخطبه\s+الاولي/.test(normalizedHead)) {
+                return { key: 'first', label: 'الخطبة الأولى', title: split.tail || '' };
+            }
+            if (/^الخطبه\s+الثانيه/.test(normalizedHead)) {
+                return { key: 'second', label: 'الخطبة الثانية', title: split.tail || '' };
+            }
+            return null;
+        };
+
+        const groupAnasirEntries = (items) => {
+            const groups = [];
+            const leadingItems = [];
+            let currentGroup = null;
+            let hasKhutbaGroups = false;
+
+            for (const item of items) {
+                const heading = getAnasirHeading(item);
+                if (heading) {
+                    hasKhutbaGroups = true;
+                    currentGroup = { ...heading, items: [] };
+                    groups.push(currentGroup);
+                    continue;
+                }
+
+                if (currentGroup) {
+                    currentGroup.items.push(item);
+                } else {
+                    leadingItems.push(item);
+                }
+            }
+
+            if (!hasKhutbaGroups) return [];
+            if (leadingItems.length) {
+                groups.unshift({ key: 'general', label: '', title: '', items: leadingItems });
+            }
+            return groups.filter((group) => group.title || group.items.length);
+        };
+
+        const renderAnasirList = (items, listClass) => {
+            const groups = groupAnasirEntries(items);
+            if (!groups.length) {
+                const listItems = items.map((item) => `<li>${escapeHtml(item)}</li>`).join('');
+                return `<ol class="${listClass}">${listItems}</ol>`;
+            }
+
+            return `<div class="khutba-elements-groups">${groups.map((group) => {
+                const headingText = group.title ? `${group.label}: ${group.title}` : group.label;
+                const headingHtml = headingText
+                    ? `<p class="khutba-elements-group-title">${escapeHtml(headingText)}</p>`
+                    : '';
+                const listItems = group.items.map((item) => `<li>${escapeHtml(item)}</li>`).join('');
+                const listHtml = listItems
+                    ? `<ol class="${listClass} khutba-elements-sublist">${listItems}</ol>`
+                    : '';
+                return `<div class="khutba-elements-group">${headingHtml}${listHtml}</div>`;
+            }).join('')}</div>`;
+        };
+
         const flushList = () => {
             if (!listBuffer.length) return;
-            const items = listBuffer
-                .map((item) => `<li>${escapeHtml(item)}</li>`)
-                .join('');
             const listClass = currentSectionKey === 'anasir'
                 ? 'khutba-list khutba-list-ordered khutba-elements-list'
                 : 'khutba-list khutba-list-ordered';
-            parts.push(`<ol class="${listClass}">${items}</ol>`);
+            parts.push(currentSectionKey === 'anasir'
+                ? renderAnasirList(listBuffer, listClass)
+                : `<ol class="${listClass}">${listBuffer.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ol>`
+            );
             listBuffer = [];
         };
 

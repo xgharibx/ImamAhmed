@@ -183,8 +183,12 @@
 
         const flushList = () => {
             if (!listBuffer.length) return;
-            const listItems = listBuffer.map((item) => `<li>${escapeHtml(item)}</li>`).join('');
-            htmlParts.push(`<ol>${listItems}</ol>`);
+            if (currentSectionKey === 'anasir') {
+                htmlParts.push(renderAnasirList(listBuffer));
+            } else {
+                const listItems = listBuffer.map((item) => `<li>${escapeHtml(item)}</li>`).join('');
+                htmlParts.push(`<ol>${listItems}</ol>`);
+            }
             listBuffer = [];
         };
 
@@ -202,6 +206,65 @@
             const match = String(line || '').match(/^([^:：]+)\s*[:：]\s*(.+)$/);
             if (!match) return { head: line, tail: '' };
             return { head: (match[1] || '').trim(), tail: (match[2] || '').trim() };
+        };
+
+        const getAnasirHeading = (item) => {
+            const split = splitAtColon(item);
+            const normalizedHead = normalizeArabic(split.head).replace(/^[^\u0621-\u064A0-9]+/, '');
+            if (/^الخطبه\s+الاولي/.test(normalizedHead)) {
+                return { key: 'first', label: 'الخطبة الأولى', title: split.tail || '' };
+            }
+            if (/^الخطبه\s+الثانيه/.test(normalizedHead)) {
+                return { key: 'second', label: 'الخطبة الثانية', title: split.tail || '' };
+            }
+            return null;
+        };
+
+        const groupAnasirEntries = (items) => {
+            const groups = [];
+            const leadingItems = [];
+            let currentGroup = null;
+            let hasKhutbaGroups = false;
+
+            for (const item of items) {
+                const heading = getAnasirHeading(item);
+                if (heading) {
+                    hasKhutbaGroups = true;
+                    currentGroup = { ...heading, items: [] };
+                    groups.push(currentGroup);
+                    continue;
+                }
+
+                if (currentGroup) {
+                    currentGroup.items.push(item);
+                } else {
+                    leadingItems.push(item);
+                }
+            }
+
+            if (!hasKhutbaGroups) return [];
+            if (leadingItems.length) {
+                groups.unshift({ key: 'general', label: '', title: '', items: leadingItems });
+            }
+            return groups.filter((group) => group.title || group.items.length);
+        };
+
+        const renderAnasirList = (items) => {
+            const groups = groupAnasirEntries(items);
+            if (!groups.length) {
+                const listItems = items.map((item) => `<li>${escapeHtml(item)}</li>`).join('');
+                return `<ol>${listItems}</ol>`;
+            }
+
+            return `<div class="khutba-elements-groups">${groups.map((group) => {
+                const headingText = group.title ? `${group.label}: ${group.title}` : group.label;
+                const headingHtml = headingText
+                    ? `<p class="khutba-elements-group-title">${escapeHtml(headingText)}</p>`
+                    : '';
+                const listItems = group.items.map((item) => `<li>${escapeHtml(item)}</li>`).join('');
+                const listHtml = listItems ? `<ol>${listItems}</ol>` : '';
+                return `<div class="khutba-elements-group">${headingHtml}${listHtml}</div>`;
+            }).join('')}</div>`;
         };
 
         // NOTE: \b does not work with Arabic in JS (Arabic chars are \W).
@@ -1325,6 +1388,49 @@
                     return entries.filter((entry, index, arr) => arr.indexOf(entry) === index);
                 };
 
+                const splitAnasirHeading = (entry) => {
+                    const match = String(entry || '').match(/^([^:：]+)\s*[:：]\s*(.+)?$/);
+                    const head = (match?.[1] || entry || '').trim();
+                    const title = (match?.[2] || '').trim();
+                    const normalizedHead = normalizeArabic(head).replace(/^[^\u0621-\u064A0-9]+/, '');
+                    if (/^الخطبه\s+الاولي/.test(normalizedHead)) {
+                        return { key: 'first', label: 'الخطبة الأولى', title };
+                    }
+                    if (/^الخطبه\s+الثانيه/.test(normalizedHead)) {
+                        return { key: 'second', label: 'الخطبة الثانية', title };
+                    }
+                    return null;
+                };
+
+                const groupAnasirEntries = (entries) => {
+                    const groups = [];
+                    const leadingEntries = [];
+                    let currentGroup = null;
+                    let hasKhutbaGroups = false;
+
+                    for (const entry of entries) {
+                        const heading = splitAnasirHeading(entry);
+                        if (heading) {
+                            hasKhutbaGroups = true;
+                            currentGroup = { ...heading, items: [] };
+                            groups.push(currentGroup);
+                            continue;
+                        }
+
+                        if (currentGroup) {
+                            currentGroup.items.push(entry);
+                        } else {
+                            leadingEntries.push(entry);
+                        }
+                    }
+
+                    if (!hasKhutbaGroups) return [];
+                    if (leadingEntries.length) {
+                        groups.unshift({ key: 'general', label: '', title: '', items: leadingEntries });
+                    }
+                    return groups.filter((group) => group.title || group.items.length);
+                };
+
                 const analyzeKhutbaBlock = (rawText, isHeading) => {
                     const cleanText = String(rawText || '').replace(/^•\s+/, '').trim();
                     const fullLineNorm = normalizeArabic(cleanText);
@@ -1362,38 +1468,38 @@
                         const analysis = analyzeKhutbaBlock(rawText, isHeading);
 
                         const style = isHeading
-                            ? { font: "bold 56px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 78, gapBefore: 18, gapAfter: 22, align: 'center', panel: null }
+                            ? { font: "bold 52px 'Aref Ruqaa', 'Amiri', serif", color: '#145341', lineHeight: 70, gapBefore: 10, gapAfter: 14, align: 'center', panel: null }
                             : analysis.isAddressLine
                                 ? {
-                                    font: "700 39px 'Amiri', 'Aref Ruqaa', serif",
+                                    font: "700 36px 'Amiri', 'Aref Ruqaa', serif",
                                     color: '#5e4300',
-                                    lineHeight: 68,
-                                    gapBefore: 14,
-                                    gapAfter: 18,
+                                    lineHeight: 58,
+                                    gapBefore: 8,
+                                    gapAfter: 10,
                                     align: 'right',
-                                    panel: { fill: 'rgba(212, 175, 55, 0.14)', stroke: 'rgba(212, 175, 55, 0.54)', accent: '#d4af37', insetX: 34, insetY: 26 }
+                                    panel: { fill: 'rgba(212, 175, 55, 0.14)', stroke: 'rgba(212, 175, 55, 0.54)', accent: '#d4af37', insetX: 28, insetY: 20 }
                                 }
                             : analysis.isKeyPhraseLine
                                 ? {
-                                    font: "700 40px 'Amiri', 'Aref Ruqaa', serif",
+                                    font: "700 36px 'Amiri', 'Aref Ruqaa', serif",
                                     color: '#145341',
-                                    lineHeight: 70,
-                                    gapBefore: 16,
-                                    gapAfter: 20,
+                                    lineHeight: 60,
+                                    gapBefore: 8,
+                                    gapAfter: 10,
                                     align: 'right',
-                                    panel: { fill: 'rgba(31, 122, 95, 0.1)', stroke: 'rgba(31, 122, 95, 0.5)', accent: '#1f7a5f', insetX: 36, insetY: 28 }
+                                    panel: { fill: 'rgba(31, 122, 95, 0.1)', stroke: 'rgba(31, 122, 95, 0.5)', accent: '#1f7a5f', insetX: 30, insetY: 22 }
                                 }
                             : analysis.isBulletLike
                                 ? {
-                                    font: "700 38px 'Amiri', 'Aref Ruqaa', serif",
+                                    font: "700 34px 'Amiri', 'Aref Ruqaa', serif",
                                     color: '#215f49',
-                                    lineHeight: 66,
-                                    gapBefore: 14,
-                                    gapAfter: 18,
+                                    lineHeight: 56,
+                                    gapBefore: 8,
+                                    gapAfter: 10,
                                     align: 'right',
-                                    panel: { fill: 'rgba(20, 83, 65, 0.08)', stroke: 'rgba(20, 83, 65, 0.28)', accent: '#d4af37', insetX: 34, insetY: 24 }
+                                    panel: { fill: 'rgba(20, 83, 65, 0.08)', stroke: 'rgba(20, 83, 65, 0.28)', accent: '#d4af37', insetX: 28, insetY: 18 }
                                 }
-                                : { font: "36px 'Amiri', 'Aref Ruqaa', serif", color: '#222', lineHeight: 64, gapBefore: 14, gapAfter: 18, align: 'right', panel: null };
+                                : { font: "32px 'Amiri', 'Aref Ruqaa', serif", color: '#222', lineHeight: 52, gapBefore: 4, gapAfter: 6, align: 'right', panel: null };
 
                         const maxSectionWidth = isHeading
                             ? (maxWidth - 120)
@@ -1408,8 +1514,16 @@
 
                         const lines = wrapTextLines(page.ctx, rawText, maxSectionWidth);
                         const blockHeight = (lines.length * style.lineHeight) + (style.panel ? (style.panel.insetY * 2) : 0);
+                        const canSplitAcrossPages = !style.panel && !isHeading;
 
-                        if ((y + style.gapBefore + blockHeight + style.gapAfter) > contentBottom) {
+                        if (!canSplitAcrossPages && (y + style.gapBefore + blockHeight + style.gapAfter) > contentBottom) {
+                            newPage();
+                            y = contentTop;
+                            page.ctx.direction = 'rtl';
+                            page.ctx.textAlign = style.align;
+                            page.ctx.font = style.font;
+                            page.ctx.fillStyle = style.color;
+                        } else if (canSplitAcrossPages && (y + style.gapBefore + style.lineHeight) > contentBottom) {
                             newPage();
                             y = contentTop;
                             page.ctx.direction = 'rtl';
@@ -1445,7 +1559,7 @@
                         }
 
                         for (const line of lines) {
-                            if (y > contentBottom) {
+                            if ((y + style.lineHeight) > contentBottom) {
                                 newPage();
                                 y = contentTop;
                                 page.ctx.direction = 'rtl';
@@ -1523,6 +1637,8 @@
 
                     if (section.key === 'anasir') {
                         const entries = extractAnasirEntries(section);
+                        const groups = groupAnasirEntries(entries);
+                        const groupsToRender = groups.length ? groups : [{ label: '', title: '', items: entries }];
                         const headingBlock = section.blocks.find((block) => block.kind === 'heading');
                         const headingText = String(headingBlock?.text || khutbaHeadingLabelByKey('anasir')).trim();
 
@@ -1532,24 +1648,35 @@
                         const headingLines = wrapTextLines(page.ctx, headingText, 920).slice(0, 2);
                         const headingHeight = headingLines.length * 82;
 
-                        const itemFont = "700 42px 'Amiri', 'Aref Ruqaa', serif";
-                        const itemLineHeight = 68;
-                        const itemGap = 20;
+                        const groupTitleFont = "800 42px 'Aref Ruqaa', 'Amiri', serif";
+                        const groupTitleLineHeight = 62;
+                        const itemFont = "700 36px 'Amiri', 'Aref Ruqaa', serif";
+                        const itemLineHeight = 52;
+                        const itemGap = 8;
+                        const groupGap = 18;
                         const numberX = page.canvas.width - 170;
                         const textX = page.canvas.width - 245;
                         const itemWidth = 760;
 
                         let totalHeight = headingHeight + 34;
-                        const measuredEntries = entries.map((entry, index) => {
-                            page.ctx.font = itemFont;
-                            const lines = wrapTextLines(page.ctx, entry, itemWidth);
-                            const height = Math.max(1, lines.length) * itemLineHeight;
-                            totalHeight += height + itemGap;
-                            return {
-                                label: `${toArabicIndicNumber(index + 1)}.`,
-                                lines,
-                                height
-                            };
+                        const measuredGroups = groupsToRender.map((group, groupIndex) => {
+                            const titleText = group.title ? `${group.label}: ${group.title}` : group.label;
+                            page.ctx.font = groupTitleFont;
+                            const titleLines = titleText ? wrapTextLines(page.ctx, titleText, 900).slice(0, 3) : [];
+                            const items = group.items.map((entry, index) => {
+                                page.ctx.font = itemFont;
+                                const lines = wrapTextLines(page.ctx, entry, itemWidth);
+                                return {
+                                    label: `${toArabicIndicNumber(index + 1)}.`,
+                                    lines
+                                };
+                            });
+                            const groupHeight = (groupIndex > 0 ? groupGap : 0)
+                                + (titleLines.length * groupTitleLineHeight)
+                                + (titleLines.length ? 8 : 0)
+                                + items.reduce((sum, item) => sum + (Math.max(1, item.lines.length) * itemLineHeight) + itemGap, 0);
+                            totalHeight += groupHeight;
+                            return { titleLines, items, groupIndex };
                         });
 
                         y = contentTop + Math.max(0, ((contentBottom - contentTop - totalHeight) / 2));
@@ -1562,20 +1689,34 @@
                         }
 
                         y += 20;
-                        for (const entry of measuredEntries) {
-                            page.ctx.fillStyle = '#d4af37';
-                            page.ctx.textAlign = 'right';
-                            page.ctx.font = "700 40px Cairo, Tahoma, Arial";
-                            page.ctx.fillText(entry.label, numberX, y);
-
-                            page.ctx.fillStyle = '#1f7a5f';
-                            page.ctx.font = itemFont;
-                            for (const line of entry.lines) {
-                                page.ctx.fillText(line, textX, y);
-                                y += itemLineHeight;
+                        for (const group of measuredGroups) {
+                            if (group.groupIndex > 0) y += groupGap;
+                            if (group.titleLines.length) {
+                                page.ctx.fillStyle = '#6a4d08';
+                                page.ctx.textAlign = 'center';
+                                page.ctx.font = groupTitleFont;
+                                for (const line of group.titleLines) {
+                                    page.ctx.fillText(line, page.canvas.width / 2, y);
+                                    y += groupTitleLineHeight;
+                                }
+                                y += 8;
                             }
 
-                            y += itemGap;
+                            for (const entry of group.items) {
+                                page.ctx.fillStyle = '#d4af37';
+                                page.ctx.textAlign = 'right';
+                                page.ctx.font = "700 34px Cairo, Tahoma, Arial";
+                                page.ctx.fillText(entry.label, numberX, y);
+
+                                page.ctx.fillStyle = '#1f7a5f';
+                                page.ctx.font = itemFont;
+                                for (const line of entry.lines) {
+                                    page.ctx.fillText(line, textX, y);
+                                    y += itemLineHeight;
+                                }
+
+                                y += itemGap;
+                            }
                         }
                         return;
                     }
@@ -1646,28 +1787,41 @@
                         headingHeight = (headingLines.length * 78) + 18;
                     }
 
-                    const entryLineHeight = 62;
-                    const entryGap = 18;
+                    const entryLineHeight = 50;
+                    const entryGap = 6;
+                    const groupTitleLineHeight = 56;
+                    const groupGap = 16;
                     const entryWidth = 780;
-                    const entryPanelX = 170;
-                    const entryPanelW = page.canvas.width - 340;
                     const numberX = page.canvas.width - 190;
                     const textX = page.canvas.width - 255;
-                    const measuredEntries = entries.map((entry, index) => {
-                        page.ctx.font = "700 40px 'Amiri', 'Aref Ruqaa', serif";
-                        const lines = wrapTextLines(page.ctx, entry, entryWidth);
-                        const panelHeight = (Math.max(1, lines.length) * entryLineHeight) + 30;
+                    const anasirGroups = groupAnasirEntries(entries);
+                    const groupsToRender = anasirGroups.length ? anasirGroups : [{ label: '', title: '', items: entries }];
+                    const measuredGroups = groupsToRender.map((group, groupIndex) => {
+                        const titleText = group.title ? `${group.label}: ${group.title}` : group.label;
+                        page.ctx.font = "800 38px 'Aref Ruqaa', 'Amiri', serif";
+                        const titleLines = titleText ? wrapTextLines(page.ctx, titleText, 900).slice(0, 3) : [];
+                        const items = group.items.map((entry, index) => {
+                            page.ctx.font = "700 34px 'Amiri', 'Aref Ruqaa', serif";
+                            const lines = wrapTextLines(page.ctx, entry, entryWidth);
+                            return {
+                                label: `${toArabicIndicNumber(index + 1)}.`,
+                                lines,
+                                totalHeight: (Math.max(1, lines.length) * entryLineHeight) + entryGap
+                            };
+                        });
                         return {
-                            label: `${toArabicIndicNumber(index + 1)}.`,
-                            lines,
-                            panelHeight,
-                            totalHeight: panelHeight + entryGap,
-                            index
+                            titleLines,
+                            items,
+                            totalHeight: (groupIndex > 0 ? groupGap : 0)
+                                + (titleLines.length * groupTitleLineHeight)
+                                + (titleLines.length ? 8 : 0)
+                                + items.reduce((sum, item) => sum + item.totalHeight, 0),
+                            groupIndex
                         };
                     });
 
                     const totalPrefaceHeight = measuredPrefaceItems.reduce((sum, item) => sum + item.height, 0);
-                    const totalEntriesHeight = measuredEntries.reduce((sum, entry) => sum + entry.totalHeight, 0);
+                    const totalEntriesHeight = measuredGroups.reduce((sum, group) => sum + group.totalHeight, 0);
                     const totalHeight = totalPrefaceHeight + (headingText ? (headingHeight + 18) : 0) + totalEntriesHeight;
 
                     y = contentTop + Math.max(0, ((contentBottom - contentTop - totalHeight) / 2) - 12);
@@ -1716,31 +1870,34 @@
                         y += 10;
                     }
 
-                    for (const entry of measuredEntries) {
-                        page.ctx.fillStyle = 'rgba(31, 122, 95, 0.08)';
-                        page.ctx.beginPath();
-                        page.ctx.roundRect(entryPanelX, y - 34, entryPanelW, entry.panelHeight, 24);
-                        page.ctx.fill();
-
-                        page.ctx.strokeStyle = 'rgba(31, 122, 95, 0.22)';
-                        page.ctx.lineWidth = 1.4;
-                        page.ctx.beginPath();
-                        page.ctx.roundRect(entryPanelX, y - 34, entryPanelW, entry.panelHeight, 24);
-                        page.ctx.stroke();
-
-                        page.ctx.fillStyle = '#d4af37';
-                        page.ctx.textAlign = 'right';
-                        page.ctx.font = "700 38px Cairo, Tahoma, Arial";
-                        page.ctx.fillText(entry.label, numberX, y + 4);
-
-                        page.ctx.fillStyle = '#145341';
-                        page.ctx.font = "700 40px 'Amiri', 'Aref Ruqaa', serif";
-                        for (const line of entry.lines) {
-                            page.ctx.fillText(line, textX, y + 4);
-                            y += entryLineHeight;
+                    for (const group of measuredGroups) {
+                        if (group.groupIndex > 0) y += groupGap;
+                        if (group.titleLines.length) {
+                            page.ctx.fillStyle = '#6a4d08';
+                            page.ctx.textAlign = 'center';
+                            page.ctx.font = "800 38px 'Aref Ruqaa', 'Amiri', serif";
+                            for (const line of group.titleLines) {
+                                page.ctx.fillText(line, page.canvas.width / 2, y);
+                                y += groupTitleLineHeight;
+                            }
+                            y += 8;
                         }
 
-                        y += entryGap;
+                        for (const entry of group.items) {
+                            page.ctx.fillStyle = '#d4af37';
+                            page.ctx.textAlign = 'right';
+                            page.ctx.font = "700 32px Cairo, Tahoma, Arial";
+                            page.ctx.fillText(entry.label, numberX, y + 2);
+
+                            page.ctx.fillStyle = '#145341';
+                            page.ctx.font = "700 34px 'Amiri', 'Aref Ruqaa', serif";
+                            for (const line of entry.lines) {
+                                page.ctx.fillText(line, textX, y + 2);
+                                y += entryLineHeight;
+                            }
+
+                            y += entryGap;
+                        }
                     }
 
                     return true;
