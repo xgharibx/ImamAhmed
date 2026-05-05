@@ -1085,7 +1085,9 @@
         const shouldRenderOutro = ['book', 'article', 'khutba'].includes(payload.type);
         const outroLine = shouldRenderOutro ? extractOutroLine() : '';
 
-        canvases.push(createPdfCoverCanvas(payload, coverCenterLines));
+        if (payload.type !== 'khutba') {
+            canvases.push(createPdfCoverCanvas(payload, coverCenterLines));
+        }
 
         let pageNumber = 1;
         let page = createPdfPageCanvas({ premiumBook: isBook });
