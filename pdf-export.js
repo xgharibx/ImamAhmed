@@ -1085,6 +1085,19 @@
         const shouldRenderOutro = ['book', 'article', 'khutba'].includes(payload.type);
         const outroLine = shouldRenderOutro ? extractOutroLine() : '';
 
+        if (payload.type === 'khutba' && outroLine) {
+            const normalizedOutroLine = normalizeArabic(outroLine);
+            for (let i = blocks.length - 1; i >= 0; i -= 1) {
+                const block = blocks[i];
+                if (block.kind !== 'paragraph' && block.kind !== 'quote') continue;
+                const blockText = String(block.text || '').replace(/\s+/g, ' ').trim();
+                if (normalizeArabic(blockText) === normalizedOutroLine) {
+                    blocks.splice(i, 1);
+                    break;
+                }
+            }
+        }
+
         canvases.push(createPdfCoverCanvas(payload, coverCenterLines));
 
         let pageNumber = 1;
