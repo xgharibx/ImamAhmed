@@ -192,6 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (/^الخطبه الاولي[،:.!؟\s]*$/.test(n)) return 'first';
             if (/^الخطبه الثانيه[،:.!؟\s]*$/.test(n)) return 'second';
             if (n.startsWith('الدعاء')) return 'dua';
+            if (n.startsWith('المقدمه')) return 'intro';
             if (n.startsWith('الموضوع')) return 'topic';
             return '';
         };
@@ -201,15 +202,16 @@ document.addEventListener('DOMContentLoaded', () => {
             if (key === 'first') return 'الْخُطْبَةُ الْأُولَى';
             if (key === 'second') return 'الْخُطْبَةُ الثَّانِيَة';
             if (key === 'dua') return 'الدُّعَاءُ';
+            if (key === 'intro') return 'الْمُقَدِّمَة';
             if (key === 'topic') return 'الْمَوْضُوع';
             return '';
         };
 
-        const isSubHeading = (line) => /^(الْعُنْصَرُ|العنصر|أولاً|ثانياً|ثالثاً|رابعاً|خامساً|سادساً|سابعاً|ثامناً|تاسعاً|عاشراً)\b/.test(line);
+        const isSubHeading = (line) => /^(الْعُنْصَرُ|العنصر|أولاً|ثانياً|ثالثاً|رابعاً|خامساً|سادساً|سابعاً|ثامناً|تاسعاً|عاشراً)(?:\s|[:：]|$)/.test(line);
         const isNumberedListItem = (line) => /^\s*[0-9٠-٩]+\s*[\)\-\.:،]?\s+/.test(line);
         const isKeyPhraseLabel = (head) => {
             const n = normalizeArabic(head);
-            return /^(العنصر|اولا|ثانيا|ثالثا|رابعا|خامسا|سادسا|سابعا|ثامنا|تاسعا|عاشرا|فلسفه|جهاد|الكرم|موسوعه|البخل|المسؤوليه|خطه|النصيحه|الجانب|مشاهد|جدول)\b/.test(n);
+            return /^(العنصر|اولا|ثانيا|ثالثا|رابعا|خامسا|سادسا|سابعا|ثامنا|تاسعا|عاشرا|فلسفه|جهاد|الكرم|موسوعه|البخل|المسؤوليه|خطه|النصيحه|الجانب|مشاهد|جدول)(?:\s|[:：]|$)/.test(n);
         };
 
         lines.forEach((line, index) => {
@@ -373,12 +375,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const candidateUrls = [
-                'data/khutab_written.json',
-                './data/khutab_written.json',
-                '../data/khutab_written.json',
-                '/data/khutab_written.json'
-            ];
+            const isKhutabDirectoryPage = /\/khutab\//.test(window.location.pathname.replace(/\\/g, '/'));
+            const candidateUrls = isKhutabDirectoryPage
+                ? ['../data/khutab_written.json', '/data/khutab_written.json', 'data/khutab_written.json', './data/khutab_written.json']
+                : ['data/khutab_written.json', './data/khutab_written.json', '../data/khutab_written.json', '/data/khutab_written.json'];
 
             let raw = null;
             for (const url of candidateUrls) {

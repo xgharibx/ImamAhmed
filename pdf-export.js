@@ -277,6 +277,7 @@
             if (/^الخطبه الاولي[،:.!؟\s]*$/.test(n)) return 'first';
             if (/^الخطبه الثانيه[،:.!؟\s]*$/.test(n)) return 'second';
             if (n.startsWith('الدعاء')) return 'dua';
+            if (n.startsWith('المقدمه')) return 'intro';
             if (n.startsWith('الموضوع')) return 'topic';
             return '';
         };
@@ -286,11 +287,12 @@
             if (key === 'first') return 'الْخُطْبَةُ الْأُولَى';
             if (key === 'second') return 'الْخُطْبَةُ الثَّانِيَة';
             if (key === 'dua') return 'الدُّعَاءُ';
+            if (key === 'intro') return 'الْمُقَدِّمَة';
             if (key === 'topic') return 'الْمَوْضُوع';
             return '';
         };
 
-        const isSubHeading = (line) => /^(الْعُنْصَرُ|العنصر|أولاً|ثانياً|ثالثاً|رابعاً|خامساً|سادساً|سابعاً|ثامناً|تاسعاً|عاشراً)\b/.test(line);
+        const isSubHeading = (line) => /^(الْعُنْصَرُ|العنصر|أولاً|ثانياً|ثالثاً|رابعاً|خامساً|سادساً|سابعاً|ثامناً|تاسعاً|عاشراً)(?:\s|[:：]|$)/.test(line);
         const isNumberedListItem = (line) => /^\s*[0-9٠-٩]+\s*[\)\-\.:،]?\s+/.test(line);
 
         for (const line of lines) {
@@ -1139,6 +1141,8 @@
             if (/^الخطبه\s+الاولي/.test(normalized)) return 'first';
             if (/^الخطبه\s+الثانيه/.test(normalized)) return 'second';
             if (/^الدعاء$/.test(normalized)) return 'dua';
+            if (/^المقدمه/.test(normalized)) return 'intro';
+            if (/^الموضوع/.test(normalized)) return 'topic';
             return '';
         };
 
@@ -1147,6 +1151,8 @@
             if (key === 'first') return 'الْخُطْبَةُ الْأُولَى';
             if (key === 'second') return 'الْخُطْبَةُ الثَّانِيَة';
             if (key === 'dua') return 'الدُّعَاءُ';
+            if (key === 'intro') return 'الْمُقَدِّمَة';
+            if (key === 'topic') return 'الْمَوْضُوع';
             return '';
         };
 
@@ -1365,7 +1371,7 @@
                     currentSection.blocks.push(block);
                 }
 
-                const sectionPriority = ['preface', 'anasir', 'first', 'second', 'dua'];
+                const sectionPriority = ['preface', 'anasir', 'intro', 'topic', 'first', 'second', 'dua'];
                 const sectionsToRender = orderedSections
                     .filter((section) => section.blocks.length)
                     .sort((a, b) => {
@@ -1376,7 +1382,7 @@
                         return safeAi - safeBi;
                     });
 
-                const khutbaKeywordPattern = /^(العنصر(?:\s+(?:الاول|الثاني|الثالث|الرابع|الخامس|السادس|السابع|الثامن|التاسع|العاشر|[0-9٠-٩]+))?|اولا|ثانيا|ثالثا|رابعا|خامسا|سادسا|سابعا|ثامنا|تاسعا|عاشرا|الرساله\s+العمليه|الخلاصه|النتيجه|الدروس\s+والعبر|الوصيه|عنوان\s+الخطبه|الخطبه\s+الاولي|الخطبه\s+الثانيه|ايها\s+الساده\s+الكرام|عباد\s+الله|اما\s+بعد)\b/;
+                const khutbaKeywordPattern = /^(العنصر(?:\s+(?:الاول|الثاني|الثالث|الرابع|الخامس|السادس|السابع|الثامن|التاسع|العاشر|[0-9٠-٩]+))?|اولا|ثانيا|ثالثا|رابعا|خامسا|سادسا|سابعا|ثامنا|تاسعا|عاشرا|الرساله\s+العمليه|الخلاصه|النتيجه|الدروس\s+والعبر|الوصيه|عنوان\s+الخطبه|الخطبه\s+الاولي|الخطبه\s+الثانيه|ايها\s+الساده\s+الكرام|عباد\s+الله|اما\s+بعد)(?:\s|[:：]|$)/;
 
                 const extractAnasirEntries = (section) => {
                     const entries = [];
@@ -1462,7 +1468,7 @@
                     const keywordLeadNorm = keywordLead ? normalizeArabic(keywordLead[1]) : '';
                     const keywordPrefixNorm = fullLineNorm.match(khutbaKeywordPattern)?.[0] || '';
 
-                    const isAddressLine = !isHeading && /^(ايها\s+الساده\s+الكرام|عباد\s+الله|اما\s+بعد)\b/.test(fullLineNorm);
+                    const isAddressLine = !isHeading && /^(ايها\s+الساده\s+الكرام|عباد\s+الله|اما\s+بعد)(?:\s|[:：]|$)/.test(fullLineNorm);
                     const isKeyPhraseLine = !isHeading && (
                         (Boolean(keywordLeadNorm) && khutbaKeywordPattern.test(keywordLeadNorm))
                         || Boolean(keywordPrefixNorm)
