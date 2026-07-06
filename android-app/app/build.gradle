@@ -1,0 +1,27 @@
+plugins {
+    id "com.android.application"
+}
+
+android {
+    namespace "com.ahmedelfashny.official"
+    compileSdk 36
+
+    defaultConfig {
+        applicationId "com.ahmedelfashny.official"
+        minSdk 23
+        targetSdk 36
+        versionCode 1
+        versionName "1.0.0"
+
+        buildConfigField "String", "LIVE_SITE_URL", "\"https://ahmedelfashny.com/\""
+        buildConfigField "String", "LIVE_SITE_HOST", "\"ahmedelfashny.com\""
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+}
+
+dependencies {
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+}
