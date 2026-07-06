@@ -395,11 +395,16 @@
 
 /* ============== Load More ============== */
 .load-more-container {
+    position: relative;
+    z-index: 5;
     text-align: center;
-    margin-top: var(--spacing-lg);
+    margin: var(--spacing-xl) 0 var(--spacing-md);
+    clear: both;
 }
 
 .load-more-btn {
+    position: relative;
+    z-index: 6;
     min-width: 200px;
 }
 

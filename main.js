@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initBackToTop();
     initBrowserBackButton();
     initCounters();
+    initKhawaterGeneratedCards();
+    initKhawaterShuffle();
     initKhawaterSearchFilters();
     initKhawaterShareButtons();
     initStoriesOfProphetsDeduplication();
@@ -488,6 +490,119 @@ function initCounters() {
 }
 
 /* ============== Khawater Search & Filters ============== */
+function initKhawaterGeneratedCards() {
+    const grid = document.querySelector('.khawater-main .khawater-grid');
+    if (!grid || grid.dataset.generatedCards === 'true') return;
+
+    const generatedKhawater = [
+        { tag: 'خواطر النجاح', icon: 'fa-lightbulb', text: 'النجاح الحقيقي أن تقوم بعد عثرتك بقلب أكثر تواضعاً، لا أن تمضي بلا خطأ. العبرة ليست في طريق بلا تعثر، بل في نفس لا تسمح للتعثر أن يكون نهاية السير.' },
+        { tag: 'خواطر النجاح', icon: 'fa-lightbulb', text: 'إذا ضاق وقتك فابدأ بالأهم لا بالأكثر ضجيجاً. القلب الذي يعرف أولوياته لا تسرقه العاجلات، ولا يبيع بركة العمر في سوق التشتت.' },
+        { tag: 'خواطر النجاح', icon: 'fa-lightbulb', text: 'من أعظم أبواب التزكية أن تصدق مع نفسك: ما الذي أصلحه لله، وما الذي أجمّله للناس؟ الصدق مؤلم في أوله، لكنه يختصر طريقاً طويلاً إلى الصفاء.' },
+        { tag: 'خواطر النجاح', icon: 'fa-lightbulb', text: 'لا تحتقر عادة صغيرة صالحة؛ ورد قصير، صدقة خفية، دعاء ثابت، أو كلمة طيبة. البنيان الكبير لا يقوم إلا من لبنات صغيرة صبرت في موضعها.' },
+        { tag: 'خواطر النجاح', icon: 'fa-lightbulb', text: 'حين تتأخر الإجابة لا تقل تركني ربي، بل قل يربيني ربي. فكم من دعوة أبطأ الله جوابها ليجعل صاحبها أعمق يقيناً وأوسع قلباً.' },
+        { tag: 'خواطر النجاح', icon: 'fa-lightbulb', text: 'القلب إذا امتلأ بالذكر صار أكثر قدرة على مقاومة الضجيج. لا تبحث عن السكينة في ازدحام الخارج، ابدأ بتنظيف الداخل من الغفلة.' },
+        { tag: 'خواطر النجاح', icon: 'fa-lightbulb', text: 'العمل الصالح الذي لا يراه الناس قد يكون أعظم ما يحفظك عند الله. لا تجعل قيمة الطاعة في عدد العيون التي شهدتها، بل في صدق القلب الذي حملها.' },
+        { tag: 'خواطر النجاح', icon: 'fa-lightbulb', text: 'كل يوم لا تتعلم فيه أدباً جديداً مع الله أو مع خلقه هو يوم يحتاج إلى مراجعة. العلم الذي لا يورث رحمة وتواضعاً يحتاج إلى علم آخر يزكيه.' },
+        { tag: 'خواطر النجاح', icon: 'fa-lightbulb', text: 'من علامات النضج الإيماني أن تختار الصمت حين يكون الكلام انتصاراً للنفس لا نصرة للحق. ليست كل معركة تستحق صوتك، وبعض النجاة في الترك.' },
+        { tag: 'خواطر النجاح', icon: 'fa-lightbulb', text: 'إذا أردت بركة اليوم فابدأه بوجهة صحيحة: نية صالحة، ذكر حاضر، وخطوة نافعة. البدايات المرتبة تهدي القلب إذا ازدحم الطريق.' },
+        { tag: 'خواطر النجاح', icon: 'fa-lightbulb', text: 'لا تجعل المقارنة تسرق منك شكر النعمة. قد ترى من غيرك زهرة ولا ترى جذورها المتعبة، فارض بما قسم الله واسع فيما أمرك.' },
+        { tag: 'خواطر النجاح', icon: 'fa-lightbulb', text: 'كل باب يغلقه الله أمامك قد يحفظك من طريق لم تكن ترى نهايته. المؤمن لا يفهم كل المنع، لكنه يحسن الظن بمن بيده الخير كله.' },
+        { tag: 'خواطر النجاح', icon: 'fa-lightbulb', text: 'من أراد إصلاح بيته فليبدأ بإصلاح لسانه. الكلمة في البيت إما سقيا للمودة، وإما شرارة تشعل ما كان يمكن إطفاؤه بحلم.' },
+        { tag: 'خواطر النجاح', icon: 'fa-lightbulb', text: 'التوبة ليست موسماً عابراً، بل باب مفتوح كلما تعبت الروح من أثقالها. ارجع ولو تكرر السقوط، فربك يحب الأوابين لا المدعين للعصمة.' },
+        { tag: 'خواطر النجاح', icon: 'fa-lightbulb', text: 'من بركة العلم أن يجعلك ألطف في النصيحة، وأبطأ في الحكم، وأسرع في ستر العيب. فإذا زاد علمك وزادت قسوتك ففتش عن حظ النفس.' },
+        { tag: 'خواطر النجاح', icon: 'fa-lightbulb', text: 'الوقت الذي يذهب في إصلاح قلبك ليس ضائعاً، بل هو أصل كل إنجاز. فالعمل بلا قلب حاضر صورة، والعمل بقلب صادق حياة وأثر.' },
+        { tag: 'خواطر النجاح', icon: 'fa-lightbulb', text: 'ليس الزهد أن تكره الدنيا، بل أن تعرف قدرها. خذ منها ما يعينك على الآخرة، ولا تسمح لها أن تجلس في موضع لا يليق إلا بالله.' },
+        { tag: 'خواطر النجاح', icon: 'fa-lightbulb', text: 'حين تخدم الناس ابتغاء وجه الله فأنت لا تضيع وقتك، بل تضعه في موضع البركة. كثير من الفتوحات تأتي بعد جبر خاطر لا يعلم به أحد.' },
+        { tag: 'خواطر النجاح', icon: 'fa-lightbulb', text: 'الاستقامة لا تعني أن تكون بلا ضعف، بل أن تعرف طريق الرجوع كلما ضعفت. أعظم الناس ثباتاً أكثرهم صدقاً في الاعتذار إلى الله.' },
+        { tag: 'خواطر النجاح', icon: 'fa-lightbulb', text: 'اجعل لك خبيئة لا يعرفها أحد: ركعتان، صدقة، دعاء، أو ستر مسلم. الخبايا الصالحة زاد القلب حين تفتر الظواهر وتشتد الأيام.' },
+        { tag: 'قصص الأنبياء', icon: 'fa-star', text: 'نوح عليه السلام علّمنا أن طول الطريق لا يعني فشل الدعوة. قد لا ترى الثمرة سريعاً، لكن الله يرى الصبر، ويكتب للأمين أجر البلاغ.' },
+        { tag: 'قصص الأنبياء', icon: 'fa-star', text: 'إبراهيم عليه السلام كسر الأصنام قبل أن تكسر النار يقينه. في كل قلب أصنام خفية: هوى، خوف، أو تعلق، ولا ينجو القلب حتى يعلن توحيده عملياً.' },
+        { tag: 'قصص الأنبياء', icon: 'fa-star', text: 'حين قالت هاجر: آلله أمرك بهذا؟ وسكنت عند نعم، صار الوادي الجاف بداية زمزم. اليقين يحول الأماكن الخالية إلى مواطن عطاء.' },
+        { tag: 'قصص الأنبياء', icon: 'fa-star', text: 'يوسف عليه السلام لم يخرج من السجن ناقماً، بل خرج محسناً. الضيق لا يفسد النفوس الكبيرة، بل يكشف معدنها حين تستطيع أن تنتقم فتختار العفو.' },
+        { tag: 'قصص الأنبياء', icon: 'fa-star', text: 'يعقوب عليه السلام بكى ولم ييأس، وحزن ولم يقطع رجاءه. الحزن ليس ضد الإيمان، إنما الخطر أن يتحول الحزن إلى سوء ظن بالله.' },
+        { tag: 'قصص الأنبياء', icon: 'fa-star', text: 'موسى عليه السلام خرج خائفاً يترقب، ثم عاد رسولاً يواجه الطغيان. لا تحكم على مستقبلك من لحظة اضطراب؛ قد تكون بداية إعداد لا نهاية طريق.' },
+        { tag: 'قصص الأنبياء', icon: 'fa-star', text: 'آسية رأت القصر من الداخل وعرفت أنه لا يساوي سجدة صدق. المكان لا يصنع الكرامة، بل القلب الذي يختار الله ولو أحاطت به الزينة.' },
+        { tag: 'قصص الأنبياء', icon: 'fa-star', text: 'داود عليه السلام جمع بين العبادة والعمل والقوة. الإيمان لا يطلب منك أن تنسحب من الحياة، بل أن تدخلها بقلب ذاكر ويد نافعة.' },
+        { tag: 'قصص الأنبياء', icon: 'fa-star', text: 'سليمان عليه السلام لما رأى النعمة قال: هذا من فضل ربي. العبد الرباني لا تنسيه القدرة مصدرها، ولا تجعله النعمة غافلاً عن الشكر.' },
+        { tag: 'قصص الأنبياء', icon: 'fa-star', text: 'يونس عليه السلام نادى في الظلمات فاستجاب الله له. لا توجد عتمة بعيدة عن سمع الله، ولا ضيق يعجز عنه دعاء صادق.' },
+        { tag: 'قصص الأنبياء', icon: 'fa-star', text: 'أيوب عليه السلام لم يجعل البلاء حجة على ترك الأدب مع الله. الشكوى إلى الله عبادة، والشكوى من الله غفلة تجرح اليقين.' },
+        { tag: 'قصص الأنبياء', icon: 'fa-star', text: 'زكريا عليه السلام دعا وهو يرى أسباب الدنيا بعيدة، فجاءه الجواب من باب القدرة. لا تجعل كبر السن أو ضعف السبب يحاصر حسن ظنك بالله.' },
+        { tag: 'قصص الأنبياء', icon: 'fa-star', text: 'مريم عليها السلام هزت جذع النخلة وهي في أشد الضعف، فجاء الرطب بفضل الله. افعل السبب ولو بدا صغيراً، فالبركة من الله لا من قوة اليد.' },
+        { tag: 'قصص الأنبياء', icon: 'fa-star', text: 'أصحاب الكهف لم يملكوا تغيير المدينة، فحفظوا إيمانهم واعتزلوا الفتنة. أحياناً يكون أعظم المواقف أن تنجو بدينك حتى يفتح الله باباً آخر.' },
+        { tag: 'قصص الأنبياء', icon: 'fa-star', text: 'لقمان بدأ وصيته بالتوحيد قبل كل مهارة وحكمة. إذا أردت بناء إنسان فابدأ بعلاقته بالله، فكل بناء بعد ذلك يجد أساسه.' },
+        { tag: 'قصص الأنبياء', icon: 'fa-star', text: 'الخضر علّم موسى عليه السلام أن بعض أقدار الله لا تظهر حكمتها من أول مشهد. اصبر على ما لا تفهمه الآن، فقد يكشف الغد رحمة كانت مستورة.' },
+        { tag: 'قصص الأنبياء', icon: 'fa-star', text: 'قصة طالوت تعلمنا أن القلة المؤمنة قد تغلب الكثرة إذا صدقت. الميزان عند الله ليس العدد وحده، بل الصبر والطاعة وحسن التوكل.' },
+        { tag: 'قصص الأنبياء', icon: 'fa-star', text: 'بلقيس لم يمنعها الملك من قبول الحق حين ظهر لها. العاقل لا يجعل منصبه سجناً لكبريائه، بل جسراً إلى قرار أشرف.' },
+        { tag: 'قصص الأنبياء', icon: 'fa-star', text: 'النمل في قصة سليمان علّمنا قيمة النظام واليقظة. حتى أضعف المخلوقات لها رسالة إذا أحسنت قراءة آيات الله في الكون.' },
+        { tag: 'قصص الأنبياء', icon: 'fa-star', text: 'سيرة النبي ﷺ كلها رحمة عملية: يعفو عند القدرة، ويواسي عند الحزن، ويثبت عند الشدة. من أحب النبي فليجعل أخلاقه أقرب شاهد على محبته.' }
+    ];
+
+    const startNumber = grid.querySelectorAll('.khatera-card').length + 1;
+    generatedKhawater.forEach((item, index) => {
+        grid.appendChild(createKhawateraCard({
+            number: startNumber + index,
+            text: item.text,
+            tag: item.tag,
+            icon: item.icon
+        }));
+    });
+
+    grid.dataset.generatedCards = 'true';
+}
+
+function createKhawateraCard({ number, text, tag, icon }) {
+    const card = document.createElement('div');
+    card.className = 'khatera-card';
+    card.setAttribute('data-aos', 'fade-up');
+
+    card.innerHTML = `
+            <div class="card-number">${escapeHtml(number)}</div>
+            <div class="card-decoration">
+                <i class="fas ${escapeHtml(icon)} quote-mark" style="font-size: 1.5rem; opacity: 0.5;"></i>
+            </div>
+            <div class="card-content">
+                <p class="khatera-text">${escapeHtml(text)}</p>
+            </div>
+            <div class="card-footer">
+                <span class="card-tag">
+                    <i class="fas fa-book"></i> ${escapeHtml(tag)}
+                </span>
+                <button class="share-btn" type="button" title="مشاركة">
+                    <i class="fas fa-share-alt"></i>
+                </button>
+            </div>
+        `;
+
+    return card;
+}
+
+function escapeHtml(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+function initKhawaterShuffle() {
+    const grid = document.querySelector('.khawater-main .khawater-grid');
+    if (!grid || grid.dataset.shuffled === 'true') return;
+
+    const cards = Array.from(grid.querySelectorAll('.khatera-card'));
+    for (let index = cards.length - 1; index > 0; index -= 1) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        [cards[index], cards[swapIndex]] = [cards[swapIndex], cards[index]];
+    }
+
+    cards.forEach((card, index) => {
+        card.querySelector('.card-number').textContent = index + 1;
+        grid.appendChild(card);
+    });
+
+    grid.dataset.shuffled = 'true';
+}
+
 function initKhawaterSearchFilters() {
     const section = document.querySelector('.khawater-main');
     if (!section) return;
@@ -495,7 +610,11 @@ function initKhawaterSearchFilters() {
     const searchInput = section.querySelector('.search-box input');
     const filterButtons = section.querySelectorAll('.filter-tags .filter-tag');
     const cards = Array.from(section.querySelectorAll('.khatera-card'));
+    const loadMoreBtn = section.querySelector('.load-more-btn');
     if (!cards.length) return;
+    const initialVisibleCount = 24;
+    const visibleStep = 24;
+    let visibleLimit = initialVisibleCount;
 
     const searchUtils = window.SiteSearchUtils || null;
     const normalizeSearchText = (value) => {
@@ -540,6 +659,7 @@ function initKhawaterSearchFilters() {
         const normalizedActiveTag = normalizeSearchText(activeTag);
         const matcher = createMatcher(currentQuery);
         let visibleCount = 0;
+        let matchingCount = 0;
 
         cards.forEach((card) => {
             const text = card.querySelector('.khatera-text')?.textContent || '';
@@ -550,12 +670,17 @@ function initKhawaterSearchFilters() {
             const score = matcher.score(`${text} ${tag}`);
             const matchesQuery = !currentQuery.trim() || score > 0;
 
-            const shouldShow = matchesTag && matchesQuery;
+            const isMatch = matchesTag && matchesQuery;
+            matchingCount += isMatch ? 1 : 0;
+            const shouldShow = isMatch && matchingCount <= visibleLimit;
             card.style.display = shouldShow ? '' : 'none';
             if (shouldShow) visibleCount += 1;
         });
 
-        emptyState.style.display = visibleCount ? 'none' : 'block';
+        emptyState.style.display = matchingCount ? 'none' : 'block';
+        if (loadMoreBtn) {
+            loadMoreBtn.style.display = matchingCount > visibleLimit ? '' : 'none';
+        }
     };
 
     filterButtons.forEach((button) => {
@@ -563,6 +688,7 @@ function initKhawaterSearchFilters() {
             filterButtons.forEach((btn) => btn.classList.remove('active'));
             button.classList.add('active');
             activeTag = button.textContent.trim() || 'الكل';
+            visibleLimit = initialVisibleCount;
             applyFilter();
         });
     });
@@ -570,7 +696,13 @@ function initKhawaterSearchFilters() {
     const debouncedApply = debounce(applyFilter, 220);
     searchInput?.addEventListener('input', () => {
         currentQuery = searchInput.value || '';
+        visibleLimit = initialVisibleCount;
         debouncedApply();
+    });
+
+    loadMoreBtn?.addEventListener('click', () => {
+        visibleLimit += visibleStep;
+        applyFilter();
     });
 
     applyFilter();

@@ -215,25 +215,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 8. Progress Management
     function loadProgress() {
-        const stored = localStorage.getItem(STORE_KEY);
-        return stored ? JSON.parse(stored) : {};
+        try {
+            const stored = localStorage.getItem(STORE_KEY);
+            return stored ? JSON.parse(stored) : {};
+        } catch (error) {
+            console.warn('Could not load azkar progress:', error);
+            return {};
+        }
     }
 
     function ensureDailyReset() {
         const today = new Date().toISOString().slice(0, 10);
-        const storedDate = localStorage.getItem(STORE_DATE_KEY);
-        if (storedDate !== today) {
+        try {
+            const storedDate = localStorage.getItem(STORE_DATE_KEY);
+            if (storedDate !== today) {
+                progress = {};
+                localStorage.setItem(STORE_KEY, JSON.stringify(progress));
+                localStorage.setItem(STORE_DATE_KEY, today);
+            }
+        } catch (error) {
+            console.warn('Could not reset azkar progress:', error);
             progress = {};
-            localStorage.setItem(STORE_KEY, JSON.stringify(progress));
-            localStorage.setItem(STORE_DATE_KEY, today);
         }
     }
 
     function saveProgress(sectionId, index, val) {
         if (!progress[sectionId]) progress[sectionId] = {};
         progress[sectionId][index] = val;
-        localStorage.setItem(STORE_KEY, JSON.stringify(progress));
-        localStorage.setItem(STORE_DATE_KEY, new Date().toISOString().slice(0, 10));
+        try {
+            localStorage.setItem(STORE_KEY, JSON.stringify(progress));
+            localStorage.setItem(STORE_DATE_KEY, new Date().toISOString().slice(0, 10));
+        } catch (error) {
+            console.warn('Could not save azkar progress:', error);
+        }
     }
 
     function getProgress(sectionId, index) {
