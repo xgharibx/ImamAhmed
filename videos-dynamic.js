@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         _sortTimestamp: extractVideoTimestamp(video)
                     };
                 })
+                .filter(video => video.sourceChannel !== 'tarteel')
                 .filter(video => video.normalizedCategory !== 'khutbah')
                 .sort(sortByNewest);
             // Initial filter
@@ -97,6 +98,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const div = document.createElement('div');
         div.className = 'video-card aos-init aos-animate';
         div.setAttribute('data-aos', 'fade-up');
+        const videoId = (video?.id || '').toString().trim();
+        const title = escapeHtml(video?.title || '');
+        const thumbnail = escapeHtml(getYoutubeThumbnail(video));
+        const duration = escapeHtml(video?.duration || '--:--');
         
         // Icon mapping
         let icon = 'fa-play-circle';
@@ -112,30 +117,36 @@ document.addEventListener('DOMContentLoaded', () => {
         else { icon = 'fa-chalkboard-teacher'; catText = 'درس'; }
 
         div.innerHTML = `
-            <div class="video-thumbnail" onclick="openVideo('${video.id}', '${escapeHtml(video.title)}')">
-                <img src="${video.thumbnail}" alt="${video.title}" loading="lazy">
+            <div class="video-thumbnail" onclick="openVideo('${videoId}', '${title}')">
+                <img src="${thumbnail}" alt="${title}" loading="lazy">
                 <div class="video-embed placeholder">
                     <div class="play-overlay">
                         <i class="fas fa-play-circle"></i>
                         <span>مشاهدة داخل الموقع</span>
                     </div>
                 </div>
-                <div class="duration-badge">${video.duration}</div>
+                <div class="duration-badge">${duration}</div>
                 <span class="video-category"><i class="fas ${icon}"></i> ${catText}</span>
             </div>
             <div class="video-content">
-                <h3 class="video-title" title="${video.title}">${video.title}</h3>
+                <h3 class="video-title" title="${title}">${title}</h3>
                 <div class="video-actions">
-                    <button class="btn btn-outline btn-sm" onclick="openVideo('${video.id}', '${escapeHtml(video.title)}')">
+                    <button class="btn btn-outline btn-sm" onclick="openVideo('${videoId}', '${title}')">
                         <i class="fas fa-play"></i> مشاهدة الآن
                     </button>
-                    <a href="https://www.youtube.com/watch?v=${video.id}" target="_blank" class="btn-yt-icon" title="فتح في يوتيوب" rel="noopener noreferrer">
+                    <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" class="btn-yt-icon" title="فتح في يوتيوب" rel="noopener noreferrer">
                         <i class="fab fa-youtube"></i>
                     </a>
                 </div>
             </div>
         `;
         return div;
+    }
+
+    function getYoutubeThumbnail(video) {
+        const videoId = (video?.id || '').toString().trim();
+        if (videoId) return `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+        return video?.thumbnail || '';
     }
 
     function buildEmbedUrl(videoId) {

@@ -17,14 +17,14 @@ document.addEventListener('DOMContentLoaded', () => {
         .then((response) => response.json())
         .then((rawData) => {
             allTilawat = (Array.isArray(rawData) ? rawData : [])
-                .filter(isDirectTilawah)
+                .filter(isTarteelChannelVideo)
                 .map((video, index) => ({
                     ...video,
                     tilawaCategory: detectTilawahSection(video),
                     _sourceIndex: index,
                     _sortTimestamp: extractVideoTimestamp(video)
                 }))
-                .sort(sortByNewest);
+                .sort((a, b) => a._sourceIndex - b._sourceIndex);
 
             filterVideos('all');
         })
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const title = escapeHtml(video?.title || 'تلاوة');
         const videoId = (video?.id || '').toString().trim();
-        const thumbnail = escapeHtml(video?.thumbnail || `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`);
+        const thumbnail = escapeHtml(getYoutubeThumbnail(video));
         const duration = escapeHtml(video?.duration || '--:--');
 
         const categoryMap = {
@@ -119,6 +119,12 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
 
         return div;
+    }
+
+    function getYoutubeThumbnail(video) {
+        const videoId = (video?.id || '').toString().trim();
+        if (videoId) return `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+        return video?.thumbnail || '';
     }
 
     function normalizeArabic(text) {
@@ -189,6 +195,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function hasAnyKeyword(text, keywords) {
         return keywords.some((keyword) => text.includes(keyword));
+    }
+
+    function isTarteelChannelVideo(video) {
+        return video?.sourceChannel === 'tarteel' || video?.channelHandle === '@AhmedIsmailElfashny';
     }
 
     function isDirectTilawah(video) {

@@ -160,12 +160,33 @@
         </div>
     </div>
 
+    <section class="youtube-section">
+        <div class="container">
+            <div class="youtube-card" data-aos="fade-up">
+                <div class="youtube-icon">
+                    <i class="fab fa-youtube"></i>
+                </div>
+                <div class="youtube-content">
+                    <h3>تابع التلاوات على يوتيوب</h3>
+                    <p>اشترك في قناة القارئ الشيخ أحمد الفشني لمتابعة المصحف المرتل والتلاوات الجديدة</p>
+                    <p class="channel-name">@AhmedIsmailElfashny</p>
+                </div>
+                <a href="https://youtube.com/@AhmedIsmailElfashny" class="btn btn-youtube" target="_blank" rel="noopener">
+                    <i class="fab fa-youtube"></i>
+                    اشترك في القناة
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
     <script src="main.js" defer></script>
     <script src="tilawa-dynamic.js" defer></script>
     <script>
-        AOS.init({duration: 800, once: true});
+        window.addEventListener('load', () => {
+            window.AOS?.init({duration: 800, once: true});
+        });
     </script>
 </body>
 </html>

@@ -325,12 +325,13 @@
     <script src="main.js" defer></script>
     <script src="hadith.js" defer></script>
     <script>
-        // Initialize AOS
-        AOS.init({
-            duration: 800,
-            easing: 'ease-in-out',
-            once: true,
-            offset: 100
+        window.addEventListener('load', () => {
+            window.AOS?.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true,
+                offset: 100
+            });
         });
     </script>
 </body>
