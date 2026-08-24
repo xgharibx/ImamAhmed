@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
         currentPage: 1,
         perPage: 12,
         query: '',
-        latestReadableIds: new Set()
+        latestReadableIds: new Set(),
+        fullItemsPromise: null
     };
 
     const listEl = document.getElementById('khutab-list');
@@ -119,8 +120,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 date_display: item.date_display,
                 date_iso: item.date_iso,
                 content_html: item.content_html,
-                content_text: item.content_text
+                content_text: item.content_text,
+                has_content: Boolean(item.has_content || item.content_html || item.content_text)
             }));
+    }
+
+    async function fetchFirstJson(candidateUrls) {
+        for (const url of candidateUrls) {
+            try {
+                const response = await fetch(url);
+                if (response.ok) return await response.json();
+            } catch {
+            }
+        }
+        throw new Error('Failed to load JSON');
+    }
+
+    async function loadFullItem(item) {
+        if (item?.content_html || item?.content_text) return item;
+
+        if (!state.fullItemsPromise) {
+            state.fullItemsPromise = fetchFirstJson([
+                'data/khutab_written.json',
+                './data/khutab_written.json',
+                '/data/khutab_written.json'
+            ]).then(data => new Map(normalizeItems(data).map(fullItem => [getItemId(fullItem), fullItem])));
+        }
+
+        const fullItems = await state.fullItemsPromise;
+        const fullItem = fullItems.get(getItemId(item));
+        if (!fullItem?.content_html && !fullItem?.content_text) {
+            throw new Error('Full khutba content is unavailable');
+        }
+        return fullItem;
     }
 
     function applyFilter() {
@@ -204,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const detailUrl = toDetailUrl(item);
         const itemId = getItemId(item);
         const isReadable = !!itemId && state.latestReadableIds.has(itemId);
-        const hasExportContent = !!(item?.content_html || item?.content_text);
+        const hasExportContent = !!(item?.has_content || item?.content_html || item?.content_text);
 
         const actionLabel = isReadable ? 'قراءة الخطبة' : 'قريباً';
         const actionHref = isReadable ? detailUrl : '#';
@@ -253,7 +285,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 downloadButton.disabled = true;
                 downloadButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جارِ التحضير...';
                 try {
-                    await window.SheikhPdfExporter.exportKhutbaItem(item);
+                    const exportItem = await loadFullItem(item);
+                    await window.SheikhPdfExporter.exportKhutbaItem(exportItem);
                 } catch (error) {
                     console.error(error);
                     alert('تعذر إنشاء ملف PDF حالياً.');
@@ -285,20 +318,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadData() {
         try {
-            const candidateUrls = ['data/khutab_written.json', './data/khutab_written.json', '/data/khutab_written.json'];
-            let json = null;
-
-            for (const url of candidateUrls) {
-                try {
-                    const res = await fetch(url, { cache: 'no-cache' });
-                    if (!res.ok) continue;
-                    json = await res.json();
-                    break;
-                } catch {
-                }
-            }
-
-            if (!json) throw new Error('Failed to load JSON');
+            const json = await fetchFirstJson([
+                'data/khutab_written_index.json',
+                './data/khutab_written_index.json',
+                '/data/khutab_written_index.json',
+                'data/khutab_written.json',
+                './data/khutab_written.json',
+                '/data/khutab_written.json'
+            ]);
             state.all = normalizeItems(json);
 
             if (!state.all.length) {

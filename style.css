@@ -2105,7 +2105,9 @@ section {
     .nav-menu {
         position: fixed;
         top: var(--mobile-header-height);
-        right: -100%;
+        right: 0;
+        z-index: 1000;
+        transform: translateX(110%);
         width: min(86vw, 360px);
         height: calc(100vh - var(--mobile-header-height));
         height: calc(100dvh - var(--mobile-header-height));
@@ -2124,6 +2126,7 @@ section {
     
     .nav-menu.active {
         right: 0;
+        transform: translateX(0);
         box-shadow: -8px 0 32px rgba(46, 125, 50, 0.5);
     }
     
