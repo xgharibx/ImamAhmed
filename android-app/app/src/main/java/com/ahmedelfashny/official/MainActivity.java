@@ -7,12 +7,15 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Insets;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
 import android.webkit.GeolocationPermissions;
@@ -30,7 +33,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import android.window.OnBackInvokedDispatcher;
+
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 public class MainActivity extends Activity {
     private static final int FILE_CHOOSER_REQUEST = 42;
@@ -42,12 +54,15 @@ public class MainActivity extends Activity {
     private ProgressBar progressBar;
     private View offlineView;
     private ValueCallback<Uri[]> filePathCallback;
+    private String mobileNavigationScript;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         buildLayout();
         configureWebView();
+        configureBackNavigation();
+        prepareMobileNavigation();
 
         String startUrl = resolveStartUrl(getIntent());
         if (savedInstanceState != null) {
@@ -90,10 +105,8 @@ public class MainActivity extends Activity {
             settings.setSafeBrowsingEnabled(true);
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
-            CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
-        }
+        settings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
+        CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
         CookieManager.getInstance().setAcceptCookie(true);
 
         webView.setWebViewClient(new AppWebViewClient());
@@ -103,7 +116,18 @@ public class MainActivity extends Activity {
 
     private void buildLayout() {
         FrameLayout root = new FrameLayout(this);
-        root.setBackgroundColor(Color.WHITE);
+        root.setBackgroundColor(getColorCompat(R.color.primary_green_dark));
+        root.setOnApplyWindowInsetsListener((view, insets) -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                Insets edges = insets.getInsets(WindowInsets.Type.systemBars()
+                        | WindowInsets.Type.displayCutout() | WindowInsets.Type.ime());
+                view.setPadding(edges.left, edges.top, edges.right, edges.bottom);
+                return WindowInsets.CONSUMED;
+            }
+            view.setPadding(insets.getSystemWindowInsetLeft(), insets.getSystemWindowInsetTop(),
+                    insets.getSystemWindowInsetRight(), insets.getSystemWindowInsetBottom());
+            return insets.consumeSystemWindowInsets();
+        });
 
         swipeRefreshLayout = new SwipeRefreshLayout(this);
         swipeRefreshLayout.setColorSchemeResources(
@@ -153,7 +177,7 @@ public class MainActivity extends Activity {
         title.setTextColor(getColorCompat(R.color.primary_green_dark));
         title.setTextSize(22);
         title.setGravity(Gravity.CENTER);
-        title.setTypeface(null, 1);
+        title.setTypeface(null, Typeface.BOLD);
 
         TextView message = new TextView(this);
         message.setText(R.string.offline_message);
@@ -199,6 +223,28 @@ public class MainActivity extends Activity {
         return LIVE_SITE_URL;
     }
 
+    private String readAsset(String name) throws IOException {
+        try (InputStream input = getAssets().open(name);
+             ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[4096];
+            int count;
+            while ((count = input.read(buffer)) != -1) output.write(buffer, 0, count);
+            return new String(output.toByteArray(), StandardCharsets.UTF_8);
+        }
+    }
+
+    private void prepareMobileNavigation() {
+        try {
+            // The live website wins once it includes the shared navigation itself.
+            mobileNavigationScript = "(()=>{if(document.querySelector('.mobile-bottom-nav'))return;"
+                    + "const style=document.createElement('style');style.textContent="
+                    + JSONObject.quote(readAsset("mobile-nav.css"))
+                    + ";document.head.append(style);" + readAsset("mobile-nav.js") + "})();";
+        } catch (IOException error) {
+            android.util.Log.w("MobileNavigation", "Shared navigation assets unavailable", error);
+        }
+    }
+
     private boolean isInternalHttpUrl(Uri uri) {
         String scheme = uri.getScheme();
         String host = uri.getHost();
@@ -220,7 +266,7 @@ public class MainActivity extends Activity {
             intent.addCategory(Intent.CATEGORY_BROWSABLE);
             startActivity(intent);
         } catch (ActivityNotFoundException error) {
-            Toast.makeText(this, "لا يوجد تطبيق مناسب لفتح الرابط", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.no_app_for_link, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -238,19 +284,32 @@ public class MainActivity extends Activity {
     }
 
     private int getColorCompat(int colorRes) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return getColor(colorRes);
-        }
-        return getResources().getColor(colorRes);
+        return getColor(colorRes);
     }
 
-    @Override
-    public void onBackPressed() {
+    private void configureBackNavigation() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    OnBackInvokedDispatcher.PRIORITY_DEFAULT,
+                    this::handleBackNavigation
+            );
+        }
+    }
+
+    private void handleBackNavigation() {
         if (webView != null && webView.canGoBack()) {
             webView.goBack();
-            return;
+        } else {
+            finish();
         }
-        super.onBackPressed();
+    }
+
+    @SuppressLint("GestureBackNavigation")
+    @Override
+    public void onBackPressed() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            handleBackNavigation();
+        }
     }
 
     @Override
@@ -307,12 +366,17 @@ public class MainActivity extends Activity {
         public void onPageFinished(WebView view, String url) {
             progressBar.setVisibility(View.GONE);
             swipeRefreshLayout.setRefreshing(false);
+            if (mobileNavigationScript != null && url != null
+                    && url.equals(view.getUrl()) && isInternalHttpUrl(Uri.parse(url))
+                    && "https".equalsIgnoreCase(Uri.parse(url).getScheme())) {
+                view.evaluateJavascript(mobileNavigationScript, null);
+            }
             super.onPageFinished(view, url);
         }
 
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && request.isForMainFrame()) {
+            if (request.isForMainFrame()) {
                 showOfflineIfNeeded();
             }
             super.onReceivedError(view, request, error);
@@ -345,29 +409,21 @@ public class MainActivity extends Activity {
             }
             filePathCallback = callback;
 
-            Intent intent;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                intent = params.createIntent();
-            } else {
-                intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("*/*");
-            }
+            Intent intent = params.createIntent();
 
             try {
                 startActivityForResult(intent, FILE_CHOOSER_REQUEST);
                 return true;
             } catch (ActivityNotFoundException error) {
                 filePathCallback = null;
-                Toast.makeText(MainActivity.this, "لا يوجد تطبيق لاختيار الملفات", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, R.string.no_file_picker, Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
 
         @Override
         public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
-            boolean granted = Build.VERSION.SDK_INT < Build.VERSION_CODES.M
-                    || checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+            boolean granted = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
             callback.invoke(origin, granted, false);
         }
     }

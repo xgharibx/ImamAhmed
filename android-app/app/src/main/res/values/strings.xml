@@ -4,4 +4,6 @@
     <string name="offline_title">تعذر الاتصال بالموقع</string>
     <string name="offline_message">تأكد من اتصال الإنترنت ثم حاول مرة أخرى.</string>
     <string name="retry">إعادة المحاولة</string>
+    <string name="no_app_for_link">لا يوجد تطبيق مناسب لفتح الرابط</string>
+    <string name="no_file_picker">لا يوجد تطبيق لاختيار الملفات</string>
 </resources>

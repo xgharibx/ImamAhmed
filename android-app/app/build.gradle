@@ -2,6 +2,12 @@ plugins {
     id "com.android.application"
 }
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystorePropertiesFile.withInputStream { keystoreProperties.load(it) }
+}
+
 android {
     namespace "com.ahmedelfashny.official"
     compileSdk 36
@@ -17,11 +23,55 @@ android {
         buildConfigField "String", "LIVE_SITE_HOST", "\"ahmedelfashny.com\""
     }
 
+    signingConfigs {
+        release {
+            if (keystorePropertiesFile.exists()) {
+                storeFile rootProject.file(keystoreProperties.getProperty("storeFile").trim())
+                storePassword keystoreProperties.getProperty("storePassword")
+                keyAlias keystoreProperties.getProperty("keyAlias")
+                keyPassword keystoreProperties.getProperty("keyPassword")
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
+        }
+
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+
+            if (keystorePropertiesFile.exists()) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+
     buildFeatures {
         buildConfig true
     }
+
+    sourceSets.main.assets.srcDir(layout.buildDirectory.dir("generated/mobileNavigation"))
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
 }
 
+// Bundle the website's exact navigation, without maintaining a separate app UI.
+def syncMobileNavigation = tasks.register("syncMobileNavigation", Sync) {
+    from(rootProject.file("..")) {
+        include "mobile-nav.css", "mobile-nav.js"
+    }
+    into(layout.buildDirectory.dir("generated/mobileNavigation"))
+}
+tasks.named("preBuild").configure { dependsOn(syncMobileNavigation) }
+
 dependencies {
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.2.0"
 }

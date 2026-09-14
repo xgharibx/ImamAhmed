@@ -7,8 +7,5 @@
         <item name="android:navigationBarColor">@color/primary_green_dark</item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowSplashScreenBackground">@color/primary_green</item>
-        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
-        <item name="android:windowSplashScreenIconBackgroundColor">@color/primary_green</item>
     </style>
 </resources>

@@ -28,7 +28,6 @@
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
-            android:screenOrientation="fullUser"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,8 +38,9 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="ahmedelfashny.com" />
-                <data android:scheme="https" android:host="www.ahmedelfashny.com" />
+                <data android:scheme="https" />
+                <data android:host="ahmedelfashny.com" />
+                <data android:host="www.ahmedelfashny.com" />
             </intent-filter>
         </activity>
     </application>

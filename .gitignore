@@ -23,3 +23,6 @@ data/khutab_written_missing_pdfs.json
 data/youtube_raw.json
 data/youtube_shorts_raw.json
 data/all_hadiths.json
+
+# Local browser verification
+tests/artifacts/
