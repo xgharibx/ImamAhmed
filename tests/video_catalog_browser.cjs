@@ -22,6 +22,9 @@ const base = process.env.PREVIEW_URL || 'http://127.0.0.1:4174';
             ]) {
                 await page.goto(base + '/' + file, { waitUntil: 'domcontentloaded' });
                 await page.locator('.video-card').first().waitFor();
+                if (await page.locator('#preloader').count()) {
+                    await page.locator('#preloader').waitFor({ state: 'hidden', timeout: 60000 });
+                }
                 const expected = data.filter(select).sort(newest).slice(0, 20).map(v => v.id);
                 const actual = await page.locator('.video-card .video-thumbnail').evaluateAll(elements =>
                     elements.map(element => element.getAttribute('onclick').match(/\('([^']+)'/)[1]));
@@ -31,7 +34,7 @@ const base = process.env.PREVIEW_URL || 'http://127.0.0.1:4174';
                     const titles = await page.locator('.video-title').allTextContents();
                     assert.deepEqual(titles, data.filter(v => v.sourceChannel !== 'tarteel' && v.category === 'quran').sort(newest).slice(0, 20).map(v => v.title));
                 }
-                await page.screenshot({ path: path.join(__dirname, 'artifacts', `catalog-${width}-${file}.png`) });
+                await page.screenshot({ path: path.join(__dirname, 'artifacts', `catalog-${width}-${file}.png`), animations: 'disabled' });
                 console.log(`PASS ${width} ${file}: newest 20 IDs and category filtering`);
             }
             assert.deepEqual(errors, []);
