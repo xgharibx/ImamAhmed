@@ -3,6 +3,16 @@
     const root = new URL('.', document.currentScript?.src || new URL('/mobile-nav.js', location.href).href);
     const page = decodeURIComponent(location.pathname.split('/').pop() || 'index.html');
     const mobile = window.matchMedia('(max-width: 1200px)');
+    const headerContainer = document.querySelector('#header .nav-container');
+    if (headerContainer && !headerContainer.querySelector('.header-stars')) {
+        for (const side of ['start', 'end']) {
+            const stars = document.createElement('span');
+            stars.className = 'header-stars header-stars-' + side;
+            stars.setAttribute('aria-hidden', 'true');
+            stars.innerHTML = '<i></i><i></i><i></i><i></i><i></i><i></i>';
+            headerContainer.appendChild(stars);
+        }
+    }
     const tabs = [
         ['home', 'الرئيسية', 'fas fa-home', 'index.html'],
         ['videos', 'المرئيات', 'far fa-play-circle', 'videos.html'],
