@@ -1,0 +1,19 @@
+[
+  {
+    "name": "القناة الرئيسية",
+    "url": "https://www.youtube.com/@ahmedelfashny",
+    "sourceChannel": "main",
+    "channelHandle": "@ahmedelfashny",
+    "channelName": "الشيخ أحمد إسماعيل الفشني",
+    "feeds": ["videos", "shorts", "streams"]
+  },
+  {
+    "name": "قناة الترتيل",
+    "url": "https://www.youtube.com/@AhmedIsmailElfashny",
+    "sourceChannel": "tarteel",
+    "channelHandle": "@AhmedIsmailElfashny",
+    "channelName": "القارئ الشيخ أحمد الفشني",
+    "feeds": ["videos", "shorts", "streams"],
+    "defaultCategory": "quran"
+  }
+]

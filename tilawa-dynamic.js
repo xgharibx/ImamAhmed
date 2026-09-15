@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     _sourceIndex: index,
                     _sortTimestamp: extractVideoTimestamp(video)
                 }))
-                .sort((a, b) => a._sourceIndex - b._sourceIndex);
+                .sort(sortByNewest);
 
             filterVideos('all');
         })
@@ -148,6 +148,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const normalizedText = normalizeDigits((text || '').toString());
         if (!normalizedText) return 0;
 
+        // Match year-first dates before the legacy day-first parser.
+        if (/^\d{4}-\d{2}-\d{2}(?:T.*)?$/.test(normalizedText)) {
+            const [year, month, day] = normalizedText.slice(0, 10).split('-').map(Number);
+            const calendar = new Date(Date.UTC(year, month - 1, day));
+            if (calendar.toISOString().slice(0, 10) !== normalizedText.slice(0, 10)) return 0;
+            const timestamp = Date.parse(normalizedText);
+            return Number.isNaN(timestamp) ? 0 : timestamp;
+        }
+
         const slashMatch = normalizedText.match(/(\d{1,2})\s*[\/\-]\s*(\d{1,2})\s*[\/\-]\s*(\d{2,4})/);
         if (slashMatch) {
             const day = Number.parseInt(slashMatch[1], 10);
@@ -181,6 +190,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function extractVideoTimestamp(video) {
+        const published = Date.parse(video?.publishedAt || '');
+        if (!Number.isNaN(published)) return published;
         const fromDateField = extractDateFromText(video?.date || '');
         if (fromDateField) return fromDateField;
         return extractDateFromText(video?.title || '');
