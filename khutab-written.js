@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
         currentPage: 1,
         perPage: 12,
         query: '',
-        latestReadableIds: new Set(),
         fullItemsPromise: null
     };
 
@@ -14,16 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadMoreBtn = document.getElementById('khutab-load-more');
     const searchInput = document.getElementById('khutab-search');
     const statsEl = document.getElementById('khutab-stats');
-    const toolbarEl = document.querySelector('.khutab-toolbar');
     const isMobileViewport = window.matchMedia('(max-width: 768px)').matches;
 
     if (!listEl) {
         return;
     }
-
-    const latestOnlyNoteEl = document.createElement('div');
-    latestOnlyNoteEl.className = 'soon-note';
-    latestOnlyNoteEl.textContent = 'متاح حالياً آخر 7 خطب.';
 
     // We render a list page and navigate to an internal detail page (no external redirects)
 
@@ -89,22 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getIsoDate(item) {
         return item?.date?.iso || item?.date_iso || '';
-    }
-
-    function computeLatestReadableIds(items, limit = 7) {
-        const list = (Array.isArray(items) ? items : []).slice();
-        const hasIsoDates = list.some((item) => !!getIsoDate(item));
-
-        if (!hasIsoDates) {
-            return new Set(list.slice(0, limit).map(getItemId).filter(Boolean));
-        }
-
-        list.sort((a, b) => {
-            const isoA = getIsoDate(a) || '';
-            const isoB = getIsoDate(b) || '';
-            return isoB.localeCompare(isoA);
-        });
-        return new Set(list.slice(0, limit).map(getItemId).filter(Boolean));
     }
 
     function normalizeItems(raw) {
@@ -235,17 +213,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const dateDisplay = getDisplayDate(item);
         const detailUrl = toDetailUrl(item);
         const itemId = getItemId(item);
-        const isReadable = !!itemId && state.latestReadableIds.has(itemId);
+        const isReadable = !!itemId;
         const hasExportContent = !!(item?.has_content || item?.content_html || item?.content_text);
 
-        const actionLabel = isReadable ? 'قراءة الخطبة' : 'قريباً';
-        const actionHref = isReadable ? detailUrl : '#';
-        const actionAttrs = isReadable
-            ? ''
-            : ' aria-disabled="true" tabindex="-1"';
-        const actionClasses = isReadable
-            ? 'btn btn-outline btn-sm'
-            : 'btn btn-outline btn-sm is-disabled-link has-soon-badge';
+        const actionLabel = 'قراءة الخطبة';
+        const actionHref = detailUrl;
+        const actionAttrs = '';
+        const actionClasses = 'btn btn-outline btn-sm';
 
         div.innerHTML = `
             <h3 class="khutab-item-title">${escapeHtml(title)}</h3>
@@ -259,14 +233,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${isReadable && hasExportContent ? '<button type="button" class="btn btn-sm khutba-download-btn"><i class="fas fa-download"></i> تحميل PDF</button>' : ''}
             </div>
         `;
-
-        if (!isReadable) {
-            const a = div.querySelector('a');
-            a?.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-            }, true);
-        }
 
         if (isReadable) {
             div.addEventListener('dblclick', () => {
@@ -330,14 +296,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!state.all.length) {
                 throw new Error('No khutab items found in data source');
-            }
-
-            state.latestReadableIds = computeLatestReadableIds(state.all, 7);
-
-            if (toolbarEl && state.all.length > 7) {
-                if (!toolbarEl.parentElement?.querySelector('.soon-note')) {
-                    toolbarEl.parentElement?.insertBefore(latestOnlyNoteEl, toolbarEl.nextSibling);
-                }
             }
 
             state.filtered = state.all.slice();
