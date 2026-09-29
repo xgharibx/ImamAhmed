@@ -57,7 +57,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function toDetailUrl(item) {
         const shortSlug = buildShortKhutbaSlug(item);
         const itemId = encodeURIComponent(getItemId(item));
-        return `khutab/${encodeURIComponent(shortSlug)}.html?id=${itemId}`;
+        const file = /^khutab\/k-[a-z0-9-]+\.html$/.test(item?.file || '')
+            ? item.file
+            : `khutab/${encodeURIComponent(shortSlug)}.html`;
+        return `${file}?id=${itemId}`;
     }
 
     function buildShortKhutbaSlug(item) {
@@ -91,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .filter((item) => item && typeof item === 'object')
             .map((item, index) => ({
                 id: String(item.id ?? index + 1),
+                file: item.file || '',
                 title: item.title || 'خطبة',
                 author: item.author || 'الشيخ أحمد الفشني',
                 excerpt: item.excerpt || '',

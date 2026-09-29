@@ -1,0 +1,95 @@
+name: Publish written khutba
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+
+permissions:
+  contents: write
+  issues: write
+  pages: write
+
+concurrency:
+  group: written-khutba-publishing
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: >-
+      startsWith(github.event.issue.title, '[نشر خطبة]') &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.issue.author_association)
+    runs-on: ubuntu-latest
+    env:
+      PYTHONIOENCODING: utf-8
+    steps:
+      - name: Check out current production content
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install browser and PDF checks
+        run: |
+          python -m pip install --disable-pip-version-check playwright pypdf
+          python -m playwright install --with-deps chromium
+
+      - name: Build and validate the khutba
+        id: build
+        run: |
+          python scripts/content_pipeline.py publish-issue --event "$GITHUB_EVENT_PATH" > publish-result.json
+          python scripts/content_pipeline.py generate-sitemap
+          python scripts/content_pipeline.py validate-khutba-result --result publish-result.json
+          python -m unittest discover -s tests -p 'test_*.py' -v
+          git diff --check
+
+      - name: Check the local card, page, and PDF
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/khutba-http.log 2>&1 &
+          python scripts/verify_khutba_publish.py --base-url http://127.0.0.1:8765 --result publish-result.json --wait-seconds 30
+
+      - name: Commit and push to main
+        id: commit
+        run: |
+          git config user.name "Sheikh Ahmed Content Bot"
+          git config user.email "content-bot@users.noreply.github.com"
+          git add -- data/khutab_written.json data/khutab_written_index.json sitemap.xml robots.txt 'khutab/k-*.html'
+          git diff --cached --check
+          git commit -m "Publish written khutba from issue #${{ github.event.issue.number }}"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Request a GitHub Pages build for the workflow commit
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds" --silent
+
+      - name: Verify the live card, page, and PDF
+        id: live
+        run: |
+          python scripts/verify_khutba_publish.py --base-url https://ahmedelfashny.com --result publish-result.json --wait-seconds 600 > live-result.json
+          echo "url=$(python -c 'import json; print(json.load(open("live-result.json"))["url"])')" >> "$GITHUB_OUTPUT"
+
+      - name: Confirm publication to the uploader
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue close "${{ github.event.issue.number }}" --repo "$GITHUB_REPOSITORY" \
+            --comment "تم نشر الخطبة والتحقق من البطاقة والصفحة وتنزيل PDF على الموقع: ${{ steps.live.outputs.url }}"
+
+      - name: Explain any failed stage
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "${{ steps.commit.outcome }}" = "success" ]; then
+            message="تم دفع الخطبة إلى main، لكن تعذر تأكيد ظهورها أو تنزيل PDF على الموقع. راجع سجل هذا التشغيل؛ لن أصف النشر بأنه مكتمل قبل نجاح الفحص."
+          else
+            message="لم تُنشر الخطبة. افتح سجل هذا التشغيل لمعرفة سبب فشل قراءة Word أو فحوص الجودة، ثم صحح الملف وأعد إرسال الطلب."
+          fi
+          gh issue comment "${{ github.event.issue.number }}" --repo "$GITHUB_REPOSITORY" --body "$message"

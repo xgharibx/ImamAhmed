@@ -1,0 +1,16 @@
+name: نشر خطبة مكتوبة
+description: ارفع ملف Word فقط، وسيجهز الموقع البطاقة والصفحة وملف PDF تلقائياً
+title: "[نشر خطبة] ملف Word"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ارفع ملف **DOCX** من هاتفك. بعد الإرسال ستظهر لك نتيجة النشر ورابط الخطبة هنا.
+  - type: textarea
+    id: docx
+    attributes:
+      label: ملف Word
+      description: اضغط على الخانة ثم اختر إرفاق ملف DOCX.
+      placeholder: أرفق ملف Word هنا
+    validations:
+      required: true
