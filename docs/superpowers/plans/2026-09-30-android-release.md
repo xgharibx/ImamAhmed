@@ -13,7 +13,7 @@
 - [x] Build signed APK/AAB; verify signatures; run Android lint and emulator checks against live content.
 - [x] Prepare privacy policy, store listing, screenshots and release instructions; save the listing and signed bundle in Console.
 - [ ] Complete remaining Play declarations and closed-test setup, then submit for review. Production remains subject to Google's tester requirements.
-- [ ] Review, commit and push only the scoped release changes; preserve deliverables outside the temporary worktree.
+- [x] Review, commit and push only the scoped release changes; preserve deliverables outside the temporary worktree.
 
 ## Verification
 Check first-party JSON freshness, unchanged DOM/navigation, Blob PDF bytes, safe filenames, blocked untrusted URLs/frames, back navigation, fullscreen exit, download cancellation, offline errors, icon safe bounds, API 36 metadata and release signing. Google review and account declarations cannot be claimed complete without Console evidence.
