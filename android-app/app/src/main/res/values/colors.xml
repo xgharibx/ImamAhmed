@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="primary_green">#1A5F4A</color>
+    <color name="app_icon_background">#003C2E</color>
     <color name="primary_green_dark">#0F3D30</color>
     <color name="primary_gold">#D4AF37</color>
     <color name="surface_light">#F8F6F0</color>

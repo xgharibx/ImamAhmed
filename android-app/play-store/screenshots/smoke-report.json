@@ -1,0 +1,14 @@
+{
+  "url": "https://ahmedelfashny.com/articles.html",
+  "errors": [],
+  "checks": [
+    "live content",
+    "single unchanged navigation",
+    "no horizontal overflow",
+    "written sermon",
+    "video embed",
+    "video modal back",
+    "more menu back",
+    "native sharing"
+  ]
+}

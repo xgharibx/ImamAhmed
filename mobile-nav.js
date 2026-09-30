@@ -29,7 +29,8 @@
         ['الخواطر', 'fa-feather-alt', 'khawater.html'],
         ['أحكام فقهية', 'fa-circle-question', 'fatawa.html'],
         ['عن الشيخ', 'fa-user', 'about.html'],
-        ['تواصل معنا', 'fa-envelope', 'contact.html']
+        ['تواصل معنا', 'fa-envelope', 'contact.html'],
+        ['سياسة الخصوصية', 'fa-shield-alt', 'privacy.html']
     ];
     let active = 'more';
     if (page === 'index.html') active = 'home';

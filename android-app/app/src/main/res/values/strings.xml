@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">الشيخ أحمد الفشني</string>
+    <string name="app_name">Ahmed Elfashny | الفشني</string>
     <string name="offline_title">تعذر الاتصال بالموقع</string>
     <string name="offline_message">تأكد من اتصال الإنترنت ثم حاول مرة أخرى.</string>
     <string name="retry">إعادة المحاولة</string>
     <string name="no_app_for_link">لا يوجد تطبيق مناسب لفتح الرابط</string>
     <string name="no_file_picker">لا يوجد تطبيق لاختيار الملفات</string>
+    <string name="download_failed">تعذر حفظ الملف. يرجى المحاولة مرة أخرى.</string>
+    <string name="download_saved">تم حفظ الملف</string>
+    <string name="share">مشاركة</string>
 </resources>

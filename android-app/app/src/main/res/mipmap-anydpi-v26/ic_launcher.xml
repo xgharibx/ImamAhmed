@@ -2,6 +2,6 @@
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MonochromeLauncherIcon">
-    <background android:drawable="@color/primary_green" />
-    <foreground android:drawable="@drawable/ic_splash" />
+    <background android:drawable="@color/app_icon_background" />
+    <foreground android:drawable="@drawable/logo_foreground" />
 </adaptive-icon>

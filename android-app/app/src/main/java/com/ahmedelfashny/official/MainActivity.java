@@ -16,6 +16,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
+import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
 import android.webkit.GeolocationPermissions;
@@ -26,6 +27,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.RenderProcessGoneDetail;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -36,6 +38,9 @@ import android.widget.Toast;
 import android.window.OnBackInvokedDispatcher;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.webkit.WebViewCompat;
+import androidx.webkit.WebViewFeature;
+import androidx.webkit.WebMessageCompat;
 
 import org.json.JSONObject;
 
@@ -43,6 +48,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
+import java.util.Arrays;
+import java.util.Locale;
 
 public class MainActivity extends Activity {
     private static final int FILE_CHOOSER_REQUEST = 42;
@@ -55,18 +63,24 @@ public class MainActivity extends Activity {
     private View offlineView;
     private ValueCallback<Uri[]> filePathCallback;
     private String mobileNavigationScript;
+    private String runtimeScript;
+    private NativeDownloads downloads;
+    private FrameLayout root;
+    private View fullscreenVideo;
+    private WebChromeClient.CustomViewCallback fullscreenCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         buildLayout();
+        downloads = new NativeDownloads(this, savedInstanceState);
         configureWebView();
         configureBackNavigation();
         prepareMobileNavigation();
 
         String startUrl = resolveStartUrl(getIntent());
         if (savedInstanceState != null) {
-            webView.restoreState(savedInstanceState);
+            if (webView.restoreState(savedInstanceState) == null) webView.loadUrl(startUrl);
         } else {
             webView.loadUrl(startUrl);
         }
@@ -83,6 +97,7 @@ public class MainActivity extends Activity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         webView.saveState(outState);
+        downloads.saveState(outState);
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -98,24 +113,41 @@ public class MainActivity extends Activity {
         settings.setDisplayZoomControls(false);
         settings.setAllowFileAccess(false);
         settings.setAllowContentAccess(true);
-        settings.setMediaPlaybackRequiresUserGesture(false);
-        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        settings.setMediaPlaybackRequiresUserGesture(true);
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             settings.setSafeBrowsingEnabled(true);
         }
 
-        settings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
+        settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
         CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
         CookieManager.getInstance().setAcceptCookie(true);
 
         webView.setWebViewClient(new AppWebViewClient());
         webView.setWebChromeClient(new AppWebChromeClient());
         webView.setDownloadListener(createDownloadListener());
+        WebView.setWebContentsDebuggingEnabled(BuildConfig.WEB_DEBUGGING);
+        try {
+            runtimeScript = readAsset("app-runtime.js");
+            HashSet<String> origins = new HashSet<>(Arrays.asList("https://" + LIVE_SITE_HOST, "https://www." + LIVE_SITE_HOST));
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_LISTENER)) {
+                WebViewCompat.addWebMessageListener(webView, "SheikhNative", origins,
+                        (view, message, origin, mainFrame, reply) -> {
+                            if (mainFrame && message.getType() == WebMessageCompat.TYPE_STRING
+                                    && DownloadPolicy.isOwnedHttps(origin.toString())) downloads.message(message.getData(), reply);
+                        });
+            }
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
+                WebViewCompat.addDocumentStartJavaScript(webView, runtimeScript, origins);
+            }
+        } catch (IOException error) {
+            android.util.Log.w("AppRuntime", "Runtime asset unavailable", error);
+        }
     }
 
     private void buildLayout() {
-        FrameLayout root = new FrameLayout(this);
+        root = new FrameLayout(this);
         root.setBackgroundColor(getColorCompat(R.color.primary_green_dark));
         root.setOnApplyWindowInsetsListener((view, insets) -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -135,7 +167,8 @@ public class MainActivity extends Activity {
                 R.color.primary_gold,
                 R.color.primary_green_dark
         );
-        swipeRefreshLayout.setOnRefreshListener(() -> webView.reload());
+        // Content is fetched automatically; do not expose browser-style pull-to-refresh.
+        swipeRefreshLayout.setEnabled(false);
 
         webView = new WebView(this);
         webView.setLayoutParams(new ViewGroup.LayoutParams(
@@ -246,11 +279,7 @@ public class MainActivity extends Activity {
     }
 
     private boolean isInternalHttpUrl(Uri uri) {
-        String scheme = uri.getScheme();
-        String host = uri.getHost();
-        if (scheme == null || host == null) return false;
-        boolean isHttp = "https".equalsIgnoreCase(scheme) || "http".equalsIgnoreCase(scheme);
-        return isHttp && (LIVE_SITE_HOST.equalsIgnoreCase(host) || ("www." + LIVE_SITE_HOST).equalsIgnoreCase(host));
+        return DownloadPolicy.isOwnedHttps(uri.toString());
     }
 
     private boolean shouldOpenExternally(Uri uri) {
@@ -261,6 +290,10 @@ public class MainActivity extends Activity {
     }
 
     private void openExternal(Uri uri) {
+        String scheme = uri.getScheme();
+        if (!("https".equalsIgnoreCase(scheme) || "http".equalsIgnoreCase(scheme)
+                || "mailto".equalsIgnoreCase(scheme) || "tel".equalsIgnoreCase(scheme)
+                || "whatsapp".equalsIgnoreCase(scheme))) return;
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             intent.addCategory(Intent.CATEGORY_BROWSABLE);
@@ -271,7 +304,12 @@ public class MainActivity extends Activity {
     }
 
     private DownloadListener createDownloadListener() {
-        return (url, userAgent, contentDisposition, mimeType, contentLength) -> openExternal(Uri.parse(url));
+        return (url, userAgent, contentDisposition, mimeType, contentLength) -> {
+            if (DownloadPolicy.isOwnedHttps(url) && ("application/pdf".equals(mimeType) || url.toLowerCase(Locale.ROOT).contains(".pdf"))) {
+                downloads.download(url, contentDisposition, userAgent);
+            } else if (!url.startsWith("blob:")) openExternal(Uri.parse(url));
+            else Toast.makeText(this, R.string.download_failed, Toast.LENGTH_LONG).show();
+        };
     }
 
     private String currentOrHomeUrl() {
@@ -297,11 +335,15 @@ public class MainActivity extends Activity {
     }
 
     private void handleBackNavigation() {
-        if (webView != null && webView.canGoBack()) {
-            webView.goBack();
-        } else {
-            finish();
-        }
+        if (fullscreenVideo != null) { hideFullscreenVideo(); return; }
+        if (webView == null) { finish(); return; }
+        webView.evaluateJavascript("(()=>{const dialog=document.querySelector('dialog[open]');"
+                + "if(dialog){const dismiss=dialog.querySelector('.mobile-nav-close');if(dismiss)dismiss.click();else dialog.close();return true;}"
+                + "const close=document.querySelector('#video-modal.active .close-modal');"
+                + "if(close){close.click();return true;}return false;})()", handled -> {
+            if ("true".equals(handled) || webView == null) return;
+            if (webView.canGoBack()) webView.goBack(); else finish();
+        });
     }
 
     @SuppressLint("GestureBackNavigation")
@@ -315,6 +357,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == NativeDownloads.SAVE_REQUEST) { downloads.result(resultCode, data); return; }
         if (requestCode != FILE_CHOOSER_REQUEST || filePathCallback == null) return;
 
         Uri[] results = null;
@@ -334,9 +377,38 @@ public class MainActivity extends Activity {
         filePathCallback = null;
     }
 
+    private void hideFullscreenVideo() {
+        if (fullscreenVideo == null) return;
+        root.removeView(fullscreenVideo);
+        fullscreenVideo = null;
+        swipeRefreshLayout.setVisibility(View.VISIBLE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+        if (fullscreenCallback != null) { fullscreenCallback.onCustomViewHidden(); fullscreenCallback = null; }
+    }
+
+    @Override protected void onPause() {
+        if (webView != null) webView.onPause();
+        super.onPause();
+    }
+
+    @Override protected void onResume() {
+        super.onResume();
+        if (webView != null) webView.onResume();
+    }
+
+    @Override protected void onDestroy() {
+        hideFullscreenVideo();
+        if (filePathCallback != null) { filePathCallback.onReceiveValue(null); filePathCallback = null; }
+        if (downloads != null) downloads.close();
+        if (webView != null) { swipeRefreshLayout.removeView(webView); webView.destroy(); webView = null; }
+        super.onDestroy();
+    }
+
     private final class AppWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            if (!request.isForMainFrame()) return false;
             Uri uri = request.getUrl();
             if (shouldOpenExternally(uri)) {
                 openExternal(uri);
@@ -370,6 +442,7 @@ public class MainActivity extends Activity {
                     && url.equals(view.getUrl()) && isInternalHttpUrl(Uri.parse(url))
                     && "https".equalsIgnoreCase(Uri.parse(url).getScheme())) {
                 view.evaluateJavascript(mobileNavigationScript, null);
+                if (runtimeScript != null) view.evaluateJavascript(runtimeScript, null);
             }
             super.onPageFinished(view, url);
         }
@@ -384,8 +457,17 @@ public class MainActivity extends Activity {
 
         @Override
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            if (failingUrl != null && failingUrl.equals(view.getUrl())) showOfflineIfNeeded();
+        }
+
+        @Override public boolean onRenderProcessGone(WebView view, RenderProcessGoneDetail detail) {
+            swipeRefreshLayout.removeView(view);
+            view.destroy();
+            webView = new WebView(MainActivity.this);
+            swipeRefreshLayout.addView(webView, new ViewGroup.LayoutParams(-1, -1));
+            configureWebView();
             showOfflineIfNeeded();
-            super.onReceivedError(view, errorCode, description, failingUrl);
+            return true;
         }
 
         private void showOfflineIfNeeded() {
@@ -396,6 +478,19 @@ public class MainActivity extends Activity {
     }
 
     private final class AppWebChromeClient extends WebChromeClient {
+        @Override public void onShowCustomView(View view, CustomViewCallback callback) {
+            if (fullscreenVideo != null) { callback.onCustomViewHidden(); return; }
+            fullscreenVideo = view;
+            fullscreenCallback = callback;
+            swipeRefreshLayout.setVisibility(View.GONE);
+            root.addView(view, new FrameLayout.LayoutParams(-1, -1));
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }
+
+        @Override public void onHideCustomView() { hideFullscreenVideo(); }
+
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
             progressBar.setProgress(newProgress);

@@ -1,0 +1,27 @@
+App name
+Ahmed Elfashny | الفشني
+
+Short description
+Sermons, recitations, videos and writings by Sheikh Ahmed Elfashny.
+
+Full description
+Explore the sermons, recitations and writings of Sheikh Ahmed Ismail Elfashny in one place.
+
+Read written khutbahs with clear Arabic text and download their PDFs. Browse articles, books and reflections, watch lectures and sermon videos, and listen to Quran recitations. The app also brings together Quran, hadith, adhkar and Islamic guidance from the Sheikh's website.
+
+New sermons, videos and writings appear as they are published, without needing a new app version for each content update. The familiar green-and-gold design and Arabic navigation remain consistent with the website.
+
+• Written sermons with PDF downloads
+• Video lectures and sermons
+• Quran recitations
+• Articles, books and reflections
+• Quran, hadith, adhkar and guidance sections
+• Search and category filters in supported libraries
+• Android's document picker for saving PDFs
+• Fullscreen video and native link sharing
+
+Reading requires no account. An internet connection is needed to load content and play media. PDF files saved to your device can be opened independently using a compatible reader. Content is primarily in Arabic.
+
+Support: amr@gharib.dev
+Website: https://ahmedelfashny.com/
+Privacy: https://ahmedelfashny.com/privacy.html

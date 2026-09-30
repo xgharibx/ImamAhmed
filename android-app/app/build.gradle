@@ -16,8 +16,8 @@ android {
         applicationId "com.ahmedelfashny.official"
         minSdk 23
         targetSdk 36
-        versionCode 1
-        versionName "1.0.0"
+        versionCode 2
+        versionName "1.0.1"
 
         buildConfigField "String", "LIVE_SITE_URL", "\"https://ahmedelfashny.com/\""
         buildConfigField "String", "LIVE_SITE_HOST", "\"ahmedelfashny.com\""
@@ -38,9 +38,11 @@ android {
         debug {
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
+            buildConfigField "boolean", "WEB_DEBUGGING", "true"
         }
 
         release {
+            buildConfigField "boolean", "WEB_DEBUGGING", "false"
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
@@ -74,4 +76,8 @@ tasks.named("preBuild").configure { dependsOn(syncMobileNavigation) }
 
 dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.2.0"
+    // Last stable WebKit line supporting the existing Android 6 (API 23) floor.
+    //noinspection GradleDependency
+    implementation "androidx.webkit:webkit:1.15.0"
+    testImplementation "junit:junit:4.13.2"
 }
