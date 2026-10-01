@@ -52,6 +52,10 @@ class RuntimeTests(unittest.TestCase):
     def test_runtime_keeps_the_existing_dom(self):
         self.assertEqual(self.page.locator("body").inner_html(), "<nav>original</nav>")
 
+    def test_app_preloader_is_hidden_before_site_scripts_run(self):
+        self.page.evaluate("document.body.insertAdjacentHTML('afterbegin', '<div id=preloader>Loading</div>')")
+        self.assertEqual(self.page.locator('#preloader').evaluate('element => getComputedStyle(element).display'), 'none')
+
     def test_blob_pdf_download_preserves_bytes_even_when_url_is_revoked(self):
         self.page.evaluate("""() => {
             const url = URL.createObjectURL(new Blob(['%PDF-1.7\\nexact original bytes'], {type: 'application/pdf'}));

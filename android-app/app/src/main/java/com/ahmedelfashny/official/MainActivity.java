@@ -10,6 +10,9 @@ import android.graphics.Color;
 import android.graphics.Insets;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkRequest;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -24,6 +27,7 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -31,7 +35,6 @@ import android.webkit.RenderProcessGoneDetail;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +54,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Collections;
 
 public class MainActivity extends Activity {
     private static final int FILE_CHOOSER_REQUEST = 42;
@@ -59,7 +63,8 @@ public class MainActivity extends Activity {
 
     private WebView webView;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private ProgressBar progressBar;
+    private LocalPageSession localPages;
+    private ConnectivityManager.NetworkCallback networkCallback;
     private View offlineView;
     private ValueCallback<Uri[]> filePathCallback;
     private String mobileNavigationScript;
@@ -72,6 +77,8 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try { localPages = new LocalPageSession(ContentSyncWorker.store(this)); }
+        catch (IOException error) { throw new IllegalStateException("Offline seed invalid", error); }
         buildLayout();
         downloads = new NativeDownloads(this, savedInstanceState);
         configureWebView();
@@ -177,16 +184,6 @@ public class MainActivity extends Activity {
         ));
         swipeRefreshLayout.addView(webView);
         root.addView(swipeRefreshLayout);
-
-        progressBar = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
-        progressBar.setMax(100);
-        progressBar.setVisibility(View.GONE);
-        FrameLayout.LayoutParams progressParams = new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                dp(3),
-                Gravity.TOP
-        );
-        root.addView(progressBar, progressParams);
 
         offlineView = createOfflineView();
         offlineView.setVisibility(View.GONE);
@@ -395,9 +392,18 @@ public class MainActivity extends Activity {
     @Override protected void onResume() {
         super.onResume();
         if (webView != null) webView.onResume();
+        ContentSyncWorker.enqueue(this);
+        if (networkCallback == null) {
+            networkCallback = new ConnectivityManager.NetworkCallback() {
+                @Override public void onAvailable(Network network) { ContentSyncWorker.enqueue(getApplicationContext()); }
+            };
+            getSystemService(ConnectivityManager.class).registerNetworkCallback(new NetworkRequest.Builder()
+                    .addCapability(android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET).build(), networkCallback);
+        }
     }
 
     @Override protected void onDestroy() {
+        if (networkCallback != null) getSystemService(ConnectivityManager.class).unregisterNetworkCallback(networkCallback);
         hideFullscreenVideo();
         if (filePathCallback != null) { filePathCallback.onReceiveValue(null); filePathCallback = null; }
         if (downloads != null) downloads.close();
@@ -406,6 +412,17 @@ public class MainActivity extends Activity {
     }
 
     private final class AppWebViewClient extends WebViewClient {
+        @Override public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+            if (!"GET".equals(request.getMethod())) return null;
+            try {
+                OfflineContentStore.LocalResource resource = localPages.open(request.getUrl().toString(), request.isForMainFrame());
+                if (resource != null) return new WebResourceResponse(resource.mime,
+                        resource.mime.startsWith("text/") || resource.mime.equals("application/json") || resource.mime.equals("application/javascript") ? "UTF-8" : null,
+                        200, "OK", Collections.singletonMap("Access-Control-Allow-Origin", "*"), resource.stream);
+            } catch (IOException error) { android.util.Log.w("OfflineContent", "Local resource unavailable", error); }
+            return null;
+        }
+
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
             if (!request.isForMainFrame()) return false;
@@ -430,13 +447,11 @@ public class MainActivity extends Activity {
         @Override
         public void onPageStarted(WebView view, String url, android.graphics.Bitmap favicon) {
             offlineView.setVisibility(View.GONE);
-            progressBar.setVisibility(View.VISIBLE);
             super.onPageStarted(view, url, favicon);
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            progressBar.setVisibility(View.GONE);
             swipeRefreshLayout.setRefreshing(false);
             if (mobileNavigationScript != null && url != null
                     && url.equals(view.getUrl()) && isInternalHttpUrl(Uri.parse(url))
@@ -471,7 +486,6 @@ public class MainActivity extends Activity {
         }
 
         private void showOfflineIfNeeded() {
-            progressBar.setVisibility(View.GONE);
             swipeRefreshLayout.setRefreshing(false);
             offlineView.setVisibility(View.VISIBLE);
         }
@@ -490,12 +504,6 @@ public class MainActivity extends Activity {
         }
 
         @Override public void onHideCustomView() { hideFullscreenVideo(); }
-
-        @Override
-        public void onProgressChanged(WebView view, int newProgress) {
-            progressBar.setProgress(newProgress);
-            progressBar.setVisibility(newProgress >= 100 ? View.GONE : View.VISIBLE);
-        }
 
         @Override
         public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> callback, FileChooserParams params) {

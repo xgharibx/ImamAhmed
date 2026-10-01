@@ -3,6 +3,16 @@
     if (window !== window.top || window.__sheikhAppRuntime) return;
     window.__sheikhAppRuntime = true;
 
+    function hidePagePreloader() {
+        if (!document.documentElement || document.getElementById('app-offline-preloader')) return;
+        const style = document.createElement('style');
+        style.id = 'app-offline-preloader';
+        style.textContent = '#preloader{display:none!important}';
+        (document.head || document.documentElement).appendChild(style);
+    }
+    hidePagePreloader();
+    if (!document.documentElement) document.addEventListener('DOMContentLoaded', hidePagePreloader, { once: true });
+
     const originalFetch = window.fetch.bind(window);
     window.fetch = (input, options) => {
         const url = new URL(typeof input === 'string' || input instanceof URL ? input : input.url, location.href);

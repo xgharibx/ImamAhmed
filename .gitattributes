@@ -1,0 +1,2 @@
+# Keep generated CDN mirrors byte-identical, including upstream license text.
+assets/app-content/** -text whitespace=-blank-at-eol

@@ -16,8 +16,8 @@ android {
         applicationId "com.ahmedelfashny.official"
         minSdk 23
         targetSdk 36
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 3
+        versionName "1.0.2"
 
         buildConfigField "String", "LIVE_SITE_URL", "\"https://ahmedelfashny.com/\""
         buildConfigField "String", "LIVE_SITE_HOST", "\"ahmedelfashny.com\""
@@ -58,6 +58,7 @@ android {
     }
 
     sourceSets.main.assets.srcDir(layout.buildDirectory.dir("generated/mobileNavigation"))
+    sourceSets.main.assets.srcDir(layout.buildDirectory.dir("generated/offlineContent"))
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -74,10 +75,21 @@ def syncMobileNavigation = tasks.register("syncMobileNavigation", Sync) {
 }
 tasks.named("preBuild").configure { dependsOn(syncMobileNavigation) }
 
+def generateOfflineContent = tasks.register("generateOfflineContent", Exec) {
+    workingDir rootProject.file("..")
+    commandLine(System.getenv("PYTHON") ?: "python", "scripts/generate_app_content.py",
+            "--seed", layout.buildDirectory.dir("generated/offlineContent/offline").get().asFile.absolutePath)
+}
+tasks.named("preBuild").configure { dependsOn(generateOfflineContent) }
+
 dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.2.0"
     // Last stable WebKit line supporting the existing Android 6 (API 23) floor.
     //noinspection GradleDependency
     implementation "androidx.webkit:webkit:1.15.0"
+    // Keep Android 6 support; WorkManager 2.12 raises its minimum to API 24.
+    //noinspection GradleDependency
+    implementation "androidx.work:work-runtime:2.11.2"
     testImplementation "junit:junit:4.13.2"
+    testImplementation "org.json:json:20260814"
 }
