@@ -1,0 +1,80 @@
+name: Update both YouTube channels
+
+on:
+  schedule:
+    - cron: '17 6 * * 1,4'
+      timezone: Africa/Cairo
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: site-content-publishing
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      PYTHONIOENCODING: utf-8
+    steps:
+      - name: Check out current production content
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install current YouTube metadata extractor
+        run: python -m pip install --disable-pip-version-check --upgrade yt-dlp
+
+      - name: Read both channels and validate new entries
+        run: >-
+          python scripts/refresh_video_catalog.py --new-only --refresh-feeds --apply
+          --cache "$RUNNER_TEMP/video-sync" --report data/video-sync-status.json
+
+      - name: Test the catalog and content pipelines
+        run: |
+          python -m unittest discover -s tests -p 'test_*.py' -v
+          node tests/video_catalog.cjs
+          git diff --check
+
+      - name: Commit and push the verified catalog
+        run: |
+          git config user.name 'Sheikh Ahmed Content Bot'
+          git config user.email 'content-bot@users.noreply.github.com'
+          git add -- data/videos.json data/video-sync-status.json
+          git diff --cached --check
+          git commit -m 'Update videos from both official YouTube channels'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Request a GitHub Pages build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds" --silent
+
+      - name: Verify the live catalog used by the website and Android app
+        run: |
+          python scripts/verify_video_sync.py --base-url https://ahmedelfashny.com --wait-seconds 600
+          python -c 'import json; s=json.load(open("data/video-sync-status.json")); print("Videos:", s["total"], "| Added:", len(s["added"]), "| Checked:", s["checked_at"])' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Retain the audit report for troubleshooting
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-sync-report
+          path: ${{ runner.temp }}/video-sync/report.json
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Report a failed sync
+        if: failure()
+        run: echo 'Video sync or live verification failed. Check the failed step and audit report; publication is not confirmed.' >> "$GITHUB_STEP_SUMMARY"

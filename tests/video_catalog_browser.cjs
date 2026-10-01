@@ -4,12 +4,13 @@ const fs = require('node:fs');
 const path = require('node:path');
 const root = path.join(__dirname, '..');
 const base = process.env.PREVIEW_URL || 'http://127.0.0.1:4174';
+const artifacts = process.env.ARTIFACT_DIR || path.join(root, 'tests', 'artifacts');
 
 (async () => {
     const data = JSON.parse(fs.readFileSync(path.join(root, 'data/videos.json'), 'utf8'));
     const newest = (a, b) => (Date.parse(b.publishedAt || b.date) || 0) - (Date.parse(a.publishedAt || a.date) || 0);
     const browser = await chromium.launch({ channel: 'chrome', headless: true });
-    fs.mkdirSync(path.join(__dirname, 'artifacts'), { recursive: true });
+    fs.mkdirSync(artifacts, { recursive: true });
     try {
         for (const width of [390, 820, 1440]) {
             const page = await browser.newPage({ viewport: { width, height: 900 } });
@@ -34,7 +35,7 @@ const base = process.env.PREVIEW_URL || 'http://127.0.0.1:4174';
                     const titles = await page.locator('.video-title').allTextContents();
                     assert.deepEqual(titles, data.filter(v => v.sourceChannel !== 'tarteel' && v.category === 'quran').sort(newest).slice(0, 20).map(v => v.title));
                 }
-                await page.screenshot({ path: path.join(__dirname, 'artifacts', `catalog-${width}-${file}.png`), animations: 'disabled' });
+                await page.screenshot({ path: path.join(artifacts, `catalog-${width}-${file}.png`), animations: 'disabled' });
                 console.log(`PASS ${width} ${file}: newest 20 IDs and category filtering`);
             }
             assert.deepEqual(errors, []);

@@ -4,6 +4,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 for (const file of ['videos-dynamic.js', 'khutab-video.js', 'tilawa-dynamic.js']) {
+    const requests = [];
     const element = { addEventListener() {}, querySelector() { return null; } };
     const context = {
         document: {
@@ -12,7 +13,7 @@ for (const file of ['videos-dynamic.js', 'khutab-video.js', 'tilawa-dynamic.js']
             getElementById() { return element; }
         },
         window: { addEventListener() {} },
-        fetch: () => new Promise(() => {}), console, URLSearchParams
+        fetch: (url, options) => { requests.push({ url, options }); return new Promise(() => {}); }, console, URLSearchParams
     };
     const names = ['extractDateFromText', 'extractVideoTimestamp', 'sortByNewest'];
     if (file !== 'tilawa-dynamic.js') names.push('classifyVideo');
@@ -21,6 +22,8 @@ for (const file of ['videos-dynamic.js', 'khutab-video.js', 'tilawa-dynamic.js']
         "document.addEventListener('DOMContentLoaded', () => { globalThis.api = {" + names.join(',') + '};'
     );
     vm.runInNewContext(source, context, { filename: file });
+    assert.equal(requests[0].url, 'data/videos.json');
+    assert.equal(requests[0].options?.cache, 'no-cache', file + ': revalidate the shared catalog');
     const { extractDateFromText: date, extractVideoTimestamp: timestamp, sortByNewest: newest } = context.api;
     assert.equal(date('2026-07-05'), Date.UTC(2026, 6, 5));
     assert.equal(date('٢٠٢٦-٠٧-٠٥'), Date.UTC(2026, 6, 5));

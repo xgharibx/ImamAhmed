@@ -63,6 +63,35 @@ def seconds_to_duration(value: Any) -> str:
     return f"{hours}:{minutes:02d}:{seconds:02d}" if hours else f"{minutes}:{seconds:02d}"
 
 
+def video_timestamp(record: dict[str, Any]) -> float:
+    value = record.get("publishedAt") or record.get("date")
+    if not value:
+        return 0
+    timestamp = dt.datetime.fromisoformat(value)
+    return timestamp.replace(tzinfo=timestamp.tzinfo or dt.timezone.utc).timestamp()
+
+
+def validate_catalog(records: Any) -> None:
+    if not isinstance(records, list) or not records:
+        raise PipelineError("The video catalog must be a nonempty array")
+    seen = set()
+    for record in records:
+        video_id = record.get("id")
+        if not re.fullmatch(r"[A-Za-z0-9_-]{11}", str(video_id)) or video_id in seen:
+            raise PipelineError("Invalid or duplicate video ID")
+        seen.add(video_id)
+        if not record.get("title") or record.get("category") not in VALID_VIDEO_CATEGORIES:
+            raise PipelineError(f"Invalid title or category: {video_id}")
+        if record.get("sourceChannel") not in {"main", "tarteel", "legacy"}:
+            raise PipelineError(f"Invalid source channel: {video_id}")
+        if not record.get("date"):
+            if video_id not in {"KW-L6uOsJAs", "vao6ATA9FXs"}:
+                raise PipelineError(f"Missing publication date: {video_id}")
+        else:
+            dt.date.fromisoformat(record["date"])
+        video_timestamp(record)
+
+
 def classify_video(title: str, duration: str = "", feed: str = "", default: str = "") -> str:
     if default in VALID_VIDEO_CATEGORIES:
         return default
@@ -107,7 +136,8 @@ def classify_video(title: str, duration: str = "", feed: str = "", default: str 
 
 
 def run_yt_dlp(url: str, flat: bool = False, playlist_end: int = 0) -> dict[str, Any]:
-    command = [sys.executable, "-m", "yt_dlp", "--ignore-errors", "--no-warnings"]
+    command = [sys.executable, "-m", "yt_dlp", "--abort-on-error", "--no-warnings",
+               "--extractor-args", "youtube:raise_incomplete_data"]
     if flat:
         command += ["--flat-playlist", "--dump-single-json"]
         if playlist_end:

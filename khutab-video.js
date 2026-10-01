@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPage = 1;
     const itemsPerPage = 20;
 
-    fetch('data/videos.json')
+    fetch('data/videos.json', { cache: 'no-cache' })
         .then((response) => response.json())
         .then((data) => {
             const allVideos = Array.isArray(data) ? data : [];

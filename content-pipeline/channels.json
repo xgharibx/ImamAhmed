@@ -4,6 +4,7 @@
     "url": "https://www.youtube.com/@ahmedelfashny",
     "sourceChannel": "main",
     "channelHandle": "@ahmedelfashny",
+    "channelId": "UCZXbR7Xs7OU6ItTQokAl0Bg",
     "channelName": "الشيخ أحمد إسماعيل الفشني",
     "feeds": ["videos", "shorts", "streams"]
   },
@@ -12,6 +13,7 @@
     "url": "https://www.youtube.com/@AhmedIsmailElfashny",
     "sourceChannel": "tarteel",
     "channelHandle": "@AhmedIsmailElfashny",
+    "channelId": "UCO8gcSlUn53Bn73t1u9C_2A",
     "channelName": "القارئ الشيخ أحمد الفشني",
     "feeds": ["videos", "shorts", "streams"],
     "defaultCategory": "quran"

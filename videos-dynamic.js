@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const knownCategories = new Set(['khutbah', 'lessons', 'tv', 'tafseer', 'quran', 'shorts', 'ali-wusul', 'fi-nur-allah', 'qisas-ibra']);
 
     // Fetch Data
-    fetch('data/videos.json')
+    fetch('data/videos.json', { cache: 'no-cache' })
         .then(response => response.json())
         .then(data => {
             allVideos = (Array.isArray(data) ? data : [])

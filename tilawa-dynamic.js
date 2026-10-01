@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalTitle = document.getElementById('modal-title');
     const closeModal = document.querySelector('.close-modal');
 
-    fetch('data/videos.json')
+    fetch('data/videos.json', { cache: 'no-cache' })
         .then((response) => response.json())
         .then((rawData) => {
             allTilawat = (Array.isArray(rawData) ? rawData : [])
