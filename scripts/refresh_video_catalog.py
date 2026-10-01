@@ -95,6 +95,13 @@ def refresh(args):
     original_bytes = pipeline.VIDEOS_JSON.read_bytes()
     original = json.loads(original_bytes)
     pipeline.validate_catalog(original)
+    known_pending = set()
+    status_path = Path(args.report) if getattr(args, 'report', None) else None
+    if status_path and status_path.exists():
+        previous = pipeline.read_json(status_path)
+        if previous.get('status') == 'success' and previous.get('catalog_sha256') == hashlib.sha256(original_bytes).hexdigest():
+            known_pending.update(value for value in previous.get('live_skipped', []) if isinstance(value, str) and re.fullmatch(r'[A-Za-z0-9_-]{11}', value))
+            known_pending.update(item['id'] for item in previous.get('deferred_pending', []) if isinstance(item, dict) and isinstance(item.get('id'), str) and re.fullmatch(r'[A-Za-z0-9_-]{11}', item['id']))
     new_only = getattr(args, "new_only", False)
     sources = pipeline.read_json(pipeline.CHANNELS_CONFIG)
     overrides = pipeline.read_json(pipeline.ROOT / "content-pipeline" / "video-category-overrides.json")
@@ -151,7 +158,7 @@ def refresh(args):
         pipeline.write_json(path, result)
         return result
 
-    report = {"feeds": feeds_report, "added": [], "dates_corrected": [], "categories_corrected": [], "unavailable": [], "live_skipped": [], "errors": []}
+    report = {"feeds": feeds_report, "added": [], "dates_corrected": [], "categories_corrected": [], "unavailable": [], "live_skipped": [], "deferred_pending": [], "errors": []}
     with ThreadPoolExecutor(max_workers=args.workers) as pool:
         futures = {pool.submit(resolve, video_id): video_id for video_id in ids}
         for done, future in enumerate(as_completed(futures), 1):
@@ -163,6 +170,10 @@ def refresh(args):
                 continue
             if metadata.get("unavailable"):
                 report["unavailable"].append(metadata)
+                # Retain only audited pending IDs; never publish unverifiable metadata.
+                if video_id in known_pending and video_id in listed and video_id not in records:
+                    report['deferred_pending'].append({'id': video_id, 'reason': metadata['unavailable']})
+                    continue
                 if video_id not in records:
                     report["errors"].append({"id": video_id, "error": metadata["unavailable"]})
                 continue

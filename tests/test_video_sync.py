@@ -117,6 +117,32 @@ class ScheduledVideoSyncTests(unittest.TestCase):
         self.assertNotIn("bbbbbbbbbbb", {row["id"] for row in pipeline.read_json(self.catalog)})
         self.assertEqual(pipeline.read_json(self.status)["live_skipped"], ["bbbbbbbbbbb"])
 
+    def test_previously_confirmed_pending_video_retries_without_blocking_valid_uploads(self):
+        completed = copy.deepcopy(self.metadata['bbbbbbbbbbb'])
+        self.metadata['bbbbbbbbbbb']['live_status'] = 'is_live'
+        self.run_sync()
+        self.metadata['bbbbbbbbbbb'] = {'id': 'bbbbbbbbbbb', 'unavailable': 'Sign in to confirm you are not a bot'}
+        self.run_sync()
+        status = pipeline.read_json(self.status)
+        self.assertEqual(status['errors'], [])
+        self.assertEqual([item['id'] for item in status['deferred_pending']], ['bbbbbbbbbbb'])
+        self.assertNotIn('bbbbbbbbbbb', status['live_skipped'])
+        self.assertNotIn('bbbbbbbbbbb', {row['id'] for row in pipeline.read_json(self.catalog)})
+        self.run_sync()
+        self.assertEqual([item['id'] for item in pipeline.read_json(self.status)['deferred_pending']], ['bbbbbbbbbbb'])
+        self.metadata['bbbbbbbbbbb'] = completed
+        self.run_sync()
+        self.assertIn('bbbbbbbbbbb', {row['id'] for row in pipeline.read_json(self.catalog)})
+        self.assertEqual(pipeline.read_json(self.status)['deferred_pending'], [])
+
+    def test_stale_pending_proof_does_not_suppress_a_metadata_error(self):
+        pipeline.write_json(self.status, {'status': 'success', 'catalog_sha256': 'stale', 'live_skipped': ['bbbbbbbbbbb']})
+        self.metadata['bbbbbbbbbbb'] = {'id': 'bbbbbbbbbbb', 'unavailable': 'Unavailable'}
+        before = self.catalog.read_bytes()
+        with self.assertRaises(pipeline.PipelineError):
+            self.run_sync()
+        self.assertEqual(before, self.catalog.read_bytes())
+
     def test_channel_pending_marker_defers_metadata_requests(self):
         def feed(url, **kwargs):
             payload = self.feed(url, **kwargs)
