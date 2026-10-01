@@ -109,6 +109,17 @@ class ScheduledVideoSyncTests(unittest.TestCase):
         self.assertNotIn("bbbbbbbbbbb", {row["id"] for row in pipeline.read_json(self.catalog)})
         self.assertEqual(pipeline.read_json(self.status)["live_skipped"], ["bbbbbbbbbbb"])
 
+    def test_channel_pending_marker_defers_metadata_requests(self):
+        def feed(url, **kwargs):
+            payload = self.feed(url, **kwargs)
+            for item in payload["entries"]:
+                if item["id"] == "bbbbbbbbbbb":
+                    item["live_status"] = "is_upcoming"
+            return payload
+        self.run_sync(feed=feed)
+        self.assertNotIn("bbbbbbbbbbb", self.fetched)
+        self.assertEqual(pipeline.read_json(self.status)["live_skipped"], ["bbbbbbbbbbb"])
+
     def test_invalid_dates_are_not_published(self):
         self.metadata["bbbbbbbbbbb"]["upload_date"] = "2026-02-31"
         before = self.catalog.read_bytes()

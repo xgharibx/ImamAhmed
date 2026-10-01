@@ -42,6 +42,8 @@ python scripts/verify_video_sync.py --base-url https://ahmedelfashny.com --wait-
 
 For ambiguous titles, add an ID-based category correction with a reason in `video-category-overrides.json`. Reviewed overrides are applied to existing entries too; other existing records are not automatically reclassified. Title-based classification cannot guarantee every future ambiguous video is understood without an editorial correction.
 
+The small `yt_dlp_plugins/extractor/channel_live_status.py` adapter preserves YouTube's public LIVE badge in newer channel cards. This defers unfinished broadcasts before requesting publication metadata; completed videos still require exact metadata. It does not download video media or bypass sign-in checks.
+
 ---
 
 ## Step-by-Step: Adding New Videos

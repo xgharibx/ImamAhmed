@@ -103,6 +103,8 @@ def refresh(args):
     context = INNERTUBE_CLIENTS["web"]["INNERTUBE_CONTEXT"]
 
     def resolve(video_id):
+        if video_id in listed and listed[video_id][2].get("live_status") in {"is_live", "is_upcoming", "post_live"}:
+            return {"id": video_id, "live_status": "is_live"}
         path = cache / f"{video_id}.json"
         if path.exists():
             cached = pipeline.read_json(path)

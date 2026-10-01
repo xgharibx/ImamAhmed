@@ -146,7 +146,7 @@ def run_yt_dlp(url: str, flat: bool = False, playlist_end: int = 0) -> dict[str,
         command += ["--skip-download", "--dump-single-json", "--no-playlist"]
     command.append(url)
     try:
-        completed = subprocess.run(command, check=True, capture_output=True, text=True, encoding="utf-8", timeout=180)
+        completed = subprocess.run(command, check=True, capture_output=True, text=True, encoding="utf-8", timeout=180, cwd=ROOT)
     except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired) as exc:
         detail = getattr(exc, "stderr", "") or str(exc)
         raise PipelineError("تعذر جلب بيانات YouTube: " + detail.strip()[-500:]) from exc
