@@ -149,3 +149,7 @@ Without `--apply`, this writes an audit report/cache only. Unlike the scheduled 
 - Read the current total and successful sync date from `data/video-sync-status.json`.
 - **Categories:** 9 canonical identifiers.
 - **Ordering:** Newest public timestamp first.
+
+## Pending Streams
+
+Live and upcoming streams are retried after completion, not published with guessed dates. If YouTube blocks metadata for a previously audited pending ID, the next successful status records it in `deferred_pending` and keeps importing other verified videos. The prior status must match the current catalog hash; the ID must still appear in an official channel feed and must not already be published. It remains visibly unresolved in the audit until complete metadata can be verified. Unknown metadata errors and incorrect channels still fail the run without changing the catalog.

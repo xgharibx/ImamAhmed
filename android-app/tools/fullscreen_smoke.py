@@ -85,7 +85,7 @@ def run(adb_path, output):
             adb('shell', 'input', 'keyevent', 'KEYCODE_BACK')
             page.wait_for_function('!document.querySelector("#video-modal").classList.contains("active")')
             assert page.locator('.mobile-bottom-nav').is_visible()
-            result = dict(status='passed', source=source, checks=['actual YouTube video advanced', 'native fullscreen entered', 'landscape rotation retained playback fullscreen', 'Back left fullscreen', 'second Back closed modal', 'original navigation restored'])
+            result = dict(status='passed', source=source, checks=['actual YouTube video advanced', 'native fullscreen entered', 'landscape rotation retained fullscreen', 'Back left fullscreen', 'second Back closed modal', 'original navigation restored'])
             (output / 'fullscreen-report.json').write_text(json.dumps(result, indent=2), encoding='utf-8')
             browser.close()
             return result
