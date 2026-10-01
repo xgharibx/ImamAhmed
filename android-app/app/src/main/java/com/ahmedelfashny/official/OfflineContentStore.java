@@ -34,6 +34,7 @@ final class OfflineContentStore {
     private final Object syncLock = new Object();
     private volatile ContentManifest active;
     private ContentManifest previous;
+    private ContentManifest staging;
     private long sequence;
 
     OfflineContentStore(File directory, SeedSource source) throws IOException {
@@ -70,19 +71,24 @@ final class OfflineContentStore {
     }
 
     boolean synchronize(byte[] encoded, Fetcher fetcher) throws IOException {
-        synchronized (syncLock) { return synchronizeLocked(encoded, fetcher); }
+        synchronized (syncLock) {
+            try { return synchronizeLocked(encoded, fetcher); }
+            finally { synchronized (this) { staging = null; } }
+        }
     }
 
     private boolean synchronizeLocked(byte[] encoded, Fetcher fetcher) throws IOException {
         ContentManifest next = ContentManifest.parse(encoded);
         if (next.revision.equals(active.revision)) return false;
+        synchronized (this) { staging = next; }
         for (ContentManifest.Resource entry : next.resources.values()) {
-            if (seedHashes.contains(entry.sha256)) continue;
             File object = new File(objects, entry.sha256);
             if (verified(object, entry)) continue;
             enforceDiskBudget(entry.size);
             File pending = new File(objects, entry.sha256 + ".pending");
-            try (InputStream input = fetcher.fetch(entry.path); FileOutputStream output = new FileOutputStream(pending)) {
+            // Persist seed dependencies too, so saved revisions survive a future APK seed change.
+            try (InputStream input = seedHashes.contains(entry.sha256) ? source.open(entry.sha256) : fetcher.fetch(entry.path);
+                 FileOutputStream output = new FileOutputStream(pending)) {
                 MessageDigest digest = ContentManifest.digest();
                 byte[] buffer = new byte[16384];
                 int count, total = 0;
@@ -97,6 +103,7 @@ final class OfflineContentStore {
             if (object.exists() && !object.delete()) throw new IOException("Cannot replace corrupt resource");
             if (!pending.renameTo(object)) throw new IOException("Cannot commit resource");
         }
+        if (!complete(next)) throw new IOException("Staged content is incomplete");
         // Immutable, increasing journal names make activation one atomic rename.
         // There is no mutable pointer that can be truncated by process death.
         String name = String.format(java.util.Locale.ROOT, "%016d-%s.json", ++sequence, next.revision);
@@ -141,6 +148,7 @@ final class OfflineContentStore {
         Set<String> keep = new HashSet<>(), revisions = new HashSet<>();
         List<ContentManifest> snapshots = new ArrayList<>(pinned.keySet());
         snapshots.add(active); if (previous != null) snapshots.add(previous);
+        if (staging != null) snapshots.add(staging);
         for (ContentManifest snapshot : snapshots) {
             if (snapshot == null) continue;
             revisions.add(snapshot.revision);

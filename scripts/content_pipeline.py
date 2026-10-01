@@ -113,7 +113,8 @@ def validate_iso_date(value: str) -> str:
     return parsed.isoformat()
 
 
-def extract_docx_paragraphs(path: Path) -> list[str]:
+def extract_docx_paragraphs(path: Path, *, min_paragraphs: int = 8,
+                            min_characters: int = 500, content_label: str = "الخطبة") -> list[str]:
     if not path.is_file():
         raise PipelineError(f"ملف Word غير موجود: {path}")
     if path.suffix.lower() != ".docx":
@@ -152,8 +153,8 @@ def extract_docx_paragraphs(path: Path) -> list[str]:
                 paragraphs.append(line)
 
     content_length = sum(len(p) for p in paragraphs)
-    if len(paragraphs) < 8 or content_length < 500:
-        raise PipelineError("محتوى الخطبة قصير جداً؛ راجع ملف Word قبل النشر")
+    if len(paragraphs) < min_paragraphs or content_length < min_characters:
+        raise PipelineError(f"محتوى {content_label} قصير جداً؛ راجع ملف Word قبل النشر")
     return paragraphs
 
 

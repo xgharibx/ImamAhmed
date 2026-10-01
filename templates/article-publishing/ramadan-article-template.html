@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="{{META_DESCRIPTION}}">
     <title>{{PAGE_TITLE}} | مكتبة الشيخ أحمد</title>
-                                                <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="canonical" href="{{CANONICAL_URL}}">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -21,6 +22,18 @@
         .nav-button { display:inline-block; margin-top:1.5rem; padding:10px 24px; background:var(--primary-color); color:white; text-decoration:none; border-radius:25px; }
         ul.ramadan-list { margin: 0 0 1.25rem; padding-right: 1.4rem; }
         ul.ramadan-list li { font-size: 1.25rem; margin-bottom: .6rem; }
+        .article-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
+        .article-actions .nav-button { border-radius: 6px; }
+        @media print {
+            body { background: white; }
+            .article-actions, .mobile-bottom-nav, .mobile-nav, .mobile-nav-overlay { display: none !important; }
+            .book-header { padding: 1.5rem; }
+            .container { margin: 0 auto; padding: 0; }
+            .content-card { box-shadow: none; border-radius: 0; padding: 1rem 0; }
+            .text-content { font-size: 16pt; }
+            p { orphans: 3; widows: 3; }
+            h2 { break-after: avoid; }
+        }
         @media (max-width: 768px) {
             .book-title { font-size: 1.8rem; }
             .content-card { padding: 1.4rem; }
@@ -40,7 +53,7 @@
     <meta property="og:image:height" content="630">
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:image:secure_url" content="https://ahmedelfashny.com/assets/og/sheikh-ahmed-share.jpg">
-    <meta property="og:url" content="https://ahmedelfashny.com/templates/article-publishing/ramadan-article-template.html">
+    <meta property="og:url" content="{{CANONICAL_URL}}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{PAGE_TITLE}}">
     <meta name="twitter:description" content="{{META_DESCRIPTION}}">
@@ -52,16 +65,19 @@
     <header class="book-header">
         <h1 class="book-title">{{PAGE_TITLE}}</h1>
         <div class="book-author">{{AUTHOR}}</div>
-        <a href="../../articles.html" class="nav-button"><i class="fas fa-arrow-right"></i> {{BACK_TEXT}}</a>
+        <div class="nav-container article-actions">
+            <a href="../articles.html" class="nav-button btn-back"><i class="fas fa-arrow-right"></i> {{BACK_TEXT}}</a>
+            <a href="{{PDF_FILENAME}}" class="nav-button js-book-download-top" download><i class="fas fa-download"></i> تحميل PDF</a>
+        </div>
     </header>
 
     <div class="container">
-        <article class="content-card">
+        <article class="content-card article-body" data-article-id="{{ARTICLE_ID}}" data-content-sha256="{{CONTENT_SHA256}}">
 {{BODY_HTML}}
         </article>
     </div>
 
-    <script src="../../pdf-export.js?v=20260415-1"></script>
+    <script src="../pdf-export.js?v=20260415-1"></script>
 </body>
 </html>
 

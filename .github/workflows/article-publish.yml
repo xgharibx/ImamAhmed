@@ -1,0 +1,157 @@
+name: Publish article
+
+on:
+  workflow_dispatch:
+  issues:
+    types: [opened, edited, reopened]
+
+permissions:
+  contents: write
+  issues: write
+  pages: write
+
+concurrency:
+  group: site-content-publishing
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: >-
+      startsWith(github.event.issue.title, '[نشر مقال]') &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.issue.author_association)
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      PYTHONIOENCODING: utf-8
+      ISSUE_NUMBER: ${{ github.event.issue.number }}
+    steps:
+      - name: Check out current production content
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install PDF rendering and content checks
+        run: |
+          python -m pip install --disable-pip-version-check playwright pypdf yt-dlp
+          python -m playwright install --with-deps chromium
+
+      - name: Build the article, its card, and its Arabic PDF
+        run: |
+          python scripts/article_pipeline.py publish-issue --event "$GITHUB_EVENT_PATH" > article-result.json
+          python scripts/content_pipeline.py generate-sitemap
+          python scripts/generate_app_content.py --prepare-assets
+          python scripts/article_pipeline.py validate-result --result article-result.json
+          python -m unittest discover -s tests -p 'test_*.py' -v
+          git diff --check
+
+      - name: Check the local card, article, and PDF download
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/article-http.log 2>&1 &
+          python scripts/verify_article_publish.py --base-url http://127.0.0.1:8765 --result article-result.json --wait-seconds 30
+
+      - name: Commit and push the validated article
+        id: commit
+        run: |
+          ARTICLE_FILE=$(python -c 'import json; print(json.load(open("article-result.json"))["file"])')
+          ARTICLE_PDF=$(python -c 'import json; print(json.load(open("article-result.json"))["pdf"])')
+          git config user.name 'Sheikh Ahmed Content Bot'
+          git config user.email 'content-bot@users.noreply.github.com'
+          git add -- articles.html sitemap.xml robots.txt "$ARTICLE_FILE" "$ARTICLE_PDF"
+          git add -- data/app-content-manifest.json assets/app-content
+          git diff --cached --check
+          git commit -m "Publish article from issue #$ISSUE_NUMBER"
+          git pull --rebase origin main
+          python scripts/finalize_publish_manifest.py
+          git push origin HEAD:main
+
+      - name: Request a GitHub Pages build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds" --silent
+
+      - name: Verify the live card, article, and PDF
+        id: live
+        run: |
+          python scripts/verify_article_publish.py --base-url https://ahmedelfashny.com --result article-result.json --wait-seconds 600 > article-live-result.json
+          python scripts/verify_app_content.py --base-url https://ahmedelfashny.com --wait-seconds 600
+          echo "url=$(python -c 'import json; print(json.load(open("article-live-result.json"))["url"])')" >> "$GITHUB_OUTPUT"
+
+      - name: Confirm publication to the uploader
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ARTICLE_URL: ${{ steps.live.outputs.url }}
+        run: |
+          gh issue close "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" \
+            --comment "تم نشر المقال والتحقق من البطاقة والصفحة وملف PDF: $ARTICLE_URL"
+
+      - name: Retain publication evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: article-publish-${{ github.event.issue.number }}
+          path: |
+            article-result.json
+            article-live-result.json
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Explain any failed stage
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMIT_OUTCOME: ${{ steps.commit.outcome }}
+        run: |
+          if [ "$COMMIT_OUTCOME" = 'success' ]; then
+            message='تم دفع المقال إلى main لكن لم يكتمل تأكيد نشر الصفحة وملف PDF. راجع سجل التشغيل؛ النشر غير مؤكد.'
+          else
+            message='لم يتم دفع المقال. راجع سجل التشغيل للتحقق من المرفق والعنوان وعدم التكرار وجودة PDF، ثم صحح الملف وأعد فتح الطلب.'
+          fi
+          gh issue comment "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --body "$message"
+
+  dry-run:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    env:
+      PYTHONIOENCODING: utf-8
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - name: Check out the selected ref without push credentials
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install real Arabic PDF and browser verification dependencies
+        run: |
+          python -m pip install --disable-pip-version-check playwright pypdf
+          python -m playwright install --with-deps chromium
+
+      - name: Check temporary-root safeguards
+        run: python -m unittest discover -s tests -p 'test_article_smoke.py' -v
+
+      - name: Exercise the real article and offline pipeline only in temporary storage
+        run: python scripts/smoke_article_publish.py --output "$RUNNER_TEMP/article-smoke-artifacts"
+
+      - name: Retain the actual PDF and narrow smoke report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: article-dry-run-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/article-smoke-artifacts/article.pdf
+            ${{ runner.temp }}/article-smoke-artifacts/report.json
+          if-no-files-found: warn
+          retention-days: 14

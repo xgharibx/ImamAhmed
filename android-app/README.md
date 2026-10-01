@@ -1,6 +1,6 @@
 # Sheikh Ahmed Android App
 
-This Android Studio project packages the production website as a release-ready Android app.
+This Android Studio project preserves the website UI and bundles public content for first-launch offline reading, with incremental background updates.
 
 ## Open in Android Studio
 
@@ -26,7 +26,7 @@ app/build/outputs/apk/debug/app-debug.apk
 
 ## Build Release AAB
 
-For Google Play, create a local signing key and a local `keystore.properties` file. A template is included at:
+For updates to the existing Google Play app, reuse its upload key and local `keystore.properties`. Do not generate a replacement key. A configuration template is included at:
 
 ```text
 keystore.properties.example
@@ -50,16 +50,18 @@ Do not commit `keystore.properties`, `.jks`, or `.keystore` files.
 
 - Package name: `com.ahmedelfashny.official`
 - App name: `Ahmed Elfashny | الفشني`
-- Version: `1.0.1` (version code `2`)
+- Version: `1.0.2` (version code `3`)
 - Support: `amr@gharib.dev`
 - Privacy: `https://ahmedelfashny.com/privacy.html`
 - Live site: `https://ahmedelfashny.com/`
 - Minimum SDK: 23
 - Target SDK: 36
 - Release builds enable resource shrinking and code minification.
-- The app uses only the internet permission.
+- Internet/network-state permissions support connected background work. No broad storage or sensitive device permissions are requested.
 
-Fresh videos, khutab, articles, books, and JSON content load from the live website, so content updates do not require a new app release.
+Current reading pages, khutab/article text, video catalogs, fonts, icons, and available thumbnails are packaged in the app. They open without internet even if never visited before. A connected WorkManager check downloads only changed resources from the public hash manifest, validates them, and activates a complete version on the next navigation. Failed updates retain the working version. YouTube playback, external services, and new PDF downloads remain online. Future content publications do not require a new app release.
+
+Set `PYTHON` to your Python interpreter if `python` is not on PATH. Gradle generates and validates the complete offline seed during `preBuild`; see `content-pipeline/app-content.md` in the repository root. No top horizontal loading bar or page preloader is shown inside the app.
 
 The app keeps the original website design. Its floating five-tab navigation is
 shared with the website (`mobile-nav.css` and `mobile-nav.js`) and bundled
@@ -86,12 +88,13 @@ Emulator smoke tools require the Python Playwright package and a running Android
 ```powershell
 python tools/android_smoke.py C:\path\to\adb.exe
 python tools/native_transfer_smoke.py C:\path\to\adb.exe
+python tools/offline_smoke.py --adb C:\path\to\adb.exe --output C:\path\to\qa
 ```
 
 The native transfer test kills only the debug app process to verify that a pending save survives process recreation. It writes small test PDFs to the emulator's Downloads directory.
 
 ## Play Status
 
-The signed bundle and store graphics are prepared for closed testing. A saved draft is not a live Play release. Complete Console's app-content declarations and release review before inviting testers. This account requires at least 12 opted-in testers for 14 continuous days before applying for production access; the three supplied email addresses do not yet meet that requirement.
+Version 1.0.1 is available to selected closed-test testers (Console verified October 1, 2026). Version 1.0.2 is the offline update; record Console's actual acceptance and review state after upload. A draft or review submission is not a public Play release. This account requires at least 12 opted-in testers for 14 continuous days before applying for production access; the three supplied email addresses do not yet meet that requirement.
 
 Keep the upload keystore backed up privately. Play-generated APKs use Google's app-signing key, which can differ from the direct APK's upload-key signature; moving between these installation channels may require uninstalling the direct APK first.

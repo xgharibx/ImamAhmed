@@ -9,7 +9,7 @@ import sys
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import quote, unquote, urljoin, urlsplit, urlunsplit
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -183,11 +183,17 @@ def prepare_seed(root, output):
     return manifest
 
 
+class ApprovedRedirects(HTTPRedirectHandler):
+    def redirect_request(self, request, fp, code, msg, headers, newurl):
+        normalize_key(newurl)
+        return super().redirect_request(request, fp, code, msg, headers, newurl)
+
+
 def fetch_mirror(root, url):
     normalize_key(url)
     # This user agent requests WOFF2 and Arabic unicode ranges used by WebView.
     req = Request(url, headers={'User-Agent': 'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 Chrome/120.0.0.0 Mobile Safari/537.36'})
-    with urlopen(req, timeout=30) as response:
+    with build_opener(ApprovedRedirects()).open(req, timeout=30) as response:
         normalize_key(response.url)
         data = response.read(MAX_FILE + 1)
         mime = response.headers.get_content_type()

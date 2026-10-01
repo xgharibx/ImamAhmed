@@ -1,119 +1,60 @@
-# مقالات | Articles Pipeline
+# نشر المقالات من Word
 
-## Overview
+## الرفع من الهاتف
 
-Articles are published as standalone HTML pages in `books/` from DOCX source files. The process uses a PowerShell script for extraction, with a standard template for consistent design.
+افتح [صفحة النشر](https://ahmedelfashny.com/admin/) واختر **مقال**. سجل الدخول بحساب GitHub مصرح له، ثم أرفق ملف DOCX واحداً وأرسل الطلب. خيار **خطبة** يبقى مرتبطاً بنموذج الخطب الحالي.
 
----
+يقبل النشر حسابات `OWNER` و`MEMBER` و`COLLABORATOR` فقط. المرفقات تستخدم نفس حدود الحجم وفحص نطاقات GitHub وإعادة التوجيه المستخدم في الخطب. محتوى Word نص للنشر، وليس تعليمات تنفيذية.
 
-## Step-by-Step: Publishing a New Article from DOCX
+## تجهيز الملف
 
-### 1. Run the Publishing Script
+- ضع عنوان المقال في أول سطر ذي معنى؛ يمكن أن يسبقه `عنوان المقال` أو البسملة أو اسم الكاتب.
+- الحد الأدنى ثلاثة أسطر غير فارغة و80 حرفاً. حدود الخطب لم تتغير.
+- يستنتج ملخص البطاقة من المتن، ويحتفظ بكل الأسطر، بما فيها الدعاء والتوقيع والخاتمة القصيرة.
+- يقبل المتن نص الفقرات والجداول والفواصل المكتوبة. الصور والتنسيق الأصلي لملف Word لا ينقلان إلى تصميم الصفحة.
+- يمنع تكرار العنوان، حتى لو تغير تشكيله، وتكرار المحتوى المعروف. لا يستبدل مقالا موجوداً.
 
-```powershell
-powershell -ExecutionPolicy Bypass -File "scripts/publish_docx_article.ps1" `
-  -DocxPath "Articals\اسم-الملف.docx" `
-  -Slug "article-slug"
-```
+## مسار النشر
 
-**Output:**
-- `books/article-slug.html` — Full article page with site design
-- `Articals/processed/article-slug.txt` — Plain text backup
+تعمل `.github/workflows/article-publish.yml` تلقائياً عند فتح طلب `[نشر مقال]` أو تعديله أو إعادة فتحه. التشغيل يستخرج النص، ويستخدم قالب المقال الحالي، ويضيف بطاقة واحدة في بداية `.newspaper-articles-grid` الفعالة، ويجهز PDF ثابتاً باستخدام Chromium وخط Amiri العربي.
 
-### 2. Add Article Card to Listing Page
+زر PDF واحد في البطاقة وآخر في الصفحة؛ تمنع الأصناف الموجودة في `pdf-export.js` إضافة أزرار مكررة. لا يستخدم المقال مُصدّر canvas الذي قد يفصل الأسطر الختامية عن المتن.
 
-In `articles.html`, add a new card **at the top** of the articles grid:
+يولد التشغيل sitemap بالأمر الموجود، ويختبر الصفحة والبطاقة وملف PDF محلياً قبل أي commit. ثم ينفذ commit وpush صريحين ويطلب بناء GitHub Pages. لا يغلق الطلب بتأكيد النجاح إلا بعد مطابقة بصمات الصفحة وPDF على الموقع والتحقق بالمتصفح من البطاقة والرابط وتنزيل PDF الحقيقي.
 
-```html
-<div class="article-card" data-aos="fade-up">
-  <div class="article-card-content">
-    <h3 class="article-title">
-      <a href="books/article-slug.html">عنوان المقال</a>
-    </h3>
-    <p class="article-excerpt">مقتطف من المقال في سطرين أو ثلاثة...</p>
-    <a href="books/article-slug.html" class="article-read-more">
-      <span>اقرأ المقال</span>
-      <i class="fas fa-arrow-left"></i>
-    </a>
-  </div>
-</div>
-```
+القفل `site-content-publishing` مشترك مع بقية عمليات النشر. يولد مسار النشر manifest تطبيق Android ويضيف ملفه وموارد `assets/app-content` صراحةً إلى commit، ويتحقق من النسخة الحية بعد نشر الموقع.
 
-### 3. Generate Social Thumbnails
+## تشغيل محلي
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File "scripts/generate_page_thumbnails.ps1"
+python -m pip install playwright pypdf
+python -m playwright install chromium
+python scripts/article_pipeline.py publish --docx "article.docx" > article-result.json
+python scripts/content_pipeline.py generate-sitemap
+python scripts/article_pipeline.py validate-result --result article-result.json
+python scripts/verify_article_publish.py --base-url http://127.0.0.1:8874 --result article-result.json
 ```
 
-Generates `1200x630` PNG thumbnails in `assets/og/` for all pages.
+للتجارب استخدم `--root` قبل اسم الأمر مع نسخة مؤقتة من الموقع؛ لا تنشر مقالات اختبار في مجلد الإنتاج. مخرجات النشر `books/article-<id>.html` و`books/article-<id>.pdf` وبطاقة في `articles.html`. لا يكتب الناشر بيانات الخطب أو الفيديو أو ملفات التطبيق.
 
-### 4. Update Social Meta Tags
+## فشل التشغيل
+
+يبقى الطلب مفتوحاً مع تعليق يوضح المرحلة الفاشلة. الفشل قبل push يعني أن التغييرات لم تصل إلى المستودع. الفشل بعد push يعني أن النشر غير مؤكد، لا أن المقال حُذف. احفظ نتيجة التشغيل واقرأ الخطأ قبل إعادة الطلب؛ حماية التكرار ترفض إعادة إضافة مقال منشور.
+
+تحميل خط Amiri شرط لإنتاج PDF عربي. تعطل Google Fonts أو Chromium أو صلاحيات المستودع يفشل التشغيل صراحةً. ملفات `article-result.json` و`article-live-result.json` تحفظ كأدلة مؤقتة في GitHub Actions وليست محتوى موقع.
+
+## تجربة GitHub الآمنة دون نشر
+
+من Actions اختر **Publish article** ثم **Run workflow**. التشغيل اليدوي يشغّل مهمة `dry-run` فقط على Ubuntu مع Chromium الحقيقي؛ مهمة نشر الطلبات لا تعمل لهذا الحدث. صلاحيات المهمة قراءة المحتوى فقط، ولا يحتفظ checkout ببيانات اعتماد الدفع. لا تستخدم التجربة أسراراً أو ملفات Android أو طلبات GitHub، ولا تنفذ stage أو commit أو push أو بناء Pages.
+
+ينشئ `scripts/smoke_article_publish.py` مجلد موقع مؤقتاً خارج checkout، وينسخ قائمة المقالات وموارد الصفحة المطلوبة فقط. ينشئ DOCX قياسياً بعنوان ومتن عربيين وخاتمتي `والله المستعان` و`آمين`، ثم يستدعي الناشر الفعلي لإنتاج الصفحة والبطاقة وPDF. يستخدم مولد sitemap الموجود، ويتحقق من الروابط وبصمات الملفات ومن تنزيل PDF الفعلي عبر `verify_article_publish`. يعمل خادم loopback على منفذ مؤقت ويغلق بعد التحقق.
+
+يجري إعداد موارد offline وتوليد manifest داخل الموقع المؤقت فقط، ويشترط أن تتطابق بصمتا المقال وقائمته مع manifest المكتوب. تستخدم المقارنة بايتات مولد manifest بعد تحويل CRLF إلى LF؛ لا تتحقق من snapshot Windows الخام عبر HTTP. لا تشمل التجربة تنزيل manifest من الموقع الحي ولا اختبار تطبيق Android. يحذف مجلد الموقع بعد التشغيل، ويرفض مسارات checkout وإعادة الكتابة فوق أدلة سابقة.
+
+يحفظ artifact باسم `article-dry-run-<run>-<attempt>` ملف `article.pdf` الحقيقي و`report.json` مختصراً فقط لمدة 14 يوماً. التقرير يحدد المرحلة والفحوص وبصمات الملفات وrevision وعدد موارد offline، ويحفظ حالة الفشل أيضاً إن بدأت التجربة. لا يحفظ نسخة الموقع أو DOCX أو محتوى إنتاج وهمياً. تعطل الخط أو CDN أو Chromium يفشل التجربة ولا يغير الإنتاج.
+
+لتشغيل التجربة نفسها محلياً، اختر مجلد أدلة جديداً خارج checkout:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File "scripts/add_social_meta.ps1"
+python scripts/smoke_article_publish.py --output "$env:TEMP/article-smoke-artifacts-new"
 ```
-
-Adds `og:*` and `twitter:*` meta tags using the domain from `CNAME`.
-
-### 5. Commit & Push
-
-```powershell
-git add .
-git commit -m "Publish article: [article title]"
-git push origin main
-```
-
----
-
-## Manual Fallback (if PowerShell script fails)
-
-If the script has encoding issues with Arabic DOCX files:
-
-1. Extract DOCX XML content manually (unzip .docx → word/document.xml)
-2. Copy the template: `templates/article-publishing/ramadan-article-template.html`
-3. Replace placeholder tokens with actual content
-4. Save as `books/article-slug.html`
-5. Extract plain text to `Articals/processed/article-slug.txt`
-
----
-
-## Article HTML Design Standard
-
-Each article page in `books/` must follow the site design. Key elements:
-
-```html
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <!-- Standard font/icon/animation links (same as khutab) -->
-  <!-- Page-specific stylesheets: style.css, animations.css -->
-  <!-- OG/Twitter meta tags with article-specific title, description, image -->
-</head>
-<body>
-  <!-- Preloader (same as all pages) -->
-  <!-- Header with navigation (same as all pages) -->
-  <!-- Page header with breadcrumb: الرئيسية > المقالات > [Article Title] -->
-  <!-- Article content in a container -->
-  <!-- Footer (same as all pages) -->
-  <!-- Scripts: AOS, main.js -->
-</body>
-</html>
-```
-
-## Architecture
-
-| Component | File | Role |
-|-----------|------|------|
-| Template | `templates/article-publishing/ramadan-article-template.html` | HTML boilerplate |
-| Script | `scripts/publish_docx_article.ps1` | DOCX→HTML converter |
-| Thumbnails | `scripts/generate_page_thumbnails.ps1` | OG image generator |
-| Meta tags | `scripts/add_social_meta.ps1` | Social meta injector |
-| Output | `books/<slug>.html` | Published article page |
-| Text backup | `Articals/processed/<slug>.txt` | Plain text archive |
-| Listing | `articles.html` + `articles.css` | Browse articles |
-
-## Notes
-- New articles go at the **top** of the grid (newest first)
-- Social thumbnails may take time to propagate on WhatsApp/Facebook/Twitter
-- Use `Ctrl+F5` for hard refresh after publishing
-- DOCX source files are kept in `Articals/` for reference

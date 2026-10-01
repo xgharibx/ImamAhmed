@@ -1,0 +1,16 @@
+name: نشر مقال
+description: ارفع ملف Word لنشر المقال وبطاقته وملف PDF
+title: "[نشر مقال] ملف Word"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        أرفق ملف **DOCX**. يجب أن يتضمن عنوان المقال والمتن كاملاً. ستظهر نتيجة النشر ورابط المقال في هذا الطلب.
+  - type: textarea
+    id: docx
+    attributes:
+      label: ملف Word
+      description: أرفق ملف DOCX واحداً من هاتفك أو جهازك.
+      placeholder: أرفق ملف Word هنا
+    validations:
+      required: true

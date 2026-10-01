@@ -3,6 +3,13 @@ import importlib.util
 import json
 import tempfile
 import unittest
+from unittest.mock import patch
+import io
+from email.message import Message
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+import threading
+import urllib.request
+import urllib.response
 from pathlib import Path
 
 
@@ -31,6 +38,39 @@ class AppContentTests(unittest.TestCase):
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(data.encode() if isinstance(data, str) else data)
 
+    def test_untrusted_cdn_redirect_is_rejected_before_contact(self):
+        contacts = []
+        class Receiver(BaseHTTPRequestHandler):
+            def do_GET(self):
+                contacts.append(self.path)
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/css')
+                self.end_headers()
+                self.wfile.write(b'body{}')
+            def log_message(self, *args):
+                pass
+        server = ThreadingHTTPServer(('127.0.0.1', 0), Receiver)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        self.addCleanup(server.server_close)
+        self.addCleanup(server.shutdown)
+        destination = f'http://127.0.0.1:{server.server_port}/must-not-contact'
+        class RedirectedHttps(urllib.request.HTTPSHandler):
+            def https_open(self, request):
+                headers = Message()
+                headers['Location'] = destination
+                response = urllib.response.addinfourl(io.BytesIO(b''), headers, request.full_url, 302)
+                response.msg = 'Found'
+                return response
+        original_builder = urllib.request.build_opener
+        def builder(*handlers):
+            return original_builder(RedirectedHttps(), *handlers)
+        original_open = builder().open
+        with patch.object(self.app, 'urlopen', original_open, create=True), patch.object(self.app, 'build_opener', builder, create=True):
+            with self.assertRaises(ValueError):
+                self.app.fetch_mirror(self.root, 'https://fonts.googleapis.com/css2?family=Amiri')
+        self.assertEqual(contacts, [], 'Untrusted recipient received a request before validation')
+
     def test_revision_changes_only_when_public_content_changes(self):
         original = self.app.build_manifest(self.root)
         self.write('data/video-sync-status.json', '{"checkedAt":"now"}')
@@ -40,6 +80,18 @@ class AppContentTests(unittest.TestCase):
         changed = self.app.build_manifest(self.root)
         self.assertNotEqual(original['revision'], changed['revision'])
         self.assertEqual(changed, self.app.build_manifest(self.root))
+
+    def test_new_article_sermon_and_video_catalog_enter_next_snapshot(self):
+        first = self.app.build_manifest(self.root)
+        self.write('books/new.html', '<p>New article</p>')
+        self.write('khutab/new.html', '<p>New sermon</p>')
+        self.write('data/videos.json', '[{"id":"a4upwTATNWQ","title":"New video"}]')
+        next_manifest = self.app.build_manifest(self.root)
+        keys = {e['key'] for e in next_manifest['resources']}
+        self.assertIn('/books/new.html', keys)
+        self.assertIn('/khutab/new.html', keys)
+        self.assertNotEqual(first['revision'], next_manifest['revision'])
+        self.assertEqual(next_manifest, self.app.build_manifest(self.root))
 
     def test_seed_contains_unvisited_reading_and_matches_hashes(self):
         out = self.root / 'android-app/build/seed'

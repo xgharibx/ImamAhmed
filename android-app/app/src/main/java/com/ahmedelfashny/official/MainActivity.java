@@ -69,6 +69,7 @@ public class MainActivity extends Activity {
     private ValueCallback<Uri[]> filePathCallback;
     private String mobileNavigationScript;
     private String runtimeScript;
+    private String lastReadingUrl = LIVE_SITE_URL;
     private NativeDownloads downloads;
     private FrameLayout root;
     private View fullscreenVideo;
@@ -446,6 +447,8 @@ public class MainActivity extends Activity {
 
         @Override
         public void onPageStarted(WebView view, String url, android.graphics.Bitmap favicon) {
+            String key = ContentManifest.requestKey(url);
+            if (key != null && key.startsWith("/") && key.endsWith(".html")) lastReadingUrl = url;
             offlineView.setVisibility(View.GONE);
             super.onPageStarted(view, url, favicon);
         }
@@ -476,12 +479,14 @@ public class MainActivity extends Activity {
         }
 
         @Override public boolean onRenderProcessGone(WebView view, RenderProcessGoneDetail detail) {
+            hideFullscreenVideo();
             swipeRefreshLayout.removeView(view);
             view.destroy();
             webView = new WebView(MainActivity.this);
             swipeRefreshLayout.addView(webView, new ViewGroup.LayoutParams(-1, -1));
             configureWebView();
-            showOfflineIfNeeded();
+            prepareMobileNavigation();
+            webView.loadUrl(lastReadingUrl);
             return true;
         }
 

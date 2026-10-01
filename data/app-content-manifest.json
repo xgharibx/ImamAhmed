@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "revision": "53330494cc4fe26c4d354dedce668e6f2bd84ad42db18cec1defd5f757a39869",
+  "revision": "f9712a33c359ce932c9a0362da42cf8a858cbfd71c611578ea4953fcf656a368",
   "resources": [
     {
       "key": "/about.css",
@@ -1146,8 +1146,8 @@
     {
       "key": "/privacy.html",
       "path": "privacy.html",
-      "sha256": "aa11b3f2e9e6e4634467506ceaff92c72fd7591de8cf43f4abe73a1c9e4108ea",
-      "size": 8432,
+      "sha256": "83bac8be6128b5d3fc8550a7854506529b72901f6939cfc656106a87bc73fe96",
+      "size": 9287,
       "mime": "text/html"
     },
     {

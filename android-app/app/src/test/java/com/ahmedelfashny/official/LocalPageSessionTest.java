@@ -44,4 +44,18 @@ public class LocalPageSessionTest {
         assertNull(page.open("https://youtube-nocookie.com/embed/video", false));
         assertNull(page.open("https://evil.test/index.html", true));
     }
+
+    @Test public void unknownReadingPageUsesNetworkForAllItsResources() throws Exception {
+        byte[] seed = manifest("old");
+        Map<String, String> values = Map.of(ContentManifest.sha256(bytes("old")), "old", ContentManifest.sha256(bytes("<html><head></head><body>Original</body></html>")), "<html><head></head><body>Original</body></html>");
+        OfflineContentStore store = new OfflineContentStore(temporary.newFolder(), new OfflineContentStore.SeedSource() {
+            public byte[] manifest() { return seed; }
+            public InputStream open(String hash) { return new ByteArrayInputStream(bytes(values.get(hash))); }
+        });
+        LocalPageSession page = new LocalPageSession(store);
+        assertNull(page.open("https://ahmedelfashny.com/books/not-yet-synced.html", true));
+        assertNull(page.open("https://ahmedelfashny.com/data/videos.json", false));
+        assertNotNull(page.open("https://ahmedelfashny.com/index.html", true));
+        assertNotNull(page.open("https://ahmedelfashny.com/data/videos.json", false));
+    }
 }

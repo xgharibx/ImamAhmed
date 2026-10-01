@@ -1,0 +1,62 @@
+name: Maintain Android offline content
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '*.html'
+      - '*.css'
+      - '*.js'
+      - 'books/**'
+      - 'khutab/*.html'
+      - 'data/**'
+      - 'assets/**'
+      - 'scripts/generate_app_content.py'
+      - 'scripts/verify_app_content.py'
+      - '.github/workflows/app-content.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: site-content-publishing
+  cancel-in-progress: false
+
+jobs:
+  maintain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out current production content
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare and verify the complete resource manifest
+        run: |
+          python scripts/generate_app_content.py --prepare-assets
+          python -m unittest discover -s tests -p 'test_app_content*.py'
+          python scripts/generate_app_content.py --check
+      - name: Commit changed offline metadata only
+        run: |
+          git config user.name 'Sheikh Ahmed Content Bot'
+          git config user.email 'content-bot@users.noreply.github.com'
+          git add -- data/app-content-manifest.json assets/app-content
+          git diff --cached --check
+          if ! git diff --cached --quiet; then
+            git commit -m 'Refresh Android offline content manifest'
+            git pull --rebase origin main
+            python scripts/finalize_publish_manifest.py
+            git push origin HEAD:main
+          fi
+      - name: Request Pages build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds" --silent
+      - name: Verify published manifest and required resources
+        run: python scripts/verify_app_content.py --base-url https://ahmedelfashny.com --wait-seconds 600

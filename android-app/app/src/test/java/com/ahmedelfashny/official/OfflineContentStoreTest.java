@@ -140,4 +140,33 @@ public class OfflineContentStoreTest {
             assertEquals("seed", reader.submit(() -> read(store, store.snapshot(), "/index.html")).get(300, java.util.concurrent.TimeUnit.MILLISECONDS));
         } finally { release.countDown(); thread.join(2000); reader.shutdownNow(); }
     }
+
+    @Test public void quotaCleanupDoesNotRemoveObjectsFromInProgressSnapshot() throws Exception {
+        File directory = temporary.newFolder();
+        OfflineContentStore store = new OfflineContentStore(directory, seed(Map.of("/index.html", "seed")));
+        store.synchronize(manifest(Map.of("/books/a.html", "first", "/books/b.html", "second", "/index.html", "next")), path -> {
+            if (path.equals("books/a.html")) {
+                // A disposable oversized orphan forces quota cleanup before the next file.
+                try (java.io.RandomAccessFile orphan = new java.io.RandomAccessFile(new File(directory, "objects/orphan"), "rw")) {
+                    orphan.setLength((long) ContentManifest.MAX_TOTAL * 2);
+                }
+            }
+            return new ByteArrayInputStream(bytes(path.equals("books/a.html") ? "first" : path.equals("books/b.html") ? "second" : "next"));
+        });
+        assertEquals("first", read(store, store.snapshot(), "/books/a.html"));
+        assertEquals("second", read(store, store.snapshot(), "/books/b.html"));
+        assertEquals("next", read(store, store.snapshot(), "/index.html"));
+    }
+
+    @Test public void savedSnapshotSurvivesChangedApkSeed() throws Exception {
+        File directory = temporary.newFolder();
+        OfflineContentStore store = new OfflineContentStore(directory, seed(Map.of("/index.html", "seed-v1")));
+        store.synchronize(manifest(Map.of("/index.html", "seed-v1", "/books/new.html", "downloaded")),
+                path -> new ByteArrayInputStream(bytes("downloaded")));
+        String savedRevision = store.snapshot().revision;
+        OfflineContentStore upgraded = new OfflineContentStore(directory, seed(Map.of("/index.html", "seed-v2")));
+        assertEquals(savedRevision, upgraded.snapshot().revision);
+        assertEquals("downloaded", read(upgraded, upgraded.snapshot(), "/books/new.html"));
+        assertEquals("seed-v1", read(upgraded, upgraded.snapshot(), "/index.html"));
+    }
 }

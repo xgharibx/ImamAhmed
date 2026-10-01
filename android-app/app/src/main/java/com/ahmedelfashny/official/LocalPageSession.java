@@ -7,13 +7,18 @@ import java.nio.charset.StandardCharsets;
 final class LocalPageSession {
     private final OfflineContentStore store;
     private volatile ContentManifest page;
+    private volatile boolean local = true;
 
     LocalPageSession(OfflineContentStore store) { this.store = store; this.page = store.snapshot(); }
 
     OfflineContentStore.LocalResource open(String url, boolean mainFrame) throws IOException {
         String key = ContentManifest.requestKey(url);
+        if (mainFrame) {
+            page = store.snapshot();
+            local = key != null && key.startsWith("/") && key.endsWith(".html") && page.resources.containsKey(key);
+        }
+        if (!local) return null;
         if (key == null) return null;
-        if (mainFrame && key.startsWith("/") && key.endsWith(".html")) page = store.snapshot();
         ContentManifest snapshot = page;
         OfflineContentStore.LocalResource resource = store.open(snapshot, key);
         if (resource == null || !resource.mime.equals("text/html")) return resource;

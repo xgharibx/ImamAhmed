@@ -43,6 +43,7 @@ jobs:
         run: |
           python scripts/content_pipeline.py publish-issue --event "$GITHUB_EVENT_PATH" > publish-result.json
           python scripts/content_pipeline.py generate-sitemap
+          python scripts/generate_app_content.py --prepare-assets
           python scripts/content_pipeline.py validate-khutba-result --result publish-result.json
           python -m unittest discover -s tests -p 'test_*.py' -v
           git diff --check
@@ -57,10 +58,11 @@ jobs:
         run: |
           git config user.name "Sheikh Ahmed Content Bot"
           git config user.email "content-bot@users.noreply.github.com"
-          git add -- data/khutab_written.json data/khutab_written_index.json sitemap.xml robots.txt 'khutab/k-*.html'
+          git add -- data/khutab_written.json data/khutab_written_index.json sitemap.xml robots.txt 'khutab/k-*.html' data/app-content-manifest.json assets/app-content
           git diff --cached --check
           git commit -m "Publish written khutba from issue #${{ github.event.issue.number }}"
           git pull --rebase origin main
+          python scripts/finalize_publish_manifest.py
           git push origin HEAD:main
           echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
@@ -73,6 +75,7 @@ jobs:
         id: live
         run: |
           python scripts/verify_khutba_publish.py --base-url https://ahmedelfashny.com --result publish-result.json --wait-seconds 600 > live-result.json
+          python scripts/verify_app_content.py --base-url https://ahmedelfashny.com --wait-seconds 600
           echo "url=$(python -c 'import json; print(json.load(open("live-result.json"))["url"])')" >> "$GITHUB_OUTPUT"
 
       - name: Confirm publication to the uploader
