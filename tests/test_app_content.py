@@ -85,6 +85,10 @@ class AppContentTests(unittest.TestCase):
         published = subprocess.check_output(['git', '-C', str(self.root), 'show', ':style.css'])
         self.assertEqual(self.app.content_bytes(self.root / 'style.css'), published)
 
+    def test_legacy_double_carriage_return_is_normalized_consistently(self):
+        self.write('style.css', b'body{}\r\r\n')
+        self.assertEqual(b'body{}\n', self.app.content_bytes(self.root / 'style.css'))
+
     def test_revision_changes_only_when_public_content_changes(self):
         original = self.app.build_manifest(self.root)
         self.write('data/video-sync-status.json', '{"checkedAt":"now"}')

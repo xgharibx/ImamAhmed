@@ -103,7 +103,8 @@ def content_bytes(path):
     data = path.read_bytes()
     mirrored = any(parent.name == 'app-content' and parent.parent.name == 'assets' for parent in path.parents)
     if not mirrored and path.suffix in ('.html', '.css', '.js', '.json', '.svg'):
-        data = data.replace(b'\r\n', b'\n')
+        while b'\r\n' in data:
+            data = data.replace(b'\r\n', b'\n')
     if not data or len(data) > MAX_FILE:
         raise ValueError('Empty or oversized resource: ' + str(path))
     return data

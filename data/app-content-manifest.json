@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "revision": "f9712a33c359ce932c9a0362da42cf8a858cbfd71c611578ea4953fcf656a368",
+  "revision": "08356a783e08db5b3d21fd5f810318c5f892c30c848ad457ac36ce997b0c04ab",
   "resources": [
     {
       "key": "/about.css",
@@ -250,8 +250,8 @@
     {
       "key": "/books/mathabat-alarwah-rihlat-alishq-ila-rihab-alnur-almuhammadi.html",
       "path": "books/mathabat-alarwah-rihlat-alishq-ila-rihab-alnur-almuhammadi.html",
-      "sha256": "9146a41e65c7577ca316b3142d6eb751080913e9567ab9a6e6378ec7f75c8318",
-      "size": 16345,
+      "sha256": "78b6c2b80cf8010b781ab58ad2a4393f588715c3aea656736ded3be96afaf247",
+      "size": 16322,
       "mime": "text/html"
     },
     {
