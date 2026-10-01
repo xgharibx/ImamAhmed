@@ -36,8 +36,8 @@
   "categories_corrected": [],
   "unavailable": [],
   "live_skipped": [
-    "lSva3R40qas",
-    "-j0Uc9pw44U"
+    "-j0Uc9pw44U",
+    "lSva3R40qas"
   ],
   "errors": [],
   "total": 1543,
@@ -47,7 +47,7 @@
   ],
   "source_sha256": "8394c46a7708c1e46a61850a34c8fb2e49a25bcfc05bc7f052c5dfb1d1f67467",
   "status": "success",
-  "checked_at": "2026-10-01T04:03:28.805549+00:00",
+  "checked_at": "2026-10-01T04:06:03.114110+00:00",
   "mode": "new-only",
   "catalog_sha256": "8394c46a7708c1e46a61850a34c8fb2e49a25bcfc05bc7f052c5dfb1d1f67467"
 }
