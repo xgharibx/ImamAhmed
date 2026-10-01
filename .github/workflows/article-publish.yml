@@ -11,8 +11,9 @@ permissions:
   pages: write
 
 concurrency:
-  group: site-content-publishing
+  group: ${{ github.event_name == 'workflow_dispatch' && 'article-publish-dry-run' || 'site-content-publishing' }}
   cancel-in-progress: false
+  queue: max
 
 jobs:
   publish:

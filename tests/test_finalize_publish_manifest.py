@@ -71,6 +71,13 @@ class FinalizePublishManifestTests(unittest.TestCase):
                 push = source.index('git push origin HEAD:main')
                 self.assertIn('python scripts/finalize_publish_manifest.py', source[rebase:push])
 
+    def test_publication_queue_preserves_multiple_waiting_uploads(self):
+        root = Path(__file__).resolve().parents[1]
+        for name in ('content-publish.yml', 'article-publish.yml', 'video-sync.yml', 'app-content.yml'):
+            with self.subTest(name=name):
+                source = (root / '.github/workflows' / name).read_text('utf-8')
+                self.assertIn('  queue: max', source)
+
 
 if __name__ == '__main__':
     unittest.main()

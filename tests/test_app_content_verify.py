@@ -6,6 +6,9 @@ import sys
 import tempfile
 import threading
 import unittest
+import io
+import time
+from unittest.mock import patch
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
@@ -47,6 +50,24 @@ class AppContentVerifyTests(unittest.TestCase):
         (self.root / 'index.html').write_text('Wrong content', encoding='utf-8')
         with self.assertRaisesRegex(ValueError, 'checksum'):
             self.verify(self.base, self.manifest)
+
+    def test_failed_resource_cancels_pending_checks(self):
+        manifest = dict(self.manifest)
+        manifest['resources'] = [dict(self.manifest['resources'][0], path='page-' + str(i) + '.html') for i in range(100)]
+        requested = []
+
+        def response(request, timeout):
+            if 'app-content-manifest.json' in request.full_url:
+                return io.BytesIO(json.dumps(manifest).encode())
+            requested.append(request.full_url)
+            if 'page-0.html' in request.full_url:
+                time.sleep(0.5)
+            return io.BytesIO(b'Incorrect bytes')
+
+        with patch('verify_app_content.urlopen', side_effect=response):
+            with self.assertRaisesRegex(ValueError, 'checksum'):
+                self.verify(self.base, manifest)
+        self.assertLess(len(requested), 100, 'A failed check must not wait for all queued downloads')
 
 
 if __name__ == '__main__':

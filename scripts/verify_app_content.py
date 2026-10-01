@@ -33,9 +33,17 @@ def verify_live(base_url, manifest, wait_seconds=0, all_resources=False):
                 raise ValueError('Live manifest is not the expected complete revision')
             entries = {e['path']: e for e in manifest['resources'] if all_resources or not e['key'].startswith(('https://i.ytimg.com/', 'https://img.youtube.com/'))}
             with concurrent.futures.ThreadPoolExecutor(max_workers=12) as pool:
-                list(pool.map(check_resource, entries.values()))
+                futures = [pool.submit(check_resource, entry) for entry in entries.values()]
+                try:
+                    for future in concurrent.futures.as_completed(futures):
+                        future.result()
+                except (ValueError, OSError):
+                    for future in futures:
+                        future.cancel()
+                    raise
             return dict(status='verified-live', revision=manifest['revision'], resources=len(manifest['resources']), checkedResources=len(entries))
         except (ValueError, OSError) as error:
+            print('Live verification attempt failed: ' + str(error), file=sys.stderr, flush=True)
             if time.monotonic() >= deadline:
                 raise ValueError('Live app content not confirmed: ' + str(error)) from error
             time.sleep(min(10, max(0, deadline - time.monotonic())))

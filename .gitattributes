@@ -1,2 +1,8 @@
+# Owned text has identical bytes on Windows, Pages and Android.
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.svg text eol=lf
 # Keep generated CDN mirrors byte-identical, including upstream license text.
 assets/app-content/** -text whitespace=-blank-at-eol

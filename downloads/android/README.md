@@ -1,8 +1,8 @@
 # Android Download
 
-`ahmed-elfashny-1.0.1.apk` is the signed direct-install Android release, version code 2, package `com.ahmedelfashny.official`, for Android 6.0 and newer.
+`ahmed-elfashny-1.0.2.apk` is the latest signed direct-install Android release, version code 3, package `com.ahmedelfashny.official`, for Android 6.0 and newer. The previous 1.0.1 APK remains available.
 
-The app loads current website content while keeping the existing design. New sermons and videos do not require reinstalling the APK. Software changes still require an app update.
+The app bundles current pages, articles, sermons, video catalogs, fonts and images for first-launch offline reading, with the existing design. It quietly downloads changed content when connected and keeps the last complete snapshot after interrupted or invalid updates. New content does not require reinstalling the APK; software changes still require an app update. YouTube playback, new PDF downloads and external services require internet.
 
 Support: amr@gharib.dev. Privacy: https://ahmedelfashny.com/privacy.html.
 

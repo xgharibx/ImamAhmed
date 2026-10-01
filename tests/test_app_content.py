@@ -2,6 +2,7 @@ import hashlib
 import importlib.util
 import json
 import tempfile
+import subprocess
 import unittest
 from unittest.mock import patch
 import io
@@ -70,6 +71,19 @@ class AppContentTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 self.app.fetch_mirror(self.root, 'https://fonts.googleapis.com/css2?family=Amiri')
         self.assertEqual(contacts, [], 'Untrusted recipient received a request before validation')
+
+    def test_cdn_mirror_text_keeps_its_published_line_endings(self):
+        raw = b'body { color: green; }\r\n'
+        self.write('assets/app-content/external.css', raw)
+        self.assertEqual(self.app.content_bytes(self.root / 'assets/app-content/external.css'), raw)
+
+    def test_git_publishes_owned_text_in_manifest_line_endings(self):
+        self.write('style.css', b'body { color: green; }\r\n')
+        self.write('.gitattributes', (SCRIPT.parent.parent / '.gitattributes').read_bytes())
+        for args in [('init', '-q'), ('config', 'core.autocrlf', 'false'), ('add', '.')]:
+            subprocess.run(['git', '-C', str(self.root), *args], check=True, capture_output=True)
+        published = subprocess.check_output(['git', '-C', str(self.root), 'show', ':style.css'])
+        self.assertEqual(self.app.content_bytes(self.root / 'style.css'), published)
 
     def test_revision_changes_only_when_public_content_changes(self):
         original = self.app.build_manifest(self.root)
