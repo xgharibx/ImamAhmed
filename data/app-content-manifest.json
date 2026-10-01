@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "revision": "08356a783e08db5b3d21fd5f810318c5f892c30c848ad457ac36ce997b0c04ab",
+  "revision": "4043d52fd794f49218da38734923ce913252d1f3744a07dfe19d596e8e60eabc",
   "resources": [
     {
       "key": "/about.css",
@@ -54,8 +54,8 @@
     {
       "key": "/articles.html",
       "path": "articles.html",
-      "sha256": "884852ba5b4297b3d3a3db51b2a052243f106884c3b40e9cc694e998dff9245f",
-      "size": 110608,
+      "sha256": "f4040ccc7d433221e5e7134425c598948bbbf96b1d552403b9b323e342242229",
+      "size": 112498,
       "mime": "text/html"
     },
     {
@@ -105,6 +105,13 @@
       "path": "books/alzuhd-qiraah-fi-jawhar-altazkiyah.html",
       "sha256": "6fa6a18628071110142b603df43c2a614039bc2425689758d8e14cd4de66ca48",
       "size": 15112,
+      "mime": "text/html"
+    },
+    {
+      "key": "/books/article-b4eee344173279b2.html",
+      "path": "books/article-b4eee344173279b2.html",
+      "sha256": "345b19dbdda87b11f0609d235713dafb38b845be7e4f192adb45e882f7afb4ff",
+      "size": 17892,
       "mime": "text/html"
     },
     {
