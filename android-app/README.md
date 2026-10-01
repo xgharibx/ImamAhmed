@@ -89,12 +89,14 @@ Emulator smoke tools require the Python Playwright package and a running Android
 python tools/android_smoke.py C:\path\to\adb.exe
 python tools/native_transfer_smoke.py C:\path\to\adb.exe
 python tools/offline_smoke.py --adb C:\path\to\adb.exe --output C:\path\to\qa
+python tools/fullscreen_smoke.py --adb C:\path\to\adb.exe --output C:\path\to\fullscreen-qa
+python tools/production_sync_smoke.py --adb C:\path\to\adb.exe --revision PUBLISHED_REVISION --output C:\path\to\sync-qa
 ```
 
 The native transfer test kills only the debug app process to verify that a pending save survives process recreation. It writes small test PDFs to the emulator's Downloads directory.
 
 ## Play Status
 
-Version 1.0.1 is available to selected closed-test testers (Console verified October 1, 2026). Version 1.0.2 is the offline update; record Console's actual acceptance and review state after upload. A draft or review submission is not a public Play release. This account requires at least 12 opted-in testers for 14 continuous days before applying for production access; the three supplied email addresses do not yet meet that requirement.
+Version 1.0.1 is available to selected closed-test testers. Google Play accepted the signed 1.0.2 offline update (version code 3) for the same Alpha closed-test track on October 1, 2026. It passed quick checks and Console confirmed "Your changes are now in review". This is not a public Play release. This account requires at least 12 opted-in testers for 14 continuous days before applying for production access; the three supplied email addresses do not yet meet that requirement.
 
 Keep the upload keystore backed up privately. Play-generated APKs use Google's app-signing key, which can differ from the direct APK's upload-key signature; moving between these installation channels may require uninstalling the direct APK first.

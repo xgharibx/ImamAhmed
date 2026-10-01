@@ -64,6 +64,17 @@ class VideoCatalogTests(unittest.TestCase):
         with patch.object(refresh.urllib.request, "urlopen", return_value=io.BytesIO(json.dumps(payload).encode())):
             self.assertIn("unavailable", refresh.fetch_metadata("abcdefghijk", {}))
 
+    def test_public_watch_fallback_requires_boolean_live_flag(self):
+        reason = "Sign in to confirm you’re not a bot"
+        blocked = {"playabilityStatus": {"status": "LOGIN_REQUIRED", "reason": reason}}
+        watch = {"videoDetails": {"videoId": "abcdefghijk", "title": "Video", "channelId": "official", "isLive": "false"},
+                 "microformat": {"playerMicroformatRenderer": {"externalChannelId": "official"}}}
+        html = ('<script>var ytInitialPlayerResponse = ' + json.dumps(watch) + ';</script>').encode()
+        with patch.object(refresh.urllib.request, "urlopen", side_effect=[
+                io.BytesIO(json.dumps(blocked).encode()), io.BytesIO(html)]):
+            metadata = refresh.fetch_metadata("abcdefghijk", {})
+        self.assertEqual(metadata.get("unavailable"), reason)
+
 
 if __name__ == "__main__":
     unittest.main()

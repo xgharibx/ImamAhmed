@@ -77,8 +77,11 @@ def run(adb_path):
         save = next(node for node in tree.iter("node") if node.get("text", "").lower() == "save" and node.get("enabled") == "true")
         x1, y1, x2, y2 = map(int, re.findall(r"\d+", save.get("bounds")))
         adb("shell", "input", "tap", str((x1+x2)//2), str((y1+y2)//2))
-        time.sleep(2)
-        assert adb("exec-out", "cat", "/sdcard/Download/" + test_name) == payload
+        deadline = time.monotonic() + 20
+        while adb("exec-out", "cat", "/sdcard/Download/" + test_name) != payload:
+            if time.monotonic() >= deadline:
+                raise AssertionError("Restored save did not produce the exact PDF bytes")
+            time.sleep(.2)
         new_pid = adb("shell", "pidof", PACKAGE).decode().strip()
         assert new_pid and new_pid != old_pid
         page = connect(playwright)

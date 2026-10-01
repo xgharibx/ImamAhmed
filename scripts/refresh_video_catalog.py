@@ -15,6 +15,39 @@ import urllib.request
 import video_catalog as pipeline
 
 
+def public_watch_pending_metadata(video_id):
+    from yt_dlp import YoutubeDL
+    from yt_dlp.extractor.youtube import YoutubeIE
+    from yt_dlp.utils import ExtractorError
+
+    if not re.fullmatch(r"[A-Za-z0-9_-]{11}", video_id):
+        return None
+    request = urllib.request.Request("https://www.youtube.com/watch?v=" + video_id,
+                                     headers={"User-Agent": "Mozilla/5.0"})
+    try:
+        with urllib.request.urlopen(request, timeout=25) as response:
+            page = response.read(8 * 1024 * 1024 + 1)
+        if len(page) > 8 * 1024 * 1024:
+            return None
+        with YoutubeDL({"quiet": True, "no_warnings": True, "cachedir": False}, auto_init=False) as downloader:
+            payload = YoutubeIE(downloader)._search_json(
+                r"ytInitialPlayerResponse\s*=", page.decode("utf-8"), "public player metadata", video_id, default={})
+        details = payload.get("videoDetails") or {}
+        micro = (payload.get("microformat") or {}).get("playerMicroformatRenderer") or {}
+        if (details.get("videoId") != video_id
+                or not isinstance(details.get("title"), str) or not details["title"].strip()
+                or not isinstance(details.get("channelId"), str) or not details["channelId"]
+                or micro.get("externalVideoId", video_id) != video_id
+                or micro.get("externalChannelId", details["channelId"]) != details["channelId"]):
+            return None
+        live = micro.get("liveBroadcastDetails") or {}
+        if any(flag is True for flag in (details.get("isLive"), details.get("isUpcoming"), live.get("isLiveNow"))):
+            return {"id": video_id, "live_status": "is_live", "channel_id": details["channelId"]}
+        return None
+    except (urllib.error.URLError, TimeoutError, ValueError, ExtractorError, AttributeError, TypeError):
+        return None
+
+
 def fetch_metadata(video_id, context):
     request = urllib.request.Request(
         "https://www.youtube.com/youtubei/v1/player?prettyPrint=false",
@@ -29,6 +62,10 @@ def fetch_metadata(video_id, context):
             micro = (payload.get("microformat") or {}).get("playerMicroformatRenderer") or {}
             if details.get("videoId") != video_id or not details.get("title"):
                 status = payload.get("playabilityStatus") or {}
+                # A flat listing can omit LIVE; read public status only, never salvage a dated record here.
+                pending = public_watch_pending_metadata(video_id) if not details else None
+                if pending:
+                    return pending
                 return {"unavailable": status.get("reason", "Public metadata unavailable"), "id": video_id}
             live = micro.get("liveBroadcastDetails") or {}
             if details.get("isLive") or details.get("isUpcoming") or live.get("isLiveNow"):
@@ -130,6 +167,10 @@ def refresh(args):
                     report["errors"].append({"id": video_id, "error": metadata["unavailable"]})
                 continue
             if metadata.get("live_status") == "is_live":
+                expected_channel = listed.get(video_id, ({}, "", {}))[0].get("channelId")
+                if expected_channel and metadata.get("channel_id") and metadata["channel_id"] != expected_channel:
+                    report["errors"].append({"id": video_id, "error": "Video belongs to a different channel"})
+                    continue
                 report["live_skipped"].append(video_id)
                 continue
             old = records.get(video_id)

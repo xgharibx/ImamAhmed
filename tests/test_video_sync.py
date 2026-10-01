@@ -103,6 +103,14 @@ class ScheduledVideoSyncTests(unittest.TestCase):
             self.run_sync()
         self.assertEqual(self.catalog.read_bytes(), before)
 
+    def test_wrong_channel_live_metadata_is_not_silently_deferred(self):
+        self.metadata["bbbbbbbbbbb"].update({"channel_id": "unrelated-channel", "live_status": "is_live"})
+        before = self.catalog.read_bytes()
+        with self.assertRaises(pipeline.PipelineError):
+            self.run_sync()
+        self.assertEqual(self.catalog.read_bytes(), before)
+        self.assertFalse(self.status.exists())
+
     def test_live_videos_are_skipped_until_completed(self):
         self.metadata["bbbbbbbbbbb"]["live_status"] = "is_live"
         self.run_sync()
@@ -181,6 +189,47 @@ class ScheduledVideoSyncTests(unittest.TestCase):
         self.run_sync()
         self.assertEqual({row["id"] for row in pipeline.read_json(self.catalog)}, {"aaaaaaaaaaa", "ccccccccccc"})
         self.assertEqual(pipeline.read_json(self.status)["live_skipped"], ["bbbbbbbbbbb"])
+
+    def test_bot_checked_player_with_public_live_watch_page_defers_only_live_video(self):
+        blocked = {"playabilityStatus": {"status": "LOGIN_REQUIRED", "reason": "Sign in to confirm you’re not a bot"}}
+        watch_player = {"videoDetails": {"videoId": "bbbbbbbbbbb", "title": "Live recitation", "isLive": True,
+                                          "channelId": "main-channel", "lengthSeconds": "0"},
+                        "microformat": {"playerMicroformatRenderer": {"externalChannelId": "main-channel",
+                            "liveBroadcastDetails": {"isLiveNow": True}}}}
+        watch_html = ('<html><script>var ytInitialPlayerResponse = ' + json.dumps(watch_player) + ';</script></html>').encode()
+        with patch.object(refresh.urllib.request, "urlopen", side_effect=[
+                io.BytesIO(json.dumps(blocked).encode()), io.BytesIO(watch_html)]):
+            self.metadata["bbbbbbbbbbb"] = refresh.fetch_metadata("bbbbbbbbbbb", {})
+        try:
+            self.run_sync()
+        except pipeline.PipelineError as error:
+            self.fail(f"Confirmed public live metadata should be deferred, not abort sync: {error}")
+        records = pipeline.read_json(self.catalog)
+        self.assertEqual({row["id"] for row in records}, {"aaaaaaaaaaa", "ccccccccccc"})
+        self.assertEqual(next(row for row in records if row["id"] == "aaaaaaaaaaa"), self.old)
+        status = pipeline.read_json(self.status)
+        self.assertEqual(status["live_skipped"], ["bbbbbbbbbbb"])
+        self.assertEqual(status["errors"], [])
+        pipeline.validate_catalog(records)
+
+    def test_bot_checked_player_with_completed_public_watch_page_still_fails_closed(self):
+        reason = "Sign in to confirm you’re not a bot"
+        blocked = {"playabilityStatus": {"status": "LOGIN_REQUIRED", "reason": reason}}
+        completed = {"videoDetails": {"videoId": "bbbbbbbbbbb", "title": "Completed stream", "isLiveContent": True,
+                                       "channelId": "main-channel", "lengthSeconds": "600"},
+                     "microformat": {"playerMicroformatRenderer": {"externalChannelId": "main-channel",
+                         "publishDate": "2026-09-30T12:00:00Z",
+                         "liveBroadcastDetails": {"isLiveNow": False, "endTimestamp": "2026-09-30T12:00:00Z"}}}}
+        watch_html = ('<script>var ytInitialPlayerResponse = ' + json.dumps(completed) + ';</script>').encode()
+        with patch.object(refresh.urllib.request, "urlopen", side_effect=[
+                io.BytesIO(json.dumps(blocked).encode()), io.BytesIO(watch_html)]):
+            self.metadata["bbbbbbbbbbb"] = refresh.fetch_metadata("bbbbbbbbbbb", {})
+        before = self.catalog.read_bytes()
+        with self.assertRaises(pipeline.PipelineError):
+            self.run_sync()
+        self.assertEqual(self.catalog.read_bytes(), before)
+        self.assertEqual(self.metadata["bbbbbbbbbbb"].get("unavailable"), reason)
+        self.assertFalse(self.status.exists())
 
     def test_incomplete_channel_continuation_is_fatal(self):
         import subprocess
