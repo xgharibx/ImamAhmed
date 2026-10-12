@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "revision": "0368e222adb8bf661793bc00cc60862ef059ee72467c4b05cdca37e95b1ac59a",
+  "revision": "034ddb000f3910703f6c6b9a154113156fe4d37845c691524772fa413bda91d9",
   "resources": [
     {
       "key": "/about.css",
@@ -397,15 +397,15 @@
     {
       "key": "/data/khutab_written.json",
       "path": "data/khutab_written.json",
-      "sha256": "5cb7be7f385049bfba760b6e8b243ae8ae8e2bfdad8f0f54157db95aea710141",
-      "size": 1746096,
+      "sha256": "913e53ab6edec55878c70598dda650074b244a3be6a8339aec22f0573d14e3ae",
+      "size": 1779111,
       "mime": "application/json"
     },
     {
       "key": "/data/khutab_written_index.json",
       "path": "data/khutab_written_index.json",
-      "sha256": "0c79e563b34718507385f2c74cfad92ea829c18055f27e6cca9a109a271e48f4",
-      "size": 50897,
+      "sha256": "b2b416a1631b08d4bc1658a78ebe6d62da153790b2484710d93386f2b3e6957d",
+      "size": 51955,
       "mime": "application/json"
     },
     {
@@ -966,6 +966,13 @@
       "path": "khutab/k-20261009-bg9jywwtmjay.html",
       "sha256": "3bbb14a3936090c5ab9829de82a53985e2321cd998707fa679dec939bbf58b4d",
       "size": 6517,
+      "mime": "text/html"
+    },
+    {
+      "key": "/khutab/k-20261016-bg9jywwtmjay.html",
+      "path": "khutab/k-20261016-bg9jywwtmjay.html",
+      "sha256": "9c61a335232e520e14a11f68b94a670a2561b412e7bebf98959c80f6f324e4d2",
+      "size": 7141,
       "mime": "text/html"
     },
     {
