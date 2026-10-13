@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "revision": "034ddb000f3910703f6c6b9a154113156fe4d37845c691524772fa413bda91d9",
+  "revision": "9c28fd557d88336339faf2a10e0bb36934660eb17e802a1a48c399cbab5950fc",
   "resources": [
     {
       "key": "/about.css",
@@ -54,8 +54,8 @@
     {
       "key": "/articles.html",
       "path": "articles.html",
-      "sha256": "f4040ccc7d433221e5e7134425c598948bbbf96b1d552403b9b323e342242229",
-      "size": 112498,
+      "sha256": "949fcf5b0e0e45a8ed147f9a47f0f5f21e92b5b9a94e0ba54162ef0a0670abf2",
+      "size": 113930,
       "mime": "text/html"
     },
     {
@@ -112,6 +112,13 @@
       "path": "books/article-b4eee344173279b2.html",
       "sha256": "345b19dbdda87b11f0609d235713dafb38b845be7e4f192adb45e882f7afb4ff",
       "size": 17892,
+      "mime": "text/html"
+    },
+    {
+      "key": "/books/article-d19c885c5bba7ca8.html",
+      "path": "books/article-d19c885c5bba7ca8.html",
+      "sha256": "a8e496da418cff67022d0cf44e4bb631257659149aa4217c48d9195a4eba2727",
+      "size": 18278,
       "mime": "text/html"
     },
     {
