@@ -73,6 +73,12 @@ class ContentPipelineTests(unittest.TestCase):
         with self.assertRaises(pipeline.PipelineError):
             pipeline.extract_attachment_url("https://github.com/other/repository")
 
+    def test_failed_upload_marker_gets_a_specific_error(self):
+        body = '<!-- Failed to upload "khutba.docx" -->'
+        with self.assertRaises(pipeline.PipelineError) as ctx:
+            pipeline.extract_attachment_url(body)
+        self.assertIn("فشل رفع ملف Word", str(ctx.exception))
+
     def test_github_attachment_cdn_redirect_is_allowed(self):
         self.assertTrue(pipeline.allowed_attachment_redirect("github-production-user-asset-6210df.s3.amazonaws.com"))
         self.assertFalse(pipeline.allowed_attachment_redirect("untrusted.s3.amazonaws.com"))

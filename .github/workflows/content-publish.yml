@@ -42,7 +42,7 @@ jobs:
       - name: Build and validate the khutba
         id: build
         run: |
-          python scripts/content_pipeline.py publish-issue --event "$GITHUB_EVENT_PATH" > publish-result.json
+          python scripts/content_pipeline.py publish-issue --event "$GITHUB_EVENT_PATH" > publish-result.json 2> build-error.log || { cat build-error.log >&2; exit 1; }
           python scripts/content_pipeline.py generate-sitemap
           python scripts/generate_app_content.py --prepare-assets
           python scripts/content_pipeline.py validate-khutba-result --result publish-result.json
@@ -95,5 +95,11 @@ jobs:
             message="تم دفع الخطبة إلى main، لكن تعذر تأكيد ظهورها أو تنزيل PDF على الموقع. راجع سجل هذا التشغيل؛ لن أصف النشر بأنه مكتمل قبل نجاح الفحص."
           else
             message="لم تُنشر الخطبة. افتح سجل هذا التشغيل لمعرفة سبب فشل قراءة Word أو فحوص الجودة، ثم صحح الملف وأعد إرسال الطلب."
+            if [ -s build-error.log ]; then
+              reason="$(grep -m1 '^PIPELINE ERROR' build-error.log | sed 's/^PIPELINE ERROR: //' || true)"
+              if [ -n "$reason" ]; then
+                message="لم تُنشر الخطبة. السبب: ${reason}"$'\n\n'"صحح ذلك ثم أعد إرسال الطلب."
+              fi
+            fi
           fi
           gh issue comment "${{ github.event.issue.number }}" --repo "$GITHUB_REPOSITORY" --body "$message"

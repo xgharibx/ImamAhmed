@@ -365,7 +365,7 @@ def prepare_khutba_docx(path: Path, *, title: str = "", date_iso: str = "", date
                 second_at = i
                 break
     if second_body_at >= 0 and (second_at is None or second_at >= len(entries)):
-        raise PipelineError("تعذر فصل عناصر الخطبة الأولى عن الثانية؛ ضع (الخطبة الثانية) بجوار أول عنصر في الخطبة الثانية")
+        raise PipelineError("تعذر فصل عناصر الخطبة الأولى عن الثانية؛ ضع (الخطبة الثانية) بجوار أول عنصر في الخطبة الثانية، وإن لم يكن لها عنصر في قائمة العناصر فأضف عنصراً جديداً لها في نهاية القائمة")
     if second_body_at < 0 and second_at is not None:
         raise PipelineError("الخطبة الثانية مذكورة في العناصر دون متن واضح")
     for header in paragraphs[:outline_start]:
@@ -746,6 +746,12 @@ def parse_issue_sections(body: str) -> dict[str, str]:
 
 
 def extract_attachment_url(value: str) -> str:
+    if re.search(r"Failed to upload", value or "", re.IGNORECASE) and "https://" not in (value or ""):
+        raise PipelineError(
+            "فشل رفع ملف Word إلى GitHub قبل إرسال الطلب (لا يوجد رابط مرفق). "
+            "أعد إنشاء الطلب وانتظر ظهور رابط الملف داخل الحقل قبل الإرسال، "
+            "ويفضل تسمية الملف باسم إنجليزي بسيط مثل khutba.docx بدون أقواس أو رموز"
+        )
     urls = re.findall(r"https://[^\s)>]+", value or "")
     for url in urls:
         clean = url.rstrip(".,؛")
