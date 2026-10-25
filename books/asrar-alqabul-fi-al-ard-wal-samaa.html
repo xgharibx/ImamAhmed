@@ -2,14 +2,21 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="robots" content="noindex, nofollow, noarchive">
     <meta name="description" content="المؤلفات - قريبا">
     <title>المؤلفات | قريبا - الشيخ أحمد إسماعيل الفشني</title>
     <link rel="canonical" href="https://ahmedelfashny.com/books/asrar-alqabul-fi-al-ard-wal-samaa.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@300;400;500;700;800;900&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../animations.css">
     <link rel="stylesheet" href="../mobile-nav.css">
     <script src="../mobile-nav.js" defer></script>
+    <script src="../main.js" defer></script>
 </head>
 <body>
     <header id="header" class="scrolled">
@@ -23,18 +30,71 @@
                     </div>
                 </a>
                 <ul class="nav-menu">
-                    <li class="nav-item"><a href="../index.html" class="nav-link">الرئيسية</a></li>
-                    <li class="nav-item"><a href="../khutab-written.html" class="nav-link">الخطب المكتوبة</a></li>
-                    <li class="nav-item"><a href="../articles.html" class="nav-link">المقالات</a></li>
+                    <li class="nav-item"><a href="../about.html" class="nav-link"><i class="fas fa-user"></i> عن الشيخ</a></li>
+                    <li class="nav-item"><a href="../quran.html" class="nav-link"><i class="fas fa-quran"></i> القرآن الكريم</a></li>
+                    <li class="nav-item"><a href="../tilawa.html" class="nav-link"><i class="fas fa-microphone-alt"></i> التلاوة</a></li>
+                    <li class="nav-item"><a href="../hadith.html" class="nav-link"><i class="fas fa-book-quran"></i> الحديث الشريف</a></li>
+                    <li class="nav-item"><a href="../adhkar.html" class="nav-link"><i class="fas fa-praying-hands"></i> أذكار</a></li>
+                    <li class="nav-item"><a href="../videos.html" class="nav-link"><i class="fas fa-video"></i> الدروس والمحاضرات</a></li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" aria-expanded="false">
+                            <i class="fas fa-mosque"></i> الخطب المنبرية <i class="fas fa-chevron-down dropdown-caret" aria-hidden="true"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../khutab-written.html" class="nav-link"><i class="fas fa-file-lines"></i> خطب مكتوبة</a></li>
+                            <li><a href="../khutab-audio.html" class="nav-link"><i class="fas fa-volume-up"></i> خطب صوتية</a></li>
+                            <li><a href="../khutab-video.html" class="nav-link"><i class="fas fa-video"></i> خطب مرئية</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a href="../articles.html" class="nav-link"><i class="fas fa-book-open"></i> المقالات</a></li>
+                    <li class="nav-item"><a href="../khawater.html" class="nav-link"><i class="fas fa-feather-alt"></i> الخواطر</a></li>
+                    <li class="nav-item"><a href="../books.html" class="nav-link is-disabled-link has-soon-badge" aria-disabled="true" tabindex="-1" data-soon="قريبا"><i class="fas fa-book"></i> المؤلفات</a></li>
+                    <li class="nav-item"><a href="../fatawa.html" class="nav-link"><i class="fas fa-circle-question"></i> أحكام فقهية</a></li>
+                    <li class="nav-item"><a href="../contact.html" class="nav-link"><i class="fas fa-envelope"></i> تواصل</a></li>
                 </ul>
+                <div class="hamburger">
+                    <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+                </div>
             </div>
         </nav>
     </header>
-    <main class="page-header-custom">
-        <div class="container">
-            <h1 class="page-title">المؤلفات</h1>
-            <p class="page-subtitle">قريبا</p>
-        </div>
+    <main>
+        <section class="page-header-custom">
+            <div class="container">
+                <h1 class="page-title">المؤلفات</h1>
+                <p class="page-subtitle">قريبا</p>
+            </div>
+        </section>
     </main>
+    <footer id="footer" class="footer">
+        <div class="footer-pattern"></div>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <div class="footer-logo"><span class="logo-arabic">الشيخ أحمد الفشني</span></div>
+                    <p class="footer-about">الموقع الرسمي للشيخ أحمد إسماعيل الفشني - إمام وخطيب وداعية إلى الله.</p>
+                    <div class="footer-social">
+                        <a href="https://www.facebook.com/share/1AcZYBDpD5" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://youtube.com/@ahmedelfashny" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h2 class="footer-title">روابط سريعة</h2>
+                    <ul class="footer-links">
+                        <li><a href="../index.html">الرئيسية</a></li>
+                        <li><a href="../books.html" class="is-disabled-link has-soon-badge" aria-disabled="true" tabindex="-1" data-soon="قريبا">المؤلفات</a></li>
+                        <li><a href="../khutab-written.html">خطب مكتوبة</a></li>
+                        <li><a href="../khutab-audio.html">خطب صوتية</a></li>
+                        <li><a href="../khutab-video.html">خطب مرئية</a></li>
+                        <li><a href="../articles.html">المقالات</a></li>
+                        <li><a href="../videos.html">الدروس</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>جميع الحقوق محفوظة &copy; <span id="currentYear"></span> الشيخ أحمد إسماعيل الفشني</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
