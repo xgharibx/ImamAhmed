@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "revision": "6b41ef377b9168e774489ee0a87651cda966c1bfb1793b70ee2145fd6a966fef",
+  "revision": "cb61f6b014cf8296f29bdff7f0261a0bb92becfc210f51a9c492ff690fa59424",
   "resources": [
     {
       "key": "/about.css",
@@ -68,43 +68,43 @@
     {
       "key": "/books/adillat-al-aman-najat-alwalidayn.html",
       "path": "books/adillat-al-aman-najat-alwalidayn.html",
-      "sha256": "671ee3386f1eaa93d799be198e8831b7a1ffd0dc2bc69018237a147b24d8b904",
-      "size": 7072,
+      "sha256": "15be443c3449de3a1d375a79033b26a1ba9f21faec4c1864d1b9c15d7db467f3",
+      "size": 7309,
       "mime": "text/html"
     },
     {
       "key": "/books/al-azhar.html",
       "path": "books/al-azhar.html",
-      "sha256": "5b441f92408055b74f4f1ef820c814f6400d2ed867a96c47f3dc0e405f0ea77f",
-      "size": 7048,
+      "sha256": "6f106c34d8658bab3a7b7158f68ab44fe2e402b66515858f45ab250c130167cc",
+      "size": 7285,
       "mime": "text/html"
     },
     {
       "key": "/books/al-etiquette-al-islami.html",
       "path": "books/al-etiquette-al-islami.html",
-      "sha256": "6ea5231e3b60e478f120c0f413144e4224d4b67acb3e01e96ddd90f17a2a1f91",
-      "size": 7062,
+      "sha256": "fb9b2259580b2cf8ee64707f44f18cc8f37c1ca24177c7f2f3f64d04fbeb5d71",
+      "size": 7299,
       "mime": "text/html"
     },
     {
       "key": "/books/al-wasatiyyah-al-nayyirah-hima-aldin-min-ghulu-alghalin.html",
       "path": "books/al-wasatiyyah-al-nayyirah-hima-aldin-min-ghulu-alghalin.html",
-      "sha256": "8c60347ef3dafa9abd55d2b89e1ae3fe5757bdd08589530a151d8066ca0cf1e6",
-      "size": 7095,
+      "sha256": "6da3f1d5ec8ccca84ae42893d4ec216185af754d4924f9a8c7692541fb9f5612",
+      "size": 7332,
       "mime": "text/html"
     },
     {
       "key": "/books/alwilayah-nur-alqulub.html",
       "path": "books/alwilayah-nur-alqulub.html",
-      "sha256": "89e23e161f289597729fbe8d367b71f624b485434cc05660e0c47e7a6c172a37",
-      "size": 7061,
+      "sha256": "9ba4ca9f2b4434886a4b1b8f7b3d90dec22d20e09d7b96e3e635245d2e7fd4d9",
+      "size": 7298,
       "mime": "text/html"
     },
     {
       "key": "/books/alzuhd-qiraah-fi-jawhar-altazkiyah.html",
       "path": "books/alzuhd-qiraah-fi-jawhar-altazkiyah.html",
-      "sha256": "537ef3ce5123f9c1bbb4891668ebb967a2d60e956e404014f944a1ad919e1dc1",
-      "size": 7074,
+      "sha256": "43b72e74911f5039bd052ffd5eb8c97190d5ce1f9300d08ef191964663c24a21",
+      "size": 7311,
       "mime": "text/html"
     },
     {
@@ -124,225 +124,225 @@
     {
       "key": "/books/asrar-alqabul-fi-al-ard-wal-samaa.html",
       "path": "books/asrar-alqabul-fi-al-ard-wal-samaa.html",
-      "sha256": "f7c74ef67278be538dcff7ade5dea6f357c5261519ca1548fe7c1764ff047a1c",
-      "size": 7073,
+      "sha256": "187e28e4d11dd1aadb213da55033d0b79726b0d6a958e0f1fcecef564a36ab5f",
+      "size": 7310,
       "mime": "text/html"
     },
     {
       "key": "/books/balance-of-friendship.html",
       "path": "books/balance-of-friendship.html",
-      "sha256": "9737177057adc813df5ed3a206811fc3f7abff5fd7a2f6628dbea97e1e0c25f7",
-      "size": 7061,
+      "sha256": "46bceb044e7393162013a8da9c19aa7f86b2c863a466ae72bc72d7557fc27058",
+      "size": 7298,
       "mime": "text/html"
     },
     {
       "key": "/books/barzakh-al-anwar.html",
       "path": "books/barzakh-al-anwar.html",
-      "sha256": "94157a706f588a6e2ee441981fa4b53aca2337f20e4c6124df736112b873565c",
-      "size": 7056,
+      "sha256": "577a34c28356ed3305cf163d37185fd867b7cbef969a5cfd6c8225748940c892",
+      "size": 7293,
       "mime": "text/html"
     },
     {
       "key": "/books/binaa-almanaa-alfikriyya-fiqh-altahsin.html",
       "path": "books/binaa-almanaa-alfikriyya-fiqh-altahsin.html",
-      "sha256": "8cdca2d6a3da3ebe02fd3ba000bc7558ac1bc667b15fbaa8386f4fd269020032",
-      "size": 7078,
+      "sha256": "69ce04bf2910a3965952d74bf99d025a3a2915671f1029afe005df48ebcc24b1",
+      "size": 7315,
       "mime": "text/html"
     },
     {
       "key": "/books/buyut-masturah-wa-qulub-maksurah.html",
       "path": "books/buyut-masturah-wa-qulub-maksurah.html",
-      "sha256": "e8d0978016c4a69759f5496b42a6f77c1e2e2c7332e778bc2cc2f4d1d6ce8cb8",
-      "size": 7072,
+      "sha256": "103ef0ce528d3f257a0b8fe719a98fd957319d1d7548a9affcde25a5da1eb7ec",
+      "size": 7309,
       "mime": "text/html"
     },
     {
       "key": "/books/children-victims.html",
       "path": "books/children-victims.html",
-      "sha256": "1f330252d988424abccf5c953811cc5a3e91dc8b2a604c3f03c64b25d36a9e12",
-      "size": 7056,
+      "sha256": "f986c26561066153b75e9af6dbe2cf36c58640b9f13347ec0607f7f699433853",
+      "size": 7293,
       "mime": "text/html"
     },
     {
       "key": "/books/divorce-remedy.html",
       "path": "books/divorce-remedy.html",
-      "sha256": "a2034ea69e68b840dd6c927ddfb9806480bab0853d4f3130948ae013ed15f222",
-      "size": 7054,
+      "sha256": "dba1f628f07ba62f20ddba41845aa87d52847d8455b3d7bd84637223638758eb",
+      "size": 7291,
       "mime": "text/html"
     },
     {
       "key": "/books/etiquette-of-disagreement.html",
       "path": "books/etiquette-of-disagreement.html",
-      "sha256": "7aef9212c4e339d955054883f51365f1aefdd95cb80c28d7eda7b06927845c73",
-      "size": 7065,
+      "sha256": "b5d22c52af544c37f2048d665e5d3c1fdb52d07fba018831e34746db29eb688d",
+      "size": 7302,
       "mime": "text/html"
     },
     {
       "key": "/books/hima-alshariah-bayn-amanat-altakhassus-wa-zayf-almazahir.html",
       "path": "books/hima-alshariah-bayn-amanat-altakhassus-wa-zayf-almazahir.html",
-      "sha256": "25b51adbe9aa79e7c6328a13adcda10d6f8d052c2d916ad433903a9d59d32847",
-      "size": 7096,
+      "sha256": "3b373d94e83b13d25eaa18293340498d2e43ffdb84d2dd2f7403bcef7f4fd0a8",
+      "size": 7333,
       "mime": "text/html"
     },
     {
       "key": "/books/hirasat-althawabit-fi-muwajahat-alhadhayan-almuasir.html",
       "path": "books/hirasat-althawabit-fi-muwajahat-alhadhayan-almuasir.html",
-      "sha256": "c477ce5c8b6a93c1bb54bba890d7feaa317bf2db53e4d7d606c4452cbd991296",
-      "size": 7091,
+      "sha256": "1ab1d0a282f109aa883e0a0b885af30e47da8d1f7b5b31dfc7b9a12becb39376",
+      "size": 7328,
       "mime": "text/html"
     },
     {
       "key": "/books/how-they-lived-how-we-live.html",
       "path": "books/how-they-lived-how-we-live.html",
-      "sha256": "03411a9fa14895b8145314f7b2c74b55c9beae215b59c2563df0496e65c9da9e",
-      "size": 7066,
+      "sha256": "18570fb70907f845d30008c06174e1e317b686fa9aafdae3ae2fb20d104cb9e3",
+      "size": 7303,
       "mime": "text/html"
     },
     {
       "key": "/books/how-to-be-a-successful-orator.html",
       "path": "books/how-to-be-a-successful-orator.html",
-      "sha256": "3de1b1135f068d66e65944cddf18a19ac44131752d66ef3a01ed0e21db7b3215",
-      "size": 7069,
+      "sha256": "fdef6524811dc5f4d9c0d0af78b598851d39ed7a91fc986af19c97ad52fd45f3",
+      "size": 7306,
       "mime": "text/html"
     },
     {
       "key": "/books/humma-almuqaranat-fiqh-alqanaah.html",
       "path": "books/humma-almuqaranat-fiqh-alqanaah.html",
-      "sha256": "5189602b1ce1aa8e33b591f219b8b1964816efd118d59ca7a132528ff5686856",
-      "size": 7071,
+      "sha256": "9ff8bfa2d4d1717dcfbc57357397e078abd4691dec75d1856d2c3ded96c4da0f",
+      "size": 7308,
       "mime": "text/html"
     },
     {
       "key": "/books/idara-aldhaat-barakat-alwaqt.html",
       "path": "books/idara-aldhaat-barakat-alwaqt.html",
-      "sha256": "b555c50f3f9ca90691701a77576ad355f26a30706c5405be316ed0fe2dab2276",
-      "size": 7068,
+      "sha256": "6b4a33c942431c504411cab4b6a0d1b8f7e2bdf3fc1af7116aabfc57d2d9d86b",
+      "size": 7305,
       "mime": "text/html"
     },
     {
       "key": "/books/in-lam-akun-akhlastu-fi-taatik.html",
       "path": "books/in-lam-akun-akhlastu-fi-taatik.html",
-      "sha256": "1fb0249a21452aad6fdf77f2ac0f970b7d82c8442a020ee8fc71af6f85e85827",
-      "size": 7070,
+      "sha256": "d5de29801de9bd44fd6f86af2bbe7e39c86928eaa70e4ec1ace4bc35176a7361",
+      "size": 7307,
       "mime": "text/html"
     },
     {
       "key": "/books/jawhar-aldin-la-shakliyyat-altin.html",
       "path": "books/jawhar-aldin-la-shakliyyat-altin.html",
-      "sha256": "1b81d73735e46033d37fefceae582d56fa3b0fe2ef927f3f9e6c2fbe43d2f24a",
-      "size": 7072,
+      "sha256": "25a2460c028e15066554370f10a7df4377d8fd3b5fa27dd73241150309778be8",
+      "size": 7309,
       "mime": "text/html"
     },
     {
       "key": "/books/journey-of-light.html",
       "path": "books/journey-of-light.html",
-      "sha256": "e89aeb30c4c178d7852ee71a81933fb5ce09dcf8e5c7a8d900ca81be88badefb",
-      "size": 7056,
+      "sha256": "5fc21a2848272f228db05a8917d4c827152afc21a8263e41d3869f4ae6d862f0",
+      "size": 7293,
       "mime": "text/html"
     },
     {
       "key": "/books/journey-of-the-heart.html",
       "path": "books/journey-of-the-heart.html",
-      "sha256": "b277f2b248ed92b979c898bb0a2af073f6b70a924ba258b6eed6cffc96ccdc43",
-      "size": 7060,
+      "sha256": "16be5e07228bf806b1180565f18ef1c750e05e884b446d15466b1a8bf8f3a49a",
+      "size": 7297,
       "mime": "text/html"
     },
     {
       "key": "/books/khawater-success-path.html",
       "path": "books/khawater-success-path.html",
-      "sha256": "8825ce32aadfa5cccac3650367eb4f985c141be0ba25b7bbc6ef7020dba47a75",
-      "size": 7061,
+      "sha256": "f6a142007fad87a5cb7b771cbaef868cfb4ba7f8fec5355d18b4a00f53c459df",
+      "size": 7298,
       "mime": "text/html"
     },
     {
       "key": "/books/losing-deal.html",
       "path": "books/losing-deal.html",
-      "sha256": "3373461cfe613a1c25b7d51ab0947e97e09e63c7fb3793a52607a1b6ec8c7ab1",
-      "size": 7051,
+      "sha256": "86b350e62fed66c11442da98ee9cdda5cc2232abcfb4c7337ebb152b997b547e",
+      "size": 7288,
       "mime": "text/html"
     },
     {
       "key": "/books/mathabat-alarwah-rihlat-alishq-ila-rihab-alnur-almuhammadi.html",
       "path": "books/mathabat-alarwah-rihlat-alishq-ila-rihab-alnur-almuhammadi.html",
-      "sha256": "c415afb7cc2b0a0a4997b2784644cc0d35cb24cb05316bc4d989a4d6a832d360",
-      "size": 7098,
+      "sha256": "dd13242a8fdae8a4207a8aa30cfce850ea810c88687b1a515e6a83d7ab6de401",
+      "size": 7335,
       "mime": "text/html"
     },
     {
       "key": "/books/one-life-to-live.html",
       "path": "books/one-life-to-live.html",
-      "sha256": "3f2c316b884750fb56145ede9be0b0462bf9a06e4a2a3d207972798cbd593a8a",
-      "size": 7056,
+      "sha256": "024def654209ef39019b4a50cb215c22953333529ea4e61df0de2a049388acec",
+      "size": 7293,
       "mime": "text/html"
     },
     {
       "key": "/books/qissat-muntahir-rihlat-min-al-zulumati-ila-nur-al-yaqin.html",
       "path": "books/qissat-muntahir-rihlat-min-al-zulumati-ila-nur-al-yaqin.html",
-      "sha256": "b1da04615b71d0b169ce4fcf15778c8d1a5014f119df2752093003c0bceae20a",
-      "size": 7095,
+      "sha256": "f256d1ca1d202e41d2f803f6a1b1cb1a463a0df7871b349b90498ad928325de1",
+      "size": 7332,
       "mime": "text/html"
     },
     {
       "key": "/books/ramadan-basirat-altakhtit-anwar-altalluq.html",
       "path": "books/ramadan-basirat-altakhtit-anwar-altalluq.html",
-      "sha256": "c7df15014d5e7010e71f96b136cd8b0440edf66c8b5bc78bc384782789c27800",
-      "size": 7080,
+      "sha256": "71fab68b5eb0f133c5a4e3f22e2f22d385c961b24c881ed381bce932b19736c8",
+      "size": 7317,
       "mime": "text/html"
     },
     {
       "key": "/books/real-winner-in-school-of-fasting.html",
       "path": "books/real-winner-in-school-of-fasting.html",
-      "sha256": "1c1d0dcd19dc9432e94d11749bb1f5e395aa7f78010704b326e88543b7a88dfa",
-      "size": 7072,
+      "sha256": "74155137f48cc0093eaea9a3310380c8e61a7490ff5eacd030909ba92551432f",
+      "size": 7309,
       "mime": "text/html"
     },
     {
       "key": "/books/riyad-al-dhakireen.html",
       "path": "books/riyad-al-dhakireen.html",
-      "sha256": "a9850a452239e5f07791aa860a486f3898699fc59a5a521a5672ab7a8f658d56",
-      "size": 7058,
+      "sha256": "76ac2ebb942a02a1ada49e7d6abd31d1c43bfb478cb3f0068f5d5235b2027536",
+      "size": 7295,
       "mime": "text/html"
     },
     {
       "key": "/books/sharh-al-arbain.html",
       "path": "books/sharh-al-arbain.html",
-      "sha256": "8287bc4fd80eb6a910e922ed589dc606c399e6aee3d459ae45b733fd97c1166e",
-      "size": 7055,
+      "sha256": "6158e1677aff81a6ad5046b86bfdae0c81a96e2cc092e3a4856b323d7feed7d0",
+      "size": 7292,
       "mime": "text/html"
     },
     {
       "key": "/books/siyam-al-shashat-rihlat-al-qalb-ila-rabb-al-samawat.html",
       "path": "books/siyam-al-shashat-rihlat-al-qalb-ila-rabb-al-samawat.html",
-      "sha256": "108cd0db189841e2b9c8e4c2bc3fc22bdac152f53861c8512cbbbeb095b40e50",
-      "size": 7091,
+      "sha256": "7a446888ed73a4adec2b175356129d3acdb119940de328f5278d7ef4763f98b5",
+      "size": 7328,
       "mime": "text/html"
     },
     {
       "key": "/books/stories-of-prophets.html",
       "path": "books/stories-of-prophets.html",
-      "sha256": "a751bbb9031ecb50c104942ba486efb99ccfc9b97f10245228230fcc157e7be5",
-      "size": 7059,
+      "sha256": "7304644ab812d2cf52602e985a8c4ed4f21c715539d4e14d67e6d56bf2c47563",
+      "size": 7296,
       "mime": "text/html"
     },
     {
       "key": "/books/thresholds-of-time.html",
       "path": "books/thresholds-of-time.html",
-      "sha256": "8c647cbf5bdf4b14b7f9cae8ef07375ea8216177614e70f0a7efff18e86c9b20",
-      "size": 7058,
+      "sha256": "29e6f9267b20a5ded6d424c7cc6d99183bf5d0cece97b71507645b892c8eaef9",
+      "size": 7295,
       "mime": "text/html"
     },
     {
       "key": "/books/uluw-alhimma-ila-nujum-aljanna.html",
       "path": "books/uluw-alhimma-ila-nujum-aljanna.html",
-      "sha256": "a06dc7241a0cb9b5fc067d5e1ae49c8969ed56045a18edaf9d8c7f437c4a80fb",
-      "size": 7070,
+      "sha256": "50d9db895e57f80eb068c58c8500428fc868696d54c34a6b0159339a343abfba",
+      "size": 7307,
       "mime": "text/html"
     },
     {
       "key": "/books/word-on-death.html",
       "path": "books/word-on-death.html",
-      "sha256": "4b6e0fe07df851b247bf3453b15db1c457b5b6eeffe03fb40e6704b16ef36019",
-      "size": 7053,
+      "sha256": "f0aae073f3ac91c1b59928801bd63b25c02deb261d9be05501bd1d0d0a797ba1",
+      "size": 7290,
       "mime": "text/html"
     },
     {

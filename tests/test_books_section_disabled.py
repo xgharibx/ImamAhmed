@@ -28,6 +28,9 @@ class BooksSectionDisabledTests(unittest.TestCase):
         for href in ("../about.html", "../videos.html", "../contact.html"):
             self.assertIn(f'href="{href}"', page)
         self.assertIn('<footer id="footer" class="footer">', page)
+        self.assertIn(".page-header-custom {", page)
+        self.assertIn("background: var(--gradient-green);", page)
+        self.assertIn("padding: 100px 0 60px;", page)
 
     def test_article_pages_in_books_folder_remain_available(self):
         page = (ROOT / "books" / "article-b4eee344173279b2.html").read_text(encoding="utf-8")
