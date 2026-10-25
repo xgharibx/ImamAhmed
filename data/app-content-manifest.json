@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "revision": "7e7fe4427ee32291e0610926fda7d348f7a2b7f2611e624d0691e7a41db0779c",
+  "revision": "b52549399a47759e7a424b6c11c9a90fb721d29465d0e177ba8d88f76d4aee66",
   "resources": [
     {
       "key": "/about.css",
@@ -61,288 +61,288 @@
     {
       "key": "/books.html",
       "path": "books.html",
-      "sha256": "7e9baa9235344122a21127b4017f1adaf07c8721f0a736f296ed3f0238d7cf6e",
-      "size": 24322,
+      "sha256": "2215dc3b6c3e7fc588bc12524dc24757e56a9643e6ec25774a2fdfb315ac0065",
+      "size": 12698,
       "mime": "text/html"
     },
     {
       "key": "/books/adillat-al-aman-najat-alwalidayn.html",
       "path": "books/adillat-al-aman-najat-alwalidayn.html",
-      "sha256": "64bf632666ca296b741a1e2de94402b79ab80f040d2c753322d55d2ce7ed265c",
-      "size": 20567,
+      "sha256": "9384c451292aef0efad0ade13a371c821dadd1497bac132f4a8e28d36eac4d0d",
+      "size": 1918,
       "mime": "text/html"
     },
     {
       "key": "/books/al-azhar.html",
       "path": "books/al-azhar.html",
-      "sha256": "b0c7a9fb2e4dbdeb0282049fdcd8eaa41282808a958427f56783217a9a985db3",
-      "size": 15675,
+      "sha256": "4b312ebe6eb195fdad72d6655aadae61531477cdf1d1f590a19b9849a9f00d26",
+      "size": 1894,
       "mime": "text/html"
     },
     {
       "key": "/books/al-etiquette-al-islami.html",
       "path": "books/al-etiquette-al-islami.html",
-      "sha256": "3610220af331c3be0879426fe6c09187da7331c343589bebdc5bc87f2628f11b",
-      "size": 11469,
+      "sha256": "d53aecc8630f3a119a55d3311560a8368a460cabd554bb11730a87388f62d3be",
+      "size": 1908,
       "mime": "text/html"
     },
     {
       "key": "/books/al-wasatiyyah-al-nayyirah-hima-aldin-min-ghulu-alghalin.html",
       "path": "books/al-wasatiyyah-al-nayyirah-hima-aldin-min-ghulu-alghalin.html",
-      "sha256": "63820a50cd742ca47a09d23755b32c05785446b994630555eb162886117aff67",
-      "size": 11555,
+      "sha256": "3e55bf85fbdcf3ebddafe696286af7d659a667346c07920f4079d47c313ac793",
+      "size": 1941,
       "mime": "text/html"
     },
     {
       "key": "/books/alwilayah-nur-alqulub.html",
       "path": "books/alwilayah-nur-alqulub.html",
-      "sha256": "ab4d3881e3e05e8ca5a2b1e775de71a15cc92c183a22f13ed25bfb371f601ff5",
-      "size": 12772,
+      "sha256": "f3c62b2cf84e2fc1e5887c95ceacb960bad8aa0e11c69efb091ee8afa00c6bdb",
+      "size": 1907,
       "mime": "text/html"
     },
     {
       "key": "/books/alzuhd-qiraah-fi-jawhar-altazkiyah.html",
       "path": "books/alzuhd-qiraah-fi-jawhar-altazkiyah.html",
-      "sha256": "6fa6a18628071110142b603df43c2a614039bc2425689758d8e14cd4de66ca48",
-      "size": 15112,
+      "sha256": "f6879836bf02b0128f77d190f248a740110c20f61cff3cb6419143cbcc2fb0b5",
+      "size": 1920,
       "mime": "text/html"
     },
     {
       "key": "/books/article-b4eee344173279b2.html",
       "path": "books/article-b4eee344173279b2.html",
-      "sha256": "345b19dbdda87b11f0609d235713dafb38b845be7e4f192adb45e882f7afb4ff",
-      "size": 17892,
+      "sha256": "59a6015d7a485ba8393b06be46018a71587301413bbaf80c6623a7caf47adea7",
+      "size": 17789,
       "mime": "text/html"
     },
     {
       "key": "/books/article-d19c885c5bba7ca8.html",
       "path": "books/article-d19c885c5bba7ca8.html",
-      "sha256": "a8e496da418cff67022d0cf44e4bb631257659149aa4217c48d9195a4eba2727",
-      "size": 18278,
+      "sha256": "0e424400ec20534fde370ceb2f8864faccf1a86fdf3dd4ed85804826bc6d3650",
+      "size": 18175,
       "mime": "text/html"
     },
     {
       "key": "/books/asrar-alqabul-fi-al-ard-wal-samaa.html",
       "path": "books/asrar-alqabul-fi-al-ard-wal-samaa.html",
-      "sha256": "2f6ed055c264916cea9524f75a20606ce20d69fc56986e1836b2c865a2b83f7d",
-      "size": 14800,
+      "sha256": "6bf62209726606ac60aaa2aebd0b7b1366738a569ffe3bbe1aa2a835195d0d30",
+      "size": 1919,
       "mime": "text/html"
     },
     {
       "key": "/books/balance-of-friendship.html",
       "path": "books/balance-of-friendship.html",
-      "sha256": "ba611383e7ede6bc5d47293413268ff801c64548f91cca6f5b27a762faae5e4f",
-      "size": 16697,
+      "sha256": "4ab41f3353bd7b915a0f8894f039f26bba4f5c4ebb1968ff7c7d89a5a47bd0f4",
+      "size": 1907,
       "mime": "text/html"
     },
     {
       "key": "/books/barzakh-al-anwar.html",
       "path": "books/barzakh-al-anwar.html",
-      "sha256": "e195e1c35275095c132c7238d0f1e44a8591835188f2fecbc6ce740988a3caaa",
-      "size": 21476,
+      "sha256": "d462b9b6c4a1794e3dde3f884875e1c2d69a90fa47363fae62a7a521e5d22852",
+      "size": 1902,
       "mime": "text/html"
     },
     {
       "key": "/books/binaa-almanaa-alfikriyya-fiqh-altahsin.html",
       "path": "books/binaa-almanaa-alfikriyya-fiqh-altahsin.html",
-      "sha256": "01bc46de4db41084ab083806d6d4e4273b8a8468051f258c4c943509d8eed721",
-      "size": 14806,
+      "sha256": "4867e3a8502075e64956b224a0d1b7a10647ddb08a04811d0b783a75af0cb0ac",
+      "size": 1924,
       "mime": "text/html"
     },
     {
       "key": "/books/buyut-masturah-wa-qulub-maksurah.html",
       "path": "books/buyut-masturah-wa-qulub-maksurah.html",
-      "sha256": "64a4075cca599824ec2363a7605ef1afc3b387329c2bc958bab690a8d11e7dec",
-      "size": 15338,
+      "sha256": "b02a64597c4347014770ba0dc8516924b59a3d08e27eea4be0db25f27b818065",
+      "size": 1918,
       "mime": "text/html"
     },
     {
       "key": "/books/children-victims.html",
       "path": "books/children-victims.html",
-      "sha256": "75c3e3858d5b449e2b7f6ce859e565310a462cd021d3616dd78c24c95da1fb8f",
-      "size": 13073,
+      "sha256": "170e0ca2d6454d0c0964e1d5cf08f53a2685b62eb4bacde5c3b389945b49ef92",
+      "size": 1902,
       "mime": "text/html"
     },
     {
       "key": "/books/divorce-remedy.html",
       "path": "books/divorce-remedy.html",
-      "sha256": "8958c079d0a6b4a730c4532862af92dfd116f857b4d6786e6b32d805f2f5f2e1",
-      "size": 12780,
+      "sha256": "74080dc35b4024438cba6be4a15ad7cfafbdebd9768ec88faf76323da50cde11",
+      "size": 1900,
       "mime": "text/html"
     },
     {
       "key": "/books/etiquette-of-disagreement.html",
       "path": "books/etiquette-of-disagreement.html",
-      "sha256": "a597173ad6247a0abc3467a9384fb78c92d0f497e99df875cc9d051f32f167cd",
-      "size": 11855,
+      "sha256": "08001cb23de3e11468ec6fc0c9b4999010e12f803de8aad682008d9dfec44230",
+      "size": 1911,
       "mime": "text/html"
     },
     {
       "key": "/books/hima-alshariah-bayn-amanat-altakhassus-wa-zayf-almazahir.html",
       "path": "books/hima-alshariah-bayn-amanat-altakhassus-wa-zayf-almazahir.html",
-      "sha256": "0a28ac8c63509fc425eb79de85f9893b7911fca232db6dbd2c0e3bdff2a08ab7",
-      "size": 12358,
+      "sha256": "38300fa779ed67557487d43e979ff1c1c849459913c154193a9a4c32d80da04b",
+      "size": 1942,
       "mime": "text/html"
     },
     {
       "key": "/books/hirasat-althawabit-fi-muwajahat-alhadhayan-almuasir.html",
       "path": "books/hirasat-althawabit-fi-muwajahat-alhadhayan-almuasir.html",
-      "sha256": "609dd6a1a20445a7bc691e5e419a57e6aab7e04f3d3a1756a746c48962c12e6f",
-      "size": 14782,
+      "sha256": "c916d00b0aed32c9d655a597c2e0660b3a81f6cf263ddfebde572a630f268a13",
+      "size": 1937,
       "mime": "text/html"
     },
     {
       "key": "/books/how-they-lived-how-we-live.html",
       "path": "books/how-they-lived-how-we-live.html",
-      "sha256": "b228ac60aafe27990547ae8f71b3e9fdbac7feb726e1e406c1dbcbeab678daf7",
-      "size": 107106,
+      "sha256": "85235730895ce185d0659545b2415e8c753f1286d1c694dcb605a6dff5223552",
+      "size": 1912,
       "mime": "text/html"
     },
     {
       "key": "/books/how-to-be-a-successful-orator.html",
       "path": "books/how-to-be-a-successful-orator.html",
-      "sha256": "53cd0e730a7d76b4ccad668b1ebe9f4d710400e13bd8d89df1ff93b311a0800f",
-      "size": 108468,
+      "sha256": "190ac7d05f46bf6e2df21644a4cbc700070ff00f57c3a7d334276bf79e3770f0",
+      "size": 1915,
       "mime": "text/html"
     },
     {
       "key": "/books/humma-almuqaranat-fiqh-alqanaah.html",
       "path": "books/humma-almuqaranat-fiqh-alqanaah.html",
-      "sha256": "bc2d887272112c0c881f276af790a8f84e3b72faddef8fa4edd7fdaea3170b94",
-      "size": 15445,
+      "sha256": "42500e31ff83897308a65d8fe7ad23b112e539388461eed253691daec09a6777",
+      "size": 1917,
       "mime": "text/html"
     },
     {
       "key": "/books/idara-aldhaat-barakat-alwaqt.html",
       "path": "books/idara-aldhaat-barakat-alwaqt.html",
-      "sha256": "ef650685c265e1992373780c053cc836e7c13c59fb8c12c214069eebed420ace",
-      "size": 10884,
+      "sha256": "50d3a37b8eb943ce35507f18b87eee6d5725cd02632a8b00556a25c677cb2d82",
+      "size": 1914,
       "mime": "text/html"
     },
     {
       "key": "/books/in-lam-akun-akhlastu-fi-taatik.html",
       "path": "books/in-lam-akun-akhlastu-fi-taatik.html",
-      "sha256": "7b85c7e12c9d3e4e17f6a187e77c9252b5c4015afa1e1b7a4bf9fdf22d4ef933",
-      "size": 15676,
+      "sha256": "d8f8e2f3b558aef065d2575029e1d1ac570d0a02445110c429a0f9a48cf4b4ef",
+      "size": 1916,
       "mime": "text/html"
     },
     {
       "key": "/books/jawhar-aldin-la-shakliyyat-altin.html",
       "path": "books/jawhar-aldin-la-shakliyyat-altin.html",
-      "sha256": "921fbc3270502d7121453fba7a74f56f406604b66ad92c056b71ba69be06a083",
-      "size": 17317,
+      "sha256": "178111e6f38680208cfec83faf27d2b25a1ee92ecb897641be33f8c1102c4b14",
+      "size": 1918,
       "mime": "text/html"
     },
     {
       "key": "/books/journey-of-light.html",
       "path": "books/journey-of-light.html",
-      "sha256": "6b33da763d70d0d7053427265d2a0da6fbebed03e5d354d462e59798854deb9f",
-      "size": 163576,
+      "sha256": "2184aa8acac47eb097c8d7a073b2ca206d926dddd35efc8a31aeedd440cbd913",
+      "size": 1902,
       "mime": "text/html"
     },
     {
       "key": "/books/journey-of-the-heart.html",
       "path": "books/journey-of-the-heart.html",
-      "sha256": "8238c480abeb4ebec3c663fee7389bcd95c0db9183984a1486cbed4b7c1ad5a4",
-      "size": 71659,
+      "sha256": "8ffc63b5f1343cdecb077a626dd67899382ad6755be3bbcadad99f9f0a2872f9",
+      "size": 1906,
       "mime": "text/html"
     },
     {
       "key": "/books/khawater-success-path.html",
       "path": "books/khawater-success-path.html",
-      "sha256": "311fbaba2ddd6b5bd890e5cc85bdddf035cb8d37e037468c70ed294ec5a2c037",
-      "size": 324012,
+      "sha256": "15489ec75b0ea6b504bb17b86a7bcf2c172c23d3105df9f5d66eaa2aa5c3f74e",
+      "size": 1907,
       "mime": "text/html"
     },
     {
       "key": "/books/losing-deal.html",
       "path": "books/losing-deal.html",
-      "sha256": "409e999e4d2289d1a97f79e5f82005aa9ecf3451bdc3d3cf1568350a780cdf3d",
-      "size": 16435,
+      "sha256": "1d021d564250bd6e73a39f9bc0064ad4109152f93e79951f3e54eeec46855dd0",
+      "size": 1897,
       "mime": "text/html"
     },
     {
       "key": "/books/mathabat-alarwah-rihlat-alishq-ila-rihab-alnur-almuhammadi.html",
       "path": "books/mathabat-alarwah-rihlat-alishq-ila-rihab-alnur-almuhammadi.html",
-      "sha256": "78b6c2b80cf8010b781ab58ad2a4393f588715c3aea656736ded3be96afaf247",
-      "size": 16322,
+      "sha256": "5d7c0ef03c3c1c938b5d37898b04847bbea9db4e063a5c5feced5b50fbf41c0d",
+      "size": 1944,
       "mime": "text/html"
     },
     {
       "key": "/books/one-life-to-live.html",
       "path": "books/one-life-to-live.html",
-      "sha256": "487e0ab45ba6371d9e0c2db355a5a5db13e3ac14d96df040f8bf9baa3c191b4d",
-      "size": 16770,
+      "sha256": "0a5425dd9f230814cfb1d14985e9f25eaab6eb5ce2a110bdc9e998ef0ec2759b",
+      "size": 1902,
       "mime": "text/html"
     },
     {
       "key": "/books/qissat-muntahir-rihlat-min-al-zulumati-ila-nur-al-yaqin.html",
       "path": "books/qissat-muntahir-rihlat-min-al-zulumati-ila-nur-al-yaqin.html",
-      "sha256": "eb4fdc17109af0e7249220ae20c7a9afb0842884026bb8ff41da63bb8e0c6a5d",
-      "size": 14903,
+      "sha256": "b572f32d40e2ae1859ac3ac620bb5dc930a69acf00fe042e92d35e0716562d36",
+      "size": 1941,
       "mime": "text/html"
     },
     {
       "key": "/books/ramadan-basirat-altakhtit-anwar-altalluq.html",
       "path": "books/ramadan-basirat-altakhtit-anwar-altalluq.html",
-      "sha256": "40a13cbfb7d9ee8031bc7ea9e6f7a3a77e7603fc2985d3427fff2495d3e2ce8b",
-      "size": 18312,
+      "sha256": "eae2c99eb4eb24ba4d0a41505333001bc87afeeae4ed7c136ea7186c9335d3d9",
+      "size": 1926,
       "mime": "text/html"
     },
     {
       "key": "/books/real-winner-in-school-of-fasting.html",
       "path": "books/real-winner-in-school-of-fasting.html",
-      "sha256": "a87a8f4fbedbe4607752f8728ce5404bde369162381dfcaa49c4638e9fe4db4a",
-      "size": 11421,
+      "sha256": "258e4ad7bed6e1196512a2d9724e811d7a9acb7b5f4bce0d51b0bed8d73eab51",
+      "size": 1918,
       "mime": "text/html"
     },
     {
       "key": "/books/riyad-al-dhakireen.html",
       "path": "books/riyad-al-dhakireen.html",
-      "sha256": "c62c3992951cc104aa681b3b78ef6d5d100d764259a4626e4c471c6aca0ce01b",
-      "size": 76667,
+      "sha256": "a9a070708bd73883a7b6e2dbbd5be7024a537a478652fb9e4da28189fa8971ee",
+      "size": 1904,
       "mime": "text/html"
     },
     {
       "key": "/books/sharh-al-arbain.html",
       "path": "books/sharh-al-arbain.html",
-      "sha256": "7907fd3913b12e5fdf18883c960b0f6f61f4296589c74267626e71c7a42f25c8",
-      "size": 51837,
+      "sha256": "8d89cfa8e3d4b9349626af30392bb6f2cf4ee6ce1adad835de77cb6c60f24e2a",
+      "size": 1901,
       "mime": "text/html"
     },
     {
       "key": "/books/siyam-al-shashat-rihlat-al-qalb-ila-rabb-al-samawat.html",
       "path": "books/siyam-al-shashat-rihlat-al-qalb-ila-rabb-al-samawat.html",
-      "sha256": "bdc9db6a04359fd85b254e260991a28e3bebc373b4901e9eba4d584e0894a380",
-      "size": 14387,
+      "sha256": "0b70478b878fc8f74ad90b210df5ee6a45609d083690d1e6243b8913346927a0",
+      "size": 1937,
       "mime": "text/html"
     },
     {
       "key": "/books/stories-of-prophets.html",
       "path": "books/stories-of-prophets.html",
-      "sha256": "821254664417d386153449f90ac7cc85f9246e2b4aeed0f147f9fd5ceb3ca8df",
-      "size": 246494,
+      "sha256": "84298757140aad10e978eebe1d22ab167a213a4df3770d9909579d34bd3059be",
+      "size": 1905,
       "mime": "text/html"
     },
     {
       "key": "/books/thresholds-of-time.html",
       "path": "books/thresholds-of-time.html",
-      "sha256": "51167598b3dba78e596bd015afb4e3d1cdfd6c7169f3b334df5970547d8cf376",
-      "size": 15074,
+      "sha256": "a321996177d6deaa383f487559dbbdae09c89b006e96961305d20665d5aba060",
+      "size": 1904,
       "mime": "text/html"
     },
     {
       "key": "/books/uluw-alhimma-ila-nujum-aljanna.html",
       "path": "books/uluw-alhimma-ila-nujum-aljanna.html",
-      "sha256": "73838669c2c43a262b97e9baffbc98e924f77c7304dfff85bc4dd67cdcca47a3",
-      "size": 14003,
+      "sha256": "cd7d1941025eb4a372f7b297db7608a621393abba4b5892cf13e0ba22caa76ce",
+      "size": 1916,
       "mime": "text/html"
     },
     {
       "key": "/books/word-on-death.html",
       "path": "books/word-on-death.html",
-      "sha256": "bfc56b6d8b46658dea85ef7d83270ae8df6d23d3f22c327bfee54487e9275428",
-      "size": 18955,
+      "sha256": "b869c6b62e475fcbc140b1c83e70e99e2a336c6f5154ee9e1807c069ac8f2b60",
+      "size": 1899,
       "mime": "text/html"
     },
     {
@@ -448,6 +448,13 @@
       "path": "data/quran_page_map.json",
       "sha256": "9b1f007c9e82822f056edaabcf29d35623546b183cd826b043fc0a0175f1bf0a",
       "size": 110364,
+      "mime": "application/json"
+    },
+    {
+      "key": "/data/share-image-usage.json",
+      "path": "data/share-image-usage.json",
+      "sha256": "7a6b26c162efdcb7bd3a990c6012ef94b568ed726f252223f62d2c6cc45df4e0",
+      "size": 6818,
       "mime": "application/json"
     },
     {
@@ -586,414 +593,414 @@
     {
       "key": "/khutab/k-20250915-njeylti.html",
       "path": "khutab/k-20250915-njeylti.html",
-      "sha256": "24c8b2444d8bda5da84080edc6d066b3421ed10e828c2039cf30c72dd907b8a4",
-      "size": 6499,
+      "sha256": "3a281f30c81ecb223970229b934baffc2ac80094d13e4beed49d9ce7c319c6f4",
+      "size": 7597,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20250921-jwq4jwfljwq4.html",
       "path": "khutab/k-20250921-jwq4jwfljwq4.html",
-      "sha256": "bd1af688e17fb4d68b2cd96b2507bc2b489c4aca0939c028267435082b8fd161",
-      "size": 6606,
+      "sha256": "c94fc08fe3ce1c59c6824715ce0c971b83b0c292257d9f40e546afcc6af26aba",
+      "size": 7580,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20250928-jwq4jwfljwq5.html",
       "path": "khutab/k-20250928-jwq4jwfljwq5.html",
-      "sha256": "5599b81369c4ce2be089e0fa697aa3b43749c924f76469d9145428f8debf9a03",
-      "size": 6927,
+      "sha256": "9797ba1decd36c65f5f6b05086b5e713e8fcc9b02da870ade5792c3ed49ef8f6",
+      "size": 8155,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20251004-jwq4jwfljwq5.html",
       "path": "khutab/k-20251004-jwq4jwfljwq5.html",
-      "sha256": "06a82281ba04d8b31373688136263139b38389eefa0ec7b54d135e35e10ef262",
-      "size": 6239,
+      "sha256": "6afd7565b17ff4ae8b853830f50cd93da19be3416a5904580b1a55c67f2d2912",
+      "size": 6947,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20251018-jwq4jwfljwq5.html",
       "path": "khutab/k-20251018-jwq4jwfljwq5.html",
-      "sha256": "8c8ac2307447fc27e208374dc8fe0a4c6c5007c4da8f9f4b449102432cb6aebd",
-      "size": 7376,
+      "sha256": "8c14e3c5777a5267055b8c00819b4c1acb71cb2ef833558758008e21c60f3dc5",
+      "size": 9037,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20251025-jwq4jwfljwq5.html",
       "path": "khutab/k-20251025-jwq4jwfljwq5.html",
-      "sha256": "e270d041e86c290d8a93417d7d8f1de8c5ce708a8dc059ea30221be7fc236c71",
-      "size": 6938,
+      "sha256": "7c34f5f155108d2ae9196cc321a0248eb174e58debae48962d9004619e362646",
+      "size": 8162,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20251102-jwq4jwfljwq5.html",
       "path": "khutab/k-20251102-jwq4jwfljwq5.html",
-      "sha256": "e6e00f1fccfb41c3d0d2be603facbbe8023d79aa5859eef78de0329063e798a8",
-      "size": 7510,
+      "sha256": "001d0ad831695e3dbf0324753a8d9d2c85e081ff8005ee16ac3c1733934f0b9b",
+      "size": 9345,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20251109-jwq4jwfljwq5.html",
       "path": "khutab/k-20251109-jwq4jwfljwq5.html",
-      "sha256": "dd4cf0da435ed9b0e9ae8cc1d897d565db608b07bbf2f0b20e243d82e26d47e6",
-      "size": 7779,
+      "sha256": "2a1251b0fd94bb208cf4e51c10bd2c467418e648518cf1e6a8655c1ed1941bec",
+      "size": 9866,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20251115-jwq4jwfljwq5.html",
       "path": "khutab/k-20251115-jwq4jwfljwq5.html",
-      "sha256": "f4950ec5685d4576f0244ec1c82fd2bfd655952b165d6381034105bcbc3682e7",
-      "size": 6877,
+      "sha256": "24b2e21e4e88488a0153ac37fca0c0320877393098e28de5f9277e5fee981440",
+      "size": 8068,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20251123-jwq4jwfljwq5.html",
       "path": "khutab/k-20251123-jwq4jwfljwq5.html",
-      "sha256": "4536ab661eea71422eb990e2a56d542871f9cd86e65d46b3aabe4f87944216b7",
-      "size": 8345,
+      "sha256": "f6313acb482fb45255312204c6856d7664bb51708830d57bd10e97222bb3e7a7",
+      "size": 10910,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20251130-jwq4jwfljwq5.html",
       "path": "khutab/k-20251130-jwq4jwfljwq5.html",
-      "sha256": "9c980354b3ba20bbc7b4b45861337bc03b038f8df71e0d9111727d3d5abf969f",
-      "size": 8240,
+      "sha256": "a14f3f7dbe968f5d431e33313d62a2f7a09c54e3f934d4057e5442907c35031c",
+      "size": 10728,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20251213-jwq4jwfljwq5.html",
       "path": "khutab/k-20251213-jwq4jwfljwq5.html",
-      "sha256": "91c3bb449bad4a572537b5855926189db8d917df31ba6ad993dc47326c4f6225",
-      "size": 8390,
+      "sha256": "58b35a9c53d2458fb04abb09d09935395eccba662d698c10f01c68df76e67451",
+      "size": 10889,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20251229-jwq4jwfljwq4.html",
       "path": "khutab/k-20251229-jwq4jwfljwq4.html",
-      "sha256": "7548a647dda3337dd622470f079fc1bb9cb777d6dda37125ee9fb6e19a69aeea",
-      "size": 6875,
+      "sha256": "b8ca95a1d0293919bc74e88a88531396570c4b3bdf6e011f46ec3cdca65f487f",
+      "size": 8031,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260116-bg9jywwtmjay.html",
       "path": "khutab/k-20260116-bg9jywwtmjay.html",
-      "sha256": "bc1a068c99aadc8e4b3bc14157dfc51e03ed34c94aeb6ef3290fb3fc70457348",
-      "size": 6349,
+      "sha256": "37d1632cadfe5169ed31f47292e3c16afad64bc35f68958577c384d12c8abafc",
+      "size": 6401,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260123-bg9jywwtmjay.html",
       "path": "khutab/k-20260123-bg9jywwtmjay.html",
-      "sha256": "a072a567f103ced525b108388fa4ef5f955030daec8678f6d8a5fcefe506b8a2",
-      "size": 6666,
+      "sha256": "a5a09cd267ef702456b1a5e9b0b6aff4f222e97dc94e18e3717345af6b95bcc0",
+      "size": 6718,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260130-bg9jywwtmjay.html",
       "path": "khutab/k-20260130-bg9jywwtmjay.html",
-      "sha256": "46ad0d08f6a62b030e70b293bc98bb9d9e26751d50ba170d63f720de799e9509",
-      "size": 6461,
+      "sha256": "9785363f4dca29814c413c1e8fdda509f2f7d7a6e332c5d68533fd1d6a32b5e6",
+      "size": 6513,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260206-bg9jywwtmjay.html",
       "path": "khutab/k-20260206-bg9jywwtmjay.html",
-      "sha256": "1585f30fa4960014e0270abce79b9f90a51a054f280f06e215ee39e77cc9c1cb",
-      "size": 6816,
+      "sha256": "631e7ada20a65e92b0877340e092fadaddcb914e641a9e183ecb71ff1e1122af",
+      "size": 6868,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260213-bg9jywwtmjay.html",
       "path": "khutab/k-20260213-bg9jywwtmjay.html",
-      "sha256": "5a9d17221c15e0f9b00f8fdd2554d4c91e16134c12fed968c2be5674f89f6b42",
-      "size": 7133,
+      "sha256": "f20b20a455aaac8bc35874e38a7a9e4af939305b75920a2227693d167db2b5f0",
+      "size": 7185,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260220-bg9jywwtmjay.html",
       "path": "khutab/k-20260220-bg9jywwtmjay.html",
-      "sha256": "5aa271053cf030119fdd025b7506c451f85975c0f6bf108b151e328242624db5",
-      "size": 7360,
+      "sha256": "83def293ad89af30c257873f73b28124be1752303d8fd2928895ba4db4460a58",
+      "size": 7412,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260227-bg9jywwtmjay.html",
       "path": "khutab/k-20260227-bg9jywwtmjay.html",
-      "sha256": "ed9d54e5d167507ecedd6be7d3f7aaf06d068da74bad48783851116ad9572371",
-      "size": 6836,
+      "sha256": "92adf6095f2fdd12e63a56f17c7c1d1e8db2e6072ff19a92d81d42318d702dc2",
+      "size": 6888,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260306-bg9jywwtmjay.html",
       "path": "khutab/k-20260306-bg9jywwtmjay.html",
-      "sha256": "c3d890d1c59fdcb5861e7f65f52e21ba4203ac8abf79d3fda6e1189c52e42f84",
-      "size": 6651,
+      "sha256": "f6dc5fd6a2efb0e22ca05ebb6ef54199e9bde0e0c1a00a929b7f8368fba639f9",
+      "size": 6703,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260313-bg9jywwtmjay.html",
       "path": "khutab/k-20260313-bg9jywwtmjay.html",
-      "sha256": "385c617df95bb8ca915071ef29240be28351eac20e7e2ec217afde7334c15a8a",
-      "size": 6998,
+      "sha256": "e8853506c253d875361702b4147503c0108cc26596718d2238adcdbeccb23bce",
+      "size": 7050,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260315-bg9jywwtmjay.html",
       "path": "khutab/k-20260315-bg9jywwtmjay.html",
-      "sha256": "f3fdf8a9a2d1c89de37464bb0ba2e0a07f7a1a2e2211a08a92b45ed5deb3d4d4",
-      "size": 6611,
+      "sha256": "cdc0941d2954236a08c6814c21a9e02f4eeab5fcdf21296906e8cbbf8222ca58",
+      "size": 6663,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260317-bg9jywwtmjay.html",
       "path": "khutab/k-20260317-bg9jywwtmjay.html",
-      "sha256": "4c690d385e2aa5234816c3035dd278e63d2878322ccaa8d6cdb3176a235b680d",
-      "size": 6237,
+      "sha256": "d831d795d5c1a756dd73bd2a8280d382cae7927ee25795526d1a174bf07688af",
+      "size": 6289,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260320-bg9jywwtmjay.html",
       "path": "khutab/k-20260320-bg9jywwtmjay.html",
-      "sha256": "bbda781a1d14e4d750ac9bb36bf6fea39625604984b0af3eb41e41cecc5a5712",
-      "size": 6646,
+      "sha256": "96aafde1f3dbe9a0d79d1051e27e421fb1e324362cb1120301ccb6504db2d3f1",
+      "size": 6700,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260320-eid-bg9jywwtmjay.html",
       "path": "khutab/k-20260320-eid-bg9jywwtmjay.html",
-      "sha256": "8bfb944ee9a9e4c39d8686d256b395f21610dc679a103c15f34e76712e6229bd",
-      "size": 7131,
+      "sha256": "5cd7b9978d526af446d4669ccb1ff66b0c13abe891b32bc68c87bf0a7960df87",
+      "size": 7180,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260327-bg9jywwtmjay.html",
       "path": "khutab/k-20260327-bg9jywwtmjay.html",
-      "sha256": "dc156bb02491048b7da531740af2db00990a2ff5d707d099d996fde721e951c5",
-      "size": 6951,
+      "sha256": "88616cf916d71a2286a222218f69711edaf5a6e504c65ecae895312c9bb4dc37",
+      "size": 7003,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260403-bg9jywwtmjay.html",
       "path": "khutab/k-20260403-bg9jywwtmjay.html",
-      "sha256": "53c43264827b394cac35ed6359a16f852c9f55ecdd4bd743b4c5dcfb3e2a27fa",
-      "size": 6948,
+      "sha256": "493b3f2ded742e1c2c039a6aa95680d291f45f02dfb2e8982d2ff4b4889cc612",
+      "size": 7004,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260410-bg9jywwtmjay.html",
       "path": "khutab/k-20260410-bg9jywwtmjay.html",
-      "sha256": "0fa8563b130624bd4986234b220ef66e103beddeead2abfc238293c3a09aad1e",
-      "size": 7274,
+      "sha256": "36b5939f747c6aca734b918804e8275fe03f9e9f249e3dbe19faefc49075c36b",
+      "size": 7332,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260417-bg9jywwtmjay.html",
       "path": "khutab/k-20260417-bg9jywwtmjay.html",
-      "sha256": "ed224bf4eccc54c4a5289890fd049ebf49024d8687503b8f8add8afed5812dc0",
-      "size": 6607,
+      "sha256": "d41350a1916699554a54c41da06ea718cb1ef14e01545e18257fc6827d18f6ff",
+      "size": 6661,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260424-bg9jywwtmjay.html",
       "path": "khutab/k-20260424-bg9jywwtmjay.html",
-      "sha256": "ee0b89c59b2b9ee0abbd3beaa4c4816c2d51327838b4498f5742e30aa8b6a77f",
-      "size": 6277,
+      "sha256": "4c0d29128570333e4683b0f09d3c87ea5d2dfa152044dbb88933acf2e1ec8050",
+      "size": 6330,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260424-sinaa.html",
       "path": "khutab/k-20260424-sinaa.html",
-      "sha256": "e2715e98ae9f5f744ff030e83164d040d1c0491ae053ab57299bc4fd41861062",
-      "size": 7028,
+      "sha256": "80edbbb32fb237db78718c8aa5926c2650b6e56db83cb83ff19bff46150c97b6",
+      "size": 7105,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260501-bg9jywwtmjay.html",
       "path": "khutab/k-20260501-bg9jywwtmjay.html",
-      "sha256": "bda2382a2738f303c72cdd5d86578777d39b3b8d0559ca444c74e587787826ce",
-      "size": 7117,
+      "sha256": "d66fc14ec0471594c8f9cbeec5c6053850ca9a6cff8710abda62ebf346491138",
+      "size": 7104,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260508-bg9jywwtmjay.html",
       "path": "khutab/k-20260508-bg9jywwtmjay.html",
-      "sha256": "dd8c66116040aa42d6e7f5871971308a63eafe6ce144afdbf6ddc039334a00ca",
-      "size": 6511,
+      "sha256": "27997aca103b9b9f736d4f9e9d105d082036f541668ad5a895cb1beddfabe544",
+      "size": 6498,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260515-bg9jywwtmjay.html",
       "path": "khutab/k-20260515-bg9jywwtmjay.html",
-      "sha256": "8214a21fce343ed8de502feb959a7e498959ca304b9ad75f77defa3a7a7e8e47",
-      "size": 6622,
+      "sha256": "df82bbb68536ee5a8c5a61b57ad0a0f141f16be959335a06c1de5b7812b0b3fe",
+      "size": 6609,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260522-bg9jywwtmjay.html",
       "path": "khutab/k-20260522-bg9jywwtmjay.html",
-      "sha256": "bd169245fbaa33ea5fa74cbbaaef071cfea55d578cde5bb7dffc341aafa2496f",
-      "size": 6556,
+      "sha256": "93798189bf722cfc397448c0b86d0a5f37201a4609aa20933c16a7db54cb0dac",
+      "size": 6543,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260526-bg9jywwtmjay.html",
       "path": "khutab/k-20260526-bg9jywwtmjay.html",
-      "sha256": "ca53bcc7f8ccfd5186e2deed6d402b6dadeaf01f9225fe5b34b060589c2867c1",
-      "size": 7221,
+      "sha256": "81233372db6e3628f665578c44b26ed978b587b1b1078696be91f727f699c6a4",
+      "size": 7210,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260527-bg9jywwtmjay.html",
       "path": "khutab/k-20260527-bg9jywwtmjay.html",
-      "sha256": "753e6abf6b31ecf684f7f2976622099ffbc4249f477983fd40714b16e0b81ec1",
-      "size": 6612,
+      "sha256": "51d357299478c2e4b169d66354a5b5c3855d90e9889f7e4fbc165fb54d765c25",
+      "size": 6601,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260605-bg9jywwtmjay.html",
       "path": "khutab/k-20260605-bg9jywwtmjay.html",
-      "sha256": "7019d134786b3a4cc6570f09cc9e9be30c979fcc643fc8f9de7dbfbd7b21e5b8",
-      "size": 7164,
+      "sha256": "05f5be2da3b16c1bd238865509d338794506e2d14a2e3d09c355cd5867cd5371",
+      "size": 7183,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260612-bg9jywwtmjay.html",
       "path": "khutab/k-20260612-bg9jywwtmjay.html",
-      "sha256": "c7e0c8cbddaac9dfc17290b97237e4daa4f2ed7fdac647eea27bec23fbea9973",
-      "size": 7096,
+      "sha256": "683806fc516230193d6d87f2f157e184c1d264582b8e6c433e965b60500788fa",
+      "size": 7085,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260626-bg9jywwtmjay.html",
       "path": "khutab/k-20260626-bg9jywwtmjay.html",
-      "sha256": "8d010188590a5644c9a375a0822bbb40b7ae9d0e399ce0f9acb22b52fe894a0a",
-      "size": 7257,
+      "sha256": "b97a2ee8d6d6f919df2e05c483dc630d5ecd74bda18b242c9cf02570fe3a79b8",
+      "size": 7246,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260703-bg9jywwtmjay.html",
       "path": "khutab/k-20260703-bg9jywwtmjay.html",
-      "sha256": "9e274c8800cc3a8075f5635aca296d8cd5bc85c65c7cc6b2e1cb5790777162cc",
-      "size": 7228,
+      "sha256": "296d707257569a4ebbc476aa75cd175a00a440a3ab2f2e3ce467983ed5f06d12",
+      "size": 7217,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260710-bg9jywwtmjay.html",
       "path": "khutab/k-20260710-bg9jywwtmjay.html",
-      "sha256": "70ec2502ea185b1fdd1352880ea93daa591a8a77f7820ebc7eef369d2de82fc1",
-      "size": 7107,
+      "sha256": "15ab73de21a69f12df83ac9bfc7d01a92add9af3aadfc1a5b468de8797420334",
+      "size": 7096,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260717-bg9jywwtmjay.html",
       "path": "khutab/k-20260717-bg9jywwtmjay.html",
-      "sha256": "e534d419f1c74d1dce32ea4c282f143f84b664fde70aa531c64e11efbd84d63f",
-      "size": 7283,
+      "sha256": "62132f5f4fc136f7cb1df7847f6a8516ff14d7f478b198e70bd0f9549b33a316",
+      "size": 7272,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260724-bg9jywwtmjay.html",
       "path": "khutab/k-20260724-bg9jywwtmjay.html",
-      "sha256": "1f9d7c4e3a1955f65e6dd611465d056591bf89efb44ba6f906fb7064e7de4e9f",
-      "size": 6733,
+      "sha256": "f1d134b3bae389f855de52f63c1ad513899ef29e49542df26e597967e626a3ea",
+      "size": 6722,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260731-bg9jywwtmjay.html",
       "path": "khutab/k-20260731-bg9jywwtmjay.html",
-      "sha256": "ab9d0e6c6cfd09fe8e72ba9983e3b3c7a9358d264c2a52382bb774a6447b85b7",
-      "size": 6378,
+      "sha256": "cbb4abb002ae4a2da56231c72cfd4459c8f7cf801aab39192d6f5a1512c8ebd4",
+      "size": 6367,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260807-bg9jywwtmjay.html",
       "path": "khutab/k-20260807-bg9jywwtmjay.html",
-      "sha256": "f598446f06cba81536afb607a73721639416366cf0d79a5cd803c2b84e0a544f",
-      "size": 6605,
+      "sha256": "52139707594dcd069ac063836aa6ff398e76823c8913b16e8f6f47350fb72e23",
+      "size": 6594,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260814-bg9jywwtmjay.html",
       "path": "khutab/k-20260814-bg9jywwtmjay.html",
-      "sha256": "552a4ce203698fac24992a771cbf6fa8291b62ebfe27528369d5372ff99a118e",
-      "size": 7213,
+      "sha256": "040ba8843e61f5d8ea249457add43c766ac353d727ca3fe5b83b443cd7a04379",
+      "size": 7075,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260821-bg9jywwtmjay.html",
       "path": "khutab/k-20260821-bg9jywwtmjay.html",
-      "sha256": "d9f17087fb831d15770d09139d4223b70fd0b79d2ce9cf9f5eef65537f2fe7ae",
-      "size": 7259,
+      "sha256": "5294a34d1756e3a81b393c4c9d9e3d5249e70a26ebae3dd24dd59f64b46f9051",
+      "size": 7121,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260828-bg9jywwtmjay.html",
       "path": "khutab/k-20260828-bg9jywwtmjay.html",
-      "sha256": "b3c7887e158d4e30c1da478768f0210e8f626248c7f1b40713bd2e821402f926",
-      "size": 6765,
+      "sha256": "3a4b8bd1e6aba5a4edb616bd4555114ed7f5c117e7607e86817c609527de6fb6",
+      "size": 6627,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260904-bg9jywwtmjay.html",
       "path": "khutab/k-20260904-bg9jywwtmjay.html",
-      "sha256": "06a27ed30a20dda718c048062eb6754e0d7d5cdb9bad3bcd5fedee8d013b7562",
-      "size": 7127,
+      "sha256": "bf807ae2401a288908497fdccdc85026de098774aed4630d4db5c3a86512a10b",
+      "size": 6989,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260911-bg9jywwtmjay.html",
       "path": "khutab/k-20260911-bg9jywwtmjay.html",
-      "sha256": "f85e9cc627d544d53ecca94a330db0f9e5173fa97b67c6e0f780e1062bef98ef",
-      "size": 6823,
+      "sha256": "dfb73729d5923df542fd644682f6ebd4f66279a90e6fabe71db9321e3612ae5f",
+      "size": 6684,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260918-bg9jywwtmjay.html",
       "path": "khutab/k-20260918-bg9jywwtmjay.html",
-      "sha256": "26fed84e86f33898a8c46de3c33317c8e3f3cadcae39b749eb54af11eb5a867c",
-      "size": 7071,
+      "sha256": "4278fbbd81223fe923eb84d1ccbbed7cfa67974b691bc510574b413d844b8c48",
+      "size": 6932,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20260925-bg9jywwtmjay.html",
       "path": "khutab/k-20260925-bg9jywwtmjay.html",
-      "sha256": "bb9b6d5615f79094ab8a49f9b750db5b797991228eacfcb5959991decc93d3dc",
-      "size": 7327,
+      "sha256": "18172a43776290f9d2c432202f4fc5d2b4c0d52841dc5a2999527baeb45ef132",
+      "size": 7188,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20261002-bg9jywwtmjay.html",
       "path": "khutab/k-20261002-bg9jywwtmjay.html",
-      "sha256": "fb5783fd020cf6aaead8ead19ccb3e130b837ab6a869b4811f4136f04b9e5a76",
-      "size": 6372,
+      "sha256": "e6a5c72ea24f5643d3435afca0cafaced7ae56687ef139ff3694f62c5f9b4152",
+      "size": 6233,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20261009-bg9jywwtmjay.html",
       "path": "khutab/k-20261009-bg9jywwtmjay.html",
-      "sha256": "3bbb14a3936090c5ab9829de82a53985e2321cd998707fa679dec939bbf58b4d",
-      "size": 6517,
+      "sha256": "291fe5651d3fc4bdeda73e87d8c180c240ae12c10eba6ac1568bd18b39e7f149",
+      "size": 6378,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20261016-bg9jywwtmjay.html",
       "path": "khutab/k-20261016-bg9jywwtmjay.html",
-      "sha256": "9c61a335232e520e14a11f68b94a670a2561b412e7bebf98959c80f6f324e4d2",
-      "size": 7141,
+      "sha256": "045081349baf17079415ebf87862a75a3d6ce2fac55094554db85a280e887e49",
+      "size": 7002,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20261023-bg9jywwtmjay.html",
       "path": "khutab/k-20261023-bg9jywwtmjay.html",
-      "sha256": "64aa8c10ff50f822962ca6b8b88500ff3d66316dceee7449928500bdd7d73a38",
-      "size": 7271,
+      "sha256": "141bae1afe5b16351985fabe1d706442d1b9bf1fe63c6097db68ae19fd81b923",
+      "size": 7132,
       "mime": "text/html"
     },
     {
       "key": "/khutab/k-20261030-bg9jywwtmjay.html",
       "path": "khutab/k-20261030-bg9jywwtmjay.html",
-      "sha256": "0d82cc0b9016cbc26e051ac1da84b6c787bee38649c5e1b240b1f13d13e828c6",
-      "size": 6941,
+      "sha256": "cdd914cc81738939d824c8468a7d0ad2831430b3d0177600f895fd8486f0dc06",
+      "size": 6802,
       "mime": "text/html"
     },
     {
@@ -1167,15 +1174,15 @@
     {
       "key": "/mobile-nav.css",
       "path": "mobile-nav.css",
-      "sha256": "d74c327ce9946fbb6ee3bc51094c3b9683a8e6a7375213b06ddbebf3e2a77b6c",
-      "size": 10728,
+      "sha256": "ab156ff91e944d8a5269f6f23f765af0e80a402ffc28456edc5439bcc3e9f04c",
+      "size": 11430,
       "mime": "text/css"
     },
     {
       "key": "/mobile-nav.js",
       "path": "mobile-nav.js",
-      "sha256": "8bb27a351d44e6b5d9df36476cfba205a2c0117bea82e9a83df6715237ebd443",
-      "size": 7353,
+      "sha256": "6b0ea48887046c4fc600665c0b187a94f4218797302af2f1824f21ab60fdc3c9",
+      "size": 9290,
       "mime": "application/javascript"
     },
     {
@@ -1487,20 +1494,6 @@
       "mime": "text/css"
     },
     {
-      "key": "https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cairo:wght@300;400;500;600;700&family=Tajawal:wght@400;500;700&display=swap",
-      "path": "assets/app-content/2718d16144da41028a6c59b76fcf1d37f5bc880e002ad4650fe5efc12608d425.css",
-      "sha256": "4fee21b514af1682166f30880917f2ce64f1b7a300a8070bdc60e2302784a22f",
-      "size": 19485,
-      "mime": "text/css"
-    },
-    {
-      "key": "https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cairo:wght@300;400;500;600;700&family=Tajawal:wght@400;500;700&family=Aref+Ruqaa:wght@400;700&display=swap",
-      "path": "assets/app-content/89305b2c0e45f1fa9a22f7ffe15080880ef596ce93e8ef0deb707bbe79b3f1a2.css",
-      "sha256": "439887a4022942685efb7d2e46b230cf475d19ef56be5d181afb6f7cd6bf88b5",
-      "size": 22997,
-      "mime": "text/css"
-    },
-    {
       "key": "https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cairo:wght@300;400;500;600;700;800;900&family=Aref+Ruqaa:wght@400;700&display=swap",
       "path": "assets/app-content/8ac8ec13181abaf3388952eb59101975d1319be348375d0c81e5f0dcc5dd4a6f.css",
       "sha256": "c15d3c9636cd8086fd5713f2f2bfaaa4b9bf1a7835642b9b83122ad51f1804fb",
@@ -1512,13 +1505,6 @@
       "path": "assets/app-content/0b1a2ec8c5bd1c2fff941250fb74b2b49ad712b864fb5c610d64a3ef872ae606.css",
       "sha256": "66df387d8f13315109dda13b691960e22b4e596bcafd48c0848051eec0b65801",
       "size": 30378,
-      "mime": "text/css"
-    },
-    {
-      "key": "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap",
-      "path": "assets/app-content/ace725edbf177ff4901430b03f9340ca6b574f3348c67fecdb1c7c232f3de891.css",
-      "sha256": "15369f8f3248164b7e852fbca6445b26423d539ec49ff34804a5b1522496b99a",
-      "size": 17342,
       "mime": "text/css"
     },
     {

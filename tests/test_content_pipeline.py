@@ -99,14 +99,41 @@ class ContentPipelineTests(unittest.TestCase):
             "content_html": "",
             "excerpt": "ملخص",
         }
-        rendered = pipeline.render_khutba_shell(item, "k-test.html")
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            image_dir = root / "assets" / "share-pics"
+            image_dir.mkdir(parents=True)
+            (image_dir / "portrait.jpg").write_bytes(b"image")
+            rendered = pipeline.render_khutba_shell(item, "k-test.html", root=root)
         self.assertIn("عنوان &lt;آمن&gt; &quot;مهم&quot;", rendered)
         self.assertIn('data-khutba-id="local-2026-07-24-safe-id"', rendered)
+        self.assertIn('property="og:image" content="https://ahmedelfashny.com/assets/share-pics/portrait.jpg"', rendered)
+        self.assertIn('name="twitter:image" content="https://ahmedelfashny.com/assets/share-pics/portrait.jpg"', rendered)
         self.assertNotIn("{{TITLE}}", rendered)
 
     def test_shell_name_matches_browser_card_slug(self):
         self.assertEqual(pipeline.make_shell_name("2026-07-17", "local-2026-07-17-abc123"),
                          "k-20260717-bg9jywwtmjay.html")
+
+    def test_sitemap_excludes_paused_books_but_keeps_article_pages(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            book = root / "books" / "old-book.html"
+            article = root / "books" / "article-current.html"
+            book_index = root / "books.html"
+            home = root / "index.html"
+            for path in (book, article, book_index, home):
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("<html></html>", encoding="utf-8")
+            with patch.object(pipeline, "ROOT", root), patch.object(
+                pipeline, "public_html_paths", return_value=[book, article, book_index, home]
+            ):
+                pipeline.generate_sitemap(None)
+
+            sitemap = (root / "sitemap.xml").read_text(encoding="utf-8")
+            self.assertNotIn("/books/old-book.html", sitemap)
+            self.assertNotIn("/books.html", sitemap)
+            self.assertIn("/books/article-current.html", sitemap)
 
     def test_automatic_metadata_and_two_khutba_outline(self):
         paragraphs = [

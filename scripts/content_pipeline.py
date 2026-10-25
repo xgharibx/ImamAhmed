@@ -97,6 +97,69 @@ def write_json(path: Path, value: Any) -> None:
     temp_path.replace(path)
 
 
+def select_share_image(seed: str, *, root: Path = ROOT) -> str:
+    image_dir = root / "assets" / "share-pics"
+    images = sorted(path.name for path in image_dir.glob("*.jpg") if path.is_file())
+    if not images:
+        raise PipelineError("لا توجد صور مشاركة في assets/share-pics")
+
+    state_path = root / "data" / "share-image-usage.json"
+    try:
+        state = read_json(state_path) if state_path.exists() else {"schema": 1, "usage": {}, "assignments": {}}
+    except (OSError, json.JSONDecodeError) as error:
+        raise PipelineError("ملف تدوير صور المشاركة غير صالح") from error
+    if not isinstance(state, dict) or state.get("schema") != 1:
+        raise PipelineError("إصدار ملف تدوير صور المشاركة غير مدعوم")
+
+    usage = state.get("usage", {})
+    assignments = state.get("assignments", {})
+    if not isinstance(usage, dict) or not isinstance(assignments, dict):
+        raise PipelineError("بيانات تدوير صور المشاركة غير صالحة")
+
+    existing = assignments.get(seed)
+    if existing in images:
+        return f"{SITE_URL}/assets/share-pics/{urllib.parse.quote(existing)}"
+
+    try:
+        counts = {name: max(0, int(usage.get(name, 0))) for name in images}
+    except (TypeError, ValueError) as error:
+        raise PipelineError("عدادات تدوير صور المشاركة غير صالحة") from error
+    least_used = min(counts.values())
+    candidates = [name for name in images if counts[name] == least_used]
+    digest = hashlib.sha256(str(seed).encode("utf-8")).digest()
+    selected = candidates[int.from_bytes(digest[:8], "big") % len(candidates)]
+
+    counts[selected] += 1
+    assignments[str(seed)] = selected
+    write_json(state_path, {"schema": 1, "usage": counts, "assignments": assignments})
+    return f"{SITE_URL}/assets/share-pics/{urllib.parse.quote(selected)}"
+
+
+def update_share_image_metadata(markup: str, image_url: str) -> str:
+    updated = markup
+    for property_name in ("og:image", "og:image:url", "og:image:secure_url"):
+        pattern = re.compile(
+            rf'(<meta\s+property="{re.escape(property_name)}"\s+content=")[^"]*(">)',
+            re.IGNORECASE,
+        )
+        updated, count = pattern.subn(rf"\g<1>{image_url}\g<2>", updated, count=1)
+        if count != 1:
+            raise PipelineError(f"وسم صورة المشاركة مفقود: {property_name}")
+
+    twitter_pattern = re.compile(
+        r'(<meta\s+name="twitter:image"\s+content=")[^"]*(">)', re.IGNORECASE
+    )
+    updated, count = twitter_pattern.subn(rf"\g<1>{image_url}\g<2>", updated, count=1)
+    if count != 1:
+        raise PipelineError("وسم صورة Twitter مفقود")
+    return re.sub(
+        r'\s*<meta\s+property="og:image:(?:width|height)"\s+content="[^"]*"\s*/?>\r?\n?',
+        "\n",
+        updated,
+        flags=re.IGNORECASE,
+    )
+
+
 def normalize_arabic(value: str) -> str:
     value = unicodedata.normalize("NFKC", value or "")
     value = re.sub(r"[\u064b-\u065f\u0670\u06d6-\u06ed]", "", value)
@@ -445,7 +508,13 @@ def existing_primary_shells() -> dict[str, str]:
     return result
 
 
-def render_khutba_shell(item: dict[str, Any], filename: str, canonical_name: str | None = None) -> str:
+def render_khutba_shell(
+    item: dict[str, Any],
+    filename: str,
+    canonical_name: str | None = None,
+    *,
+    root: Path = ROOT,
+) -> str:
     template = SHELL_TEMPLATE.read_text(encoding="utf-8")
     title = str(item["title"]).strip()
     author = str(item.get("author") or DEFAULT_AUTHOR).strip()
@@ -453,12 +522,13 @@ def render_khutba_shell(item: dict[str, Any], filename: str, canonical_name: str
     date_iso = validate_iso_date(str(item["date"]["iso"]))
     description = f"{title} — بقلم {author} • {display_date}"
     canonical_file = canonical_name or filename
-    version = date_iso.replace("-", "") + "-1"
+    share_image = select_share_image(f"khutba:{item['id']}", root=root)
     replacements = {
         "{{TITLE}}": html.escape(title, quote=True),
         "{{DESCRIPTION}}": html.escape(description, quote=True),
         "{{CANONICAL_URL}}": html.escape(f"{SITE_URL}/khutab/{urllib.parse.quote(canonical_file)}", quote=True),
-        "{{OG_IMAGE}}": f"{SITE_URL}/assets/og/sheikh-ahmed-share.jpg?v={version}",
+        "{{OG_IMAGE}}": share_image,
+        "{{TWITTER_IMAGE}}": share_image,
         "{{UPDATED_TIME}}": f"{date_iso}T00:00:00+00:00",
         "{{KHUTBA_ID}}": html.escape(str(item["id"]), quote=True),
         "{{KHUTBA_ID_JS}}": str(item["id"]).replace("\\", "\\\\").replace("'", "\\'"),
@@ -941,7 +1011,11 @@ def generate_sitemap(_: argparse.Namespace) -> dict[str, int]:
     paths: list[Path] = []
     for path in public_html_paths():
         relative = path.relative_to(ROOT).as_posix()
+        if path.name == "books.html":
+            continue
         if relative.startswith("khutab/") and not path.name.startswith("k-"):
+            continue
+        if relative.startswith("books/") and not path.name.startswith("article-"):
             continue
         if path.name == "khutba-view.html":
             continue

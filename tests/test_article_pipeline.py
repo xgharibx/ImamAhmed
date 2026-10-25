@@ -3,6 +3,7 @@ import hashlib
 import html
 import importlib.util
 import json
+import re
 from pathlib import Path
 import sys
 import tempfile
@@ -20,6 +21,10 @@ class ArticlePipelineTests(unittest.TestCase):
         folder = tempfile.TemporaryDirectory()
         self.addCleanup(folder.cleanup)
         self.root = Path(folder.name)
+        image_dir = self.root / "assets" / "share-pics"
+        image_dir.mkdir(parents=True)
+        for name in ("share-a.jpg", "share-b.jpg"):
+            (image_dir / name).write_bytes(b"image")
         self.listing = self.root / "articles.html"
         self.original = ('<!DOCTYPE html><html><body><div class="article-grid">Legacy</div>'
                          '<div class="newspaper-articles-grid" data-aos="fade-up">'
@@ -85,6 +90,10 @@ class ArticlePipelineTests(unittest.TestCase):
         self.assertNotIn('../../', page)
         self.assertIn('rel="canonical" href="https://ahmedelfashny.com/' + result["file"] + '"', page)
         self.assertIn('property="og:url" content="https://ahmedelfashny.com/' + result["file"] + '"', page)
+        og_image = re.search(r'<meta property="og:image" content="([^"]+)"', page).group(1)
+        twitter_image = re.search(r'<meta name="twitter:image" content="([^"]+)"', page).group(1)
+        self.assertIn("/assets/share-pics/", og_image)
+        self.assertEqual(og_image, twitter_image)
         self.assertIn('js-book-download-top', page)
         self.assertNotIn('{{', page)
         for line in self.paragraphs:
@@ -163,6 +172,28 @@ class ArticlePipelineTests(unittest.TestCase):
         (self.root / result["pdf"]).write_bytes(b"bad PDF")
         with self.assertRaises(shared.PipelineError):
             self.api().validate_article_result(result, root=self.root)
+
+    def test_existing_article_preview_rotation_is_stable_and_updates_all_tags(self):
+        books = self.root / "books"
+        books.mkdir()
+        page = books / "article-existing.html"
+        page.write_text('''<html><head>
+<meta property="og:image" content="old.jpg">
+<meta property="og:image:url" content="old.jpg">
+<meta property="og:image:secure_url" content="old.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="old.jpg">
+</head><body><article data-article-id="article-existing"></article></body></html>''', encoding="utf-8")
+
+        result = self.api().refresh_existing_share_previews(self.root)
+        updated = page.read_text(encoding="utf-8")
+        image = re.search(r'<meta property="og:image" content="([^"]+)"', updated).group(1)
+        self.assertEqual(result["updated"], 1)
+        self.assertIn("/assets/share-pics/", image)
+        self.assertEqual(updated.count(f'content="{image}"'), 4)
+        self.assertNotIn("og:image:width", updated)
+        self.assertEqual(self.api().refresh_existing_share_previews(self.root)["updated"], 0)
 
     def test_admin_chooser_keeps_both_explicit_upload_forms(self):
         from html.parser import HTMLParser

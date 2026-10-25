@@ -100,18 +100,19 @@ def prepare_article_docx(path: Path) -> dict:
             "content_sha256": digest}
 
 
-def render_page(article: dict) -> str:
+def render_page(article: dict, *, root: Path = ROOT) -> str:
     body = []
     for line in article["body_paragraphs"]:
         heading = len(line) <= 95 and (line.endswith(":") or (line.startswith("(") and line.endswith(")")))
         tag, css = ("h2", "section-title") if heading else ("p", "text-content")
         body.append(f'            <{tag} class="{css}">{html.escape(line)}</{tag}>')
+    share_image = shared.select_share_image(f"article:{article['id']}", root=root)
     values = {"PAGE_TITLE": html.escape(article["title"], quote=True),
               "META_DESCRIPTION": html.escape(article["excerpt"], quote=True),
               "AUTHOR": html.escape(shared.DEFAULT_AUTHOR), "BACK_TEXT": "عودة إلى المقالات",
               "CANONICAL_URL": f'{shared.SITE_URL}/{article["file"]}', "ARTICLE_ID": article["id"],
               "CONTENT_SHA256": article["content_sha256"], "PDF_FILENAME": Path(article["pdf"]).name,
-              "BODY_HTML": "\n".join(body)}
+              "OG_IMAGE": share_image, "BODY_HTML": "\n".join(body)}
     def replace(match):
         key = match.group(1)
         if key not in values:
@@ -135,6 +136,21 @@ def render_card(article: dict) -> str:
                     </div>
                 </article>
 '''
+
+
+def refresh_existing_share_previews(root: Path = ROOT) -> dict[str, int]:
+    updated = 0
+    for path in sorted((root / "books").glob("article-*.html")):
+        source = path.read_text(encoding="utf-8")
+        match = re.search(r'data-article-id="([^"]+)"', source)
+        if not match:
+            raise PipelineError(f"معرّف المقال مفقود في {path.relative_to(root)}")
+        image = shared.select_share_image(f"article:{match.group(1)}", root=root)
+        rendered = shared.update_share_image_metadata(source, image)
+        if rendered != source:
+            path.write_text(rendered, encoding="utf-8", newline="\n")
+            updated += 1
+    return {"updated": updated}
 
 
 def validate_pdf(path: Path) -> int:
@@ -197,7 +213,7 @@ def publish_article(docx: Path, *, root: Path = ROOT, date_iso: str = "") -> dic
     page_path, pdf_path = root / article["file"], root / article["pdf"]
     if page_path.exists() or pdf_path.exists():
         raise PipelineError("ملفات المقال موجودة بالفعل؛ لن يتم استبدالها")
-    page_html = render_page(article)
+    page_html = render_page(article, root=root)
     offset = parser.insertions[0]
     updated = listing[:offset] + render_card(article) + listing[offset:]
     page_path.parent.mkdir(parents=True, exist_ok=True)
@@ -289,12 +305,15 @@ def main() -> int:
     issue.add_argument("--event", type=Path, required=True)
     validate = commands.add_parser("validate-result")
     validate.add_argument("--result", type=Path, required=True)
+    commands.add_parser("refresh-share-previews")
     args = parser.parse_args()
     try:
         if args.command == "publish":
             result = publish_article(args.docx, root=args.root, date_iso=args.date)
         elif args.command == "publish-issue":
             result = publish_issue(args.event, root=args.root)
+        elif args.command == "refresh-share-previews":
+            result = refresh_existing_share_previews(args.root)
         else:
             result = validate_article_result(shared.read_json(args.result), root=args.root)
     except (PipelineError, OSError, ValueError, ET.ParseError) as error:

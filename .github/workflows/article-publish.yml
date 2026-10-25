@@ -63,7 +63,7 @@ jobs:
           ARTICLE_PDF=$(python -c 'import json; print(json.load(open("article-result.json"))["pdf"])')
           git config user.name 'Sheikh Ahmed Content Bot'
           git config user.email 'content-bot@users.noreply.github.com'
-          git add -- articles.html sitemap.xml robots.txt "$ARTICLE_FILE" "$ARTICLE_PDF"
+          git add -- articles.html sitemap.xml robots.txt data/share-image-usage.json "$ARTICLE_FILE" "$ARTICLE_PDF"
           git add -- data/app-content-manifest.json assets/app-content
           git diff --cached --check
           git commit -m "Publish article from issue #$ISSUE_NUMBER"

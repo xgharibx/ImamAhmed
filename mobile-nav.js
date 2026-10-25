@@ -3,6 +3,43 @@
     const root = new URL('.', document.currentScript?.src || new URL('/mobile-nav.js', location.href).href);
     const page = decodeURIComponent(location.pathname.split('/').pop() || 'index.html');
     const mobile = window.matchMedia('(max-width: 1200px)');
+
+    const getBookDestination = (href) => {
+        try {
+            const rawHref = String(href || '').trim();
+            if (!rawHref || rawHref.startsWith('#')) return '';
+            const pathname = new URL(rawHref, location.href).pathname;
+            if (/\/books\/article-[^/]+\.(?:html|pdf)$/i.test(pathname)) return '';
+            return /\/books\.html$/i.test(pathname) || /\/books\/[^/]+$/i.test(pathname) ? pathname : '';
+        } catch {
+            return '';
+        }
+    };
+
+    const disableBookLinks = () => {
+        document.querySelectorAll('a[href]').forEach((link) => {
+            const destination = getBookDestination(link.getAttribute('href'));
+            if (!destination) return;
+            link.classList.add('is-disabled-link', 'has-soon-badge');
+            link.setAttribute('aria-disabled', 'true');
+            link.setAttribute('tabindex', '-1');
+            link.setAttribute('data-soon', 'قريبا');
+            if (/\/books\//i.test(destination)) {
+                const card = link.closest('.book-card, .featured-card');
+                if (card) card.setAttribute('hidden', '');
+                else link.closest('li')?.setAttribute('hidden', '');
+            }
+        });
+    };
+
+    disableBookLinks();
+    document.addEventListener('click', (event) => {
+        const link = event.target.closest('a[href]');
+        if (!link || !getBookDestination(link.getAttribute('href'))) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+    }, true);
+
     const headerContainer = document.querySelector('#header .nav-container');
     if (headerContainer && !headerContainer.querySelector('.header-stars')) {
         for (const side of ['start', 'end']) {
@@ -81,6 +118,14 @@
     const links = document.createElement('div');
     links.className = 'mobile-nav-sections';
     for (const [label, glyph, path] of sections) {
+        if (path === 'books.html') {
+            const item = document.createElement('span');
+            item.className = 'mobile-nav-disabled-item';
+            item.setAttribute('aria-disabled', 'true');
+            item.innerHTML = '<i class="fas ' + glyph + '" aria-hidden="true"></i><span>' + label + '</span><small>قريبا</small>';
+            links.append(item);
+            continue;
+        }
         const link = document.createElement('a');
         link.href = new URL(path, root).href;
         link.innerHTML = '<i class="fas ' + glyph + '" aria-hidden="true"></i><span>' + label + '</span><i class="fas fa-angle-left" aria-hidden="true"></i>';
