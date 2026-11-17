@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "revision": "53ccb864496d7992e79a8d48dd5167cb5f27a0806d6e2538fb1522620b2bc0e2",
+  "revision": "9b9150dae4b20c6081c43093ea895296763a6b61b199775298ea4d56a7f12089",
   "resources": [
     {
       "key": "/about.css",
@@ -404,15 +404,15 @@
     {
       "key": "/data/khutab_written.json",
       "path": "data/khutab_written.json",
-      "sha256": "d2dffb01905b5640c60f266ea9479513d9bd3332fde4deb9bff5dc143570afc9",
-      "size": 1964045,
+      "sha256": "53c5e3c6561362b1a5e052799ae463a9e742e1db408852986c72c99783ae4e16",
+      "size": 2010754,
       "mime": "application/json"
     },
     {
       "key": "/data/khutab_written_index.json",
       "path": "data/khutab_written_index.json",
-      "sha256": "907dc9d19a82e8b1b5c43b14bc750f6569023fb50aa39ff398df4af16b108e11",
-      "size": 55955,
+      "sha256": "5460827dff05539d491c983c62577dba91b0c9c63f57b7b43231e3bd152bca10",
+      "size": 57071,
       "mime": "application/json"
     },
     {
@@ -453,8 +453,8 @@
     {
       "key": "/data/share-image-usage.json",
       "path": "data/share-image-usage.json",
-      "sha256": "d1bbd4a4c9e4f8fc3416e600a9a8118950704b5e4e98ea32fb34fadb83814c85",
-      "size": 6942,
+      "sha256": "8007eae341e645cf67065eca953149d919621a7fe7d404f88de6beec9085d7e5",
+      "size": 7004,
       "mime": "application/json"
     },
     {
@@ -1015,6 +1015,13 @@
       "path": "khutab/k-20261113-bg9jywwtmjay.html",
       "sha256": "e66ec742bed4e6c4ec7ef78a291a9c9d4e5b866e886e907b17c4da19c75d510d",
       "size": 6576,
+      "mime": "text/html"
+    },
+    {
+      "key": "/khutab/k-20261120-bg9jywwtmjay.html",
+      "path": "khutab/k-20261120-bg9jywwtmjay.html",
+      "sha256": "cf599de252b90c22178ceca4687ec91146eb2925f09c6c8b45a5c9cfeb8bd073",
+      "size": 6655,
       "mime": "text/html"
     },
     {
